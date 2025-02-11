@@ -59,11 +59,10 @@ const Row = styled.div`
   gap: 10px;
 `;
 
-const ImageUplader = ({ bucket, folder = "", onUpload, name, onChange, value }) => {
+const ImageUplader = ({ name, onChange }) => {
   const [file, setFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
-  const [uploading, setUploading] = useState(false);
-  const [imageUrl, setImageUrl] = useState(null);
+
   const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
@@ -77,38 +76,28 @@ const ImageUplader = ({ bucket, folder = "", onUpload, name, onChange, value }) 
 
   const handleIconClick = () => {
     if (fileInputRef.current) {
-      fileInputRef.current.click(); // Trigger the file input when the div is clicked
+      fileInputRef.current.click();
     }
   };
 
   const removeImage = () => {
     setFile(null);
     setPreviewImage(null);
-    setImageUrl(null);
   };
 
-  const uploadImage = async (url) => {
-    console.log("Uploaded Image URL: ", url);
+  /* const uploadImage = async () => {
     if (!file) return;
-    setUploading(true);
 
     const fileName = `${Date.now()}-${file.name}`.replaceAll("/", "");
-    const filePath = folder ? `${folder}/${fileName}` : fileName;
+    const filePath = folder ? `${fileName}` : fileName;
 
     const { error } = await supabase.storage.from(bucket).upload(filePath, file);
     if (error) {
       console.error("Upload failed:", error.message);
-      setUploading(false);
+
       return;
     }
-
-    // Get public URL of uploaded image
-    const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(filePath);
-    setImageUrl(urlData.publicUrl);
-    if (onUpload) onUpload(urlData.publicUrl);
-
-    setUploading(false);
-  };
+  }; */
 
   return (
     <ImageUploadContainer>
@@ -130,14 +119,6 @@ const ImageUplader = ({ bucket, folder = "", onUpload, name, onChange, value }) 
             <p>{file.name}</p>
           </Row>
         </StyledPreviewImageWrap>
-      )}
-      {imageUrl && (
-        <p>
-          Image uploaded:{" "}
-          <a href={imageUrl} target='_blank' rel='noopener noreferrer'>
-            View
-          </a>
-        </p>
       )}
     </ImageUploadContainer>
   );

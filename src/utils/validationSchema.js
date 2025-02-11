@@ -7,7 +7,12 @@ export const createShipSchema = z.object({
     .min(1, { message: "IMO number is required" })
     .regex(/^\d+$/, { message: "IMO number must be a valid number" })
     .transform((val) => parseInt(val, 10)),
-  shipType: z.string().min(1, { message: "Ship type is required" }),
+  /* shipType: z.string().min(1, { message: "Ship type is required" }), */
+  shipType: z
+    .string()
+    .min(1, { message: "Ship type is required" }) // Ensure it's selected
+    .refine((val) => !isNaN(parseInt(val, 10)), { message: "Invalid ship type" }) // Ensure it's a number
+    .transform((val) => parseInt(val, 10)), // Convert string to number
   price: z
     .string()
     .min(1, "Price is required")

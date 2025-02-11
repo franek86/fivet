@@ -1,0 +1,15 @@
+import { useMutation } from "@tanstack/react-query";
+import { uploadImage } from "../../services/uploadFile.js";
+import { toast } from "react-toastify";
+
+export const useUploadSingleImage = () => {
+  return useMutation({
+    mutationFn: ({ file, bucket }) => uploadImage({ file, bucket }),
+    onSuccess: () => {
+      console.log("Image uploaded");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+};

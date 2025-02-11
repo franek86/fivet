@@ -199,6 +199,19 @@ const GlobalStyles = styled.createGlobalStyle`
     /* For dark mode */
     filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
   }
+
+  //React date picker
+  .react-date-picker {
+    &__wrapper {
+      border-radius: var(--border-radius-sm);
+      border: 1px solid var(--color-grey-500);
+      padding: 0.9rem;
+
+      input:focus {
+        outline: none;
+      }
+    }
+  }
 `;
 
 export default GlobalStyles;

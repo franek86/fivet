@@ -7,14 +7,18 @@ import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import TextArea from "../ui/TextArea.jsx";
 import ImageUplader from "../ImageUplader.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
+import Label from "../ui/Label.jsx";
 
 import DatePicker from "react-date-picker";
 
 import styled from "styled-components";
+import { LuCalendarDays, LuX } from "react-icons/lu";
 
 import { createShipSchema } from "../../utils/validationSchema.js";
 import { useCreateShip } from "../../hooks/ships/useCreateShip.js";
 import { useCategories } from "../../hooks/categories/useCategories.js";
+import { useUploadSingleImage } from "../../hooks/files/useUploadSingleImage.js";
+import { useImagePublicUrl } from "../../hooks/files/useImagePublicUrl.js";
 
 const Form = styled.div`
   display: grid;
@@ -37,11 +41,14 @@ const Row = styled.div`
 
 const Column = styled(Row)`
   flex-direction: column;
+  gap: 0;
 `;
 
 const ShipsForm = () => {
   const { categories } = useCategories();
-  const { mutate } = useCreateShip();
+  const { mutate: submitData } = useCreateShip();
+  const { mutate: uploadImage } = useUploadSingleImage();
+  const { mutate: getImageUrl } = useImagePublicUrl();
 
   const {
     register,
@@ -50,15 +57,40 @@ const ShipsForm = () => {
     watch,
     formState: { errors },
     handleSubmit,
-  } = useForm({
-    resolver: zodResolver(createShipSchema),
-  });
+  } = useForm();
 
   const onSubmit = (data) => {
-    mutate({
+    const file = data.mainImage;
+    const filePath = `${Date.now()}-${file.name}`.replaceAll("/", "");
+    const bucket = "Ship images";
+
+    uploadImage(
+      { file, bucket },
+      {
+        onSuccess: () => {
+          getImageUrl(
+            { filePath, bucket },
+            {
+              onSuccess: (urlImage) => {
+                console.log({ ...data, mainImage: urlImage });
+                submitData({
+                  ...data,
+                  mainImage: urlImage,
+                });
+              },
+            }
+          );
+        },
+      }
+    );
+
+    /* if (file) {
+      mutate({ file, bucket: "Ship images" });
+    } */
+    /*  mutate({
       ...data,
       mainImage: data.mainImage,
-    });
+    }); */
   };
 
   return (
@@ -103,50 +135,82 @@ const ShipsForm = () => {
           />
         </Column>
         <Column>
-          <Input label='Price (USD)' directions='column' register={register} {...register("price", { require: true })} />
+          <Input
+            label='Price (USD)'
+            directions='column'
+            placeholder='2,000,00'
+            register={register}
+            {...register("price", { require: true })}
+          />
           <InputErrorMessage message={errors.price?.message} />
         </Column>
-        <Input label='Ship location' directions='column' register={register} {...register("location")} />
-        <Input label='Main engine' directions='column' register={register} {...register("mainEngine")} />
+        <Input label='Ship location' directions='column' placeholder='e.g. Croatia' register={register} {...register("location")} />
+        <Input
+          label='Main engine'
+          directions='column'
+          placeholder='e.g. 1x Makita 2400 kw'
+          register={register}
+          {...register("mainEngine")}
+        />
       </Form>
 
       <Form>
-        <Input label='Length overall' directions='column' register={register} {...register("lengthOverall")} />
-        <Input label='Beam' directions='column' register={register} {...register("beam")} />
-        <Input label='Depth' directions='column' register={register} {...register("depth")} />
-        <Input label='Draft' directions='column' register={register} {...register("draft")} />
-        <Input label='Tonnage' directions='column' register={register} {...register("tonnage")} />
-        <Input label='Cargo capacity' directions='column' register={register} {...register("cargoCapacity")} />
+        <Input label='Length overall' directions='column' placeholder='e.g. 94 m' register={register} {...register("lengthOverall")} />
+        <Input label='Beam' directions='column' placeholder='e.g. 15 m' register={register} {...register("beam")} />
+        <Input label='Depth' directions='column' placeholder='e.g. 7.2 m' register={register} {...register("depth")} />
+        <Input label='Draft' directions='column' placeholder='e.g. 5.8 m' register={register} {...register("draft")} />
+        <Input label='Tonnage' directions='column' placeholder='e.g. 4000 t' register={register} {...register("tonnage")} />
+        <Input label='Cargo capacity' directions='column' placeholder='e.g. 3990 cbm' register={register} {...register("cargoCapacity")} />
         {/*      <Input label='Build year' directions='column' register={register} {...register("buildYear")} />
          */}
-        <Controller
-          control={control}
-          name='buildYear'
-          render={({ field }) => (
-            <DatePicker {...field} format='dd-MM-yyyy' value={field.value || null} onChange={(date) => field.onChange(date)} />
-          )}
-        />
-        <Input label='Build country' directions='column' register={register} {...register("buildCountry")} />
+        <Column>
+          <Label>Build year</Label>
+          <Controller
+            control={control}
+            name='buildYear'
+            render={({ field }) => (
+              <DatePicker
+                {...field}
+                format='dd-MM-yyyy'
+                value={field.value || null}
+                onChange={(date) => field.onChange(date)}
+                calendarIcon={<LuCalendarDays size={24} />}
+                clearIcon={<LuX size={24} />}
+                dayPlaceholder='dd'
+                monthPlaceholder='MM'
+                yearPlaceholder='yyyy'
+              />
+            )}
+          />
+        </Column>
+        <Input label='Build country' directions='column' placeholder='e.g. Poland' register={register} {...register("buildCountry")} />
         {/* <Input label='Refit year' directions='column' register={register} {...register("refitYear")} />
          */}
-        <Controller
-          control={control}
-          name='refitYear'
-          render={({ field }) => (
-            <DatePicker {...field} format='dd-MM-yyyy' value={field.value || null} onChange={(date) => field.onChange(date)} />
-          )}
-        />
+        <Column>
+          <Label>Refit year</Label>
+          <Controller
+            control={control}
+            name='refitYear'
+            render={({ field }) => (
+              <DatePicker
+                {...field}
+                format='dd-MM-yyyy'
+                value={field.value || null}
+                onChange={(date) => field.onChange(date)}
+                calendarIcon={<LuCalendarDays size={24} />}
+                clearIcon={<LuX size={24} />}
+                dayPlaceholder='dd'
+                monthPlaceholder='MM'
+                yearPlaceholder='yyyy'
+              />
+            )}
+          />
+        </Column>
       </Form>
       <Form>
         <TextArea label='Remarks' directions='column' register={register} {...register("remarks")} />
         <TextArea label='Description' directions='column' register={register} {...register("description")} />
-        <ImageUplader
-          name='mainImage'
-          value={watch("mainImage")}
-          onChange={(file) => setValue("mainImage", file)}
-          bucket='Ship images'
-          folder='ships'
-        />
+        <ImageUplader name='mainImage' value={watch("mainImage")} onChange={(file) => setValue("mainImage", file)} />
       </Form>
 
       <Row>

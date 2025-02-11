@@ -21,9 +21,9 @@ export const createShipSchema = z.object({
   draft: z.string().optional(),
   tonnage: z.string().optional(),
   cargoCapacity: z.string().optional(),
-  buildYear: z.string().optional(),
+  buildYear: z.date().optional(),
   buildCountry: z.string().optional(),
-  refitYear: z.string().optional(),
+  refitYear: z.date().optional(),
   remarks: z.string().optional(),
   description: z.string().optional(),
   mainImage: z
@@ -31,9 +31,7 @@ export const createShipSchema = z.object({
     .refine((file) => file.size <= 5 * 1024 * 1024, {
       message: "File size should not exceed 5MB",
     })
-    .refine((file) => ["image/jpeg", "image/png"].includes(file.type), {
-      message: "Only JPG and PNG images are allowed",
-    })
+    .refine((file) => file.type.startsWith("image/"))
     .optional(),
 });
 

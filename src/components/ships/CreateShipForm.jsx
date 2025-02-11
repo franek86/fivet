@@ -1,4 +1,3 @@
-import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -9,9 +8,12 @@ import TextArea from "../ui/TextArea.jsx";
 import ImageUplader from "../ImageUplader.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
 
+import DatePicker from "react-date-picker";
+
 import styled from "styled-components";
 
 import { createShipSchema } from "../../utils/validationSchema.js";
+import { useCreateShip } from "../../hooks/ships/useCreateShip.js";
 import { useCategories } from "../../hooks/categories/useCategories.js";
 
 const Form = styled.div`
@@ -38,28 +40,25 @@ const Column = styled(Row)`
 `;
 
 const ShipsForm = () => {
-  const [shipImage, setShipImage] = useState(null);
-  const imageRef = useRef(null);
-
   const { categories } = useCategories();
+  const { mutate } = useCreateShip();
 
   const {
     register,
     control,
     setValue,
+    watch,
     formState: { errors },
     handleSubmit,
   } = useForm({
     resolver: zodResolver(createShipSchema),
   });
 
-  const handleImageUpload = (url) => {
-    setShipImage(url);
-    setValue("mainImage", url);
-  };
-
   const onSubmit = (data) => {
-    console.log(data);
+    mutate({
+      ...data,
+      mainImage: data.mainImage,
+    });
   };
 
   return (
@@ -118,14 +117,36 @@ const ShipsForm = () => {
         <Input label='Draft' directions='column' register={register} {...register("draft")} />
         <Input label='Tonnage' directions='column' register={register} {...register("tonnage")} />
         <Input label='Cargo capacity' directions='column' register={register} {...register("cargoCapacity")} />
-        <Input label='Build year' directions='column' register={register} {...register("buildYear")} />
+        {/*      <Input label='Build year' directions='column' register={register} {...register("buildYear")} />
+         */}
+        <Controller
+          control={control}
+          name='buildYear'
+          render={({ field }) => (
+            <DatePicker {...field} format='dd-MM-yyyy' value={field.value || null} onChange={(date) => field.onChange(date)} />
+          )}
+        />
         <Input label='Build country' directions='column' register={register} {...register("buildCountry")} />
-        <Input label='Refit year' directions='column' register={register} {...register("refitYear")} />
+        {/* <Input label='Refit year' directions='column' register={register} {...register("refitYear")} />
+         */}
+        <Controller
+          control={control}
+          name='refitYear'
+          render={({ field }) => (
+            <DatePicker {...field} format='dd-MM-yyyy' value={field.value || null} onChange={(date) => field.onChange(date)} />
+          )}
+        />
       </Form>
       <Form>
         <TextArea label='Remarks' directions='column' register={register} {...register("remarks")} />
         <TextArea label='Description' directions='column' register={register} {...register("description")} />
-        <input type='file' {...register("mainImage")} />
+        <ImageUplader
+          name='mainImage'
+          value={watch("mainImage")}
+          onChange={(file) => setValue("mainImage", file)}
+          bucket='Ship images'
+          folder='ships'
+        />
       </Form>
 
       <Row>

@@ -1,4 +1,6 @@
 import { createGlobalStyle } from "styled-components";
+import "react-date-picker/dist/DatePicker.css";
+import "react-calendar/dist/Calendar.css";
 
 const styled = { createGlobalStyle };
 

@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useRef, useState } from "react";
 
 import Label from "./ui/Label.jsx";
 import { LuCircleX } from "react-icons/lu";
@@ -59,22 +59,26 @@ const Row = styled.div`
   gap: 10px;
 `;
 
-const ImageUplader = forwardRef(({ bucket, folder = "", onUpload, register, name, ...rest }, ref) => {
+const ImageUplader = ({ bucket, folder = "", onUpload, name, onChange, value }) => {
   const [file, setFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
+  const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0] || null;
+    onChange(selectedFile);
     if (e.target.files?.[0]) {
-      const selectedFile = e.target.files[0];
       setFile(selectedFile);
       setPreviewImage(URL.createObjectURL(selectedFile));
     }
   };
 
   const handleIconClick = () => {
-    ref.current.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // Trigger the file input when the div is clicked
+    }
   };
 
   const removeImage = () => {
@@ -108,7 +112,7 @@ const ImageUplader = forwardRef(({ bucket, folder = "", onUpload, register, name
 
   return (
     <ImageUploadContainer>
-      <input type='file' accept='image/*' ref={ref} onChange={handleFileChange} {...(register ? register(name) : {})} {...rest} />
+      <input type='file' ref={fileInputRef} name={name} onChange={handleFileChange} />
       {!file && (
         <Row>
           <StyledImageUpload onClick={handleIconClick}>
@@ -117,6 +121,7 @@ const ImageUplader = forwardRef(({ bucket, folder = "", onUpload, register, name
           </StyledImageUpload>
         </Row>
       )}
+
       {file && (
         <StyledPreviewImageWrap>
           <StyledIconClose onClick={removeImage} />
@@ -124,7 +129,6 @@ const ImageUplader = forwardRef(({ bucket, folder = "", onUpload, register, name
             {previewImage && <StyledPreviewImage src={previewImage} />}
             <p>{file.name}</p>
           </Row>
-          <Button onClick={uploadImage}>{uploading ? "Uploading..." : "Upload Image"}</Button>
         </StyledPreviewImageWrap>
       )}
       {imageUrl && (
@@ -137,6 +141,6 @@ const ImageUplader = forwardRef(({ bucket, folder = "", onUpload, register, name
       )}
     </ImageUploadContainer>
   );
-});
+};
 
 export default ImageUplader;

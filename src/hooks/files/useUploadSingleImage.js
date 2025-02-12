@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 export const useUploadSingleImage = () => {
   return useMutation({
-    mutationFn: ({ file, bucket }) => uploadImage({ file, bucket }),
+    mutationFn: ({ file, bucket, filePath }) => uploadImage({ file, bucket, filePath }),
     onSuccess: () => {
       console.log("Image uploaded");
     },

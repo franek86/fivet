@@ -28,12 +28,8 @@ export const getShips = async ({ page }) => {
     Create ship data
 */
 
-export const createShip = async (newData, mainImage) => {
-  const shipData = {
-    ...newData,
-    mainImage,
-  };
-  const { data, error } = await supabase.from("ships").insert([shipData]).select();
+export const createShip = async (newData) => {
+  const { data, error } = await supabase.from("ships").insert([newData]).select();
 
   if (error) {
     console.log(error);

@@ -1,17 +1,14 @@
 import supabase from "./databaseConfig.js";
 
 /* Upload single image */
-export const uploadImage = async ({ file, bucket }) => {
-  if (!file) throw new Error("No file provided");
-  if (!bucket) throw new Error("No bucket specified");
-
-  const fileName = `${Date.now()}-${file.name}`.replaceAll(/\s/g, "-");
-
-  const { error } = await supabase.storage.from(bucket).upload(fileName, file);
+export const uploadImage = async ({ file, bucket, filePath }) => {
+  const { error } = await supabase.storage.from(bucket).upload(filePath, file);
   if (error) {
     console.error("Upload failed:", error.message);
     throw new Error("Categories could not be loaded");
   }
+
+  return filePath;
 };
 
 /* Get image public url */

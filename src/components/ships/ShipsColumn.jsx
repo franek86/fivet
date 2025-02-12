@@ -3,12 +3,20 @@ import { formatedPrice } from "../../utils/formattedPrice.js";
 import Button from "../ui/Button.jsx";
 import Dropdown from "../ui/Dropdown.jsx";
 import Table from "../ui/Table.jsx";
+import { useSearchParams } from "react-router";
+import { PAGE_SIZE } from "../../utils/constants.js";
 
-function ShipsColumn({ ship }) {
-  const { id, mainImage, shipName, imoNumber, shipType, price } = ship;
+function ShipsColumn({ ship, index }) {
+  const [searchParams] = useSearchParams();
+
+  const { mainImage, shipName, imoNumber, shipType, price } = ship;
+
+  const currentPage = searchParams.get("page") || 1;
+  const orderNumberItems = (currentPage - 1) * PAGE_SIZE + (index + 1);
+
   return (
     <Table.Row>
-      <Table.Column>{id}</Table.Column>
+      <Table.Column>{orderNumberItems}</Table.Column>
       <Table.Column>
         <picture>
           <img src={mainImage} alt={shipName} />

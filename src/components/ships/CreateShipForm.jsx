@@ -19,6 +19,7 @@ import { useCreateShip } from "../../hooks/ships/useCreateShip.js";
 import { useCategories } from "../../hooks/categories/useCategories.js";
 import { useUploadSingleImage } from "../../hooks/files/useUploadSingleImage.js";
 import { useImagePublicUrl } from "../../hooks/files/useImagePublicUrl.js";
+import { useNavigate } from "react-router";
 
 const Form = styled.div`
   display: grid;
@@ -50,6 +51,8 @@ const ShipsForm = () => {
   const { mutate: uploadImage } = useUploadSingleImage();
   const { mutate: getImageUrl } = useImagePublicUrl();
 
+  const navigate = useNavigate();
+
   const {
     register,
     control,
@@ -61,36 +64,28 @@ const ShipsForm = () => {
 
   const onSubmit = (data) => {
     const file = data.mainImage;
-    const filePath = `${Date.now()}-${file.name}`.replaceAll("/", "");
+    const filePath = `${Date.now()}${Math.floor(Math.random() * 10000)}-${file.name.replaceAll(/\s/g, "-")}`;
     const bucket = "Ship images";
 
     uploadImage(
-      { file, bucket },
+      { file, bucket, filePath },
       {
-        onSuccess: () => {
+        onSuccess: (filePath) => {
           getImageUrl(
             { filePath, bucket },
             {
               onSuccess: (urlImage) => {
-                console.log({ ...data, mainImage: urlImage });
                 submitData({
                   ...data,
                   mainImage: urlImage,
                 });
+                navigate("/ships");
               },
             }
           );
         },
       }
     );
-
-    /* if (file) {
-      mutate({ file, bucket: "Ship images" });
-    } */
-    /*  mutate({
-      ...data,
-      mainImage: data.mainImage,
-    }); */
   };
 
   return (

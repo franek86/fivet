@@ -25,8 +25,8 @@ function ShipsTable() {
       </Table.Header>
 
       <Table.Body>
-        {ships.map((ship) => (
-          <ShipsColumn ship={ship} key={ship.id} />
+        {ships.map((ship, index) => (
+          <ShipsColumn ship={ship} key={ship.id} index={index} />
         ))}
       </Table.Body>
 

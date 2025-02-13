@@ -38,3 +38,16 @@ export const createShip = async (newData) => {
 
   return data;
 };
+
+/* 
+  Delete ship by id
+*/
+export const deleteShip = async (id) => {
+  const { data, error } = await supabase.from("ships").delete().eq("id", id);
+  if (error) {
+    console.log(error);
+    throw new Error("Category could not be deleted");
+  }
+
+  return data;
+};

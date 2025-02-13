@@ -201,6 +201,12 @@ const GlobalStyles = styled.createGlobalStyle`
   }
 
   //React date picker
+  .react-datetime-picker__calendar--open,
+  .react-datetime-picker__calendar--closed,
+  .react-datetime-picker__clock--open,
+  .react-datetime-picker__clock--closed {
+    position: absolute;
+  }
   .react-date-picker {
     &__wrapper {
       border-radius: var(--border-radius-sm);
@@ -210,6 +216,29 @@ const GlobalStyles = styled.createGlobalStyle`
       input:focus {
         outline: none;
       }
+    }
+  }
+
+  .react-calendar {
+    box-shadow: var(--shadow-lg);
+    border-radius: var(--border-radius-sm);
+    &__navigation button:enabled:hover,
+    &__navigation button:enabled:focus,
+    &__tile:enabled:hover,
+    &__tile:enabled:focus {
+      background-color: var(--color-brand-500);
+      color: var(--color-grey-0);
+      border-radius: var(--border-radius-sm);
+    }
+    &__tile--now {
+      background-color: var(--color-brand-200);
+      border-radius: var(--border-radius-sm);
+    }
+
+    &__tile--active {
+      background-color: var(--color-brand-600);
+      font-weight: 700;
+      border-radius: var(--border-radius-sm);
     }
   }
 `;

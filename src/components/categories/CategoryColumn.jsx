@@ -3,6 +3,7 @@ import Dropdown from "../ui/Dropdown.jsx";
 import Button from "../ui/Button.jsx";
 import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
+import CreateCategoryForm from "./CreateCategoryForm.jsx";
 
 import { LuTrash2 } from "react-icons/lu";
 import { LuPencil } from "react-icons/lu";
@@ -10,7 +11,6 @@ import { LuPencil } from "react-icons/lu";
 import { useDeleteCategory } from "../../hooks/categories/useDeleteCategory.js";
 import { useDispatch } from "react-redux";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
-import CreateCategoryForm from "./CreateCategoryForm.jsx";
 import { useSearchParams } from "react-router";
 import { PAGE_SIZE } from "../../utils/constants.js";
 

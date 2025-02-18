@@ -15,18 +15,20 @@ import NotFound from "./pages/NotFound.jsx";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import EditShip from "./pages/EditShip.jsx";
 
 function App() {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      <ToastContainer position='top-right' />
+      <ToastContainer position='top-right' autoClose={2000} />
       <GlobalStyles />
       <Routes>
         <Route element={<MainLayout />}>
           <Route index element={<Dashboard />} />
           <Route path='/ships' element={<Ships />} />
           <Route path='/ships/create' element={<CreateShip />} />
+          <Route path='/ships/edit/:id' element={<EditShip />} />
           <Route path='/users' element={<Users />} />
           <Route path='/categories' element={<Categories />} />
         </Route>

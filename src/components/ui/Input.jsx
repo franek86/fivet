@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import Label from "./Label.jsx";
+import { forwardRef } from "react";
 
 const Wrap = styled.div`
   display: flex;
-  flex-direction: ${(props) => props.directions};
+  flex-direction: ${(props) => props.$directions};
 `;
 
 const StyledInput = styled.input`
@@ -19,13 +20,13 @@ const StyledInput = styled.input`
   }
 `;
 
-function Input({ directions, type = "text", placeholder, register, label, name, ...rest }) {
+const Input = forwardRef(({ directions, type = "text", placeholder, register, label, name, ...props }, ref) => {
   return (
-    <Wrap directions={directions}>
+    <Wrap $directions={directions}>
       {label && <Label>{label}</Label>}
-      <StyledInput type={type} id={name} placeholder={placeholder} {...(register ? register(name) : {})} {...rest} />
+      <StyledInput ref={ref} type={type} id={name} placeholder={placeholder} {...(register ? register(name) : {})} {...props} />
     </Wrap>
   );
-}
+});
 
 export default Input;

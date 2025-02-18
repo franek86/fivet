@@ -4,7 +4,7 @@ import Modal from "../Modal.jsx";
 import Table from "../ui/Table.jsx";
 
 import { LuPencil, LuTrash2 } from "react-icons/lu";
-import { useSearchParams } from "react-router";
+import { Link, useSearchParams } from "react-router";
 import { useDispatch } from "react-redux";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 
@@ -39,11 +39,13 @@ function ShipsColumn({ ship, index }) {
       </Table.Column>
       <Table.Column>
         <Dropdown>
-          <Button variation='icon'>
-            <LuPencil />
-            Edit
+          <Button $variation='icon'>
+            <Link to={`edit/${shipId}`}>
+              <LuPencil />
+              Edit
+            </Link>
           </Button>
-          <Button variation='icon' onClick={() => dispatch(openModalByName(shipId))}>
+          <Button $variation='icon' onClick={() => dispatch(openModalByName(shipId))}>
             <LuTrash2 />
             Delete
           </Button>

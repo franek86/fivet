@@ -1,6 +1,8 @@
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate, useParams } from "react-router";
 
+import Spinner from "../Spinner.jsx";
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
@@ -8,18 +10,17 @@ import TextArea from "../ui/TextArea.jsx";
 import ImageUplader from "../ImageUplader.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
 import Label from "../ui/Label.jsx";
-
 import DatePicker from "react-date-picker";
 
+import { createShipSchema, editShipSchema } from "../../utils/validationSchema.js";
 import styled from "styled-components";
 import { LuCalendarDays, LuX } from "react-icons/lu";
 
-import { createShipSchema } from "../../utils/validationSchema.js";
 import { useCreateShip } from "../../hooks/ships/useCreateShip.js";
+import { useShip } from "../../hooks/ships/useShip.js";
 import { useCategories } from "../../hooks/categories/useCategories.js";
 import { useUploadSingleImage } from "../../hooks/files/useUploadSingleImage.js";
 import { useImagePublicUrl } from "../../hooks/files/useImagePublicUrl.js";
-import { useNavigate } from "react-router";
 
 const Form = styled.div`
   display: grid;
@@ -46,12 +47,18 @@ const Column = styled(Row)`
 `;
 
 const ShipsForm = () => {
+  const navigate = useNavigate();
+  const { id: editId } = useParams();
+  const isEditSession = Boolean(editId);
+
   const { categories } = useCategories();
-  const { mutate: submitData } = useCreateShip();
+  const { data: singleShipData, isLoading, isError } = useShip(editId);
+
+  const { mutate: submitData, isPending } = useCreateShip();
   const { mutate: uploadImage } = useUploadSingleImage();
   const { mutate: getImageUrl } = useImagePublicUrl();
 
-  const navigate = useNavigate();
+  const schema = isEditSession ? editShipSchema : createShipSchema;
 
   const {
     register,
@@ -60,33 +67,48 @@ const ShipsForm = () => {
     watch,
     formState: { errors },
     handleSubmit,
-  } = useForm();
-
+  } = useForm({
+    defaultValues: isEditSession
+      ? {
+          ...singleShipData,
+          imoNumber: singleShipData?.imoNumber ? String(singleShipData?.imoNumber) : "",
+          price: singleShipData?.price ? String(singleShipData?.price) : "",
+        }
+      : {},
+    resolver: zodResolver(schema),
+  });
   const onSubmit = (data) => {
-    const file = data.mainImage;
-    const filePath = `${Date.now()}${Math.floor(Math.random() * 10000)}-${file.name.replaceAll(/\s/g, "-")}`;
-    const bucket = "Ship images";
+    if (isEditSession) {
+      console.log(data);
+    } else {
+      const file = data.mainImage;
+      const filePath = `${Date.now()}${Math.floor(Math.random() * 10000)}-${file.name.replaceAll(/\s/g, "-")}`;
+      const bucket = "Ship images";
 
-    uploadImage(
-      { file, bucket, filePath },
-      {
-        onSuccess: (filePath) => {
-          getImageUrl(
-            { filePath, bucket },
-            {
-              onSuccess: (urlImage) => {
-                submitData({
-                  ...data,
-                  mainImage: urlImage,
-                });
-                navigate("/ships");
-              },
-            }
-          );
-        },
-      }
-    );
+      uploadImage(
+        { file, bucket, filePath },
+        {
+          onSuccess: (filePath) => {
+            getImageUrl(
+              { filePath, bucket },
+              {
+                onSuccess: (urlImage) => {
+                  submitData({
+                    ...data,
+                    mainImage: urlImage,
+                  });
+                  navigate("/ships");
+                },
+              }
+            );
+          },
+        }
+      );
+    }
   };
+
+  if (isLoading) return <Spinner />;
+  if (isError) return <div>Error</div>;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -103,6 +125,7 @@ const ShipsForm = () => {
         </Column>
         <Column>
           <Input
+            type='number'
             label='IMO number'
             placeholder='e.g. 0000001'
             directions='column'
@@ -128,36 +151,89 @@ const ShipsForm = () => {
               />
             )}
           />
+          <InputErrorMessage message={errors.shipType?.message} />
         </Column>
         <Column>
           <Input
+            type='number'
             label='Price (USD)'
             directions='column'
-            placeholder='2,000,00'
+            placeholder='2000000'
             register={register}
             {...register("price", { require: true })}
           />
           <InputErrorMessage message={errors.price?.message} />
         </Column>
-        <Input label='Ship location' directions='column' placeholder='e.g. Croatia' register={register} {...register("location")} />
-        <Input
-          label='Main engine'
-          directions='column'
-          placeholder='e.g. 1x Makita 2400 kw'
-          register={register}
-          {...register("mainEngine")}
-        />
+        <Column>
+          <Input
+            label='Ship location'
+            directions='column'
+            placeholder='e.g. Croatia'
+            register={register}
+            {...register("location", { require: true })}
+          />
+          <InputErrorMessage message={errors.location?.message} />
+        </Column>
+        <Column>
+          <Input
+            label='Main engine'
+            directions='column'
+            placeholder='e.g. 1x Makita 2400 kw'
+            register={register}
+            {...register("mainEngine", { require: true })}
+          />
+          <InputErrorMessage message={errors.mainEngine?.message} />
+        </Column>
       </Form>
 
       <Form>
-        <Input label='Length overall' directions='column' placeholder='e.g. 94 m' register={register} {...register("lengthOverall")} />
-        <Input label='Beam' directions='column' placeholder='e.g. 15 m' register={register} {...register("beam")} />
-        <Input label='Depth' directions='column' placeholder='e.g. 7.2 m' register={register} {...register("depth")} />
-        <Input label='Draft' directions='column' placeholder='e.g. 5.8 m' register={register} {...register("draft")} />
-        <Input label='Tonnage' directions='column' placeholder='e.g. 4000 t' register={register} {...register("tonnage")} />
-        <Input label='Cargo capacity' directions='column' placeholder='e.g. 3990 cbm' register={register} {...register("cargoCapacity")} />
-        {/*      <Input label='Build year' directions='column' register={register} {...register("buildYear")} />
-         */}
+        <Column>
+          <Input
+            label='Length overall'
+            directions='column'
+            placeholder='e.g. 94 m'
+            register={register}
+            {...register("lengthOverall", { require: true })}
+          />
+          <InputErrorMessage message={errors.lengthOverall?.message} />
+        </Column>
+
+        <Column>
+          <Input label='Beam' directions='column' placeholder='e.g. 15 m' register={register} {...register("beam", { require: true })} />
+          <InputErrorMessage message={errors.beam?.message} />
+        </Column>
+
+        <Column>
+          <Input label='Depth' directions='column' placeholder='e.g. 7.2 m' register={register} {...register("depth", { require: true })} />
+          <InputErrorMessage message={errors.depth?.message} />
+        </Column>
+
+        <Column>
+          <Input label='Draft' directions='column' placeholder='e.g. 5.8 m' register={register} {...register("draft", { require: true })} />
+          <InputErrorMessage message={errors.draft?.message} />
+        </Column>
+
+        <Column>
+          <Input
+            label='Tonnage'
+            directions='column'
+            placeholder='e.g. 4000 t'
+            register={register}
+            {...register("tonnage", { require: true })}
+          />
+          <InputErrorMessage message={errors.tonnage?.message} />
+        </Column>
+
+        <Column>
+          <Input
+            label='Cargo capacity'
+            directions='column'
+            placeholder='e.g. 3990 cbm'
+            register={register}
+            {...register("cargoCapacity", { require: true })}
+          />
+          <InputErrorMessage message={errors.cargoCapacity?.message} />
+        </Column>
         <Column>
           <Label>Build year</Label>
           <Controller
@@ -179,8 +255,7 @@ const ShipsForm = () => {
           />
         </Column>
         <Input label='Build country' directions='column' placeholder='e.g. Poland' register={register} {...register("buildCountry")} />
-        {/* <Input label='Refit year' directions='column' register={register} {...register("refitYear")} />
-         */}
+
         <Column>
           <Label>Refit year</Label>
           <Controller
@@ -205,13 +280,17 @@ const ShipsForm = () => {
       <Form>
         <TextArea label='Remarks' directions='column' register={register} {...register("remarks")} />
         <TextArea label='Description' directions='column' register={register} {...register("description")} />
-        <ImageUplader name='mainImage' value={watch("mainImage")} onChange={(file) => setValue("mainImage", file)} />
+        <Column>
+          <ImageUplader name='mainImage' value={watch("mainImage")} onChange={(file) => setValue("mainImage", file)} />
+          <InputErrorMessage message={errors.mainImage?.message} />
+        </Column>
       </Form>
 
       <Row>
-        <Button>Publish</Button>
-        <Button variation='third'>Draft</Button>
-        <Button variation='secondary'>Cancel</Button>
+        {isEditSession ? <Button>{isPending ? "Loading..." : "Edit"}</Button> : <Button>{isPending ? "Loading..." : "Save"}</Button>}
+
+        <Button $variation='third'>Draft</Button>
+        <Button $variation='secondary'>Cancel</Button>
       </Row>
     </form>
   );

@@ -83,8 +83,8 @@ function CreateCategoryForm({ categoryToEdit = {} }) {
         ) : (
           <Button>{isPending ? "Creating..." : isSuccess ? "Success!" : "Create new category"}</Button>
         )}
-        {/*  <Button variation='third'>Draft</Button>
-        <Button variation='secondary'>Cancel</Button> */}
+        {/*  <Button $variation='third'>Draft</Button>
+        <Button $variation='secondary'>Cancel</Button> */}
       </Row>
     </form>
   );

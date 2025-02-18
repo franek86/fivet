@@ -100,6 +100,8 @@ const GlobalStyles = styled.createGlobalStyle`
     --border-radius-sm: 5px;
     --border-radius-md: 7px;
     --border-radius-lg: 9px;
+
+    --toastify-font-family: "PT Sans", serif;
   }
 
   *,
@@ -240,6 +242,11 @@ const GlobalStyles = styled.createGlobalStyle`
       font-weight: 700;
       border-radius: var(--border-radius-sm);
     }
+  }
+
+  //React Tostify
+  .Toastify__toast {
+    font-size: 1.2rem;
   }
 `;
 

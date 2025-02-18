@@ -20,11 +20,11 @@ const StyledTextArea = styled.textarea`
   }
 `;
 
-function TextArea({ directions, placeholder, register, label, name, ...rest }) {
+function TextArea({ directions, placeholder, register, label, name }) {
   return (
     <Wrap directions={directions}>
       {label && <Label>{label}</Label>}
-      <StyledTextArea rows='5' cols='15' id={name} {...(register ? register(name) : {})} {...rest}>
+      <StyledTextArea rows='5' cols='15' id={name} {...(register ? register(name) : {})}>
         {placeholder}
       </StyledTextArea>
     </Wrap>

@@ -32,11 +32,11 @@ function CategoryColumn({ category, index }) {
       <Table.Column>{description}</Table.Column>
       <Table.Column>
         <Dropdown>
-          <Button variation='icon' onClick={() => dispatch(openModalByName(`edit-${categoryId}`))}>
+          <Button $variation='icon' onClick={() => dispatch(openModalByName(`edit-${categoryId}`))}>
             <LuPencil />
             Edit
           </Button>
-          <Button variation='icon' onClick={() => dispatch(openModalByName(categoryId))}>
+          <Button $variation='icon' onClick={() => dispatch(openModalByName(categoryId))}>
             <LuTrash2 />
             Delete
           </Button>

@@ -27,10 +27,10 @@ function ConfirmDialog({ itemName, onConfirm, onCloseModal }) {
       <p>Are you sure you want to delete this {itemName} permanently? This action cannot be undone.</p>
 
       <div>
-        <Button variation='third' onClick={onCloseModal}>
+        <Button $variation='third' onClick={onCloseModal}>
           Cancel
         </Button>
-        <Button variation='danger' onClick={onConfirm}>
+        <Button $variation='danger' onClick={onConfirm}>
           Delete
         </Button>
       </div>

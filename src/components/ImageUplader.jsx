@@ -1,12 +1,10 @@
-import { forwardRef, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import Label from "./ui/Label.jsx";
 import { LuCircleX } from "react-icons/lu";
 import { LuImageDown } from "react-icons/lu";
 
 import styled from "styled-components";
-import Button from "./ui/Button.jsx";
-import supabase from "../services/databaseConfig.js";
 
 const ImageUploadContainer = styled.section`
   display: flex;
@@ -84,20 +82,6 @@ const ImageUplader = ({ name, onChange }) => {
     setFile(null);
     setPreviewImage(null);
   };
-
-  /* const uploadImage = async () => {
-    if (!file) return;
-
-    const fileName = `${Date.now()}-${file.name}`.replaceAll("/", "");
-    const filePath = folder ? `${fileName}` : fileName;
-
-    const { error } = await supabase.storage.from(bucket).upload(filePath, file);
-    if (error) {
-      console.error("Upload failed:", error.message);
-
-      return;
-    }
-  }; */
 
   return (
     <ImageUploadContainer>

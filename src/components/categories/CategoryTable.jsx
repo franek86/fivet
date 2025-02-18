@@ -1,4 +1,3 @@
-import { useSearchParams } from "react-router";
 import { useCategories } from "../../hooks/categories/useCategories.js";
 import Pagination from "../Pagination.jsx";
 import Spinner from "../Spinner.jsx";

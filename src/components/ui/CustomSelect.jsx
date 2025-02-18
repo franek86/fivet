@@ -1,5 +1,5 @@
-import { forwardRef, useState } from "react";
-import { Controller, useController } from "react-hook-form";
+import { useState } from "react";
+import { useController } from "react-hook-form";
 import Label from "./Label.jsx";
 import styled, { css } from "styled-components";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
@@ -36,8 +36,8 @@ const Select = styled.div`
   align-items: center;
   justify-content: space-between;
   background-color: transparent;
-  ${(props) => sizes[props.size]};
-  ${(props) => variations[props.variation]};
+  ${(props) => sizes[props.$size || ""]};
+  ${(props) => variations[props.$variation || ""]};
   border-radius: var(--border-radius-sm);
   cursor: pointer;
 `;
@@ -56,7 +56,7 @@ const SelectDropdown = styled.div`
 const SelectOption = styled.div`
   padding: 1.2rem;
   border-radius: var(--border-radius-sm);
-  background-color: ${(props) => (props.selected ? "var(--color-brand-200)" : "var(--color-grey-100)")};
+  background-color: ${(props) => (props.$selected ? "var(--color-brand-200)" : "var(--color-grey-100)")};
   cursor: pointer;
 
   &:hover {
@@ -84,7 +84,7 @@ const CustomSelect = ({ name, control, options, label, size, variation, valueKey
     <Wrap>
       <Label>{label}</Label>
 
-      <Select onClick={() => setIsOpen(!isOpen)} size={size} variation={variation}>
+      <Select onClick={() => setIsOpen(!isOpen)} $size={size} $variation={variation}>
         {selectedOption ? selectedOption.name : "Select item"}
         {isOpen ? <LuChevronUp /> : <LuChevronDown />}
       </Select>
@@ -92,7 +92,7 @@ const CustomSelect = ({ name, control, options, label, size, variation, valueKey
       {isOpen && (
         <SelectDropdown>
           {options?.map((option) => (
-            <SelectOption key={option.name} selected={field.value === option[valueKey]} onClick={() => handleSelect(option)}>
+            <SelectOption key={option.name} $selected={field.value === option[valueKey]} onClick={() => handleSelect(option)}>
               {option.name}
             </SelectOption>
           ))}

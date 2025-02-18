@@ -7,9 +7,11 @@ const StyledTable = styled.div`
   margin-top: 2.4rem;
 `;
 
-const StyledReuseRow = styled.div`
+const StyledReuseRow = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "columns", // Filter out columns prop
+})`
   display: grid;
-  grid-template-columns: ${(props) => props.columns};
+  grid-template-columns: ${(props) => props.columns || "1fr"};
   column-gap: 2.4rem;
 `;
 

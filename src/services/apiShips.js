@@ -25,6 +25,20 @@ export const getShips = async ({ page }) => {
 };
 
 /* 
+  Single ship data by id
+*/
+export const getShip = async (id) => {
+  if (!id) return;
+  let { data, error } = await supabase.from("ships").select("*").eq("id", id).single();
+  if (error) {
+    console.log(error);
+    throw new Error("Ship colud not be loaded");
+  }
+
+  return data;
+};
+
+/* 
     Create ship data
 */
 

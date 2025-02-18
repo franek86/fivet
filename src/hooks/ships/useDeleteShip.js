@@ -6,7 +6,7 @@ export const useDeleteShip = () => {
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: deleteShip,
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries(["ships"]);
       toast.success("Ship successfully deleted");
     },

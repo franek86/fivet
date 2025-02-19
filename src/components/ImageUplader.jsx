@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Label from "./ui/Label.jsx";
 import { LuCircleX } from "react-icons/lu";
@@ -57,11 +57,15 @@ const Row = styled.div`
   gap: 10px;
 `;
 
-const ImageUplader = ({ name, onChange }) => {
+const ImageUplader = ({ name, onChange, initialImage }) => {
   const [file, setFile] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(initialImage || null);
 
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    setPreviewImage(initialImage);
+  }, [initialImage]);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0] || null;
@@ -86,7 +90,7 @@ const ImageUplader = ({ name, onChange }) => {
   return (
     <ImageUploadContainer>
       <input type='file' ref={fileInputRef} name={name} onChange={handleFileChange} />
-      {!file && (
+      {!file && !previewImage && (
         <Row>
           <StyledImageUpload onClick={handleIconClick}>
             <Label>Upload main image</Label>
@@ -95,12 +99,12 @@ const ImageUplader = ({ name, onChange }) => {
         </Row>
       )}
 
-      {file && (
+      {previewImage && (
         <StyledPreviewImageWrap>
           <StyledIconClose onClick={removeImage} />
           <Row>
+            <p>Main image</p>
             {previewImage && <StyledPreviewImage src={previewImage} />}
-            <p>{file.name}</p>
           </Row>
         </StyledPreviewImageWrap>
       )}

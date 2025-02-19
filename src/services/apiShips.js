@@ -39,11 +39,19 @@ export const getShip = async (id) => {
 };
 
 /* 
-    Create ship data
+    Create and edit ship data
 */
 
-export const createShip = async (newData) => {
-  const { data, error } = await supabase.from("ships").insert([newData]).select();
+export const createEditShip = async (newData, id) => {
+  let query = await supabase.from("ships");
+
+  //Create new data
+  if (!id) query = query.insert([newData]).select().single();
+
+  //Edit current data by id
+  if (id) query = query.update(newData).eq("id", id).select();
+
+  const { data, error } = await query;
 
   if (error) {
     console.log(error);

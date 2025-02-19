@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "react-router";
@@ -17,6 +18,7 @@ import styled from "styled-components";
 import { LuCalendarDays, LuX } from "react-icons/lu";
 
 import { useCreateShip } from "../../hooks/ships/useCreateShip.js";
+import { useEditShip } from "../../hooks/ships/useEditShip.js";
 import { useShip } from "../../hooks/ships/useShip.js";
 import { useCategories } from "../../hooks/categories/useCategories.js";
 import { useUploadSingleImage } from "../../hooks/files/useUploadSingleImage.js";
@@ -48,13 +50,14 @@ const Column = styled(Row)`
 
 const ShipsForm = () => {
   const navigate = useNavigate();
-  const { id: editId } = useParams();
-  const isEditSession = Boolean(editId);
+  const { id: shipId } = useParams();
+  const isEditSession = Boolean(shipId);
 
   const { categories } = useCategories();
-  const { data: singleShipData, isLoading, isError } = useShip(editId);
+  const { data: singleShipData, isLoading, isError } = useShip(shipId);
 
   const { mutate: submitData, isPending } = useCreateShip();
+  const { editShip } = useEditShip();
   const { mutate: uploadImage } = useUploadSingleImage();
   const { mutate: getImageUrl } = useImagePublicUrl();
 
@@ -67,23 +70,31 @@ const ShipsForm = () => {
     watch,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useForm({
-    defaultValues: isEditSession
-      ? {
-          ...singleShipData,
-          imoNumber: singleShipData?.imoNumber ? String(singleShipData?.imoNumber) : "",
-          price: singleShipData?.price ? String(singleShipData?.price) : "",
-        }
-      : {},
+    defaultValues: {},
     resolver: zodResolver(schema),
   });
+
+  useEffect(() => {
+    if (singleShipData && isEditSession) {
+      reset({
+        ...singleShipData,
+        imoNumber: singleShipData?.imoNumber ? String(singleShipData?.imoNumber) : "",
+        price: singleShipData?.price ? String(singleShipData?.price) : "",
+        mainImage: singleShipData?.mainImage || null,
+        buildYear: singleShipData?.buildYear || "",
+        refitYear: singleShipData?.refitYear || "",
+      });
+    }
+  }, [singleShipData, reset]);
+
   const onSubmit = (data) => {
-    if (isEditSession) {
-      console.log(data);
-    } else {
-      const file = data.mainImage;
-      const filePath = `${Date.now()}${Math.floor(Math.random() * 10000)}-${file.name.replaceAll(/\s/g, "-")}`;
-      const bucket = "Ship images";
+    const file = data.mainImage;
+
+    if (file instanceof File) {
+      var filePath = `${Date.now()}${Math.floor(Math.random() * 10000)}-${file.name.replaceAll(/\s/g, "-")}`;
+      var bucket = "Ship images";
 
       uploadImage(
         { file, bucket, filePath },
@@ -104,6 +115,13 @@ const ShipsForm = () => {
           },
         }
       );
+    } else {
+      const formatedData = {
+        ...data,
+        buildYear: data?.buildYear || null,
+        refitYear: data?.refitYear || null,
+      };
+      editShip({ newData: formatedData, id: Number(shipId) });
     }
   };
 
@@ -197,22 +215,18 @@ const ShipsForm = () => {
           />
           <InputErrorMessage message={errors.lengthOverall?.message} />
         </Column>
-
         <Column>
           <Input label='Beam' directions='column' placeholder='e.g. 15 m' register={register} {...register("beam", { require: true })} />
           <InputErrorMessage message={errors.beam?.message} />
         </Column>
-
         <Column>
           <Input label='Depth' directions='column' placeholder='e.g. 7.2 m' register={register} {...register("depth", { require: true })} />
           <InputErrorMessage message={errors.depth?.message} />
         </Column>
-
         <Column>
           <Input label='Draft' directions='column' placeholder='e.g. 5.8 m' register={register} {...register("draft", { require: true })} />
           <InputErrorMessage message={errors.draft?.message} />
         </Column>
-
         <Column>
           <Input
             label='Tonnage'
@@ -223,7 +237,6 @@ const ShipsForm = () => {
           />
           <InputErrorMessage message={errors.tonnage?.message} />
         </Column>
-
         <Column>
           <Input
             label='Cargo capacity'
@@ -255,7 +268,6 @@ const ShipsForm = () => {
           />
         </Column>
         <Input label='Build country' directions='column' placeholder='e.g. Poland' register={register} {...register("buildCountry")} />
-
         <Column>
           <Label>Refit year</Label>
           <Controller
@@ -281,7 +293,12 @@ const ShipsForm = () => {
         <TextArea label='Remarks' directions='column' register={register} {...register("remarks")} />
         <TextArea label='Description' directions='column' register={register} {...register("description")} />
         <Column>
-          <ImageUplader name='mainImage' value={watch("mainImage")} onChange={(file) => setValue("mainImage", file)} />
+          <ImageUplader
+            name='mainImage'
+            value={watch("mainImage")}
+            onChange={(file) => setValue("mainImage", file)}
+            initialImage={singleShipData?.mainImage}
+          />
           <InputErrorMessage message={errors.mainImage?.message} />
         </Column>
       </Form>

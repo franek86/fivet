@@ -57,12 +57,22 @@ export const editShipSchema = z.object({
   draft: z.string().optional(),
   tonnage: z.string().optional(),
   cargoCapacity: z.string().optional(),
-  buildYear: z.date().optional(),
+  buildYear: z
+    .string()
+    .optional()
+    .refine((value) => !value || !isNaN(Date.parse(value)), "Invalid date format"),
   buildCountry: z.string().optional(),
-  refitYear: z.date().optional(),
+  refitYear: z
+    .string()
+    .optional()
+    .refine((value) => !value || !isNaN(Date.parse(value)), "Invalid date format"),
   remarks: z.string().optional(),
   description: z.string().optional(),
-  mainImage: z
+  mainImage: z.union([z.instanceof(File), z.string().url("Must be a valid image URL")]).refine((value) => {
+    if (typeof value === "string") return true;
+    return value instanceof File && value.type.startsWith("image/");
+  }, "Main image must be a valid image file or URL"),
+  /*  mainImage: z
     .instanceof(File, { message: "mainImage must be a valid image file" })
     .optional()
     .refine((file) => file.size <= 5 * 1024 * 1024, {
@@ -70,7 +80,7 @@ export const editShipSchema = z.object({
     })
     .refine((file) => file.type.startsWith("image/"), {
       message: "Only image files are allowed",
-    }),
+    }), */
 });
 
 export const createCategorySchema = z.object({

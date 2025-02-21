@@ -47,14 +47,26 @@ const StyledPreviewImageWrap = styled.div`
 `;
 
 const StyledPreviewImage = styled.img`
-  height: 8rem;
-  width: 8rem;
+  height: 148px;
+  border-radius: var(--border-radius-sm);
 `;
 
 const Row = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const P = styled.p`
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-right: 1rem;
+  margin-bottom: 0.4rem;
 `;
 
 const ImageUplader = ({ name, onChange, initialImage }) => {
@@ -102,10 +114,10 @@ const ImageUplader = ({ name, onChange, initialImage }) => {
       {previewImage && (
         <StyledPreviewImageWrap>
           <StyledIconClose onClick={removeImage} />
-          <Row>
-            <p>Main image</p>
-            {previewImage && <StyledPreviewImage src={previewImage} />}
-          </Row>
+          <Column>
+            <P>Main image</P>
+            {previewImage && <StyledPreviewImage src={previewImage} alt='' />}
+          </Column>
         </StyledPreviewImageWrap>
       )}
     </ImageUploadContainer>

@@ -28,7 +28,7 @@ function ShipsColumn({ ship, index }) {
       <Table.Column>{orderNumberItems}</Table.Column>
       <Table.Column>
         <picture>
-          <img src={mainImage} alt={shipName} />
+          <img src={mainImage && !mainImage.error ? mainImage : "/images/no-image.webp"} alt={shipName} />
         </picture>
       </Table.Column>
       <Table.Column>{shipName}</Table.Column>

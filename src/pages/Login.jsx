@@ -1,5 +1,48 @@
+import { Link } from "react-router";
+
+import Input from "../components/ui/Input.jsx";
+import Button from "../components/ui/Button.jsx";
+import Title from "../components/ui/Title.jsx";
+
+import styled from "styled-components";
+
+const FormWrap = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2.4rem;
+  padding: 4rem 1.5rem;
+  border: 1px solid var(--color-brand-100);
+  box-shadow: var(--box-shadow-lg);
+  width: 100%;
+  text-align: center;
+`;
+
+const TextWrap = styled.p`
+  font-size: 1.5rem;
+  font-weight: 600;
+`;
+
+const LinkText = styled(Link)`
+  color: var(--color-brand-600);
+
+  &:hover {
+    color: var(--color-brand-400);
+  }
+`;
+
 function Login() {
-  return <div>Login</div>;
+  return (
+    <FormWrap>
+      <Title>Log in</Title>
+      <Input directions='column' placehoder='Email address' label='Email' name='email' />
+      <Input directions='column' type='password' placehoder='Password' label='Password' name='password' />
+      <Button>Log in</Button>
+      <TextWrap>
+        Don't have a Fivet account? Please <LinkText to='/register'>Sign up</LinkText>.
+      </TextWrap>
+    </FormWrap>
+  );
 }
 
 export default Login;

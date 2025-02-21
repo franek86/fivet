@@ -102,6 +102,13 @@ const GlobalStyles = styled.createGlobalStyle`
     --border-radius-lg: 9px;
 
     --toastify-font-family: "PT Sans", serif;
+
+    //responsive brakepoints
+    --device-sm: 640px; //640px
+    --device-md: 48rem; //768px
+    --device-lg: 64rem; //1024px
+    --device-xl: 80rem; //1280px
+    --device-xxl: 96rem; //1536px
   }
 
   *,

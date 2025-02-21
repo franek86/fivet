@@ -23,7 +23,7 @@ const StyledInput = styled.input`
 const Input = forwardRef(({ directions, type = "text", placeholder, register, label, name, ...props }, ref) => {
   return (
     <Wrap $directions={directions}>
-      {label && <Label>{label}</Label>}
+      {label && <Label htmlFor={name}>{label}</Label>}
       <StyledInput ref={ref} type={type} id={name} placeholder={placeholder} {...(register ? register(name) : {})} {...props} />
     </Wrap>
   );

@@ -68,6 +68,7 @@ const Button = styled.button`
   border-radius: var(--border-radius-sm);
   display: flex;
   align-items: center;
+  justify-content: center;
 
   ${(props) => sizes[props.$size]};
   ${(props) => variations[props.$variation]}

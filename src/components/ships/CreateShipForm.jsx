@@ -92,6 +92,12 @@ const ShipsForm = () => {
   const onSubmit = (data) => {
     const file = data.mainImage;
 
+    const formatedData = {
+      ...data,
+      buildYear: data?.buildYear || null,
+      refitYear: data?.refitYear || null,
+    };
+
     if (file instanceof File) {
       var filePath = `${Date.now()}${Math.floor(Math.random() * 10000)}-${file.name.replaceAll(/\s/g, "-")}`;
       var bucket = "Ship images";
@@ -104,11 +110,36 @@ const ShipsForm = () => {
               { filePath, bucket },
               {
                 onSuccess: (urlImage) => {
-                  submitData({
-                    ...data,
-                    mainImage: urlImage,
-                  });
-                  navigate("/ships");
+                  if (isEditSession) {
+                    editShip(
+                      {
+                        newData: {
+                          ...data,
+                          buildYear: data?.buildYear || null,
+                          refitYear: data?.refitYear || null,
+                          mainImage: urlImage,
+                        },
+                        id: Number(shipId),
+                      },
+                      {
+                        onSuccess: () => {
+                          navigate("/ships");
+                        },
+                      }
+                    );
+                  } else {
+                    submitData(
+                      {
+                        ...data,
+                        mainImage: urlImage,
+                      },
+                      {
+                        onSuccess: () => {
+                          navigate("/ships");
+                        },
+                      }
+                    );
+                  }
                 },
               }
             );
@@ -116,13 +147,20 @@ const ShipsForm = () => {
         }
       );
     } else {
-      const formatedData = {
-        ...data,
-        buildYear: data?.buildYear || null,
-        refitYear: data?.refitYear || null,
-      };
-      editShip({ newData: formatedData, id: Number(shipId) });
+      editShip(
+        { newData: formatedData, id: Number(shipId) },
+        {
+          onSuccess: () => {
+            navigate("/ships");
+          },
+        }
+      );
     }
+  };
+
+  const cancelEditBtn = (e) => {
+    e.preventDefault();
+    navigate(-1);
   };
 
   if (isLoading) return <Spinner />;
@@ -306,8 +344,17 @@ const ShipsForm = () => {
       <Row>
         {isEditSession ? <Button>{isPending ? "Loading..." : "Edit"}</Button> : <Button>{isPending ? "Loading..." : "Save"}</Button>}
 
-        <Button $variation='third'>Draft</Button>
-        <Button $variation='secondary'>Cancel</Button>
+        {/* <Button $variation='third'>Draft</Button> */}
+        {isEditSession && (
+          <Button onClick={cancelEditBtn} $variation='secondary'>
+            Cancel
+          </Button>
+        )}
+        {!isEditSession && (
+          <Button onClick={() => reset()} $variation='secondary'>
+            Cancel
+          </Button>
+        )}
       </Row>
     </form>
   );

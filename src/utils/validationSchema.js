@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// create ship form schema
 export const createShipSchema = z.object({
   shipName: z.string().min(1, { message: "Ship name is required" }),
   imoNumber: z
@@ -36,6 +37,7 @@ export const createShipSchema = z.object({
     }),
 });
 
+// edit ship form schema
 export const editShipSchema = z.object({
   shipName: z.string().optional(),
   imoNumber: z
@@ -72,18 +74,16 @@ export const editShipSchema = z.object({
     if (typeof value === "string") return true;
     return value instanceof File && value.type.startsWith("image/");
   }, "Main image must be a valid image file or URL"),
-  /*  mainImage: z
-    .instanceof(File, { message: "mainImage must be a valid image file" })
-    .optional()
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
-      message: "File size should not exceed 5MB",
-    })
-    .refine((file) => file.type.startsWith("image/"), {
-      message: "Only image files are allowed",
-    }), */
 });
 
+// category form schema
 export const createCategorySchema = z.object({
   name: z.string().min(1, { message: "Category name is required" }),
   description: z.string().optional(),
+});
+
+// Log in form schema
+export const loginSchema = z.object({
+  email: z.string().min(1, { message: "Email is required" }).email("Invalid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters long"),
 });

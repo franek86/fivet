@@ -1,12 +1,11 @@
 import { Link } from "react-router";
 
-import Input from "../components/ui/Input.jsx";
-import Button from "../components/ui/Button.jsx";
 import Title from "../components/ui/Title.jsx";
 
 import styled from "styled-components";
+import LoginForm from "../components/auth/LoginForm.jsx";
 
-const FormWrap = styled.form`
+const FormWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -35,9 +34,7 @@ function Login() {
   return (
     <FormWrap>
       <Title>Log in</Title>
-      <Input directions='column' placehoder='Email address' label='Email' name='email' />
-      <Input directions='column' type='password' placehoder='Password' label='Password' name='password' />
-      <Button>Log in</Button>
+      <LoginForm />
       <TextWrap>
         Don't have a Fivet account? Please <LinkText to='/register'>Sign up</LinkText>.
       </TextWrap>

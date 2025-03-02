@@ -20,7 +20,6 @@ export const getCategories = async ({ page, sortBy }) => {
   const { data, count, error } = await query;
 
   if (error) {
-    console.log(error);
     throw new Error("Categories could not be loaded");
   }
 
@@ -43,7 +42,6 @@ export const createEditCategory = async (newCategory, id) => {
   const { data, error } = await query;
 
   if (error) {
-    console.log(error);
     throw new Error("Categories could not be loaded");
   }
 
@@ -58,7 +56,6 @@ export const deleteCategory = async (id) => {
   const { data, error } = await supabase.from("categories").delete().eq("id", id);
 
   if (error) {
-    console.log(error);
     throw new Error("Category could not be deleted");
   }
 

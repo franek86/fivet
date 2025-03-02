@@ -17,7 +17,6 @@ export const getShips = async ({ page }) => {
   const { data, count, error } = await query;
 
   if (error) {
-    console.log(error);
     throw new Error("Ships could not be loaded");
   }
 
@@ -31,7 +30,6 @@ export const getShip = async (id) => {
   if (!id) return;
   let { data, error } = await supabase.from("ships").select("*").eq("id", id).single();
   if (error) {
-    console.log(error);
     throw new Error("Ship colud not be loaded");
   }
 
@@ -54,7 +52,6 @@ export const createEditShip = async (newData, id) => {
   const { data, error } = await query;
 
   if (error) {
-    console.log(error);
     throw new Error("Ships colud not be create");
   }
 
@@ -67,7 +64,6 @@ export const createEditShip = async (newData, id) => {
 export const deleteShip = async (id) => {
   const { data, error } = await supabase.from("ships").delete().eq("id", id);
   if (error) {
-    console.log(error);
     throw new Error("Category could not be deleted");
   }
 

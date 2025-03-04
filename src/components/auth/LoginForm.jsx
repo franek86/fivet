@@ -2,7 +2,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
 
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
@@ -10,7 +9,6 @@ import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 
 import { loginSchema } from "../../utils/validationSchema.js";
 import { loginApi } from "../../services/apiAuth.js";
-import { setUser } from "../../slices/authSlice.js";
 
 import styled from "styled-components";
 import { toast } from "react-toastify";
@@ -22,12 +20,10 @@ const Form = styled.form`
 
 function LoginForm() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const { mutate, isPending } = useMutation({
     mutationFn: ({ email, password }) => loginApi({ email, password }),
-    onSuccess: (data) => {
-      dispatch(setUser({ user: data.user, session: data.session }));
+    onSuccess: async () => {
       toast.success("Your are loggedin");
       navigate("/");
     },

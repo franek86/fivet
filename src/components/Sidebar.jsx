@@ -2,6 +2,7 @@ import styled from "styled-components";
 import Nav from "./Nav.jsx";
 import Logo from "./Logo.jsx";
 import Avatar from "./Avatar.jsx";
+import Logout from "./Logout.jsx";
 
 const Aside = styled.aside`
   display: flex;
@@ -11,6 +12,13 @@ const Aside = styled.aside`
 
 const AsideWrapper = styled.div``;
 
+const AsideWrapperBottom = styled.div`
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
 function Sidebar() {
   return (
     <Aside>
@@ -18,7 +26,10 @@ function Sidebar() {
         <Logo />
         <Nav />
       </AsideWrapper>
-      <Avatar />
+      <AsideWrapperBottom>
+        <Avatar />
+        <Logout />
+      </AsideWrapperBottom>
     </Aside>
   );
 }

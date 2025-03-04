@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 const StyledAvatar = styled.div`
-  padding: 2rem;
   display: flex;
   align-items: center;
 `;

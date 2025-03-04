@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   user: null,
   session: null,
-  isLoading: false,
 };
 
 const authSlice = createSlice({
@@ -11,15 +10,12 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      console.log(state);
       state.user = action.payload.user;
-      state.session = action.payload.session;
-      state.isLoading = true;
+      state.role = action.payload?.role || "user";
     },
     logoutUser: (state) => {
       state.user = null;
-      state.session = null;
-      state.isLoading = fasle;
+      state.role = null;
     },
   },
 });

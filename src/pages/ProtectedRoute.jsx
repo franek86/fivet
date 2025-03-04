@@ -21,7 +21,7 @@ function ProtectedRoute({ alowedRoles }) {
       </FullPage>
     );
   if (!user) return <Navigate to='/login' replace />;
-  if (!alowedRoles.includes("admin")) return <Navigate to='/unauthorized' replace />;
+  if (!alowedRoles.includes(role)) return <Navigate to='/unauthorized' replace />;
 
   return <Outlet />;
 }

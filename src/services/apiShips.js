@@ -2,11 +2,15 @@ import { PAGE_SIZE } from "../utils/constants.js";
 import supabase from "./databaseConfig.js";
 
 /* 
-    Get all ships with pagination
+    Get all ships depend if is user or admin with pagination
     TO DO: add filters
 */
-export const getShips = async ({ page }) => {
+export const getShips = async ({ page, role, userId }) => {
   let query = supabase.from("ships").select("*", { count: "exact" });
+
+  if (role !== "admin") {
+    query = query.eq("owner_id", userId);
+  }
 
   if (page) {
     const from = (page - 1) * PAGE_SIZE;

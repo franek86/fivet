@@ -24,18 +24,18 @@ function App() {
       <ToastContainer position='top-right' autoClose={2000} />
       <GlobalStyles />
       <Routes>
-        <Route element={<ProtectedRoute alowedRoles='admin' />}>
+        <Route element={<ProtectedRoute alowedRoles={["admin", "user"]} />}>
           <Route element={<MainLayout />}>
             <Route index element={<Dashboard />} />
             <Route path='/ships' element={<Ships />} />
             <Route path='/ships/create' element={<CreateShip />} />
             <Route path='/ships/edit/:id' element={<EditShip />} />
-            <Route path='/users' element={<Users />} />
-            <Route path='/categories' element={<Categories />} />
+
+            <Route element={<ProtectedRoute alowedRoles={["admin"]} />}>
+              <Route path='/users' element={<Users />} />
+              <Route path='/categories' element={<Categories />} />
+            </Route>
           </Route>
-        </Route>
-        <Route element={<ProtectedRoute alowedRoles='user' />}>
-          <Route path='/user-test' element={<UserTest />} />
         </Route>
         <Route element={<AuthLayout />}>
           <Route path='/login' element={<Login />} />

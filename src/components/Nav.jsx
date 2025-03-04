@@ -1,6 +1,7 @@
 import { NavLink } from "react-router";
 import { navLinks } from "../utils/links.js";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 
 const StyledNav = styled.nav`
   display: flex;
@@ -24,14 +25,17 @@ const NavList = styled(NavLink)`
 `;
 
 function Nav() {
+  const role = useSelector((state) => state.auth.role);
   return (
     <StyledNav>
-      {navLinks.map((item) => (
-        <NavList to={item.href} key={item.label}>
-          <item.icon />
-          {item.label}
-        </NavList>
-      ))}
+      {navLinks
+        .filter((item) => item.allowRoles.includes(role))
+        .map((item) => (
+          <NavList to={item.href} key={item.label}>
+            <item.icon />
+            {item.label}
+          </NavList>
+        ))}
     </StyledNav>
   );
 }

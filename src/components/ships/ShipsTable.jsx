@@ -12,6 +12,7 @@ function ShipsTable() {
 
   if (error) return <div>Error</div>;
 
+  if (!ships || ships.length === 0) return <div>No ships</div>;
   return (
     <Table columns='40px 80px 1fr 1fr 1fr 1fr 100px'>
       <Table.Header>

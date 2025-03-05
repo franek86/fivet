@@ -29,7 +29,7 @@ export const useLogout = () => {
     onSuccess: () => {
       dispatch(logoutUser());
       toast.success("Your are logged out!");
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
     },
     onError: (error) => {
       console.error("Logout error:", error.message);

@@ -1,4 +1,6 @@
-import React from "react";
+import { useSelector } from "react-redux";
+
+import { RxAvatar } from "react-icons/rx";
 import styled from "styled-components";
 
 const StyledAvatar = styled.div`
@@ -7,6 +9,9 @@ const StyledAvatar = styled.div`
 `;
 
 const StyledAvatarImg = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 6rem;
   width: 6rem;
   border-radius: 50%;
@@ -14,11 +19,25 @@ const StyledAvatarImg = styled.div`
   margin-right: 1rem;
 `;
 
+const StyledName = styled.p`
+  font-weight: 600;
+  font-size: 1.5rem;
+`;
+
 function Avatar() {
+  const firstName = useSelector((state) => state.profile.firstName);
+  const lastName = useSelector((state) => state.profile.lastName);
+  const avatar = useSelector((state) => state.profile.avatar);
   return (
     <StyledAvatar>
-      <StyledAvatarImg></StyledAvatarImg>
-      Frane
+      {avatar || (
+        <StyledAvatarImg>
+          <RxAvatar size={50} />
+        </StyledAvatarImg>
+      )}
+      <StyledName>
+        Welcome, {firstName ? firstName : <p>User</p>} {lastName ? lastName : null}
+      </StyledName>
     </StyledAvatar>
   );
 }

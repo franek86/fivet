@@ -16,7 +16,7 @@ import NotFound from "./pages/NotFound.jsx";
 import EditShip from "./pages/EditShip.jsx";
 import Unauthorized from "./pages/Unauthorized.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
-import UserTest from "./pages/UserTest.jsx";
+import Profile from "./pages/Profile.jsx";
 
 function App() {
   return (
@@ -24,23 +24,28 @@ function App() {
       <ToastContainer position='top-right' autoClose={2000} />
       <GlobalStyles />
       <Routes>
+        <Route element={<AuthLayout />}>
+          <Route index element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/unauthorized' element={<Unauthorized />} />
+        </Route>
         <Route element={<ProtectedRoute alowedRoles={["admin", "user"]} />}>
           <Route element={<MainLayout />}>
-            <Route index element={<Dashboard />} />
+            <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/ships' element={<Ships />} />
             <Route path='/ships/create' element={<CreateShip />} />
             <Route path='/ships/edit/:id' element={<EditShip />} />
+            <Route path='/profile' element={<Profile />} />
 
             <Route element={<ProtectedRoute alowedRoles={["admin"]} />}>
               <Route path='/users' element={<Users />} />
               <Route path='/categories' element={<Categories />} />
             </Route>
+
+            {/*  <Route element={<ProtectedRoute alowedRoles={["user"]} />}>
+              <Route path='/profile' element={<Profile />} />
+            </Route> */}
           </Route>
-        </Route>
-        <Route element={<AuthLayout />}>
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/unauthorized' element={<Unauthorized />} />
         </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>

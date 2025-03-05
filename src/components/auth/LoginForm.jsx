@@ -25,7 +25,7 @@ function LoginForm() {
     mutationFn: ({ email, password }) => loginApi({ email, password }),
     onSuccess: async () => {
       toast.success("Your are loggedin");
-      navigate("/");
+      navigate("/dashboard");
     },
     onError: (error) => {
       toast.error(error.message);

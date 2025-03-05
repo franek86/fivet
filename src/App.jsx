@@ -1,9 +1,12 @@
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Routes, Route } from "react-router";
 
 import GlobalStyles from "./GlobalStyles.js";
+import { ToastContainer } from "react-toastify";
+
 import MainLayout from "./layouts/MainLayout.jsx";
 import AuthLayout from "./layouts/AuthLayout.jsx";
-import { ToastContainer } from "react-toastify";
 
 import Dashboard from "./pages/Dashboard.jsx";
 import Ships from "./pages/Ships.jsx";
@@ -18,7 +21,26 @@ import Unauthorized from "./pages/Unauthorized.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
 import Profile from "./pages/Profile.jsx";
 
+import { setProfile } from "./slices/profileSlice.js";
+import { useProfileData } from "./hooks/useProfile.js";
+
 function App() {
+  const dispatch = useDispatch();
+  const { data: profile, isSuccess } = useProfileData();
+
+  useEffect(() => {
+    if (isSuccess && profile) {
+      dispatch(
+        setProfile({
+          firstName: profile.first_name,
+          lastName: profile.last_name,
+          avatar: profile.avatar,
+          email: profile.email,
+        })
+      );
+    }
+  }, [dispatch, profile, isSuccess]);
+
   return (
     <>
       <ToastContainer position='top-right' autoClose={2000} />

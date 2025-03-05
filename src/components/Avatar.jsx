@@ -8,7 +8,7 @@ const StyledAvatar = styled.div`
   align-items: center;
 `;
 
-const StyledAvatarImg = styled.div`
+const StyledNoAvatar = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,16 +24,25 @@ const StyledName = styled.p`
   font-size: 1.5rem;
 `;
 
+const StyledImageAvatar = styled.img`
+  height: 5rem;
+  width: 5rem;
+  border-radius: 50%;
+  margin-right: 1rem;
+`;
+
 function Avatar() {
   const firstName = useSelector((state) => state.profile.firstName);
   const lastName = useSelector((state) => state.profile.lastName);
   const avatar = useSelector((state) => state.profile.avatar);
   return (
     <StyledAvatar>
-      {avatar || (
-        <StyledAvatarImg>
+      {avatar ? (
+        <StyledImageAvatar src={avatar} />
+      ) : (
+        <StyledNoAvatar>
           <RxAvatar size={50} />
-        </StyledAvatarImg>
+        </StyledNoAvatar>
       )}
       <StyledName>
         Welcome, {firstName ? firstName : <p>User</p>} {lastName ? lastName : null}

@@ -4,6 +4,7 @@ const initialState = {
   avatar: "",
   firstName: "",
   lastName: "",
+  email: "",
 };
 
 const profileSlice = createSlice({
@@ -14,6 +15,7 @@ const profileSlice = createSlice({
       state.avatar = action.payload.avatar;
       state.firstName = action.payload.firstName;
       state.lastName = action.payload.lastName;
+      state.email = action.payload.email;
     },
   },
 });

@@ -1,7 +1,8 @@
-import { useSelector } from "react-redux";
-
 import { RxAvatar } from "react-icons/rx";
 import styled from "styled-components";
+
+import { useProfileData } from "../hooks/useProfile.js";
+import Spinner from "./Spinner.jsx";
 
 const StyledAvatar = styled.div`
   display: flex;
@@ -32,9 +33,12 @@ const StyledImageAvatar = styled.img`
 `;
 
 function Avatar() {
-  const firstName = useSelector((state) => state.profile.firstName);
-  const lastName = useSelector((state) => state.profile.lastName);
-  const avatar = useSelector((state) => state.profile.avatar);
+  const { data, isLoading } = useProfileData();
+
+  if (isLoading) return <Spinner />;
+
+  const { first_name, last_name, avatar } = data;
+
   return (
     <StyledAvatar>
       {avatar ? (
@@ -45,7 +49,7 @@ function Avatar() {
         </StyledNoAvatar>
       )}
       <StyledName>
-        Welcome, {firstName ? firstName : <p>User</p>} {lastName ? lastName : null}
+        Welcome, {first_name ? first_name : <p>User</p>} {last_name ? last_name : null}
       </StyledName>
     </StyledAvatar>
   );

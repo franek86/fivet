@@ -1,14 +1,18 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+
 import { useForm } from "react-hook-form";
 
 import Button from "../ui/Button.jsx";
 import Input from "../ui/Input.jsx";
 import ImageUploader from "../ImageUplader.jsx";
+import Spinner from "../Spinner.jsx";
 
 import styled from "styled-components";
+import { useUploadSingleImage } from "../../hooks/files/useUploadSingleImage.js";
+import { useImagePublicUrl } from "../../hooks/files/useImagePublicUrl.js";
+import { useProfileData, useUpdateProfile } from "../../hooks/useProfile.js";
 
-const StyledWrap = styled.form`
+const StyledForm = styled.form`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 5rem;
@@ -32,10 +36,10 @@ const StyledImage = styled.img`
 `;
 
 function ProfileData() {
-  const firstName = useSelector((state) => state.profile.firstName);
-  const lastName = useSelector((state) => state.profile.lastName);
-  const emailUser = useSelector((state) => state.profile.email);
-  const avatar = useSelector((state) => state.profile.avatar);
+  const { mutate: uploadAvatar } = useUploadSingleImage();
+  const { mutate: getImageUrl } = useImagePublicUrl();
+  const { data, isLoading } = useProfileData();
+  const { mutate: updateProfile } = useUpdateProfile();
 
   const {
     register,
@@ -46,36 +50,75 @@ function ProfileData() {
     reset,
   } = useForm({
     defaultValues: {
-      first_name: firstName,
-      last_name: lastName,
-      email: emailUser,
+      first_name: "",
+      last_name: "",
+      email: "",
+      avatar: data?.avatar || null,
     },
   });
 
   useEffect(() => {
-    reset({
-      first_name: firstName,
-      last_name: lastName,
-      email: emailUser,
-    });
-  }, [reset]);
+    if (data) {
+      reset({
+        first_name: data.first_name || "",
+        last_name: data.last_name || "",
+        email: data.email || "",
+        avatar: data.avatar || null,
+      });
+    }
+  }, [data, reset]);
+
+  const handleOnSubmit = (data) => {
+    const file = data.avatar;
+
+    if (file instanceof File) {
+      var filePath = `${Date.now()}${Math.floor(Math.random() * 10000)}-${file.name.replaceAll(/\s/g, "-")}`;
+      var bucket = "avatar";
+      uploadAvatar(
+        { file, bucket, filePath },
+        {
+          onSuccess: (filePath) => {
+            getImageUrl(
+              { filePath, bucket },
+              {
+                onSuccess: (imageUrl) => {
+                  updateProfile({
+                    ...data,
+                    avatar: imageUrl,
+                  });
+                },
+              }
+            );
+          },
+        }
+      );
+    } else {
+      updateProfile(data);
+    }
+  };
+
+  const handleAvatarChange = (file) => {
+    setValue("avatar", file);
+  };
+
+  if (isLoading) return <Spinner />;
 
   return (
-    <StyledWrap>
+    <StyledForm onSubmit={handleSubmit(handleOnSubmit)}>
       <StyledInfo>
         <Input register={register} {...register("first_name")} />
         <Input register={register} {...register("last_name")} />
-        <Input register={register} {...register("email")} />
+        <Input type='email' register={register} {...register("email")} />
         <Button>Edit</Button>
       </StyledInfo>
       <StyledAvatar>
-        {avatar ? (
-          <ImageUploader value={watch("avatar")} initialImage={avatar} onChange={(file) => setValue("avatar", file)} />
+        {data.avatar ? (
+          <ImageUploader name='avatar' value={watch("avatar")} initialImage={data.avatar} onChange={handleAvatarChange} />
         ) : (
-          <StyledImage src={avatar} />
+          <StyledImage src={data.avatar} />
         )}
       </StyledAvatar>
-    </StyledWrap>
+    </StyledForm>
   );
 }
 

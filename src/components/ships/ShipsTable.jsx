@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { useShips } from "../../hooks/ships/useShips.js";
 import Pagination from "../Pagination.jsx";
 import Spinner from "../Spinner.jsx";
@@ -7,6 +8,7 @@ import ShipsColumn from "./ShipsColumn.jsx";
 
 function ShipsTable() {
   const { ships, count, isLoading, error } = useShips();
+  const role = useSelector((state) => state.auth.role);
 
   if (isLoading) return <Spinner />;
 
@@ -14,13 +16,14 @@ function ShipsTable() {
 
   if (!ships || ships.length === 0) return <div>No ships</div>;
   return (
-    <Table columns='40px 80px 1fr 1fr 1fr 1fr 100px'>
+    <Table columns='40px 80px 1fr 1fr 1fr 1fr 1fr'>
       <Table.Header>
         <div>No.</div>
         <div>Image</div>
+        {role !== "admin" ? <div>Ship Type</div> : <div>User</div>}
+
         <div>Ship Name</div>
         <div>IMO no.</div>
-        <div>Ship Type</div>
         <div>Price</div>
         <div>Actions</div>
       </Table.Header>

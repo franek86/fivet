@@ -5,7 +5,7 @@ import Table from "../ui/Table.jsx";
 
 import { LuPencil, LuTrash2 } from "react-icons/lu";
 import { Link, useSearchParams } from "react-router";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 
 import { PAGE_SIZE } from "../../utils/constants.js";
@@ -15,13 +15,15 @@ import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
 function ShipsColumn({ ship, index }) {
   const [searchParams] = useSearchParams();
+  const role = useSelector((state) => state.auth.role);
   const dispatch = useDispatch();
   const { mutate } = useDeleteShip();
-
-  const { id: shipId, mainImage, shipName, imoNumber, shipType, price } = ship;
+  const { id: shipId, mainImage, shipName, imoNumber, price, shipType } = ship;
 
   const currentPage = searchParams.get("page") || 1;
   const orderNumberItems = (currentPage - 1) * PAGE_SIZE + (index + 1);
+  const firstName = ship.profile?.first_name || "";
+  const lastName = ship.profile?.last_name || "";
 
   return (
     <Table.Row>
@@ -31,9 +33,12 @@ function ShipsColumn({ ship, index }) {
           <img src={mainImage && !mainImage.error ? mainImage : "/images/no-image.webp"} alt={shipName} />
         </picture>
       </Table.Column>
+
+      <Table.Column>{role !== "admin" ? shipType : `${firstName} ${lastName}`}</Table.Column>
+
       <Table.Column>{shipName}</Table.Column>
       <Table.Column>{imoNumber}</Table.Column>
-      <Table.Column>{shipType}</Table.Column>
+
       <Table.Column>
         <strong>{formatedPrice(price)}</strong>
       </Table.Column>

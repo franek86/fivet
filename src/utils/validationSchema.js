@@ -27,6 +27,7 @@ export const createShipSchema = z.object({
   refitYear: z.date().optional(),
   remarks: z.string().optional(),
   description: z.string().optional(),
+  owner_id: z.string().optional(),
   mainImage: z
     .instanceof(File, { message: "An image file is required" })
     .refine((file) => file.size <= 5 * 1024 * 1024, {

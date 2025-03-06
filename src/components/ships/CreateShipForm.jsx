@@ -23,6 +23,7 @@ import { useShip } from "../../hooks/ships/useShip.js";
 import { useCategories } from "../../hooks/categories/useCategories.js";
 import { useUploadSingleImage } from "../../hooks/files/useUploadSingleImage.js";
 import { useImagePublicUrl } from "../../hooks/files/useImagePublicUrl.js";
+import { useUser } from "../../hooks/useAuth.js";
 
 const Form = styled.div`
   display: grid;
@@ -55,7 +56,7 @@ const ShipsForm = () => {
 
   const { categories } = useCategories();
   const { data: singleShipData, isLoading, isError } = useShip(shipId);
-
+  const { data: user } = useUser();
   const { mutate: submitData, isPending } = useCreateShip();
   const { editShip } = useEditShip();
   const { mutate: uploadImage } = useUploadSingleImage();
@@ -169,6 +170,7 @@ const ShipsForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Form>
+        <input type='hidden' {...register("owner_id")} value={user.id} />
         <Column>
           <Input
             label='Ship name'

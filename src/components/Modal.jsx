@@ -14,6 +14,7 @@ const StyledModal = styled.div`
   box-shadow: var(--shadow-lg);
   padding: 3.2rem;
   transition: all 0.4s ease-in-out;
+  z-index: 10;
 `;
 
 const StyledOverlay = styled.div`
@@ -24,7 +25,7 @@ const StyledOverlay = styled.div`
   background-color: var(--backdrop-color);
   backdrop-filter: blur(4px);
   transition: all 0.4s ease-in-out;
-  z-index: 1000;
+  z-index: 5;
 `;
 
 const Button = styled.button`
@@ -55,14 +56,15 @@ function Modal({ children, onClose, name }) {
 
   if (name !== openName) return null;
   return createPortal(
-    <StyledOverlay>
+    <div>
+      <StyledOverlay onClick={onClose}></StyledOverlay>
       <StyledModal>
         <Button onClick={onClose}>
           <TfiClose />
         </Button>
         {children}
       </StyledModal>
-    </StyledOverlay>,
+    </div>,
     document.body
   );
 }

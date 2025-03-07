@@ -18,6 +18,7 @@ import EditShip from "./pages/EditShip.jsx";
 import Unauthorized from "./pages/Unauthorized.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
 import Profile from "./pages/Profile.jsx";
+import AddressBook from "./pages/AddressBook.jsx";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path='/ships' element={<Ships />} />
             <Route path='/ships/create' element={<CreateShip />} />
             <Route path='/ships/edit/:id' element={<EditShip />} />
+            <Route path='/address-book' element={<AddressBook />} />
             <Route path='/profile' element={<Profile />} />
 
             <Route element={<ProtectedRoute alowedRoles={["admin"]} />}>

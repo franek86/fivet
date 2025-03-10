@@ -1,10 +1,12 @@
 import { useForm } from "react-hook-form";
 
+import Button from "../ui/Button.jsx";
 import Input from "../ui/Input.jsx";
+import TextArea from "../ui/TextArea.jsx";
+import Spinner from "../../components/Spinner.jsx";
 
 import styled from "styled-components";
-import Button from "../ui/Button.jsx";
-import TextArea from "../ui/TextArea.jsx";
+import { useCreateAddressBook } from "../../hooks/useAddressBook.js";
 
 const StyledForm = styled.form`
   display: flex;
@@ -19,6 +21,7 @@ const Grid = styled.div`
 `;
 
 function FormAddressBook() {
+  const { mutate, isPending } = useCreateAddressBook();
   const {
     register,
     formState: { errors },
@@ -26,8 +29,11 @@ function FormAddressBook() {
   } = useForm();
 
   const onHandleSubmit = (data) => {
-    console.log(data);
+    mutate(data);
   };
+
+  if (isPending) return <Spinner />;
+
   return (
     <StyledForm onSubmit={handleSubmit(onHandleSubmit)}>
       <Grid>
@@ -38,12 +44,12 @@ function FormAddressBook() {
         <Input directions='column' label='Mobile number' register={register} {...register("mobile_number")} />
         <Input directions='column' label='Country' register={register} {...register("country")} />
         <Input directions='column' label='Address' register={register} {...register("address")} />
-        <Input directions='column' label='Second address' register={register} {...register("addres_2")} />
+        <Input directions='column' label='Second address' register={register} {...register("address_2")} />
         <Input directions='column' label='Company' register={register} {...register("company")} />
-        <Input type='url' directions='column' label='Linkedin' register={register} {...register("linkedin_link")} />
-        <Input type='url' directions='column' label='Facebook' register={register} {...register("facebook_link")} />
-        <Input type='url' directions='column' label='Instagram' register={register} {...register("instagram_link")} />
-        <Input type='url' directions='column' label='Tik Tok' register={register} {...register("tiktok_link")} />
+        <Input type='url' directions='column' label='Linkedin url' register={register} {...register("linkedin_link")} />
+        <Input type='url' directions='column' label='Facebook url' register={register} {...register("facebook_link")} />
+        <Input type='url' directions='column' label='Instagram url' register={register} {...register("instagram_link")} />
+        <Input type='url' directions='column' label='Tik Tok url' register={register} {...register("tiktok_link")} />
       </Grid>
       <TextArea directions='column' label='Note' register={register} {...register("note")}></TextArea>
       <Button>Save</Button>

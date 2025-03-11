@@ -20,13 +20,22 @@ const Grid = styled.div`
   gap: 2rem;
 `;
 
-function FormAddressBook() {
+const Row = styled.div`
+  display: flex;
+  gap: 15px;
+`;
+
+function FormAddressBook({ addressBookToEdit = {} }) {
   const { mutate, isPending } = useCreateAddressBook();
+
+  const { id, ...editValues } = addressBookToEdit;
+  const isEditSession = Boolean(id);
+
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm();
+  } = useForm({ defaultValues: isEditSession ? editValues : {} });
 
   const onHandleSubmit = (data) => {
     mutate(data);
@@ -52,7 +61,14 @@ function FormAddressBook() {
         <Input type='url' directions='column' label='Tik Tok url' register={register} {...register("tiktok_link")} />
       </Grid>
       <TextArea directions='column' label='Note' register={register} {...register("note")}></TextArea>
-      <Button>Save</Button>
+      {/*  <Row>
+        {isEditSession ? (
+          <Button>{editIsPending ? "Editing..." : editIsSuccess ? "Success!" : "Edit"}</Button>
+        ) : (
+          <Button>{isPending ? "Creating..." : isSuccess ? "Success!" : "Save"}</Button>
+        )}
+        
+      </Row> */}
     </StyledForm>
   );
 }

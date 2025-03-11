@@ -3,7 +3,7 @@ import Label from "./Label.jsx";
 
 const Wrap = styled.div`
   display: flex;
-  flex-direction: ${(props) => props.directions};
+  flex-direction: ${(props) => props.$directions};
   margin-bottom: 2rem;
 `;
 
@@ -22,7 +22,7 @@ const StyledTextArea = styled.textarea`
 
 function TextArea({ directions, placeholder, register, label, name }) {
   return (
-    <Wrap directions={directions}>
+    <Wrap $directions={directions}>
       {label && <Label>{label}</Label>}
       <StyledTextArea rows='5' cols='15' id={name} {...(register ? register(name) : {})}>
         {placeholder}

@@ -14,17 +14,17 @@ import { useCreateCategory } from "../../hooks/categories/useCreateCategory.js";
 import { closeModalByName } from "../../slices/modalSlice.js";
 import { useEditCategory } from "../../hooks/categories/useEditCategory.js";
 
+const Row = styled.div`
+  display: flex;
+  gap: 15px;
+`;
+
+const Column = styled(Row)`
+  flex-direction: column;
+  margin-bottom: 1.2rem;
+`;
+
 function CreateCategoryForm({ categoryToEdit = {} }) {
-  const Row = styled.div`
-    display: flex;
-    gap: 15px;
-  `;
-
-  const Column = styled(Row)`
-    flex-direction: column;
-    margin-bottom: 1.2rem;
-  `;
-
   const dispatch = useDispatch();
 
   const { id: editId, ...editValues } = categoryToEdit;

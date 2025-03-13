@@ -15,6 +15,25 @@ export const loginApi = async ({ email, password }) => {
   return data;
 };
 
+/* Sign up with email and password */
+export const signupEmailApi = async ({ fullName, email, password }) => {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        fullName,
+        avatar: "",
+      },
+    },
+  });
+  if (error) {
+    throw new Error("Invalid credentials.");
+  }
+
+  return data;
+};
+
 /* get user role */
 export const getCurrentUser = async () => {
   const {

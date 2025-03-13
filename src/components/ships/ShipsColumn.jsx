@@ -4,30 +4,25 @@ import Modal from "../Modal.jsx";
 import Table from "../ui/Table.jsx";
 
 import { LuPencil, LuTrash2 } from "react-icons/lu";
-import { Link, useSearchParams } from "react-router";
+import { Link } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 
-import { PAGE_SIZE } from "../../utils/constants.js";
 import { formatedPrice } from "../../utils/formattedPrice.js";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
-function ShipsColumn({ ship, index }) {
-  const [searchParams] = useSearchParams();
+function ShipsColumn({ ship }) {
   const role = useSelector((state) => state.auth.role);
   const dispatch = useDispatch();
   const { mutate } = useDeleteShip();
   const { id: shipId, mainImage, shipName, imoNumber, price, shipType } = ship;
 
-  const currentPage = searchParams.get("page") || 1;
-  const orderNumberItems = (currentPage - 1) * PAGE_SIZE + (index + 1);
   const firstName = ship.profile?.first_name || "";
   const lastName = ship.profile?.last_name || "";
 
   return (
     <Table.Row>
-      <Table.Column>{orderNumberItems}</Table.Column>
       <Table.Column>
         <picture>
           <img src={mainImage && !mainImage.error ? mainImage : "/images/no-image.webp"} alt={shipName} />

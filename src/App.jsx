@@ -10,7 +10,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Ships from "./pages/Ships.jsx";
 import Categories from "./pages/Categories.jsx";
 import Users from "./pages/Users.jsx";
-import Register from "./pages/Register.jsx";
+import SignUp from "./pages/SignUp.jsx";
 import Login from "./pages/Login.jsx";
 import CreateShip from "./pages/CreateShip.jsx";
 import NotFound from "./pages/NotFound.jsx";
@@ -19,6 +19,7 @@ import Unauthorized from "./pages/Unauthorized.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
 import Profile from "./pages/Profile.jsx";
 import AddressBook from "./pages/AddressBook.jsx";
+import SingleAddressBook from "./pages/SIngleAddressBook.jsx";
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
       <Routes>
         <Route element={<AuthLayout />}>
           <Route index element={<Login />} />
-          <Route path='/register' element={<Register />} />
+          <Route path='/sign-up' element={<SignUp />} />
           <Route path='/unauthorized' element={<Unauthorized />} />
         </Route>
         <Route element={<ProtectedRoute alowedRoles={["admin", "user"]} />}>
@@ -38,6 +39,8 @@ function App() {
             <Route path='/ships/create' element={<CreateShip />} />
             <Route path='/ships/edit/:id' element={<EditShip />} />
             <Route path='/address-book' element={<AddressBook />} />
+            <Route path='/address-book/:id' element={<SingleAddressBook />} />
+
             <Route path='/profile' element={<Profile />} />
 
             <Route element={<ProtectedRoute alowedRoles={["admin"]} />}>

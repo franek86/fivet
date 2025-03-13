@@ -5,8 +5,13 @@ import Title from "../components/ui/Title.jsx";
 
 const Flex = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
+
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+  }
 `;
 
 function AddressBook() {

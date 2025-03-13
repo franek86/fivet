@@ -17,8 +17,18 @@ export const getProfileApi = async () => {
   return data;
 };
 
-/* update profile  */
+/* Create profile  */
+export const createProfileApi = async (profileData) => {
+  const { data, error } = await supabase.from("profile").insert(profileData).single();
 
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
+/* update profile  */
 export const updateProfileApi = async (updatedData, userId) => {
   if (!userId) throw new Error("User id does not exists.");
 

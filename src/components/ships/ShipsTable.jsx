@@ -16,9 +16,8 @@ function ShipsTable() {
 
   if (!ships || ships.length === 0) return <div>No ships</div>;
   return (
-    <Table columns='40px 80px 1fr 1fr 1fr 1fr 1fr'>
+    <Table columns='80px 1fr 1fr 1fr 1fr 1fr'>
       <Table.Header>
-        <div>No.</div>
         <div>Image</div>
         {role !== "admin" ? <div>Ship Type</div> : <div>User</div>}
 

@@ -1,14 +1,18 @@
 import { createContext, useContext } from "react";
 import styled from "styled-components";
+import useMediaQuery from "../../hooks/useMediaQuery.js";
 
 const StyledTable = styled.div`
-  border: 1px solid var(--color-grey-200);
   font-size: 1.4rem;
   margin-top: 2.4rem;
+
+  @media (min-width: 640px) {
+    border: 1px solid var(--color-grey-200);
+  }
 `;
 
 const StyledReuseRow = styled.div.withConfig({
-  shouldForwardProp: (prop) => prop !== "columns", // Filter out columns prop
+  shouldForwardProp: (prop) => prop !== "columns",
 })`
   display: grid;
   grid-template-columns: ${(props) => props.columns || "1fr"};
@@ -55,6 +59,8 @@ function Table({ columns, children }) {
 }
 
 function Header({ children }) {
+  const isMdScreen = useMediaQuery(640); // min width 640px
+  if (!isMdScreen) return null;
   const { columns } = useContext(TableContext);
   return (
     <TableHeader role='row' columns={columns} as='header'>

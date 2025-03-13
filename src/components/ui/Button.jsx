@@ -56,7 +56,7 @@ const variations = {
     width: 100%;
     gap: 0.75rem;
     background-color: transparent;
-    border-bottom: 1px solid var(--color-grey-300);
+
     &:hover {
       background-color: var(--color-brand-200);
     }

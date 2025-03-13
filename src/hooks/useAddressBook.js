@@ -1,6 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
-import { createAddressBoookContactApi, fecthAddressBookApi } from "../services/apiAddressBook.js";
+import {
+  createAddressBoookContactApi,
+  deleteSingleAddressBookApi,
+  editAddressBoookContactApi,
+  fecthAddressBookApi,
+} from "../services/apiAddressBook.js";
 import { toast } from "react-toastify";
 import { closeModalByName } from "../slices/modalSlice.js";
 
@@ -8,7 +13,7 @@ export const useCreateAddressBook = () => {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  const { mutate, isPending } = useMutation({
+  const { mutate, isPending, isSuccess } = useMutation({
     mutationFn: (data) => createAddressBoookContactApi(data, user.id),
     onSuccess: () => {
       toast.success("Contact successfully added");
@@ -20,7 +25,7 @@ export const useCreateAddressBook = () => {
     },
   });
 
-  return { mutate, isPending };
+  return { mutate, isPending, isSuccess };
 };
 
 export const useGetAddressBook = () => {
@@ -32,4 +37,37 @@ export const useGetAddressBook = () => {
   });
 
   return { data, isLoading, isError };
+};
+
+export const useEditAddressBook = () => {
+  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+  const { mutate, isPending, isSuccess } = useMutation({
+    mutationFn: ({ newData, id }) => editAddressBoookContactApi(newData, id),
+    onSuccess: () => {
+      toast.success("Address book successfully edited.");
+      dispatch(closeModalByName("address-book"));
+      queryClient.invalidateQueries(["address-book"]);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  return { mutate, isPending, isSuccess };
+};
+
+export const useDeleteAddressBook = () => {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: (id) => deleteSingleAddressBookApi(id),
+    onSuccess: () => {
+      toast.success("Address book deleted.");
+      queryClient.invalidateQueries(["address-book"]);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  return { mutate };
 };

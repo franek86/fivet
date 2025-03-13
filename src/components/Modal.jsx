@@ -7,14 +7,26 @@ import styled from "styled-components";
 
 const StyledModal = styled.div`
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  bottom: 0;
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-lg);
   padding: 3.2rem;
   transition: all 0.4s ease-in-out;
   z-index: 10;
+  overflow-x: scroll;
+
+  @media screen and (min-width: 640px) {
+    top: 50%;
+    left: 50%;
+    bottom: unset;
+    transform: translate(-50%, -50%);
+  }
+
+  /* @media screen and (min-width: 768px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  } */
 `;
 
 const StyledOverlay = styled.div`

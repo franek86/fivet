@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getProfileApi, updateProfileApi } from "../services/apiProfile.js";
+import { createProfileApi, getProfileApi, updateProfileApi } from "../services/apiProfile.js";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -29,4 +29,17 @@ export const useUpdateProfile = () => {
   });
 
   return { mutate, isPending };
+};
+
+export const useCreateProfile = () => {
+  const { mutate } = useMutation({
+    mutationFn: (profileData) => createProfileApi(profileData),
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error.message);
+    },
+  });
+  return { mutate };
 };

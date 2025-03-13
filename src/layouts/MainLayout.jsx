@@ -13,7 +13,11 @@ const Main = styled.main`
   background-color: var(--color-grey-100);
   height: 100%;
   min-height: 100vh;
-  padding: 2rem 4rem;
+  padding: 2rem;
+
+  @media (min-width: 640px) {
+    padding: 1.6rem 4rem;
+  }
 `;
 
 function MainLayout() {

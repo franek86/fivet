@@ -1,6 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
+import "react-phone-input-2/lib/style.css";
 
 const styled = { createGlobalStyle };
 
@@ -254,6 +255,29 @@ const GlobalStyles = styled.createGlobalStyle`
   //React Tostify
   .Toastify__toast {
     font-size: 1.2rem;
+  }
+
+  // Custom phone input
+  .react-tel-input .form-control {
+    border: 1px solid var(--color-grey-500);
+    border-radius: var(--border-radius-sm);
+    min-width: 100%;
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+  .react-tel-input .special-label {
+    display: block;
+    position: static;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-right: 1rem;
+    margin-bottom: 0.4rem;
+  }
+  .react-tel-input .flag-dropdown {
+    top: 28px;
+    bottom: 0;
+    border: 0;
+    background: transparent;
   }
 `;
 

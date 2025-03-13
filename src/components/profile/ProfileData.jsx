@@ -14,9 +14,13 @@ import { useProfileData, useUpdateProfile } from "../../hooks/useProfile.js";
 
 const StyledForm = styled.form`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 5rem;
   margin-top: 3rem;
+
+  @media screen and (min-width: 640px) {
+    grid-template-columns: 1fr 1fr;
+  }
 `;
 
 const StyledInfo = styled.div`
@@ -50,8 +54,7 @@ function ProfileData() {
     reset,
   } = useForm({
     defaultValues: {
-      first_name: "",
-      last_name: "",
+      fullName: "",
       email: "",
       avatar: data?.avatar || null,
     },
@@ -60,8 +63,7 @@ function ProfileData() {
   useEffect(() => {
     if (data) {
       reset({
-        first_name: data.first_name || "",
-        last_name: data.last_name || "",
+        fullName: data.fullName || "",
         email: data.email || "",
         avatar: data.avatar || null,
       });
@@ -106,8 +108,7 @@ function ProfileData() {
   return (
     <StyledForm onSubmit={handleSubmit(handleOnSubmit)}>
       <StyledInfo>
-        <Input register={register} {...register("first_name")} />
-        <Input register={register} {...register("last_name")} />
+        <Input register={register} {...register("fullName")} />
         <Input type='email' register={register} {...register("email")} />
         <Button>Edit</Button>
       </StyledInfo>

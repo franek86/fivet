@@ -11,18 +11,16 @@ function AddressBookTable() {
   if (isError) return <div>Error</div>;
 
   return (
-    <Table columns='50px 1fr 1fr 1fr 1fr 80px'>
+    <Table columns='1fr 1fr 1fr 80px'>
       <Table.Header>
-        <div>No.</div>
-        <div>First name</div>
-        <div>Last name</div>
+        <div>Name</div>
         <div>Email</div>
         <div>Mobile number</div>
         <div>Actions</div>
       </Table.Header>
       <Table.Body>
-        {data?.map((item, index) => (
-          <AddressBookColumn item={item} key={item.id} index={index} />
+        {data?.map((item) => (
+          <AddressBookColumn item={item} key={item.id} />
         ))}
       </Table.Body>
     </Table>

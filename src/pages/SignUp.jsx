@@ -1,9 +1,8 @@
 import { Link } from "react-router";
-
-import Title from "../components/ui/Title.jsx";
-
 import styled from "styled-components";
-import LoginForm from "../components/auth/LoginForm.jsx";
+
+import SignUpForm from "../components/auth/SignUpForm.jsx";
+import Title from "../components/ui/Title.jsx";
 
 const FormWrap = styled.div`
   display: flex;
@@ -30,16 +29,16 @@ const LinkText = styled(Link)`
   }
 `;
 
-function Login() {
+function SignUp() {
   return (
     <FormWrap>
-      <Title>Log in</Title>
-      <LoginForm />
+      <Title>Sign up</Title>
+      <SignUpForm />
       <TextWrap>
-        Don't have a Fivet account? Please <LinkText to='/sign-up'>Sign up</LinkText>.
+        You already have a Fivet account? Please <LinkText to='/'>Sign in</LinkText>.
       </TextWrap>
     </FormWrap>
   );
 }
 
-export default Login;
+export default SignUp;

@@ -60,3 +60,14 @@ export const logoutUserApi = async () => {
     throw new Error(error.message);
   }
 };
+
+/* add user role */
+export const createUserRoleApi = async (newData) => {
+  const { data, error } = await supabase.from("user_roles").insert([newData]).select();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return { data };
+};

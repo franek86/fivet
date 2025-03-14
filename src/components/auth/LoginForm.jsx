@@ -48,20 +48,22 @@ function LoginForm() {
         type='email'
         directions='column'
         placehoder='Email address'
-        label='Email'
+        label='Email *'
         name='email'
         register={register}
         {...register("email")}
+        autoComplete='email'
       />
       <InputErrorMessage message={errors.email?.message} />
       <Input
         directions='column'
         type='password'
         placehoder='Password'
-        label='Password'
+        label='Password *'
         name='password'
         register={register}
         {...register("password")}
+        autoComplete='password'
       />
       <InputErrorMessage message={errors.password?.message} />
       <Button>{isPending ? "Loading..." : "Log in"}</Button>

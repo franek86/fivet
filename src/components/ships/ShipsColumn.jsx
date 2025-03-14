@@ -18,8 +18,7 @@ function ShipsColumn({ ship }) {
   const { mutate } = useDeleteShip();
   const { id: shipId, mainImage, shipName, imoNumber, price, shipType } = ship;
 
-  const firstName = ship.profile?.first_name || "";
-  const lastName = ship.profile?.last_name || "";
+  const fullName = ship.profile?.fullName || "";
 
   return (
     <Table.Row>
@@ -29,7 +28,7 @@ function ShipsColumn({ ship }) {
         </picture>
       </Table.Column>
 
-      <Table.Column>{role !== "admin" ? shipType : `${firstName} ${lastName}`}</Table.Column>
+      <Table.Column>{role !== "admin" ? shipType : `${fullName}`}</Table.Column>
 
       <Table.Column>{shipName}</Table.Column>
       <Table.Column>{imoNumber}</Table.Column>

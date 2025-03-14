@@ -1,5 +1,16 @@
 import supabase from "./databaseConfig.js";
 
+/* Get all user profile oly for admin*/
+export const getAllProfileApi = async () => {
+  const { data, error } = await supabase.from("profile").select("*");
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data;
+};
+
 /* get profile data by user id */
 export const getProfileApi = async () => {
   const {
@@ -19,7 +30,7 @@ export const getProfileApi = async () => {
 
 /* Create profile  */
 export const createProfileApi = async (profileData) => {
-  const { data, error } = await supabase.from("profile").insert(profileData).single();
+  const { data, error } = await supabase.from("profile").insert(profileData).select("*");
 
   if (error) {
     throw new Error(error.message);

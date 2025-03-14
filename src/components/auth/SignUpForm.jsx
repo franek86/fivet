@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { signupEmailApi } from "../../services/apiAuth.js";
 import { useCreateProfile } from "../../hooks/useProfile.js";
 import { useNavigate } from "react-router";
+import { useCreateUserRole } from "../../hooks/useAuth.js";
 
 const Form = styled.form`
   display: flex;
@@ -23,7 +24,7 @@ const Column = styled(Form)`
 
 function SignUpForm() {
   const navigate = useNavigate();
-  const { mutate: createProfile } = useCreateProfile();
+
   const { mutate: signUp } = useMutation({
     mutationFn: signupEmailApi,
     onSuccess: () => {
@@ -34,6 +35,9 @@ function SignUpForm() {
       toast.error(error.message);
     },
   });
+
+  const { mutate: createProfile } = useCreateProfile();
+  const { mutate: createUserRole } = useCreateUserRole();
 
   const {
     register,
@@ -47,11 +51,14 @@ function SignUpForm() {
       { fullName, email, password },
       {
         onSuccess: ({ user }) => {
-          console.log(user);
           createProfile({
-            fullName: user?.user_metadata.fullName,
-            email: user?.user_metadata.email,
-            id: user?.id,
+            fullName: user.user_metadata.fullName,
+            email: user.user_metadata.email,
+            id: user.id,
+          });
+
+          createUserRole({
+            user_id: user.id,
           });
         },
       }
@@ -61,23 +68,36 @@ function SignUpForm() {
   return (
     <Form onSubmit={handleSubmit(onHandleSubmit)}>
       <Column>
-        <Input directions='column' label='Full name' register={register} {...register("fullName", { required: "Full name is required" })} />
+        <Input
+          directions='column'
+          label='Full name *'
+          register={register}
+          {...register("fullName", { required: "Full name is required" })}
+          autoComplete='fullName'
+        />
         <InputErrorMessage message={errors.fullName?.message} />
       </Column>
       <Column>
-        <Input directions='column' label='Email' register={register} {...register("email", { required: "Email is required" })} />
+        <Input
+          directions='column'
+          label='Email *'
+          register={register}
+          {...register("email", { required: "Email is required" })}
+          autoComplete='email'
+        />
         <InputErrorMessage message={errors.email?.message} />
       </Column>
       <Column>
         <Input
           directions='column'
-          label='Password'
+          label='Password *'
           type='password'
           register={register}
           {...register("password", {
             required: "Password is requierd",
             minLength: { value: 8, message: "Minimun 8 characters" },
           })}
+          autoComplete='password'
         />
         <InputErrorMessage message={errors.password?.message} />
       </Column>
@@ -85,12 +105,13 @@ function SignUpForm() {
         <Input
           directions='column'
           type='password'
-          label='Repeat password'
+          label='Repeat password *'
           register={register}
           {...register("repeatPassword", {
             required: "Please repeat password",
             validate: (value) => value === watch("password") || "Passowords does not match",
           })}
+          autoComplete='repeatPassword'
         />
         <InputErrorMessage message={errors.repeatPassword?.message} />
       </Column>

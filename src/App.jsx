@@ -42,15 +42,13 @@ function App() {
             <Route path='/address-book/:id' element={<SingleAddressBook />} />
 
             <Route path='/profile' element={<Profile />} />
+          </Route>
+        </Route>
 
-            <Route element={<ProtectedRoute alowedRoles={["admin"]} />}>
-              <Route path='/users' element={<Users />} />
-              <Route path='/categories' element={<Categories />} />
-            </Route>
-
-            {/*  <Route element={<ProtectedRoute alowedRoles={["user"]} />}>
-              <Route path='/profile' element={<Profile />} />
-            </Route> */}
+        <Route element={<ProtectedRoute alowedRoles={["admin"]} />}>
+          <Route element={<MainLayout />}>
+            <Route path='/users' element={<Users />} />
+            <Route path='/categories' element={<Categories />} />
           </Route>
         </Route>
         <Route path='*' element={<NotFound />} />

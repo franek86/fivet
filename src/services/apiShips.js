@@ -6,7 +6,7 @@ import supabase from "./databaseConfig.js";
     TO DO: add filters
 */
 export const getShips = async ({ page, role, userId }) => {
-  let query = supabase.from("ships").select("*,profile(first_name, last_name)", { count: "exact" });
+  let query = supabase.from("ships").select("*,profile(fullName)", { count: "exact" });
 
   if (role !== "admin") {
     query = query.eq("owner_id", userId);

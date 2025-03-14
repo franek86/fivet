@@ -37,7 +37,7 @@ function Avatar() {
 
   if (isLoading) return <Spinner />;
 
-  const { first_name, last_name, avatar } = data;
+  const { fullName, avatar } = data;
 
   return (
     <StyledAvatar>
@@ -48,9 +48,7 @@ function Avatar() {
           <RxAvatar size={50} />
         </StyledNoAvatar>
       )}
-      <StyledName>
-        Welcome, {first_name ? first_name : <p>User</p>} {last_name ? last_name : null}
-      </StyledName>
+      <StyledName>Welcome, {fullName ? fullName : <p>User</p>}</StyledName>
     </StyledAvatar>
   );
 }

@@ -1,4 +1,3 @@
-import { setUser } from "../slices/authSlice.js";
 import supabase from "./databaseConfig.js";
 
 /* log in user */

@@ -43,9 +43,14 @@ export const useCreateProfile = () => {
 };
 
 export const useGetAllUserProfile = () => {
-  const { data, isPending, isError } = useQuery({
+  const { data, isPending, isFetching, isError } = useQuery({
     queryKey: ["all-profile"],
     queryFn: getAllProfileApi,
+    placeholderData: (previousData) => {
+      if (previousData && previousData.length > 0) {
+        return Array.from({ length: previousData.length }, () => ({}));
+      }
+    },
   });
-  return { data, isPending, isError };
+  return { data, isPending, isError, isFetching };
 };

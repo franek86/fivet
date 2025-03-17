@@ -79,6 +79,7 @@ const ShipsForm = () => {
 
   useEffect(() => {
     if (singleShipData && isEditSession) {
+      console.log(singleShipData);
       reset({
         ...singleShipData,
         imoNumber: singleShipData?.imoNumber ? String(singleShipData?.imoNumber) : "",

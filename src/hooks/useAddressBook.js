@@ -31,12 +31,17 @@ export const useCreateAddressBook = () => {
 export const useGetAddressBook = () => {
   const user = useSelector((state) => state.auth.user);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, isFetching } = useQuery({
     queryKey: ["address-book"],
     queryFn: () => fecthAddressBookApi(user.id),
+    placeholderData: (previousData) => {
+      if (previousData && previousData.length > 0) {
+        return Array.from({ length: previousData.length }, () => ({}));
+      }
+    },
   });
 
-  return { data, isLoading, isError };
+  return { data, isLoading, isError, isFetching };
 };
 
 export const useEditAddressBook = () => {

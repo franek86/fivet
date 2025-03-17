@@ -1,5 +1,9 @@
 import { PAGE_SIZE } from "../utils/constants.js";
-import supabase from "./databaseConfig.js";
+import { getResizedImageUrl } from "../utils/resizedImage.js";
+import supabase, { baseUrl } from "./databaseConfig.js";
+
+const bucketName = "Ship images";
+const placeholder = `${baseUrl}/storage/v1/object/public/Ship%20images//image-ships-placeholder.png`;
 
 /* 
     Get all ships depend if is user or admin with pagination
@@ -24,7 +28,23 @@ export const getShips = async ({ page, role, userId }) => {
     throw new Error("Ships could not be loaded");
   }
 
-  return { data, count };
+  const { data: files } = await supabase.storage.from(bucketName).list();
+
+  const checkImageExists = (imageUrl) => {
+    if (!imageUrl) return placeholder;
+
+    const fileName = imageUrl.split("/").pop();
+    const fileExists = files.some((file) => file.name === fileName);
+
+    return fileExists ? getResizedImageUrl(imageUrl, 80, 45) : placeholder;
+  };
+
+  const updatedData = data.map((ship) => ({
+    ...ship,
+    mainImage: checkImageExists(ship.mainImage),
+  }));
+
+  return { data: updatedData, count };
 };
 
 /* 
@@ -32,12 +52,25 @@ export const getShips = async ({ page, role, userId }) => {
 */
 export const getShip = async (id) => {
   if (!id) return;
-  let { data, error } = await supabase.from("ships").select("*").eq("id", id).single();
+  const { data, error } = await supabase.from("ships").select("*").eq("id", id).single();
   if (error) {
     throw new Error("Ship colud not be loaded");
   }
 
-  return data;
+  const { data: files } = await supabase.storage.from(bucketName).list();
+
+  const checkImageExists = (imageUrl) => {
+    if (!imageUrl) return placeholder;
+
+    const fileName = imageUrl.split("/").pop();
+    const fileExists = files.some((file) => file.name === fileName);
+
+    return fileExists ? getResizedImageUrl(imageUrl, 80, 45) : placeholder;
+  };
+
+  const updatedData = { ...data, mainImage: checkImageExists(data.mainImage) };
+
+  return updatedData;
 };
 
 /* 

@@ -1,13 +1,14 @@
 import { useSelector } from "react-redux";
 import { useShips } from "../../hooks/ships/useShips.js";
+
 import Pagination from "../Pagination.jsx";
 import Spinner from "../Spinner.jsx";
-
 import Table from "../ui/Table.jsx";
 import ShipsColumn from "./ShipsColumn.jsx";
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 function ShipsTable() {
-  const { ships, count, isLoading, error } = useShips();
+  const { ships, count, isLoading, error, isFetching } = useShips();
   const role = useSelector((state) => state.auth.role);
 
   if (isLoading) return <Spinner />;
@@ -28,9 +29,9 @@ function ShipsTable() {
       </Table.Header>
 
       <Table.Body>
-        {ships.map((ship, index) => (
-          <ShipsColumn ship={ship} key={ship.id} index={index} />
-        ))}
+        {isFetching
+          ? ships.map((_, index) => <TablePlaceholder key={index} />)
+          : ships.map((ship, index) => <ShipsColumn ship={ship} key={ship.id} index={index} />)}
       </Table.Body>
 
       <Table.Footer>

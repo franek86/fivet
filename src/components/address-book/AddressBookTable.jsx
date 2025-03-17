@@ -3,9 +3,10 @@ import Table from "../ui/Table.jsx";
 
 import { useGetAddressBook } from "../../hooks/useAddressBook.js";
 import AddressBookColumn from "./AddressBookColumn.jsx";
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 function AddressBookTable() {
-  const { data, isLoading, isError } = useGetAddressBook();
+  const { data, isLoading, isError, isFetching } = useGetAddressBook();
 
   if (isLoading) return <Spinner />;
   if (isError) return <div>Error</div>;
@@ -19,9 +20,9 @@ function AddressBookTable() {
         <div>Actions</div>
       </Table.Header>
       <Table.Body>
-        {data?.map((item) => (
-          <AddressBookColumn item={item} key={item.id} />
-        ))}
+        {isFetching
+          ? data?.map((_, index) => <TablePlaceholder key={index} />)
+          : data?.map((item) => <AddressBookColumn item={item} key={item.id} />)}
       </Table.Body>
     </Table>
   );

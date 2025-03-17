@@ -86,18 +86,22 @@ const P = styled.p`
 `;
 
 const CardBoxPlaceholder = styled.div`
-  background-color: var(--color-grey-200);
+  background: var(--linear-gradient);
+  background-size: 200% 100%;
   min-width: 100%;
   width: 100px;
   height: 20px;
 `;
 
 const CardImagePlaceholder = styled(CardImage)`
-  background-color: var(--color-grey-200);
+  background: var(--linear-gradient);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite ease-in-out;
 `;
 
 const CardContentPlaceholder = styled(CardContent)`
   gap: 1rem;
+  animation: shimmer 1.5s infinite linear;
 `;
 
 // 🔹 Placeholder component

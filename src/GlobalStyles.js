@@ -40,6 +40,7 @@ const GlobalStyles = styled.createGlobalStyle`
       --color-red-800: #991b1b;
 
       --backdrop-color: rgba(255, 255, 255, 0.1);
+      --linear-gradient: linear-gradient(90deg, #e0e0e0 25%, #ffffff 50%, #f0f0f0 75%);
 
       --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
       --shadow-md: 0px 0.6rem 2.4rem rgba(0, 0, 0, 0.06);
@@ -278,6 +279,15 @@ const GlobalStyles = styled.createGlobalStyle`
     bottom: 0;
     border: 0;
     background: transparent;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
   }
 `;
 

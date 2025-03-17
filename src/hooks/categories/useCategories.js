@@ -13,10 +13,15 @@ export const useCategories = () => {
   const [field, direction] = sortByRow.split("-");
   const sortBy = { field, direction };
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error, isFetching } = useQuery({
     queryKey: ["categories", page, sortBy],
     queryFn: () => getCategories({ page, sortBy }),
+    placeholderData: (previousData) => {
+      if (previousData && previousData.length > 0) {
+        return Array.from({ length: previousData.length }, () => ({}));
+      }
+    },
   });
 
-  return { categories: data?.data || [], count: data?.count || 0, isLoading, error };
+  return { categories: data?.data || [], count: data?.count || 0, isLoading, error, isFetching };
 };

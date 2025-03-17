@@ -3,6 +3,7 @@ import Pagination from "../Pagination.jsx";
 import Spinner from "../Spinner.jsx";
 import Sort from "../ui/Sort.jsx";
 import Table from "../ui/Table.jsx";
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import CategoryColumn from "./CategoryColumn.jsx";
 
 function CategoryTable() {
@@ -11,7 +12,7 @@ function CategoryTable() {
     { value: "name-desc", name: "Sort by name (Z-A)" },
   ];
 
-  const { categories, count, isLoading, error } = useCategories();
+  const { categories, count, isLoading, error, isFetching } = useCategories();
 
   if (isLoading) return <Spinner />;
 
@@ -27,9 +28,9 @@ function CategoryTable() {
           <div>Actions</div>
         </Table.Header>
         <Table.Body>
-          {categories.map((cat, index) => (
-            <CategoryColumn category={cat} key={cat.id} index={index} />
-          ))}
+          {isFetching
+            ? categories.map((_, index) => <TablePlaceholder key={index} />)
+            : categories.map((cat, index) => <CategoryColumn category={cat} key={cat.id} index={index} />)}
         </Table.Body>
 
         <Table.Footer>

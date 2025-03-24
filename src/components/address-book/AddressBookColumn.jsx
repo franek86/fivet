@@ -12,9 +12,18 @@ import { LuEye, LuPencil, LuTrash2 } from "react-icons/lu";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import useMediaQuery from "../../hooks/useMediaQuery.js";
 import { useDeleteAddressBook } from "../../hooks/useAddressBook.js";
+import styled from "styled-components";
+
+const StyledPriority = styled.div`
+  background-color: ${({ $props }) => ($props === "REGULAR" ? "#c7d2fe" : "#99f6e4")};
+  padding: 0.5rem 0.85rem;
+  margin-left: 0.5rem;
+  font-size: 1.2rem;
+  border-radius: var(--border-radius-lg);
+`;
 
 function AddressBookColumn({ item }) {
-  const { id, first_name, last_name, email, mobile_number } = item;
+  const { id, full_name, email, mobile_number, priority } = item;
 
   const isMdScreen = useMediaQuery(640); //min width 640px
   const dispatch = useDispatch();
@@ -47,7 +56,7 @@ function AddressBookColumn({ item }) {
   return (
     <Table.Row>
       <Table.Column>
-        {first_name} {last_name}
+        {full_name} <StyledPriority $props={priority}>{priority}</StyledPriority>
       </Table.Column>
 
       <Table.Column>

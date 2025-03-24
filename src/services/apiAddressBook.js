@@ -38,6 +38,17 @@ export const fecthAddressBookApi = async (userId) => {
   return data;
 };
 
+/* Get single address book */
+export const getSingleAddressBookApi = async (id) => {
+  if (!id) throw new Error("Address book by id does not exists");
+  const { data, error } = await supabase.from("address_book").select("*").eq("id", id).single();
+  if (error) {
+    throw new Error("Ship colud not be loaded");
+  }
+
+  return data;
+};
+
 /* Delete single address book by id */
 export const deleteSingleAddressBookApi = async (id) => {
   if (!id) throw new Error("Address book by id does not exists");

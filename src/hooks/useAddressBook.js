@@ -5,6 +5,7 @@ import {
   deleteSingleAddressBookApi,
   editAddressBoookContactApi,
   fecthAddressBookApi,
+  getSingleAddressBookApi,
 } from "../services/apiAddressBook.js";
 import { toast } from "react-toastify";
 import { closeModalByName } from "../slices/modalSlice.js";
@@ -42,6 +43,14 @@ export const useGetAddressBook = () => {
   });
 
   return { data, isLoading, isError, isFetching };
+};
+
+export const useGetAddressBookById = (id) => {
+  const { data, isPending, isError, isFetching } = useQuery({
+    queryKey: ["address-book-id"],
+    queryFn: () => getSingleAddressBookApi(id),
+  });
+  return { data, isPending, isError, isFetching };
 };
 
 export const useEditAddressBook = () => {

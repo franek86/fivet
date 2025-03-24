@@ -12,6 +12,10 @@ const sizes = {
   medium: css`
     padding: 1.25rem 0.9rem;
   `,
+  full: css`
+    width: 100%;
+    padding: 1.25rem 0.9rem;
+  `,
 };
 
 const variations = {
@@ -28,7 +32,8 @@ const variations = {
 
 const Wrap = styled.div`
   position: relative;
-  width: max-content;
+  max-width: max-content;
+  min-width: 100%;
 `;
 
 const Select = styled.div`
@@ -51,6 +56,7 @@ const SelectDropdown = styled.div`
   padding: 1.25rem 0;
   border-radius: var(--border-radius-sm);
   box-shadow: var(--shadow-md);
+  z-index: 2;
 `;
 
 const SelectOption = styled.div`

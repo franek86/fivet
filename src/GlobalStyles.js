@@ -2,6 +2,7 @@ import { createGlobalStyle } from "styled-components";
 import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "react-phone-input-2/lib/style.css";
+import "react-quill/dist/quill.snow.css";
 
 const styled = { createGlobalStyle };
 
@@ -279,6 +280,13 @@ const GlobalStyles = styled.createGlobalStyle`
     bottom: 0;
     border: 0;
     background: transparent;
+  }
+
+  //React Quill
+  .quill .ql-toolbar,
+  .quill .ql-container {
+    border-radius: var(--border-radius-md);
+    border-color: var(--color-grey-500);
   }
 
   @keyframes shimmer {

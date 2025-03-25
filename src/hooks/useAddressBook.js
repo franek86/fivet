@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   createAddressBoookContactApi,
   deleteSingleAddressBookApi,
+  editAddressBookPriorityApi,
   editAddressBoookContactApi,
   fecthAddressBookApi,
   getSingleAddressBookApi,
@@ -83,5 +84,21 @@ export const useDeleteAddressBook = () => {
       toast.error(error.message);
     },
   });
+  return { mutate };
+};
+
+export const useEditAddressBookPriority = () => {
+  const queryClient = useQueryClient();
+  const { mutate, isSuccess, isError, isPending } = useMutation({
+    mutationFn: ({ id, newPriority }) => editAddressBookPriorityApi(id, newPriority),
+    onSuccess: () => {
+      toast.success("Priority updated");
+      queryClient.invalidateQueries(['"address-book"']);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   return { mutate };
 };

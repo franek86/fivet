@@ -13,8 +13,8 @@ const WrapDropdown = styled.div`
 
 const StyledDropdown = styled.div`
   position: absolute;
-  left: ${({ position }) => position.x}px;
-  top: ${({ position }) => position.y}px;
+  left: ${({ $position }) => $position.x}px;
+  top: ${({ $position }) => $position.y}px;
   width: max-content;
   background-color: var(--color-grey-100);
   border: 1px solid var(--color-grey-200);
@@ -40,7 +40,7 @@ function Dropdown({ children }) {
   return (
     <WrapDropdown onClick={handleClick}>
       <LuEllipsis />
-      {isOpen && <StyledDropdown position={position}>{children}</StyledDropdown>}
+      {isOpen && <StyledDropdown $position={position}>{children}</StyledDropdown>}
     </WrapDropdown>
   );
 }

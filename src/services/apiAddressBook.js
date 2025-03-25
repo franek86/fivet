@@ -26,6 +26,18 @@ export const editAddressBoookContactApi = async (newData, id) => {
   return data;
 };
 
+/* Edit only address book priority field */
+export const editAddressBookPriorityApi = async (id, newPriority) => {
+  if (!id) throw new Error("Address book id does not exists");
+
+  const { data, error } = await supabase.from("address_book").update({ priority: newPriority }).eq("id", id);
+  if (error) {
+    throw new Error("Priority could not be edited");
+  }
+
+  return data;
+};
+
 /* Get address book list */
 export const fecthAddressBookApi = async (userId) => {
   if (!userId) throw new Error("User does not exists");

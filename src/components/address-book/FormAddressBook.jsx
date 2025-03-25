@@ -52,7 +52,7 @@ function FormAddressBook({ addressBookToEdit = {} }) {
 
   const onHandleSubmit = (data) => {
     if (!isEditSession) {
-      //create(data);
+      create(data);
       console.log(data);
     } else {
       console.log({ newData: data, id });
@@ -82,6 +82,7 @@ function FormAddressBook({ addressBookToEdit = {} }) {
               placeholder='Choose priority'
               variation='transparent'
               size='full'
+              valueKey='value'
               options={priorityOptions}
             />
           )}

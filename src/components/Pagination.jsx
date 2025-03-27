@@ -1,7 +1,7 @@
 import React from "react";
 import { useSearchParams } from "react-router";
 import styled from "styled-components";
-import { PAGE_SIZE } from "../utils/constants.js";
+import { MAX_PAGE_BUTTONS, PAGE_SIZE } from "../utils/constants.js";
 
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
 
@@ -36,10 +36,12 @@ const SytledButton = styled.button`
 `;
 
 const StyledNumber = styled.button`
-  border-radius: 50%;
-  background-color: var(--color-brand-600);
-  font-size: 1.4rem;
-  color: var(--color-brand-200);
+  background-color: ${(props) => (props.active ? "#c7d2fe" : "#4f46e5")};
+  font-size: 1.35rem;
+  color: ${(props) => (props.active ? "#4f46e5" : "#c7d2fe")};
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--border-radius-sm);
+  border: none;
 `;
 
 const P = styled.p`
@@ -55,45 +57,6 @@ function Pagination({ count }) {
   const currentPage = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
   const pageCount = Math.ceil(count / PAGE_SIZE);
 
-  const maxVisiblePages = 1;
-  const renderPageNumbers = () => {
-    const pageNumbers = [];
-    const halfVisible = Math.floor(maxVisiblePages / 2);
-
-    let startPage = Math.max(currentPage - halfVisible, 1);
-    let endPage = Math.min(currentPage + halfVisible, totalPage);
-
-    if (currentPage <= halfVisible) {
-      startPage = 1;
-      endPage = Math.min(maxVisiblePages, count);
-    } else if (currentPage > count - halfVisible) {
-      startPage = Math.max(count - maxVisiblePages + 1, 1);
-      endPage = count;
-    }
-
-    for (let i = startPage; i <= endPage; i++) {
-      pageNumbers.push(
-        <StyledNumber
-          key={i}
-          onClick={() => onPageChange(i)}
-          className={`px-3 py-1 mx-1 rounded-full ${currentPage === i ? "bg-green-500 text-white" : "bg-gray-200"}`}
-        >
-          {i}
-        </StyledNumber>
-      );
-    }
-
-    if (endPage < totalPage) {
-      pageNumbers.push(
-        <span key='end-ellipsis' className='px-2'>
-          ...
-        </span>
-      );
-    }
-
-    return pageNumbers;
-  };
-
   const nextPage = () => {
     const next = currentPage === pageCount ? currentPage : currentPage + 1;
     searchParams.set("page", next);
@@ -104,6 +67,34 @@ function Pagination({ count }) {
     const prev = currentPage === 1 ? currentPage : currentPage - 1;
     searchParams.set("page", prev);
     setSearchParams(searchParams);
+  };
+
+  function handlePageChange(page) {
+    searchParams.set("page", page);
+    setSearchParams(searchParams);
+  }
+
+  const generatePageNumbers = () => {
+    const pages = [];
+    const half = Math.floor(MAX_PAGE_BUTTONS / 2);
+    let start = Math.max(1, currentPage - half);
+    let end = Math.min(pageCount, start + MAX_PAGE_BUTTONS - 1);
+
+    if (end - start < MAX_PAGE_BUTTONS - 1) {
+      start = Math.max(1, end - MAX_PAGE_BUTTONS + 1);
+    }
+
+    if (start > 1) pages.push(1);
+    if (start > 2) pages.push("...");
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (end < pageCount - 1) pages.push("...");
+    if (end < pageCount) pages.push(pageCount);
+
+    return pages;
   };
 
   if (count <= PAGE_SIZE) return null;
@@ -118,7 +109,19 @@ function Pagination({ count }) {
         <LuChevronLeft />
         Previous
       </SytledButton>
-      {renderPageNumbers}
+
+      {generatePageNumbers().map((num, index) =>
+        num === "..." ? (
+          <span key={index} className='px-3 py-1 mx-1'>
+            ...
+          </span>
+        ) : (
+          <StyledNumber key={num} onClick={() => handlePageChange(num)} active={num === currentPage}>
+            {num}
+          </StyledNumber>
+        )
+      )}
+
       <SytledButton onClick={nextPage} disabled={currentPage === pageCount}>
         Next
         <LuChevronRight />

@@ -79,7 +79,6 @@ const ShipsForm = () => {
 
   useEffect(() => {
     if (singleShipData && isEditSession) {
-      console.log(singleShipData);
       reset({
         ...singleShipData,
         imoNumber: singleShipData?.imoNumber ? String(singleShipData?.imoNumber) : "",
@@ -348,16 +347,9 @@ const ShipsForm = () => {
         {isEditSession ? <Button>{isPending ? "Loading..." : "Edit"}</Button> : <Button>{isPending ? "Loading..." : "Save"}</Button>}
 
         {/* <Button $variation='third'>Draft</Button> */}
-        {isEditSession && (
-          <Button onClick={cancelEditBtn} $variation='secondary'>
-            Cancel
-          </Button>
-        )}
-        {!isEditSession && (
-          <Button onClick={() => reset()} $variation='secondary'>
-            Cancel
-          </Button>
-        )}
+        <Button onClick={cancelEditBtn} $variation='secondary'>
+          Cancel
+        </Button>
       </Row>
     </form>
   );

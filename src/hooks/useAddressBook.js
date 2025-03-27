@@ -89,7 +89,7 @@ export const useDeleteAddressBook = () => {
 
 export const useEditAddressBookPriority = () => {
   const queryClient = useQueryClient();
-  const { mutate, isSuccess, isError, isPending } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: ({ id, newPriority }) => editAddressBookPriorityApi(id, newPriority),
     onSuccess: () => {
       toast.success("Priority updated");

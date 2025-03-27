@@ -15,7 +15,11 @@ export const getCategories = async ({ page, sortBy }) => {
     query = query.range(from, to);
   }
   //Sort
-  if (sortBy?.field) query = query.order(sortBy.field, { ascending: sortBy.direction === "asc" });
+  if (sortBy?.field) {
+    query = query.order(sortBy.field, { ascending: sortBy.direction === "asc" });
+  } else {
+    query = query.order("created_at", { ascending: false });
+  }
 
   const { data, count, error } = await query;
 

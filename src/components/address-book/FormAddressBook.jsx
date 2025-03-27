@@ -53,10 +53,9 @@ function FormAddressBook({ addressBookToEdit = {} }) {
   const onHandleSubmit = (data) => {
     if (!isEditSession) {
       create(data);
-      console.log(data);
     } else {
       console.log({ newData: data, id });
-      //edit({ newData: data, id });
+      edit({ newData: data, id });
     }
   };
 

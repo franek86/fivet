@@ -7,7 +7,7 @@ export const useCategories = () => {
 
   const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
 
-  let sortByRow = searchParams.get("sortBy") || "name-asc";
+  let sortByRow = searchParams.get("sortBy") || "created_at";
   sortByRow = sortByRow && sortByRow !== "undefined" ? sortByRow : "name-asc";
 
   const [field, direction] = sortByRow.split("-");

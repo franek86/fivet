@@ -11,9 +11,13 @@ const StyledNav = styled.nav`
 const NavList = styled(NavLink)`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   padding: 1.2rem 2rem;
   font-size: 1.85rem;
+  @media screen and (min-width: 1024px) {
+    justify-content: start;
+  }
   &:hover,
   &:active,
   &.active:link,
@@ -21,6 +25,16 @@ const NavList = styled(NavLink)`
     color: var(--color-grey-800);
     background-color: var(--color-brand-200);
     border-radius: var(--border-radius-sm);
+  }
+`;
+
+const NavItem = styled.div`
+  display: block;
+  @media screen and (min-width: 640px) {
+    display: none;
+  }
+  @media screen and (min-width: 1024px) {
+    display: block;
   }
 `;
 
@@ -33,7 +47,7 @@ function Nav() {
         .map((item) => (
           <NavList to={item.href} key={item.label}>
             <item.icon />
-            {item.label}
+            <NavItem>{item.label}</NavItem>
           </NavList>
         ))}
     </StyledNav>

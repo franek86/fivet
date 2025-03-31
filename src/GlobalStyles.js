@@ -211,6 +211,25 @@ const GlobalStyles = styled.createGlobalStyle`
     /* For dark mode */
     filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
   }
+  tr:nth-child(even) {
+    background-color: var(--color-grey-50);
+  }
+  tr:nth-child(odd) {
+    background-color: var(--color-grey-100);
+  }
+  //Simmer animation
+  .simmer {
+    background: var(--linear-gradient);
+    background-size: 400% 100%;
+    animation: shimmer-animation 1.35s infinite ease-in-out;
+    margin-bottom: 1rem;
+  }
+  .simmer-data-placehoder {
+    display: inline-block;
+    width: 100%;
+    height: 16px;
+    padding: 1.35rem 0.5rem;
+  }
 
   //React date picker
   .react-datetime-picker__calendar--open,
@@ -289,12 +308,12 @@ const GlobalStyles = styled.createGlobalStyle`
     border-color: var(--color-grey-500);
   }
 
-  @keyframes shimmer {
+  @keyframes shimmer-animation {
     0% {
-      background-position: -200% 0;
+      background-position: -100% 0;
     }
     100% {
-      background-position: 200% 0;
+      background-position: 100% 0;
     }
   }
 `;

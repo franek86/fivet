@@ -1,21 +1,20 @@
 import styled from "styled-components";
-import Table from "./Table.jsx";
 
-const BoxPlaceholder = styled.div`
-  background: var(--linear-gradient);
-  background-size: 200% 100%;
-  min-width: 100%;
-  width: 100px;
-  height: 20px;
+const StyledPlaceholderTable = styled.div`
+  margin-top: 2.4rem;
 `;
 
-function TablePlaceholder() {
+function TablePlaceholder({ count }) {
   return (
-    <Table columns='1fr'>
-      <Table.Row>
-        <BoxPlaceholder />
-      </Table.Row>
-    </Table>
+    <StyledPlaceholderTable>
+      {Array(count)
+        .fill(null)
+        .map((_, index) => (
+          <div key={index} className='simmer'>
+            <div className='simmer-data-placehoder'></div>
+          </div>
+        ))}
+    </StyledPlaceholderTable>
   );
 }
 

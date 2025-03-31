@@ -15,6 +15,10 @@ const CardWrap = styled.div`
   }
 
   @media screen and (min-width: 1024px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media screen and (min-width: 1200px) {
     grid-template-columns: 1fr 1fr 1fr;
   }
 `;

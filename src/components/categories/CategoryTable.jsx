@@ -1,8 +1,8 @@
 import { useCategories } from "../../hooks/categories/useCategories.js";
 import Pagination from "../Pagination.jsx";
 import Spinner from "../Spinner.jsx";
+import CustomTable from "../ui/CustomTable.jsx";
 import Sort from "../ui/Sort.jsx";
-import Table from "../ui/Table.jsx";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import CategoryColumn from "./CategoryColumn.jsx";
 
@@ -12,31 +12,31 @@ function CategoryTable() {
     { value: "name-desc", name: "Sort by name (Z-A)" },
   ];
 
+  const tableColumns = [
+    { header: "", accessor: "delete row" },
+    { header: "Name", accessor: "name" },
+    { header: "Description", accessor: "description" },
+    { header: "Actions", accessor: "actions" },
+  ];
+
   const { categories, count, isLoading, error, isFetching } = useCategories();
+  const dataLength = categories.length;
 
   if (isLoading) return <Spinner />;
 
   if (error) return <div>Error something went wrong</div>;
+
+  const renderRow = (item) => <CategoryColumn key={item.id} category={item} />;
+
   return (
     <>
       <Sort items={items} />
-      <Table columns='100px 180px 1fr 80px'>
-        <Table.Header>
-          <div>No.</div>
-          <div>Name</div>
-          <div>Description</div>
-          <div>Actions</div>
-        </Table.Header>
-        <Table.Body>
-          {isFetching
-            ? categories.map((_, index) => <TablePlaceholder key={index} />)
-            : categories.map((cat, index) => <CategoryColumn category={cat} key={cat.id} index={index} />)}
-        </Table.Body>
-
-        <Table.Footer>
-          <Pagination count={count} />
-        </Table.Footer>
-      </Table>
+      {isFetching ? (
+        <TablePlaceholder count={dataLength} />
+      ) : (
+        <CustomTable columns={tableColumns} renderRow={renderRow} data={categories} />
+      )}
+      <Pagination count={count} />
     </>
   );
 }

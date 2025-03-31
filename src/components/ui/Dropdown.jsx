@@ -9,6 +9,8 @@ const WrapDropdown = styled.div`
   padding: 0.6rem;
   border-radius: var(--border-radius-md);
   cursor: pointer;
+  max-width: max-content;
+  margin: auto;
 `;
 
 const StyledDropdown = styled.div`

@@ -7,7 +7,7 @@ import ConfirmDialog from "../ConfirmDialog.jsx";
 import Dropdown from "../ui/Dropdown.jsx";
 import FormAddressBook from "./FormAddressBook.jsx";
 import Modal from "../Modal.jsx";
-import Table from "../ui/Table.jsx";
+import Checkbox from "../ui/Checkbox.jsx";
 
 import { LuChevronDown, LuEye, LuPencil, LuTrash2 } from "react-icons/lu";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
@@ -16,9 +16,10 @@ import { useDeleteAddressBook, useEditAddressBookPriority } from "../../hooks/us
 import styled from "styled-components";
 
 const StyledPriority = styled.div`
+  max-width: max-content;
+  margin: auto;
   background-color: ${({ $props }) => ($props === "REGULAR" ? "#c7d2fe" : "#99f6e4")};
   padding: 0.5rem 0.85rem;
-  margin-left: 0.5rem;
   font-size: 1.2rem;
   border-radius: var(--border-radius-lg);
   cursor: pointer;
@@ -35,10 +36,10 @@ const StyledDropdown = styled.form`
   text-align: center;
 `;
 
-function AddressBookColumn({ item }) {
+function AddressBookColumn({ addressBook }) {
   const [visibleDropdown, setVisibleDropdown] = useState(false);
 
-  const { id, full_name, email, mobile_number, priority } = item;
+  const { id, full_name, email, mobile_number, priority } = addressBook;
   const [changePriority, setChangePriority] = useState(priority);
 
   const isMdScreen = useMediaQuery(640); //min width 640px
@@ -79,9 +80,13 @@ function AddressBookColumn({ item }) {
   };
 
   return (
-    <Table.Row>
-      <Table.Column>
-        {full_name}
+    <tr>
+      <td>
+        <Checkbox />
+      </td>
+      <td>{full_name}</td>
+
+      <td>
         <StyledPriority $props={changePriority}>
           <div onClick={() => setVisibleDropdown(!visibleDropdown)}>
             {changePriority} <LuChevronDown />
@@ -90,19 +95,19 @@ function AddressBookColumn({ item }) {
             <StyledDropdown onClick={handleOnClick}>{changePriority === "REGULAR" ? "Important" : "Regular"}</StyledDropdown>
           )}
         </StyledPriority>
-      </Table.Column>
+      </td>
 
-      <Table.Column>
+      <td>
         <strong>
           <a href={`mailto:${email}`}>{email}</a>
         </strong>
-      </Table.Column>
-      <Table.Column>
+      </td>
+      <td>
         <strong>
           <a href={`tel:+${mobile_number}`}>{mobile_number}</a>
         </strong>
-      </Table.Column>
-      <Table.Column>
+      </td>
+      <td>
         {isMdScreen ? (
           <Dropdown>
             {editButton}
@@ -116,16 +121,16 @@ function AddressBookColumn({ item }) {
             {viewButton}
           </div>
         )}
-      </Table.Column>
+      </td>
 
       <Modal name={`edit-${id}`} onClose={() => dispatch(closeModalByName())}>
-        <FormAddressBook addressBookToEdit={item} />
+        <FormAddressBook addressBookToEdit={addressBook} />
       </Modal>
 
       <Modal name={id} onClose={() => dispatch(closeModalByName())}>
         <ConfirmDialog itemName={id} onConfirm={() => mutate(id)} onCloseModal={() => dispatch(closeModalByName())} />
       </Modal>
-    </Table.Row>
+    </tr>
   );
 }
 

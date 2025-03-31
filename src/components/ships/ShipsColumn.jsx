@@ -1,18 +1,26 @@
+import { useState } from "react";
+import { Link } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+
 import Button from "../ui/Button.jsx";
 import Dropdown from "../ui/Dropdown.jsx";
 import Modal from "../Modal.jsx";
-import Table from "../ui/Table.jsx";
+import Checkbox from "../ui/Checkbox.jsx";
+import ConfirmDialog from "../ConfirmDialog.jsx";
 
 import { LuPencil, LuTrash2 } from "react-icons/lu";
-import { Link } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
-
-import { formatedPrice } from "../../utils/formattedPrice.js";
-import ConfirmDialog from "../ConfirmDialog.jsx";
 import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
+import { formatedPrice } from "../../utils/formattedPrice.js";
+
+const StyledImage = styled.img`
+  width: 80px;
+`;
+
 function ShipsColumn({ ship }) {
+  const [selectedItem, setSelectedItem] = useState([]);
   const role = useSelector((state) => state.auth.role);
   const dispatch = useDispatch();
   const { mutate } = useDeleteShip();
@@ -20,23 +28,28 @@ function ShipsColumn({ ship }) {
 
   const fullName = ship.profile?.fullName || "";
 
+  const handleSelectedItem = (id) => {
+    setSelectedItem((prev) => (prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]));
+  };
+
   return (
-    <Table.Row>
-      <Table.Column>
-        <picture>
-          <img src={mainImage && !mainImage.error ? mainImage : "/images/no-image.webp"} alt={shipName} />
-        </picture>
-      </Table.Column>
+    <tr>
+      <td>
+        <Checkbox checked={selectedItem.includes(shipId)} onChange={() => handleSelectedItem(shipId)} />
+      </td>
+      <td>
+        <StyledImage src={mainImage && !mainImage.error ? mainImage : "/images/no-image.webp"} alt={shipName} />
+      </td>
 
-      <Table.Column>{role !== "admin" ? shipType : `${fullName}`}</Table.Column>
+      <td>{role !== "admin" ? shipType : `${fullName}`}</td>
 
-      <Table.Column>{shipName}</Table.Column>
-      <Table.Column>{imoNumber}</Table.Column>
+      <td>{shipName}</td>
+      <td>{imoNumber}</td>
 
-      <Table.Column>
+      <td>
         <strong>{formatedPrice(price)}</strong>
-      </Table.Column>
-      <Table.Column>
+      </td>
+      <td>
         <Dropdown>
           <Button $variation='icon'>
             <Link to={`edit/${shipId}`}>
@@ -49,12 +62,12 @@ function ShipsColumn({ ship }) {
             Delete
           </Button>
         </Dropdown>
-      </Table.Column>
+      </td>
 
       <Modal name={shipId} onClose={() => dispatch(closeModalByName())}>
         <ConfirmDialog itemName={shipName} onConfirm={() => mutate(shipId)} onCloseModal={() => dispatch(closeModalByName())} />
       </Modal>
-    </Table.Row>
+    </tr>
   );
 }
 

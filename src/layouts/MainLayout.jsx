@@ -4,7 +4,11 @@ import styled from "styled-components";
 
 const LayoutGrid = styled.div`
   display: grid;
-  @media screen and (min-width: 768px) {
+  grid-template-columns: 1fr;
+  @media screen and (min-width: 640px) {
+    grid-template-columns: 10rem 1fr;
+  }
+  @media screen and (min-width: 1024px) {
     grid-template-columns: 26rem 1fr;
   }
 `;

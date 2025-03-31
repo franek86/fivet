@@ -7,6 +7,11 @@ import Spinner from "./Spinner.jsx";
 const StyledAvatar = styled.div`
   display: flex;
   align-items: center;
+  flex-direction: column;
+
+  @media screen and (min-width: 1024px) {
+    flex-direction: row;
+  }
 `;
 
 const StyledNoAvatar = styled.div`
@@ -48,7 +53,7 @@ function Avatar() {
           <RxAvatar size={50} />
         </StyledNoAvatar>
       )}
-      <StyledName>Welcome, {fullName ? fullName : <p>User</p>}</StyledName>
+      <StyledName>Welcome {fullName ? fullName : <p>User</p>}</StyledName>
     </StyledAvatar>
   );
 }

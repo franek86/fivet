@@ -30,6 +30,7 @@ const NavList = styled(NavLink)`
 
 const NavItem = styled.div`
   display: block;
+  font-size: 1.6rem;
   @media screen and (min-width: 640px) {
     display: none;
   }

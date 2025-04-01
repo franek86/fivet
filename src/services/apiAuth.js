@@ -1,5 +1,20 @@
+/* import apiClient from "../utils/axiosConfig.js"; */
 import supabase from "./databaseConfig.js";
 
+/* test api register 
+export const testRegister = async ({ fullName, email, password }) => {
+  try {
+    const res = await apiClient.post("/auth/register", {
+      fullName,
+      email,
+      password,
+    });
+    return res.data;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+*/
 /* log in user */
 export const loginApi = async ({ email, password }) => {
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -39,7 +54,7 @@ export const getCurrentUser = async () => {
     data: { session },
     error: sessionError,
   } = await supabase.auth.getSession();
-
+  console.log(session);
   if (!session?.user || sessionError) throw sessionError || new Error("No session found");
 
   const { data, error } = await supabase.from("user_roles").select("roles(role)").eq("user_id", session.user.id).single();

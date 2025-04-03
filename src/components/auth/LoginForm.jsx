@@ -66,7 +66,7 @@ function LoginForm() {
         autoComplete='password'
       />
       <InputErrorMessage message={errors.password?.message} />
-      <Button>{isPending ? "Loading..." : "Log in"}</Button>
+      <Button data-cy='login'>{isPending ? "Loading..." : "Log in"}</Button>
     </Form>
   );
 }

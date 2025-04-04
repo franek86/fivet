@@ -12,6 +12,7 @@ import { loginApi } from "../../services/apiAuth.js";
 
 import styled from "styled-components";
 import { toast } from "react-toastify";
+import { handleApiError } from "../../utils/handleApiError.js";
 
 const Form = styled.form`
   display: grid;
@@ -28,7 +29,7 @@ function LoginForm() {
       navigate("/dashboard");
     },
     onError: (error) => {
-      toast.error(error.message);
+      handleApiError(error, "Login failed");
     },
   });
 
@@ -45,7 +46,6 @@ function LoginForm() {
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Input
-        type='email'
         directions='column'
         placehoder='Email address'
         label='Email *'

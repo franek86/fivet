@@ -5,7 +5,7 @@ import Title from "../components/ui/Title.jsx";
 import Unauthorized from "./Unauthorized.jsx";
 
 function Users() {
-  const admin = useSelector((state) => state.auth.role === "admin");
+  const admin = useSelector((state) => state.auth.role === "ADMIN");
 
   if (!admin) return <Unauthorized />;
   return (

@@ -14,7 +14,6 @@ export const useUser = () => {
       dispatch(setUser({ role: user.role, user }));
       return user;
     },
-    /* staleTime: 1000 * 60 * 5, */
   });
 
   return { data, isLoading };

@@ -1,7 +1,17 @@
+import apiClient from "../utils/axiosConfig.js";
 import supabase from "./databaseConfig.js";
 
-/* Get all user profile oly for admin*/
+/* Get all user profile olny for admin*/
 export const getAllProfileApi = async () => {
+  try {
+    const res = await apiClient.get("/profile");
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+/* export const getAllProfileApi = async () => {
   const { data, error } = await supabase.from("profile").select("*");
 
   if (error) {
@@ -9,9 +19,10 @@ export const getAllProfileApi = async () => {
   }
 
   return data;
-};
+}; */
 
 /* get profile data by user id */
+
 export const getProfileApi = async () => {
   const {
     data: { user },

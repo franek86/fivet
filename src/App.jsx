@@ -32,7 +32,7 @@ function App() {
           <Route path='/sign-up' element={<SignUp />} />
           <Route path='/unauthorized' element={<Unauthorized />} />
         </Route>
-        <Route element={<ProtectedRoute alowedRoles={["admin", "user"]} />}>
+        <Route element={<ProtectedRoute alowedRoles={["ADMIN", "USER"]} />}>
           <Route element={<MainLayout />}>
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/ships' element={<Ships />} />
@@ -45,7 +45,7 @@ function App() {
           </Route>
         </Route>
 
-        <Route element={<ProtectedRoute alowedRoles={["admin"]} />}>
+        <Route element={<ProtectedRoute alowedRoles={["ADMIN"]} />}>
           <Route element={<MainLayout />}>
             <Route path='/users' element={<Users />} />
             <Route path='/categories' element={<Categories />} />

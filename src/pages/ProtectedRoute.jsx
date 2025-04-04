@@ -1,4 +1,3 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useUser } from "../hooks/useAuth.js";
 import { Navigate, Outlet } from "react-router";
 
@@ -11,7 +10,7 @@ const FullPage = styled.div`
 `;
 
 function ProtectedRoute({ alowedRoles }) {
-  const { isLoading, data: user } = useUser();
+  const { isLoading, data } = useUser();
 
   if (isLoading)
     return (
@@ -19,8 +18,8 @@ function ProtectedRoute({ alowedRoles }) {
         <Spinner />
       </FullPage>
     );
-  if (!user) return <Navigate to='/' replace />;
-  if (!alowedRoles.includes(user.role)) return <Navigate to='/unauthorized' replace />;
+  if (!data) return <Navigate to='/' replace />;
+  if (!alowedRoles.includes(data.user.role)) return <Navigate to='/unauthorized' replace />;
 
   return <Outlet />;
 }

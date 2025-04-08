@@ -8,5 +8,5 @@ export const navLinks = [
   { href: "/categories", label: "Categories", icon: MdOutlineCategory, allowRoles: ["ADMIN"] },
   { href: "/users", label: "Users", icon: FaUsers, allowRoles: ["ADMIN"] },
   { href: "/address-book", label: "Address book", icon: FaRegAddressCard, allowRoles: ["ADMIN", "USER"] },
-  { href: "/profile", label: "Profile", icon: FaCircleUser, allowRoles: ["USER"] },
+  { href: "/profile", label: "Profile", icon: FaCircleUser, allowRoles: ["ADMIN", "USER"] },
 ];

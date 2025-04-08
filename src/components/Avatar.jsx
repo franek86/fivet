@@ -2,6 +2,7 @@ import { RxAvatar } from "react-icons/rx";
 import styled from "styled-components";
 
 import { useProfileData } from "../hooks/useProfile.js";
+import { useUser } from "../hooks/useAuth.js";
 import Spinner from "./Spinner.jsx";
 
 const StyledAvatar = styled.div`
@@ -38,11 +39,11 @@ const StyledImageAvatar = styled.img`
 `;
 
 function Avatar() {
-  const { data, isLoading } = useProfileData();
+  const { data, isLoading } = useUser();
 
   if (isLoading) return <Spinner />;
 
-  const { fullName, avatar } = data;
+  const { fullName, avatar } = data.profile;
 
   return (
     <StyledAvatar>

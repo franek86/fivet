@@ -108,7 +108,7 @@ const CardContentPlaceholder = styled(CardContent)`
   animation: shimmer 1.5s infinite linear;
 `;
 
-// 🔹 Placeholder component
+// Placeholder component
 function UserProfileListPlaceholder() {
   return (
     <Card>
@@ -144,7 +144,6 @@ function UserProfileList() {
                 <CardContent>
                   <strong>{item.fullName}</strong>
                   <Link href={`mailto:${item.email}`}>{item.email}</Link>
-                  <P>Created at {customFormatDate(item.created_at)}</P>
                 </CardContent>
 
                 {item.avatar ? <CardImage src={item.avatar} alt={item.fullName} /> : ""}

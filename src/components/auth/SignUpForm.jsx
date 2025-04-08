@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 
@@ -8,10 +9,7 @@ import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 
-import { signupEmailApi } from "../../services/apiAuth.js";
-import { useCreateProfile } from "../../hooks/useProfile.js";
-import { useNavigate } from "react-router";
-import { useCreateUserRole } from "../../hooks/useAuth.js";
+import { registerUser } from "../../services/apiAuth.js";
 
 const Form = styled.form`
   display: flex;
@@ -26,7 +24,7 @@ function SignUpForm() {
   const navigate = useNavigate();
 
   const { mutate: signUp } = useMutation({
-    mutationFn: signupEmailApi,
+    mutationFn: registerUser,
     onSuccess: () => {
       toast.success("Sign in!");
       navigate("/");
@@ -36,9 +34,6 @@ function SignUpForm() {
     },
   });
 
-  const { mutate: createProfile } = useCreateProfile();
-  const { mutate: createUserRole } = useCreateUserRole();
-
   const {
     register,
     handleSubmit,
@@ -47,22 +42,7 @@ function SignUpForm() {
   } = useForm({});
 
   const onHandleSubmit = ({ fullName, email, password }) => {
-    signUp(
-      { fullName, email, password },
-      {
-        onSuccess: ({ user }) => {
-          createProfile({
-            fullName: user.user_metadata.fullName,
-            email: user.user_metadata.email,
-            id: user.id,
-          });
-
-          createUserRole({
-            user_id: user.id,
-          });
-        },
-      }
-    );
+    signUp({ fullName, email, password });
   };
 
   return (

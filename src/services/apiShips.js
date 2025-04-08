@@ -12,7 +12,7 @@ const placeholder = `${baseUrl}/storage/v1/object/public/Ship%20images//image-sh
 export const getShips = async ({ page, role, userId }) => {
   let query = supabase.from("ships").select("*,profile(fullName)", { count: "exact" });
 
-  if (role !== "admin") {
+  if (role !== "ADMIN") {
     query = query.eq("owner_id", userId);
   }
 

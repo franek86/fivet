@@ -19,7 +19,7 @@ function ProtectedRoute({ alowedRoles }) {
       </FullPage>
     );
   if (!data) return <Navigate to='/' replace />;
-  if (!alowedRoles.includes(data.user.role)) return <Navigate to='/unauthorized' replace />;
+  if (!alowedRoles.includes(data.role)) return <Navigate to='/unauthorized' replace />;
 
   return <Outlet />;
 }

@@ -10,6 +10,7 @@ import Spinner from "../Spinner.jsx";
 import styled from "styled-components";
 import { useUploadSingleImage } from "../../hooks/files/useUploadSingleImage.js";
 import { useImagePublicUrl } from "../../hooks/files/useImagePublicUrl.js";
+import { useUser } from "../../hooks/useAuth.js";
 import { useProfileData, useUpdateProfile } from "../../hooks/useProfile.js";
 
 const StyledForm = styled.form`
@@ -42,7 +43,7 @@ const StyledImage = styled.img`
 function ProfileData() {
   const { mutate: uploadAvatar } = useUploadSingleImage();
   const { mutate: getImageUrl } = useImagePublicUrl();
-  const { data, isLoading } = useProfileData();
+  const { data, isLoading } = useUser();
   const { mutate: updateProfile } = useUpdateProfile();
 
   const {
@@ -56,16 +57,16 @@ function ProfileData() {
     defaultValues: {
       fullName: "",
       email: "",
-      avatar: data?.avatar || null,
+      avatar: data?.profile.avatar || null,
     },
   });
 
   useEffect(() => {
     if (data) {
       reset({
-        fullName: data.fullName || "",
-        email: data.email || "",
-        avatar: data.avatar || null,
+        fullName: data.profile.fullName || "",
+        email: data.profile.email || "",
+        avatar: data.profile.avatar || null,
       });
     }
   }, [data, reset]);
@@ -113,10 +114,10 @@ function ProfileData() {
         <Button>Edit</Button>
       </StyledInfo>
       <StyledAvatar>
-        {data.avatar ? (
-          <ImageUploader name='avatar' value={watch("avatar")} initialImage={data.avatar} onChange={handleAvatarChange} />
+        {data.profile.avatar ? (
+          <ImageUploader name='avatar' value={watch("avatar")} initialImage={data.profile.avatar} onChange={handleAvatarChange} />
         ) : (
-          <StyledImage src={data.avatar} />
+          <StyledImage src={data.profile.avatar} />
         )}
       </StyledAvatar>
     </StyledForm>

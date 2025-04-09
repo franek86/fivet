@@ -75,26 +75,7 @@ function ProfileData() {
     const file = data.avatar;
 
     if (file instanceof File) {
-      var filePath = `${Date.now()}${Math.floor(Math.random() * 10000)}-${file.name.replaceAll(/\s/g, "-")}`;
-      var bucket = "avatar";
-      uploadAvatar(
-        { file, bucket, filePath },
-        {
-          onSuccess: (filePath) => {
-            getImageUrl(
-              { filePath, bucket },
-              {
-                onSuccess: (imageUrl) => {
-                  updateProfile({
-                    ...data,
-                    avatar: imageUrl,
-                  });
-                },
-              }
-            );
-          },
-        }
-      );
+      updateProfile({ ...data, avatar: file });
     } else {
       updateProfile(data);
     }

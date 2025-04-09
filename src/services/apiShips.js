@@ -1,9 +1,6 @@
 import { PAGE_SIZE } from "../utils/constants.js";
 import { getResizedImageUrl } from "../utils/resizedImage.js";
-import supabase, { baseUrl } from "./databaseConfig.js";
-
-const bucketName = "Ship images";
-const placeholder = `${baseUrl}/storage/v1/object/public/Ship%20images//image-ships-placeholder.png`;
+import supabase from "./databaseConfig.js";
 
 /* 
     Get all ships depend if is user or admin with pagination

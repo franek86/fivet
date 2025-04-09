@@ -11,18 +11,8 @@ export const getAllProfileApi = async () => {
     throw new Error(message);
   }
 };
-/* export const getAllProfileApi = async () => {
-  const { data, error } = await supabase.from("profile").select("*");
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
-}; */
 
 /* get profile data by user id */
-
 export const getProfileApi = async () => {
   const {
     data: { user },
@@ -43,11 +33,13 @@ export const getProfileApi = async () => {
 export const updateProfileApi = async (updatedData, userId) => {
   if (!userId) throw new Error("User id does not exists.");
 
-  const { data, error } = await supabase.from("profile").update(updatedData).eq("id", userId).single();
-
-  if (error) {
-    throw new Error(error.message);
+  try {
+    const res = await apiClient.patch("/profile/update", updatedData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
   }
-
-  return data;
 };

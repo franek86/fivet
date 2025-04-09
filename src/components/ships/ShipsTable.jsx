@@ -34,28 +34,6 @@ function ShipsTable() {
       {isFetching ? <TablePlaceholder count={dataLength} /> : <CustomTable columns={tableColumns} renderRow={renderRow} data={ships} />}
       <Pagination count={count} />
     </>
-    /*  <Table columns='80px 80px 1fr 1fr 1fr 1fr 1fr'>
-      <Table.Header>
-        <div></div>
-        <div>Image</div>
-        {role !== "admin" ? <div>Ship Type</div> : <div>User</div>}
-
-        <div>Ship Name</div>
-        <div>IMO no.</div>
-        <div>Price</div>
-        <div>Actions</div>
-      </Table.Header>
-
-      <Table.Body>
-        {isFetching
-          ? ships.map((_, index) => <TablePlaceholder key={index} />)
-          : ships.map((ship, index) => <ShipsColumn ship={ship} key={ship.id} index={index} />)}
-      </Table.Body>
-
-      <Table.Footer>
-        <Pagination count={count} />
-      </Table.Footer>
-    </Table> */
   );
 }
 

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 
 import Button from "../ui/Button.jsx";
 import Input from "../ui/Input.jsx";
-import ImageUploader from "../ImageUplader.jsx";
+import ImageUploader from "../ImageUploader.jsx";
 import Spinner from "../Spinner.jsx";
 
 import styled from "styled-components";

@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import TablePlaceholder from "./TablePlaceholder.jsx";
 
 const StyledTable = styled.table`
   font-size: 1.3rem;

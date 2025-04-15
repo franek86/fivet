@@ -10,7 +10,7 @@ export const useShips = () => {
   const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
 
   const { data, isLoading, error, isFetching } = useQuery({
-    queryKey: ["ships", page, role, user.id],
+    queryKey: ["ships", page, role, user?.id],
     queryFn: () => getShips({ page, role, userId: user.id }),
     placeholderData: (previousData) => {
       if (previousData && previousData.length > 0) {

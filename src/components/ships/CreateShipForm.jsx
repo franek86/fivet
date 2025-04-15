@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 import { useNavigate, useParams } from "react-router";
 
 import Spinner from "../Spinner.jsx";
@@ -8,22 +8,19 @@ import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import TextArea from "../ui/TextArea.jsx";
-import ImageUplader from "../ImageUplader.jsx";
+import ImageUploader from "../ImageUploader.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
-import Label from "../ui/Label.jsx";
-import DatePicker from "react-date-picker";
 
-import { createShipSchema, editShipSchema } from "../../utils/validationSchema.js";
+import { editShipSchema, floatValidation, imageValidation, yearValidation } from "../../utils/validationSchema.js";
 import styled from "styled-components";
-import { LuCalendarDays, LuX } from "react-icons/lu";
 
 import { useCreateShip } from "../../hooks/ships/useCreateShip.js";
 import { useEditShip } from "../../hooks/ships/useEditShip.js";
 import { useShip } from "../../hooks/ships/useShip.js";
-import { useCategories } from "../../hooks/categories/useCategories.js";
 import { useUploadSingleImage } from "../../hooks/files/useUploadSingleImage.js";
 import { useImagePublicUrl } from "../../hooks/files/useImagePublicUrl.js";
 import { useUser } from "../../hooks/useAuth.js";
+import { useAllShipType } from "../../hooks/useShipType.js";
 
 const Form = styled.div`
   display: grid;
@@ -54,7 +51,7 @@ const ShipsForm = () => {
   const { id: shipId } = useParams();
   const isEditSession = Boolean(shipId);
 
-  const { categories } = useCategories();
+  const { allShipType } = useAllShipType();
   const { data: singleShipData, isLoading, isError } = useShip(shipId);
   const { data: user } = useUser();
   const { mutate: submitData, isPending } = useCreateShip();
@@ -62,7 +59,7 @@ const ShipsForm = () => {
   const { mutate: uploadImage } = useUploadSingleImage();
   const { mutate: getImageUrl } = useImagePublicUrl();
 
-  const schema = isEditSession ? editShipSchema : createShipSchema;
+  const schema = isEditSession ? editShipSchema : null;
 
   const {
     register,
@@ -74,7 +71,6 @@ const ShipsForm = () => {
     reset,
   } = useForm({
     defaultValues: {},
-    resolver: zodResolver(schema),
   });
 
   useEffect(() => {
@@ -93,14 +89,23 @@ const ShipsForm = () => {
   const onSubmit = (data) => {
     const file = data.mainImage;
 
-    const formatedData = {
-      ...data,
-      buildYear: data?.buildYear || null,
-      refitYear: data?.refitYear || null,
-    };
-
     if (file instanceof File) {
-      var filePath = `${Date.now()}${Math.floor(Math.random() * 10000)}-${file.name.replaceAll(/\s/g, "-")}`;
+      submitData(
+        {
+          ...data,
+          beam: data.beam ? parseFloat(data.beam) : null,
+          length: data.length ? parseFloat(data.length) : null,
+          depth: data.depth ? parseFloat(data.depth) : null,
+          draft: data.draft ? parseFloat(data.draft) : null,
+          tonnage: data.tonnage ? parseFloat(data.tonnage) : null,
+          refitYear: data.refitYear ? parseInt(data.refitYear) : null,
+          buildYear: data.buildYear ? parseInt(data.buildYear) : null,
+          price: data.price ? parseFloat(data.price) : null,
+          mainImage: data.mainImage.name,
+        },
+        console.log(data)
+      );
+      /*  var filePath = `${Date.now()}${Math.floor(Math.random() * 10000)}-${file.name.replaceAll(/\s/g, "-")}`;
       var bucket = "Ship images";
 
       uploadImage(
@@ -155,7 +160,7 @@ const ShipsForm = () => {
             navigate("/ships");
           },
         }
-      );
+      );*/
     }
   };
 
@@ -170,42 +175,42 @@ const ShipsForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Form>
-        <input type='hidden' {...register("owner_id")} value={user.id} />
+        <input type='hidden' {...register("userId")} value={user.id} />
         <Column>
           <Input
             label='Ship name'
             placeholder='e.g. Ten Spirit'
             directions='column'
             register={register}
-            {...register("shipName", { require: true })}
+            {...register("shipName", { required: "Ship name is required" })}
           />
           <InputErrorMessage message={errors.shipName?.message} />
         </Column>
         <Column>
           <Input
-            type='number'
             label='IMO number'
             placeholder='e.g. 0000001'
             directions='column'
             register={register}
-            {...register("imoNumber", { required: true })}
+            {...register("imo", floatValidation)}
           />
           <InputErrorMessage message={errors.imoNumber?.message} />
         </Column>
         <Column>
           <Controller
-            name='shipType'
+            name='typeId'
             control={control}
             render={({ field }) => (
               <CustomSelect
                 {...field}
                 control={control}
-                options={categories}
+                options={allShipType}
                 placeholder='Ship Type'
                 label='Choose an ship type'
                 size='medium'
                 variation='transparent'
-                valueKey='name'
+                valueKey='id'
+                {...register("typeId", { required: "Ship type is required" })}
               />
             )}
           />
@@ -228,7 +233,7 @@ const ShipsForm = () => {
             directions='column'
             placeholder='e.g. Croatia'
             register={register}
-            {...register("location", { require: true })}
+            {...register("location", { required: "Ship location is required" })}
           />
           <InputErrorMessage message={errors.location?.message} />
         </Column>
@@ -238,7 +243,7 @@ const ShipsForm = () => {
             directions='column'
             placeholder='e.g. 1x Makita 2400 kw'
             register={register}
-            {...register("mainEngine", { require: true })}
+            {...register("mainEngine", { required: "Main engine is required" })}
           />
           <InputErrorMessage message={errors.mainEngine?.message} />
         </Column>
@@ -251,29 +256,33 @@ const ShipsForm = () => {
             directions='column'
             placeholder='e.g. 94 m'
             register={register}
-            {...register("lengthOverall", { require: true })}
+            {...register("lengthOverall", { required: "Length overall is required" })}
           />
           <InputErrorMessage message={errors.lengthOverall?.message} />
         </Column>
         <Column>
-          <Input label='Beam' directions='column' placeholder='e.g. 15 m' register={register} {...register("beam", { require: true })} />
+          <Input label='Length' directions='column' placeholder='e.g. 94' register={register} {...register("length", floatValidation)} />
+          <InputErrorMessage message={errors.length?.message} />
+        </Column>
+        <Column>
+          <Input label='Beam' directions='column' placeholder='e.g. 25.4' register={register} {...register("beam", floatValidation)} />
           <InputErrorMessage message={errors.beam?.message} />
         </Column>
         <Column>
-          <Input label='Depth' directions='column' placeholder='e.g. 7.2 m' register={register} {...register("depth", { require: true })} />
+          <Input label='Depth' directions='column' placeholder='e.g. 7.2' register={register} {...register("depth", floatValidation)} />
           <InputErrorMessage message={errors.depth?.message} />
         </Column>
         <Column>
-          <Input label='Draft' directions='column' placeholder='e.g. 5.8 m' register={register} {...register("draft", { require: true })} />
+          <Input label='Draft' directions='column' placeholder='e.g. 5.8' register={register} {...register("draft", floatValidation)} />
           <InputErrorMessage message={errors.draft?.message} />
         </Column>
         <Column>
           <Input
             label='Tonnage'
             directions='column'
-            placeholder='e.g. 4000 t'
+            placeholder='e.g. 4000'
             register={register}
-            {...register("tonnage", { require: true })}
+            {...register("tonnage", floatValidation)}
           />
           <InputErrorMessage message={errors.tonnage?.message} />
         </Column>
@@ -283,62 +292,44 @@ const ShipsForm = () => {
             directions='column'
             placeholder='e.g. 3990 cbm'
             register={register}
-            {...register("cargoCapacity", { require: true })}
+            {...register("cargoCapacity", { required: "Cargo capacity is required" })}
           />
           <InputErrorMessage message={errors.cargoCapacity?.message} />
         </Column>
         <Column>
-          <Label>Build year</Label>
-          <Controller
-            control={control}
-            name='buildYear'
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                format='dd-MM-yyyy'
-                value={field.value || null}
-                onChange={(date) => field.onChange(date)}
-                calendarIcon={<LuCalendarDays size={24} />}
-                clearIcon={<LuX size={24} />}
-                dayPlaceholder='dd'
-                monthPlaceholder='MM'
-                yearPlaceholder='yyyy'
-              />
-            )}
+          <Input
+            type='number'
+            label='Build year'
+            directions='column'
+            placeholder='e.g. 1997'
+            register={register}
+            {...register("buildYear", yearValidation)}
           />
+          <InputErrorMessage message={errors.buildYear?.message} />
         </Column>
         <Input label='Build country' directions='column' placeholder='e.g. Poland' register={register} {...register("buildCountry")} />
         <Column>
-          <Label>Refit year</Label>
-          <Controller
-            control={control}
-            name='refitYear'
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                format='dd-MM-yyyy'
-                value={field.value || null}
-                onChange={(date) => field.onChange(date)}
-                calendarIcon={<LuCalendarDays size={24} />}
-                clearIcon={<LuX size={24} />}
-                dayPlaceholder='dd'
-                monthPlaceholder='MM'
-                yearPlaceholder='yyyy'
-              />
-            )}
+          <Input
+            label='Refit year'
+            directions='column'
+            placeholder='e.g. 2011'
+            register={register}
+            {...register("refitYear", yearValidation)}
           />
+          <InputErrorMessage message={errors.refitYear?.message} />
         </Column>
       </Form>
       <Form>
         <TextArea label='Remarks' directions='column' register={register} {...register("remarks")} />
         <TextArea label='Description' directions='column' register={register} {...register("description")} />
         <Column>
-          <ImageUplader
+          <ImageUploader
             name='mainImage'
             value={watch("mainImage")}
             onChange={(file) => setValue("mainImage", file)}
             initialImage={singleShipData?.mainImage}
           />
+
           <InputErrorMessage message={errors.mainImage?.message} />
         </Column>
       </Form>

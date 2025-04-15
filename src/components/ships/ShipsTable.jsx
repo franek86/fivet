@@ -14,6 +14,7 @@ function ShipsTable() {
   const tableColumns = [
     { header: "", accessor: "delete row" },
     { header: "Image", accessor: "image" },
+    ...(role === "ADMIN" ? [{ header: "Published", accessor: "published" }] : []),
     { header: `${role !== "ADMIN" ? "Ship type" : "User"}`, accessor: "ship-type-user" },
     { header: "Ship Name", accessor: "ship name" },
     { header: "IMO no.", accessor: "imo" },

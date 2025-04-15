@@ -69,7 +69,7 @@ const P = styled.p`
   margin-bottom: 0.4rem;
 `;
 
-const ImageUplader = ({ name, onChange, initialImage }) => {
+const ImageUploader = ({ name, onChange, initialImage }) => {
   const [file, setFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(initialImage || null);
 
@@ -81,6 +81,7 @@ const ImageUplader = ({ name, onChange, initialImage }) => {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0] || null;
+
     onChange(selectedFile);
     if (e.target.files?.[0]) {
       setFile(selectedFile);
@@ -124,4 +125,4 @@ const ImageUplader = ({ name, onChange, initialImage }) => {
   );
 };
 
-export default ImageUplader;
+export default ImageUploader;

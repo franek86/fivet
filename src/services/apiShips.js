@@ -1,3 +1,4 @@
+import apiClient from "../utils/axiosConfig.js";
 import { PAGE_SIZE } from "../utils/constants.js";
 import { getResizedImageUrl } from "../utils/resizedImage.js";
 import supabase from "./databaseConfig.js";
@@ -7,41 +8,20 @@ import supabase from "./databaseConfig.js";
     TO DO: add filters
 */
 export const getShips = async ({ page, role, userId }) => {
-  let query = supabase.from("ships").select("*,profile(fullName)", { count: "exact" });
+  try {
+    const res = await apiClient.get("/ships", {
+      params: {
+        page,
+        role,
+        userId,
+      },
+    });
 
-  if (role !== "ADMIN") {
-    query = query.eq("owner_id", userId);
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
   }
-
-  if (page) {
-    const from = (page - 1) * PAGE_SIZE;
-    const to = from + PAGE_SIZE - 1;
-    query = query.range(from, to);
-  }
-
-  const { data, count, error } = await query;
-
-  if (error) {
-    throw new Error("Ships could not be loaded");
-  }
-
-  const { data: files } = await supabase.storage.from(bucketName).list();
-
-  const checkImageExists = (imageUrl) => {
-    if (!imageUrl) return placeholder;
-
-    const fileName = imageUrl.split("/").pop();
-    const fileExists = files.some((file) => file.name === fileName);
-
-    return fileExists ? getResizedImageUrl(imageUrl, 80, 45) : placeholder;
-  };
-
-  const updatedData = data.map((ship) => ({
-    ...ship,
-    mainImage: checkImageExists(ship.mainImage),
-  }));
-
-  return { data: updatedData, count };
 };
 
 /* 
@@ -75,21 +55,15 @@ export const getShip = async (id) => {
 */
 
 export const createEditShip = async (newData, id) => {
-  let query = await supabase.from("ships");
-
-  //Create new data
-  if (!id) query = query.insert([newData]).select().single();
-
-  //Edit current data by id
-  if (id) query = query.update(newData).eq("id", id).select();
-
-  const { data, error } = await query;
-
-  if (error) {
-    throw new Error("Ships colud not be create");
+  try {
+    const res = await apiClient.post("/ships/create", newData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
   }
-
-  return data;
 };
 
 /* 

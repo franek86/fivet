@@ -10,6 +10,8 @@ function CategoryTable() {
   const items = [
     { value: "name-asc", name: "Sort by name (A-Z)" },
     { value: "name-desc", name: "Sort by name (Z-A)" },
+    { value: "createdAt-desc", name: "Newest first" },
+    { value: "createdAt-asc", name: "Oldest first" },
   ];
 
   const tableColumns = [

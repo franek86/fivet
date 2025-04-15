@@ -9,7 +9,7 @@ const LayoutGrid = styled.div`
     grid-template-columns: 10rem 1fr;
   }
   @media screen and (min-width: 1024px) {
-    grid-template-columns: 26rem 1fr;
+    grid-template-columns: 20rem 1fr;
   }
 `;
 
@@ -20,7 +20,7 @@ const Main = styled.main`
   padding: 2rem;
 
   @media (min-width: 640px) {
-    padding: 1.6rem 4rem;
+    padding: 1.6rem 2rem;
   }
 `;
 

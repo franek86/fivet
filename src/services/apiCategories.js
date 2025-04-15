@@ -1,33 +1,37 @@
+import apiClient from "../utils/axiosConfig.js";
+import { PAGE_SIZE } from "../utils/constants.js";
+
+/* GET ALL SHIP TYPES */
+export const getAllShipTypes = async () => {
+  try {
+    const res = await apiClient.get("/shipType/all");
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
 /* 
     Get all categories with pagination
 */
 
-import { PAGE_SIZE } from "../utils/constants.js";
-import supabase from "./databaseConfig.js";
+export const getCategories = async ({ page = 1, sortBy = "desc", limit = PAGE_SIZE }) => {
+  try {
+    const params = new URLSearchParams();
 
-export const getCategories = async ({ page, sortBy }) => {
-  let query = supabase.from("categories").select("*", { count: "exact" });
+    params.append("page", page);
+    params.append("limit", limit);
 
-  //Pagination
-  if (page) {
-    const from = (page - 1) * PAGE_SIZE;
-    const to = from + PAGE_SIZE - 1;
-    query = query.range(from, to);
+    if (sortBy?.field && sortBy?.direction) {
+      params.append("sortBy", `${sortBy.field}-${sortBy.direction}`);
+    }
+    let response = await apiClient(`/shipType?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
   }
-  //Sort
-  if (sortBy?.field) {
-    query = query.order(sortBy.field, { ascending: sortBy.direction === "asc" });
-  } else {
-    query = query.order("created_at", { ascending: false });
-  }
-
-  const { data, count, error } = await query;
-
-  if (error) {
-    throw new Error("Categories could not be loaded");
-  }
-
-  return { data, count };
 };
 
 /* 
@@ -35,21 +39,18 @@ export const getCategories = async ({ page, sortBy }) => {
 */
 
 export const createEditCategory = async (newCategory, id) => {
-  let query = supabase.from("categories");
+  try {
+    const endpoint = id ? `/shipType/edit/${id}` : "/shipType/create";
 
-  //Create category
-  if (!id) query = query.insert([newCategory]).select().single();
+    const method = id ? "patch" : "post";
 
-  //Edit category
-  if (id) query = query.update(newCategory).eq("id", id).select();
+    const response = await apiClient[method](endpoint, newCategory);
 
-  const { data, error } = await query;
-
-  if (error) {
-    throw new Error("Categories could not be loaded");
+    return response.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
   }
-
-  return data;
 };
 
 /* 
@@ -57,11 +58,11 @@ export const createEditCategory = async (newCategory, id) => {
 */
 
 export const deleteCategory = async (id) => {
-  const { data, error } = await supabase.from("categories").delete().eq("id", id);
-
-  if (error) {
-    throw new Error("Category could not be deleted");
+  try {
+    const response = await apiClient.delete(`/shipType/${id}`);
+    return response.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
   }
-
-  return data;
 };

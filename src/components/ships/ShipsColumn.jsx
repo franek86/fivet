@@ -24,9 +24,18 @@ function ShipsColumn({ ship }) {
   const role = useSelector((state) => state.auth.role);
   const dispatch = useDispatch();
   const { mutate } = useDeleteShip();
-  const { id: shipId, mainImage, shipName, imoNumber, price, shipType } = ship;
-
-  const fullName = ship.profile?.fullName || "";
+  const {
+    id: shipId,
+    mainImage,
+    published,
+    shipName,
+    imo,
+    price,
+    shipType: { name: shipTypeName },
+    user: {
+      profile: { fullName },
+    },
+  } = ship;
 
   const handleSelectedItem = (id) => {
     setSelectedItem((prev) => (prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]));
@@ -40,11 +49,12 @@ function ShipsColumn({ ship }) {
       <td>
         <StyledImage src={mainImage && !mainImage.error ? mainImage : "/images/no-image.webp"} alt={shipName} />
       </td>
+      {role !== "ADMIN" ? null : <td>{published ? "Yes" : "No"}</td>}
 
-      <td>{role !== "admin" ? shipType : `${fullName}`}</td>
+      <td>{role !== "ADMIN" ? shipTypeName : `${fullName}`}</td>
 
       <td>{shipName}</td>
-      <td>{imoNumber}</td>
+      <td>{imo}</td>
 
       <td>
         <strong>{formatedPrice(price)}</strong>

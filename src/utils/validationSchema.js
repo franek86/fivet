@@ -1,37 +1,56 @@
 import { z } from "zod";
 
-export const floatValidation = {
-  required: "This field is required",
-  validate: (value) => {
-    const num = parseFloat(value);
-    if (isNaN(num)) return "Must be a valid number";
-    if (num <= 0) return "Must be a positive number";
-    return true;
-  },
-};
+const stringToFloat = (fieldName) =>
+  z
+    .string()
+    .min(1, `${fieldName} is required`)
+    .refine((val) => /^-?\d+(\.\d+)?$/.test(val), {
+      message: `${fieldName} must be a valid number`,
+    })
+    .transform((val) => parseFloat(val));
 
-export const imageValidation = {
-  required: "Image is required",
-  validate: {
-    isFile: (files) => (files && files.length > 0 && files[0] instanceof File) || "Must be a valid file",
-    isImage: (files) => (files && files[0]?.type.startsWith("image/")) || "Must be an image file",
-  },
-};
+const optionalInt = (fieldName) =>
+  z
+    .string()
+    .optional()
+    .refine((val) => !val || /^\d{1,4}$/.test(val), {
+      message: `${fieldName} must be a whole number`,
+    })
+    .transform((val) => (val ? parseInt(val) : undefined));
 
-export const yearValidation = {
-  pattern: {
-    value: /^\d{1,4}$/,
-    message: "Year must be a number with up to 4 digits",
-  },
-  validate: (value) => {
-    if (!value) return true;
-    const year = parseInt(value, 10);
-    if (isNaN(year)) return "Year must be a number";
-    if (year < 1000) return "Year must be at least 1000";
-    if (year > new Date().getFullYear()) return "Year can't be in the future";
-    return true;
-  },
-};
+export const createShipSchema = z.object({
+  shipName: z.string().min(1, { message: "Ship name is required" }),
+  imo: z.string().min(1, { message: "IMO number is required" }),
+  typeId: z.string().uuid().min(1, "Ship type is required"),
+  price: z
+    .string()
+    .min(1, "Price is required")
+    .refine((val) => /^\d+$/.test(val), { message: "Price must be a whole number without dots or commas" })
+    .transform((val) => Number(val)),
+  location: z.string().min(1, "Location is required"),
+  mainEngine: z.string().min(1, "Main engine is required"),
+  lengthOverall: z.string().optional(),
+  length: stringToFloat("Length"),
+  beam: stringToFloat("Beam"),
+  depth: stringToFloat("Depth"),
+  draft: stringToFloat("Draft"),
+  tonnage: stringToFloat("Tonnage"),
+  cargoCapacity: z.string().min(1, "Cargo capacity is required"),
+  buildYear: optionalInt("Build year"),
+  buildCountry: z.string().optional(),
+  refitYear: optionalInt("Refit year"),
+  remarks: z.string().optional(),
+  description: z.string().optional(),
+  userId: z.string().uuid(),
+  mainImage: z
+    .instanceof(File, { message: "An image file is required" })
+    .refine((file) => file.size <= 5 * 1024 * 1024, {
+      message: "File size should not exceed 5MB",
+    })
+    .refine((file) => file.type.startsWith("image/"), {
+      message: "Only image files are allowed",
+    }),
+});
 
 // edit ship form schema
 export const editShipSchema = z.object({

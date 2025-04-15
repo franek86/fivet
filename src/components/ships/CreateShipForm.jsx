@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "react-router";
 
 import Spinner from "../Spinner.jsx";
@@ -11,7 +11,7 @@ import TextArea from "../ui/TextArea.jsx";
 import ImageUploader from "../ImageUploader.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
 
-import { editShipSchema, floatValidation, imageValidation, yearValidation } from "../../utils/validationSchema.js";
+import { createShipSchema, editShipSchema } from "../../utils/validationSchema.js";
 import styled from "styled-components";
 
 import { useCreateShip } from "../../hooks/ships/useCreateShip.js";
@@ -59,7 +59,7 @@ const ShipsForm = () => {
   const { mutate: uploadImage } = useUploadSingleImage();
   const { mutate: getImageUrl } = useImagePublicUrl();
 
-  const schema = isEditSession ? editShipSchema : null;
+  const schema = isEditSession ? editShipSchema : createShipSchema;
 
   const {
     register,
@@ -71,6 +71,7 @@ const ShipsForm = () => {
     reset,
   } = useForm({
     defaultValues: {},
+    resolver: zodResolver(schema),
   });
 
   useEffect(() => {
@@ -90,8 +91,24 @@ const ShipsForm = () => {
     const file = data.mainImage;
 
     if (file instanceof File) {
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        if (key === "image") return;
+        formData.append(key, value);
+      });
+
+      // Append the image file
+      if (data.image && data.mainImage.length > 0) {
+        formData.append("mainImage", data.mainImage[0]);
+      }
       submitData(
+        formData,
         {
+          onSuccess: () => {
+            navigate("/ships");
+          },
+        }
+        /*  {
           ...data,
           beam: data.beam ? parseFloat(data.beam) : null,
           length: data.length ? parseFloat(data.length) : null,
@@ -102,8 +119,7 @@ const ShipsForm = () => {
           buildYear: data.buildYear ? parseInt(data.buildYear) : null,
           price: data.price ? parseFloat(data.price) : null,
           mainImage: data.mainImage.name,
-        },
-        console.log(data)
+        }, */
       );
       /*  var filePath = `${Date.now()}${Math.floor(Math.random() * 10000)}-${file.name.replaceAll(/\s/g, "-")}`;
       var bucket = "Ship images";
@@ -192,7 +208,7 @@ const ShipsForm = () => {
             placeholder='e.g. 0000001'
             directions='column'
             register={register}
-            {...register("imo", floatValidation)}
+            {...register("imo", { required: "IMO number is required" })}
           />
           <InputErrorMessage message={errors.imoNumber?.message} />
         </Column>
@@ -223,7 +239,7 @@ const ShipsForm = () => {
             directions='column'
             placeholder='2000000'
             register={register}
-            {...register("price", { require: true })}
+            {...register("price", { required: "Price is required" })}
           />
           <InputErrorMessage message={errors.price?.message} />
         </Column>
@@ -261,19 +277,43 @@ const ShipsForm = () => {
           <InputErrorMessage message={errors.lengthOverall?.message} />
         </Column>
         <Column>
-          <Input label='Length' directions='column' placeholder='e.g. 94' register={register} {...register("length", floatValidation)} />
+          <Input
+            label='Length'
+            directions='column'
+            placeholder='e.g. 94'
+            register={register}
+            {...register("length", { require: "Length is required" })}
+          />
           <InputErrorMessage message={errors.length?.message} />
         </Column>
         <Column>
-          <Input label='Beam' directions='column' placeholder='e.g. 25.4' register={register} {...register("beam", floatValidation)} />
+          <Input
+            label='Beam'
+            directions='column'
+            placeholder='e.g. 25.4'
+            register={register}
+            {...register("beam", { require: "Beam is required" })}
+          />
           <InputErrorMessage message={errors.beam?.message} />
         </Column>
         <Column>
-          <Input label='Depth' directions='column' placeholder='e.g. 7.2' register={register} {...register("depth", floatValidation)} />
+          <Input
+            label='Depth'
+            directions='column'
+            placeholder='e.g. 7.2'
+            register={register}
+            {...register("depth", { require: "Depth is required" })}
+          />
           <InputErrorMessage message={errors.depth?.message} />
         </Column>
         <Column>
-          <Input label='Draft' directions='column' placeholder='e.g. 5.8' register={register} {...register("draft", floatValidation)} />
+          <Input
+            label='Draft'
+            directions='column'
+            placeholder='e.g. 5.8'
+            register={register}
+            {...register("draft", { require: "Draft is required" })}
+          />
           <InputErrorMessage message={errors.draft?.message} />
         </Column>
         <Column>
@@ -282,7 +322,7 @@ const ShipsForm = () => {
             directions='column'
             placeholder='e.g. 4000'
             register={register}
-            {...register("tonnage", floatValidation)}
+            {...register("tonnage", { require: true })}
           />
           <InputErrorMessage message={errors.tonnage?.message} />
         </Column>
@@ -303,21 +343,15 @@ const ShipsForm = () => {
             directions='column'
             placeholder='e.g. 1997'
             register={register}
-            {...register("buildYear", yearValidation)}
+            {...register("buildYear")}
           />
           <InputErrorMessage message={errors.buildYear?.message} />
         </Column>
-        <Input label='Build country' directions='column' placeholder='e.g. Poland' register={register} {...register("buildCountry")} />
         <Column>
-          <Input
-            label='Refit year'
-            directions='column'
-            placeholder='e.g. 2011'
-            register={register}
-            {...register("refitYear", yearValidation)}
-          />
+          <Input label='Refit year' directions='column' placeholder='e.g. 2011' register={register} {...register("refitYear")} />
           <InputErrorMessage message={errors.refitYear?.message} />
         </Column>
+        <Input label='Build country' directions='column' placeholder='e.g. Poland' register={register} {...register("buildCountry")} />
       </Form>
       <Form>
         <TextArea label='Remarks' directions='column' register={register} {...register("remarks")} />

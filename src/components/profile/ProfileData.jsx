@@ -29,13 +29,23 @@ const StyledInfo = styled.div`
   gap: 10px;
 `;
 const StyledAvatar = styled.div`
+  height: 20rem;
+  width: 20rem;
+  padding: 1.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.02);
+  }
 `;
 
 const StyledImage = styled.img`
-  height: 30rem;
+  //height: 30rem;
   width: 30rem;
   border-radius: 50%;
 `;
@@ -96,9 +106,9 @@ function ProfileData() {
       </StyledInfo>
       <StyledAvatar>
         {data.profile.avatar ? (
-          <ImageUploader name='avatar' value={watch("avatar")} initialImage={data.profile.avatar} onChange={handleAvatarChange} />
-        ) : (
           <StyledImage src={data.profile.avatar} />
+        ) : (
+          <ImageUploader name='avatar' value={watch("avatar")} initialImage={data.profile.avatar} onChange={handleAvatarChange} />
         )}
       </StyledAvatar>
     </StyledForm>

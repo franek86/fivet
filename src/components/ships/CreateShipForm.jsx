@@ -70,7 +70,7 @@ const ShipsForm = () => {
     handleSubmit,
     reset,
   } = useForm({
-    defaultValues: {},
+    defaultValues: isEditSession ? { ...singleShipData } : {},
     resolver: zodResolver(schema),
   });
 
@@ -78,11 +78,11 @@ const ShipsForm = () => {
     if (singleShipData && isEditSession) {
       reset({
         ...singleShipData,
-        imoNumber: singleShipData?.imoNumber ? String(singleShipData?.imoNumber) : "",
+        /*  imo: singleShipData?.imoNumber ? String(singleShipData?.imoNumber) : "",
         price: singleShipData?.price ? String(singleShipData?.price) : "",
         mainImage: singleShipData?.mainImage || null,
         buildYear: singleShipData?.buildYear || "",
-        refitYear: singleShipData?.refitYear || "",
+        refitYear: singleShipData?.refitYear || "", */
       });
     }
   }, [singleShipData, reset]);
@@ -101,82 +101,7 @@ const ShipsForm = () => {
       if (data.image && data.mainImage.length > 0) {
         formData.append("mainImage", data.mainImage[0]);
       }
-      submitData(
-        formData,
-        {
-          onSuccess: () => {
-            navigate("/ships");
-          },
-        }
-        /*  {
-          ...data,
-          beam: data.beam ? parseFloat(data.beam) : null,
-          length: data.length ? parseFloat(data.length) : null,
-          depth: data.depth ? parseFloat(data.depth) : null,
-          draft: data.draft ? parseFloat(data.draft) : null,
-          tonnage: data.tonnage ? parseFloat(data.tonnage) : null,
-          refitYear: data.refitYear ? parseInt(data.refitYear) : null,
-          buildYear: data.buildYear ? parseInt(data.buildYear) : null,
-          price: data.price ? parseFloat(data.price) : null,
-          mainImage: data.mainImage.name,
-        }, */
-      );
-      /*  var filePath = `${Date.now()}${Math.floor(Math.random() * 10000)}-${file.name.replaceAll(/\s/g, "-")}`;
-      var bucket = "Ship images";
-
-      uploadImage(
-        { file, bucket, filePath },
-        {
-          onSuccess: (filePath) => {
-            getImageUrl(
-              { filePath, bucket },
-              {
-                onSuccess: (urlImage) => {
-                  if (isEditSession) {
-                    editShip(
-                      {
-                        newData: {
-                          ...data,
-                          buildYear: data?.buildYear || null,
-                          refitYear: data?.refitYear || null,
-                          mainImage: urlImage,
-                        },
-                        id: Number(shipId),
-                      },
-                      {
-                        onSuccess: () => {
-                          navigate("/ships");
-                        },
-                      }
-                    );
-                  } else {
-                    submitData(
-                      {
-                        ...data,
-                        mainImage: urlImage,
-                      },
-                      {
-                        onSuccess: () => {
-                          navigate("/ships");
-                        },
-                      }
-                    );
-                  }
-                },
-              }
-            );
-          },
-        }
-      );
-    } else {
-      editShip(
-        { newData: formatedData, id: Number(shipId) },
-        {
-          onSuccess: () => {
-            navigate("/ships");
-          },
-        }
-      );*/
+      submitData(formData);
     }
   };
 
@@ -210,7 +135,7 @@ const ShipsForm = () => {
             register={register}
             {...register("imo", { required: "IMO number is required" })}
           />
-          <InputErrorMessage message={errors.imoNumber?.message} />
+          <InputErrorMessage message={errors.imo?.message} />
         </Column>
         <Column>
           <Controller

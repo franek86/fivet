@@ -17,7 +17,7 @@ function EditShip() {
   return (
     <>
       <FlexWrap>
-        <Title tag='h1'>{`Edit ship - ${id}`}</Title>
+        <Title tag='h1'>Edit ship</Title>
         <BackBtn />
       </FlexWrap>
       <CreateShipForm editId={id} />

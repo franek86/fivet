@@ -1,5 +1,4 @@
 import apiClient from "../utils/axiosConfig.js";
-import { PAGE_SIZE } from "../utils/constants.js";
 import { getResizedImageUrl } from "../utils/resizedImage.js";
 import supabase from "./databaseConfig.js";
 
@@ -19,6 +18,7 @@ export const getShips = async ({ page, role, userId }) => {
 
     return res.data;
   } catch (error) {
+    console.log(error);
     const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);
   }
@@ -28,26 +28,13 @@ export const getShips = async ({ page, role, userId }) => {
   Single ship data by id
 */
 export const getShip = async (id) => {
-  if (!id) return;
-  const { data, error } = await supabase.from("ships").select("*").eq("id", id).single();
-  if (error) {
-    throw new Error("Ship colud not be loaded");
+  try {
+    const res = await apiClient(`/ships/${id}`);
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
   }
-
-  const { data: files } = await supabase.storage.from(bucketName).list();
-
-  const checkImageExists = (imageUrl) => {
-    if (!imageUrl) return placeholder;
-
-    const fileName = imageUrl.split("/").pop();
-    const fileExists = files.some((file) => file.name === fileName);
-
-    return fileExists ? getResizedImageUrl(imageUrl, 80, 45) : placeholder;
-  };
-
-  const updatedData = { ...data, mainImage: checkImageExists(data.mainImage) };
-
-  return updatedData;
 };
 
 /* 
@@ -56,9 +43,21 @@ export const getShip = async (id) => {
 
 export const createEditShip = async (newData, id) => {
   try {
-    const res = await apiClient.post("/ships/create", newData, {
+    const method = id ? "patch" : "post";
+    const endpoint = id ? `/ships/${id}` : "/ships/create";
+    const res = await apiClient[method](endpoint, newData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
+
+    /* if (!id) {
+      var res = await apiClient.post("/ships/create", newData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    } else {
+      var res = await apiClient.post(`/ships/${id}`, newData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    } */
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";
@@ -70,10 +69,11 @@ export const createEditShip = async (newData, id) => {
   Delete ship by id
 */
 export const deleteShip = async (id) => {
-  const { data, error } = await supabase.from("ships").delete().eq("id", id);
-  if (error) {
-    throw new Error("Category could not be deleted");
+  try {
+    const res = await apiClient.delete(`/ships/${id}`);
+    return res;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
   }
-
-  return data;
 };

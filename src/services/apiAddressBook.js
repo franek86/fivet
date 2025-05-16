@@ -1,16 +1,16 @@
-import supabase from "./databaseConfig.js";
+import apiClient from "../utils/axiosConfig.js";
 
 /* Create contact in address boook */
-export const createAddressBoookContactApi = async (newData, userId) => {
-  if (!userId) throw new Error("User does not exists");
-
-  const { data, error } = await supabase.from("address_book").insert([{ ...newData, user_id: userId }]);
-
-  if (error) {
-    throw new Error("Contact could not be added");
+export const createAddressBoookContactApi = async (newData) => {
+  try {
+    const res = await apiClient.post("/address-book/create", {
+      ...newData,
+    });
+    return res;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
   }
-
-  return data;
 };
 
 /* Edit contact by id in address boook */
@@ -41,13 +41,14 @@ export const editAddressBookPriorityApi = async (id, newPriority) => {
 /* Get address book list */
 export const fecthAddressBookApi = async (userId) => {
   if (!userId) throw new Error("User does not exists");
-  const { data, error } = await supabase.from("address_book").select("*").eq("user_id", userId);
 
-  if (error) {
-    throw new Error("Address book list could not be loaded");
+  try {
+    const res = await apiClient.get("/address-book");
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
   }
-
-  return data;
 };
 
 /* Get single address book */

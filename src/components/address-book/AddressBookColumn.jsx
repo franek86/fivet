@@ -39,7 +39,7 @@ const StyledDropdown = styled.form`
 function AddressBookColumn({ addressBook }) {
   const [visibleDropdown, setVisibleDropdown] = useState(false);
 
-  const { id, full_name, email, mobile_number, priority } = addressBook;
+  const { id, fullName, email, mobile_number, priority } = addressBook;
   const [changePriority, setChangePriority] = useState(priority);
 
   const isMdScreen = useMediaQuery(640); //min width 640px
@@ -84,7 +84,7 @@ function AddressBookColumn({ addressBook }) {
       <td>
         <Checkbox />
       </td>
-      <td>{full_name}</td>
+      <td>{fullName}</td>
 
       <td>
         <StyledPriority $props={changePriority}>

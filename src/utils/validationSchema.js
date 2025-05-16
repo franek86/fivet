@@ -1,5 +1,5 @@
-import { z } from "zod";
-
+import { nullable, z } from "zod";
+const StatusEnum = z.enum(["REGULAR", "IMPORTANT"]);
 const stringToFloat = (fieldName) =>
   z
     .string()
@@ -101,4 +101,24 @@ export const createCategorySchema = z.object({
 export const loginSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
+});
+
+// Address book schema
+export const addressBookSchema = z.object({
+  email: z.string().min(1, { message: "Email is required" }).email("Invalid email address"),
+  fullName: z.string().min(1, "Name is required"),
+  phone_number: z.string().optional().nullable(),
+  mobile_number: z.string().optional().nullable(),
+  country: z.string().optional().nullable(),
+  address_2: z.string().optional().nullable(),
+  web_link: z.string().optional().nullable(),
+  linkedin_link: z.string().optional().nullable(),
+  facebook_link: z.string().optional().nullable(),
+  instagram_link: z.string().optional().nullable(),
+  tiktok_link: z.string().optional().nullable(),
+  priority: StatusEnum.default("REGULAR"),
+  company: z.string().optional().nullable(),
+  address: z.string().optional().nullable(),
+  note: z.string().optional().nullable(),
+  userId: z.string().uuid(),
 });

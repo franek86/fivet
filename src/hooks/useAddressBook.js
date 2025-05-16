@@ -12,11 +12,11 @@ import { toast } from "react-toastify";
 import { closeModalByName } from "../slices/modalSlice.js";
 
 export const useCreateAddressBook = () => {
-  const user = useSelector((state) => state.auth.user);
+  //const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const { mutate, isPending, isSuccess } = useMutation({
-    mutationFn: (data) => createAddressBoookContactApi(data, user.id),
+    mutationFn: (data) => createAddressBoookContactApi(data),
     onSuccess: () => {
       toast.success("Contact successfully added");
       dispatch(closeModalByName("address-book"));

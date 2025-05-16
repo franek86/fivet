@@ -1,15 +1,19 @@
 import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import ReactQuill from "react-quill";
 
 import Button from "../ui/Button.jsx";
 import Input from "../ui/Input.jsx";
-import CustomSelect from "../ui/CustomSelect.jsx";
 import TextArea from "../ui/TextArea.jsx";
+import CustomSelect from "../ui/CustomSelect.jsx";
 import Spinner from "../../components/Spinner.jsx";
 import CustomPhoneInput from "../ui/CustomPhoneInput.jsx";
+import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 
 import styled from "styled-components";
 import { useCreateAddressBook, useEditAddressBook } from "../../hooks/useAddressBook.js";
+import { addressBookSchema } from "../../utils/validationSchema.js";
+import { useUser } from "../../hooks/useAuth.js";
 
 const StyledForm = styled.form`
   display: flex;
@@ -36,7 +40,13 @@ const Row = styled.div`
   gap: 15px;
 `;
 
+const Column = styled(Row)`
+  flex-direction: column;
+  gap: 0;
+`;
+
 function FormAddressBook({ addressBookToEdit = {} }) {
+  const { data: user } = useUser();
   const { mutate: create, isPending, isSuccess } = useCreateAddressBook();
   const { mutate: edit, isPending: editIsPending, isSuccess: editIsSuccess } = useEditAddressBook();
 
@@ -48,7 +58,10 @@ function FormAddressBook({ addressBookToEdit = {} }) {
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm({ defaultValues: isEditSession ? editValues : {} });
+  } = useForm({
+    defaultValues: isEditSession ? editValues : { phone_number: "", mobile_number: "", note: "" },
+    resolver: zodResolver(addressBookSchema),
+  });
 
   const onHandleSubmit = (data) => {
     if (!isEditSession) {
@@ -68,6 +81,7 @@ function FormAddressBook({ addressBookToEdit = {} }) {
 
   return (
     <StyledForm onSubmit={handleSubmit(onHandleSubmit)}>
+      <input type='hidden' {...register("userId")} value={user.id} />
       <Grid>
         <Controller
           name='priority'
@@ -86,8 +100,21 @@ function FormAddressBook({ addressBookToEdit = {} }) {
             />
           )}
         />
-        <Input directions='column' label='Name' register={register} placeholder='Enter name' {...register("full_name")} />
-        <Input type='email' directions='column' label='Email' placeholder='Enter valid email' register={register} {...register("email")} />
+        <Column>
+          <Input directions='column' label='Name' register={register} placeholder='Enter name' {...register("fullName")} />
+          <InputErrorMessage message={errors.fullName?.message} />
+        </Column>
+        <Column>
+          <Input
+            type='email'
+            directions='column'
+            label='Email'
+            placeholder='Enter valid email'
+            register={register}
+            {...register("email")}
+          />
+          <InputErrorMessage message={errors.email?.message} />
+        </Column>
         <CustomPhoneInput
           label='Mobile number'
           name='mobile_number'
@@ -143,12 +170,21 @@ function FormAddressBook({ addressBookToEdit = {} }) {
           register={register}
           {...register("tiktok_link")}
         />
+        <Input
+          type='url'
+          directions='column'
+          label='Web url'
+          placeholder='Enter valid web url'
+          register={register}
+          {...register("web_link")}
+        />
       </Grid>
-      <Controller
+      <TextArea placeholder='Note' name='note' />
+      {/*  <Controller
         name='note'
         control={control}
-        render={({ field }) => <ReactQuill {...field} placeholder='Here you can enter note about your contact' />}
-      />
+        render={({ field }) => <ReactQuill {...field} value={field.value} placeholder='Here you can enter note about your contact' />}
+      /> */}
 
       <Row>
         {isEditSession ? (

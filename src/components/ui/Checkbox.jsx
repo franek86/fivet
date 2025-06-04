@@ -15,8 +15,8 @@ const StyleHiddenCheckbox = styled.input`
 `;
 
 const StyledCheckmark = styled.div`
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 2rem;
+  height: 2rem;
   border: 1px solid var(--color-silver-700);
   border-radius: var(--border-radius-sm);
   display: flex;

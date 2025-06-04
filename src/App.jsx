@@ -20,6 +20,7 @@ import ProtectedRoute from "./pages/ProtectedRoute.jsx";
 import Profile from "./pages/Profile.jsx";
 import AddressBook from "./pages/AddressBook.jsx";
 import SingleAddressBook from "./pages/SIngleAddressBook.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route element={<AuthLayout />}>
           <Route index element={<Login />} />
           <Route path='/sign-up' element={<SignUp />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route path='/unauthorized' element={<Unauthorized />} />
         </Route>
         <Route element={<ProtectedRoute alowedRoles={["ADMIN", "USER"]} />}>

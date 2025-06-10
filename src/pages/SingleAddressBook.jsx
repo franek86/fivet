@@ -84,7 +84,7 @@ function SingleAddressBook() {
   if (isError) return <div>Error</div>;
 
   const {
-    full_name,
+    fullName,
     email,
     phone_number,
     mobile_number,
@@ -97,13 +97,15 @@ function SingleAddressBook() {
     instagram_link,
     tiktok_link,
     note,
+    web_link,
+    priority,
   } = data;
   //const [noteValue, setNoteValue] = useState(note || "");
 
   return (
     <>
       <FlexWrap>
-        <Title tag='h1'>{full_name} </Title>
+        <Title tag='h1'>{fullName} </Title>
         <BackBtn />
       </FlexWrap>
       <StyledGrid>

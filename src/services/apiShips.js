@@ -49,15 +49,6 @@ export const createEditShip = async (newData, id) => {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    /* if (!id) {
-      var res = await apiClient.post("/ships/create", newData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-    } else {
-      var res = await apiClient.post(`/ships/${id}`, newData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-    } */
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

@@ -8,4 +8,68 @@ const apiClient = axios.create({
   withCredentials: true,
 });
 
+let isRefreshing = false;
+let refreshSubscribers = () => [];
+
+//handle logout and prevent infinite loops
+const handleLogout = () => {
+  if (window.location.pathname !== "/") {
+    window.location.href("/");
+  }
+};
+
+//Handle adding a new access token
+const subbscribeTokenRefresh = (callback) => {
+  refreshSubscribers.push(callback);
+};
+
+//Execute request after refresh
+const onRefreshSuccess = () => {
+  refreshSubscribers.forEach((callback) => callback());
+  refreshSubscribers = [];
+};
+
+//Handle api request
+apiClient.interceptors.request.use(
+  (config) => config,
+  (error) => Promise.reject(error)
+);
+
+//Handle expired token and refresh logic
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    //Prevent infinite loop
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((reslove) => {
+          subbscribeTokenRefresh(() => reslove(originalRequest));
+        });
+      }
+      originalRequest._retry = true;
+      isRefreshing = true;
+      try {
+        await axios.post(
+          `${meta.env.VITE_API_BASE_URL}/auth/refresh-token`,
+          {},
+          {
+            withCredentials: true,
+          }
+        );
+        isRefreshing = false;
+        onRefreshSuccess();
+        return apiClient(originalRequest);
+      } catch (error) {
+        isRefreshing = false;
+        refreshSubscribers = [];
+        handleLogout();
+        return Promise.reject(error);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default apiClient;

@@ -15,27 +15,28 @@ export const createAddressBoookContactApi = async (newData) => {
 
 /* Edit contact by id in address boook */
 export const editAddressBoookContactApi = async (newData, id) => {
-  if (!id) throw new Error("Address book does not exists");
+  if (!id) throw new Error("Address book id does not exists");
 
-  const { data, error } = await supabase.from("address_book").update(newData).eq("id", id).select();
-
-  if (error) {
-    throw new Error("Contact could not be edited");
+  try {
+    const response = await apiClient.patch(`/address-book/${id}`, { ...newData });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error(message);
   }
-
-  return data;
 };
 
 /* Edit only address book priority field */
 export const editAddressBookPriorityApi = async (id, newPriority) => {
   if (!id) throw new Error("Address book id does not exists");
 
-  const { data, error } = await supabase.from("address_book").update({ priority: newPriority }).eq("id", id);
-  if (error) {
-    throw new Error("Priority could not be edited");
+  try {
+    const response = await apiClient.patch(`/address-book/${id}`, { priority: newPriority });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error(message);
   }
-
-  return data;
 };
 
 /* Get address book list */
@@ -54,21 +55,25 @@ export const fecthAddressBookApi = async (userId) => {
 /* Get single address book */
 export const getSingleAddressBookApi = async (id) => {
   if (!id) throw new Error("Address book by id does not exists");
-  const { data, error } = await supabase.from("address_book").select("*").eq("id", id).single();
-  if (error) {
-    throw new Error("Ship colud not be loaded");
+  console.log(id);
+  try {
+    const res = await apiClient.get(`/address-book/${id}`);
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
   }
-
-  return data;
 };
 
 /* Delete single address book by id */
 export const deleteSingleAddressBookApi = async (id) => {
   if (!id) throw new Error("Address book by id does not exists");
-  const { data, error } = await supabase.from("address_book").delete().eq("id", id);
-  if (error) {
-    throw new Error("Address book list could not be loaded");
+  try {
+    const res = await apiClient.delete(`/address-book/${id}`);
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
   }
-
-  return data;
 };

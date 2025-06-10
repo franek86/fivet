@@ -1,4 +1,4 @@
-import { nullable, z } from "zod";
+import { z } from "zod";
 const StatusEnum = z.enum(["REGULAR", "IMPORTANT"]);
 const stringToFloat = (fieldName) =>
   z
@@ -13,6 +13,7 @@ const optionalInt = (fieldName) =>
   z
     .string()
     .optional()
+    .nullable()
     .refine((val) => !val || /^\d{1,4}$/.test(val), {
       message: `${fieldName} must be a whole number`,
     })
@@ -55,34 +56,21 @@ export const createShipSchema = z.object({
 // edit ship form schema
 export const editShipSchema = z.object({
   shipName: z.string().optional(),
-  imoNumber: z
-    .string()
-    .regex(/^\d+$/, { message: "IMO number must be a valid number" })
-    .transform((val) => parseInt(val, 10))
-    .optional(),
-  shipType: z.string().optional(),
-  price: z
-    .string()
-    .refine((val) => /^\d+$/.test(val), { message: "Price must be a whole number without dots or commas" })
-    .transform((val) => Number(val))
-    .optional(),
+  imo: z.string().optional(),
+  typeId: z.string().optional(),
+  price: z.number().int().optional(),
   location: z.string().optional(),
   mainEngine: z.string().optional(),
   lengthOverall: z.string().optional(),
-  beam: z.string().optional(),
-  depth: z.string().optional(),
-  draft: z.string().optional(),
-  tonnage: z.string().optional(),
+  length: z.coerce.number().optional(),
+  beam: z.coerce.number().optional(),
+  depth: z.coerce.number().optional(),
+  draft: z.coerce.number().optional(),
+  tonnage: z.coerce.number().optional(),
   cargoCapacity: z.string().optional(),
-  buildYear: z
-    .string()
-    .optional()
-    .refine((value) => !value || !isNaN(Date.parse(value)), "Invalid date format"),
+  buildYear: optionalInt("Build year"),
   buildCountry: z.string().optional(),
-  refitYear: z
-    .string()
-    .optional()
-    .refine((value) => !value || !isNaN(Date.parse(value)), "Invalid date format"),
+  refitYear: optionalInt("Refit year"),
   remarks: z.string().optional(),
   description: z.string().optional(),
   mainImage: z.union([z.instanceof(File), z.string().url("Must be a valid image URL")]).refine((value) => {

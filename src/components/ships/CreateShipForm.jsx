@@ -55,9 +55,7 @@ const ShipsForm = () => {
   const { data: singleShipData, isLoading, isError } = useShip(shipId);
   const { data: user } = useUser();
   const { mutate: submitData, isPending } = useCreateShip();
-  const { editShip } = useEditShip();
-  const { mutate: uploadImage } = useUploadSingleImage();
-  const { mutate: getImageUrl } = useImagePublicUrl();
+  const { mutate: editShip } = useEditShip();
 
   const schema = isEditSession ? editShipSchema : createShipSchema;
 
@@ -101,7 +99,14 @@ const ShipsForm = () => {
       if (data.image && data.mainImage.length > 0) {
         formData.append("mainImage", data.mainImage[0]);
       }
-      submitData(formData);
+
+      if (isEditSession) {
+        editShip({ newData: data, id: shipId });
+      } else {
+        submitData(data);
+      }
+    } else {
+      isEditSession && editShip({ newData: data, id: shipId });
     }
   };
 
@@ -119,7 +124,7 @@ const ShipsForm = () => {
         <input type='hidden' {...register("userId")} value={user.id} />
         <Column>
           <Input
-            label='Ship name'
+            label='Ship name *'
             placeholder='e.g. Ten Spirit'
             directions='column'
             register={register}
@@ -129,7 +134,7 @@ const ShipsForm = () => {
         </Column>
         <Column>
           <Input
-            label='IMO number'
+            label='IMO number *'
             placeholder='e.g. 0000001'
             directions='column'
             register={register}
@@ -160,7 +165,7 @@ const ShipsForm = () => {
         <Column>
           <Input
             type='number'
-            label='Price (USD)'
+            label='Price (USD) *'
             directions='column'
             placeholder='2000000'
             register={register}
@@ -170,7 +175,7 @@ const ShipsForm = () => {
         </Column>
         <Column>
           <Input
-            label='Ship location'
+            label='Ship location *'
             directions='column'
             placeholder='e.g. Croatia'
             register={register}
@@ -180,7 +185,7 @@ const ShipsForm = () => {
         </Column>
         <Column>
           <Input
-            label='Main engine'
+            label='Main engine *'
             directions='column'
             placeholder='e.g. 1x Makita 2400 kw'
             register={register}
@@ -203,7 +208,7 @@ const ShipsForm = () => {
         </Column>
         <Column>
           <Input
-            label='Length'
+            label='Length *'
             directions='column'
             placeholder='e.g. 94'
             register={register}
@@ -213,7 +218,7 @@ const ShipsForm = () => {
         </Column>
         <Column>
           <Input
-            label='Beam'
+            label='Beam *'
             directions='column'
             placeholder='e.g. 25.4'
             register={register}
@@ -223,7 +228,7 @@ const ShipsForm = () => {
         </Column>
         <Column>
           <Input
-            label='Depth'
+            label='Depth *'
             directions='column'
             placeholder='e.g. 7.2'
             register={register}
@@ -233,7 +238,7 @@ const ShipsForm = () => {
         </Column>
         <Column>
           <Input
-            label='Draft'
+            label='Draft *'
             directions='column'
             placeholder='e.g. 5.8'
             register={register}
@@ -243,7 +248,7 @@ const ShipsForm = () => {
         </Column>
         <Column>
           <Input
-            label='Tonnage'
+            label='Tonnage *'
             directions='column'
             placeholder='e.g. 4000'
             register={register}
@@ -253,7 +258,7 @@ const ShipsForm = () => {
         </Column>
         <Column>
           <Input
-            label='Cargo capacity'
+            label='Cargo capacity *'
             directions='column'
             placeholder='e.g. 3990 cbm'
             register={register}

@@ -48,7 +48,7 @@ export const useGetAddressBook = () => {
 
 export const useGetAddressBookById = (id) => {
   const { data, isPending, isError, isFetching } = useQuery({
-    queryKey: ["address-book-id"],
+    queryKey: ["address-book-id", id],
     queryFn: () => getSingleAddressBookApi(id),
   });
   return { data, isPending, isError, isFetching };

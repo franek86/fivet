@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { useController } from "react-hook-form";
 import Label from "./Label.jsx";
 import styled, { css } from "styled-components";
@@ -70,7 +70,7 @@ const SelectOption = styled.div`
   }
 `;
 
-const CustomSelect = ({ name, control, options, label, size, variation, valueKey = "name" }) => {
+const CustomSelect = forwardRef(({ name, control, options, label, size, variation, valueKey = "name" }, ref) => {
   if (!control) {
     console.error(`❌ CustomSelect: Missing 'control' prop for ${name}`);
     return null;
@@ -90,7 +90,7 @@ const CustomSelect = ({ name, control, options, label, size, variation, valueKey
     <Wrap>
       <Label>{label}</Label>
 
-      <Select onClick={() => setIsOpen(!isOpen)} $size={size} $variation={variation}>
+      <Select ref={ref} onClick={() => setIsOpen(!isOpen)} $size={size} $variation={variation}>
         {selectedOption ? selectedOption.name : "Select item"}
         {isOpen ? <LuChevronUp /> : <LuChevronDown />}
       </Select>
@@ -106,6 +106,6 @@ const CustomSelect = ({ name, control, options, label, size, variation, valueKey
       )}
     </Wrap>
   );
-};
+});
 
 export default CustomSelect;

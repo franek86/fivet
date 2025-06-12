@@ -19,7 +19,6 @@ import Unauthorized from "./pages/Unauthorized.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
 import Profile from "./pages/Profile.jsx";
 import AddressBook from "./pages/AddressBook.jsx";
-import SingleAddressBook from "./pages/SIngleAddressBook.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 
 function App() {
@@ -41,7 +40,6 @@ function App() {
             <Route path='/ships/create' element={<CreateShip />} />
             <Route path='/ships/edit/:id' element={<EditShip />} />
             <Route path='/address-book' element={<AddressBook />} />
-            <Route path='/address-book/:id' element={<SingleAddressBook />} />
 
             <Route path='/profile' element={<Profile />} />
           </Route>

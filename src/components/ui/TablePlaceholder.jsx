@@ -11,7 +11,7 @@ function TablePlaceholder({ count }) {
         .fill(null)
         .map((_, index) => (
           <div key={index} className='simmer'>
-            <div className='simmer-data-placehoder'></div>
+            <div className='simmer-data-placeholder'></div>
           </div>
         ))}
     </StyledPlaceholderTable>

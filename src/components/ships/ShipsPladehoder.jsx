@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Table from "../ui/Table.jsx";
 
-function ShipsPlacehoder() {
+function ShipsPlaceholder() {
   return (
     <Table.Row>
       <Table.Column>
@@ -29,4 +29,4 @@ function ShipsPlacehoder() {
   );
 }
 
-export default ShipsPlacehoder;
+export default ShipsPlaceholder;

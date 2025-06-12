@@ -6,6 +6,7 @@ import Spinner from "../Spinner.jsx";
 import ShipsColumn from "./ShipsColumn.jsx";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import CustomTable from "../ui/CustomTable.jsx";
+import EmptyState from "../EmptyState.jsx";
 
 function ShipsTable() {
   const { ships, count, isLoading, error, isFetching } = useShips();
@@ -26,10 +27,10 @@ function ShipsTable() {
 
   if (error) return <div>Error</div>;
 
-  if (!ships || ships.length === 0) return <div>No ships</div>;
-
   const renderRow = (item) => <ShipsColumn key={item.id} ship={item} />;
   const dataLength = ships?.length;
+
+  if (dataLength < 1) return <EmptyState message='No ships for now. Please create ship' />;
   return (
     <>
       {isFetching ? <TablePlaceholder count={dataLength} /> : <CustomTable columns={tableColumns} renderRow={renderRow} data={ships} />}

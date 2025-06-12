@@ -1,3 +1,4 @@
+import axios from "axios";
 import apiClient from "../utils/axiosConfig.js";
 
 /* Register user */
@@ -76,7 +77,7 @@ export const resetPasswordApi = async ({ email, password }) => {
 /* LOGIN USER */
 export const loginApi = async ({ email, password }) => {
   try {
-    const res = await apiClient.post("/auth/login", { email, password });
+    const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, { email, password });
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

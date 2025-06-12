@@ -67,7 +67,6 @@ function FormAddressBook({ addressBookToEdit = {} }) {
     if (!isEditSession) {
       create(data);
     } else {
-      console.log({ newData: data, id });
       edit({ newData: data, id });
     }
   };
@@ -179,12 +178,13 @@ function FormAddressBook({ addressBookToEdit = {} }) {
           {...register("web_link")}
         />
       </Grid>
-      <TextArea placeholder='Note' name='note' />
-      {/*  <Controller
+      <Controller
         name='note'
         control={control}
-        render={({ field }) => <ReactQuill {...field} value={field.value} placeholder='Here you can enter note about your contact' />}
-      /> */}
+        render={({ field }) => (
+          <TextArea {...field} defaultValue='' label='Note' directions='column' register={register} {...register("note")} />
+        )}
+      />
 
       <Row>
         {isEditSession ? (

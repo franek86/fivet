@@ -144,7 +144,7 @@ function ForgotPasswordForm() {
           <Form onSubmit={handleSubmit(onSubmitEmail)}>
             <Input
               directions='column'
-              placehoder='Email address'
+              placeholder='Email address'
               label='Email *'
               name='email'
               register={register}

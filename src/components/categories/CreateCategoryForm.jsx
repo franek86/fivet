@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import Input from "../ui/Input.jsx";
@@ -74,7 +74,13 @@ function CreateCategoryForm({ categoryToEdit = {} }) {
         <InputErrorMessage message={errors.name?.message} />
       </Column>
       <Column>
-        <TextArea label='Description' directions='column' register={register} {...register("description")} />
+        <Controller
+          name='description'
+          control={control}
+          render={({ field }) => (
+            <TextArea {...field} defaultValue='' label='Description' directions='column' register={register} {...register("description")} />
+          )}
+        />
       </Column>
 
       <Row>

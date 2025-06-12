@@ -14,6 +14,7 @@ import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import useMediaQuery from "../../hooks/useMediaQuery.js";
 import { useDeleteAddressBook, useEditAddressBookPriority } from "../../hooks/useAddressBook.js";
 import styled from "styled-components";
+import SingleAddressBook from "./SingleAddressBook.jsx";
 
 const StyledPriority = styled.div`
   max-width: max-content;
@@ -63,12 +64,10 @@ function AddressBookColumn({ addressBook }) {
   );
 
   const viewButton = (
-    <Link to={`${id}`}>
-      <Button $variation='icon'>
-        <LuEye />
-        View
-      </Button>
-    </Link>
+    <Button $variation='icon' onClick={() => dispatch(openModalByName(`view-${id}`))}>
+      <LuEye />
+      View
+    </Button>
   );
 
   const handleOnClick = () => {
@@ -127,8 +126,12 @@ function AddressBookColumn({ addressBook }) {
         <FormAddressBook addressBookToEdit={addressBook} />
       </Modal>
 
+      <Modal name={`view-${id}`} onClose={() => dispatch(closeModalByName())}>
+        <SingleAddressBook id={id} />
+      </Modal>
+
       <Modal name={id} onClose={() => dispatch(closeModalByName())}>
-        <ConfirmDialog itemName={id} onConfirm={() => mutate(id)} onCloseModal={() => dispatch(closeModalByName())} />
+        <ConfirmDialog itemName={fullName} onConfirm={() => mutate(id)} onCloseModal={() => dispatch(closeModalByName())} />
       </Modal>
     </tr>
   );

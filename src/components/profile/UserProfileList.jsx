@@ -40,36 +40,42 @@ const CardTop = styled.div`
 
 const CardBottom = styled.div`
   display: grid;
+  gap: 2rem;
+  padding: 1.8rem;
   grid-template-columns: 1fr 1fr;
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-top: 1px solid var(--color-grey-200);
 `;
 
 const CardButton = styled.div`
-  color: var(--color-grey-0);
-  padding: 0.75rem;
-  font-size: 1.4rem;
+  color: var(--color-grey-400);
+  padding: 0.5rem;
+  font-size: 1.25rem;
   cursor: pointer;
-  transition: all 0.3s ease-in-out;
-
-  &:hover {
-    opacity: 0.6;
-  }
+  transition: all 0.2s ease-in-out;
+  border: 1px solid var(--color-grey-400);
+  border-radius: 2rem;
 `;
 
 const CardButtonEdit = styled(CardButton)`
-  background-color: var(--color-green-700);
+  &:hover {
+    color: var(--color-grey-0);
+    background-color: var(--color-green-700);
+  }
 `;
 const CardButtonDelete = styled(CardButton)`
-  background-color: var(--color-red-700);
+  &:hover {
+    color: var(--color-grey-0);
+    background-color: var(--color-red-700);
+  }
 `;
 
 const CardImage = styled.img`
-  width: 4rem;
-  height: 4rem;
+  width: 6rem;
+  height: 6rem;
   border-radius: 50%;
+  background-color: var(--color-grey-200);
 `;
 
 const CardContent = styled.div`
@@ -79,14 +85,17 @@ const CardContent = styled.div`
 
 const Link = styled.a`
   color: var(--color-blue-500);
+  font-size: 1.3rem;
   &:hover {
     color: var(--color-blue-700);
   }
 `;
 
-const P = styled.p`
-  font-size: 1.2rem;
-  margin-top: 1.5rem;
+const DateWrapp = styled.p`
+  font-size: 1.25rem;
+  padding-top: 1.2rem;
+  color: var(--color-grey-500);
+  font-style: italic;
 `;
 
 const CardBoxPlaceholder = styled.div`
@@ -144,9 +153,10 @@ function UserProfileList() {
                 <CardContent>
                   <strong>{item.fullName}</strong>
                   <Link href={`mailto:${item.email}`}>{item.email}</Link>
+                  <DateWrapp>Created at {customFormatDate(item.createdAt)}</DateWrapp>
                 </CardContent>
 
-                {item.avatar ? <CardImage src={item.avatar} alt={item.fullName} /> : ""}
+                {item.avatar ? <CardImage src={item.avatar} alt={item.fullName} /> : <CardImage />}
               </CardTop>
               <CardBottom>
                 <CardButtonEdit>Edit</CardButtonEdit>

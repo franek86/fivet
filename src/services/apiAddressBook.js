@@ -55,10 +55,10 @@ export const fecthAddressBookApi = async (userId) => {
 /* Get single address book */
 export const getSingleAddressBookApi = async (id) => {
   if (!id) throw new Error("Address book by id does not exists");
-  console.log(id);
+
   try {
     const res = await apiClient.get(`/address-book/${id}`);
-    console.log(res.data);
+
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

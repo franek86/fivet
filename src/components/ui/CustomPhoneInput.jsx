@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 
 import PhoneInput from "react-phone-input-2";
 
-function CustomPhoneInput({ control, name, label, defaultValue }) {
+const CustomPhoneInput = forwardRef(({ control, name, label, defaultValue }, ref) => {
   const [countryCode, setCountryCode] = useState("");
 
   useEffect(() => {
@@ -24,6 +24,7 @@ function CustomPhoneInput({ control, name, label, defaultValue }) {
         render={({ field }) => (
           <PhoneInput
             {...field}
+            inputRef={ref}
             specialLabel={label}
             country={defaultValue || countryCode}
             onChange={(value) => field.onChange(value)}
@@ -33,6 +34,6 @@ function CustomPhoneInput({ control, name, label, defaultValue }) {
       />
     </>
   );
-}
+});
 
 export default CustomPhoneInput;

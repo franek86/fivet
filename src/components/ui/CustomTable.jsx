@@ -9,10 +9,9 @@ const StyledTable = styled.table`
 
 const TableHeader = styled.th`
   background-color: var(--color-grey-50);
-  text-transform: uppercase;
   letter-spacing: 0.4px;
-  font-weight: 600;
-  color: var(--color-grey-600);
+  font-weight: 400;
+  color: var(--color-grey-500);
   padding: 1.35rem 0.5rem;
 `;
 
@@ -20,7 +19,7 @@ const TableBody = styled.tbody`
   td {
     text-align: center;
     letter-spacing: 0.4px;
-    color: var(--color-grey-600);
+    color: var(--color-grey-700);
     padding: 1.35rem 0.5rem;
   }
 `;

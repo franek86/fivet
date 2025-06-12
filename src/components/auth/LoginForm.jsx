@@ -69,7 +69,7 @@ function LoginForm() {
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Input
         directions='column'
-        placehoder='Email address'
+        placeholder='Email address'
         label='Email *'
         name='email'
         register={register}
@@ -81,7 +81,7 @@ function LoginForm() {
         <Input
           directions='column'
           type={showPassword ? "text" : "password"}
-          placehoder='Password'
+          placeholder='Password'
           label='Password *'
           name='password'
           register={register}

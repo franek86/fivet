@@ -1,4 +1,6 @@
 import axios from "axios";
+import store from "../store.js";
+import { logoutUser } from "../slices/authSlice.js";
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -9,17 +11,10 @@ const apiClient = axios.create({
 });
 
 let isRefreshing = false;
-let refreshSubscribers = () => [];
-
-//handle logout and prevent infinite loops
-const handleLogout = () => {
-  if (window.location.pathname !== "/") {
-    window.location.href("/");
-  }
-};
+let refreshSubscribers = [];
 
 //Handle adding a new access token
-const subbscribeTokenRefresh = (callback) => {
+const subscribeTokenRefresh = (callback) => {
   refreshSubscribers.push(callback);
 };
 
@@ -44,15 +39,15 @@ apiClient.interceptors.response.use(
     //Prevent infinite loop
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
-        return new Promise((reslove) => {
-          subbscribeTokenRefresh(() => reslove(originalRequest));
+        return new Promise((resolve) => {
+          subscribeTokenRefresh(() => resolve(originalRequest));
         });
       }
       originalRequest._retry = true;
       isRefreshing = true;
       try {
         await axios.post(
-          `${meta.env.VITE_API_BASE_URL}/auth/refresh-token`,
+          `${import.meta.env.VITE_API_BASE_URL}/auth/refresh-token`,
           {},
           {
             withCredentials: true,
@@ -60,11 +55,16 @@ apiClient.interceptors.response.use(
         );
         isRefreshing = false;
         onRefreshSuccess();
+
         return apiClient(originalRequest);
       } catch (error) {
         isRefreshing = false;
         refreshSubscribers = [];
-        handleLogout();
+
+        store.dispatch(logoutUser());
+        if (window.location.pathname !== "/") {
+          window.location.replace("/");
+        }
         return Promise.reject(error);
       }
     }

@@ -284,8 +284,22 @@ const ShipsForm = () => {
         <Input label='Build country' directions='column' placeholder='e.g. Poland' register={register} {...register("buildCountry")} />
       </Form>
       <Form>
-        <TextArea label='Remarks' directions='column' register={register} {...register("remarks")} />
-        <TextArea label='Description' directions='column' register={register} {...register("description")} />
+        <Controller
+          name='remarks'
+          control={control}
+          render={({ field }) => (
+            <TextArea {...field} defaultValue='' label='Remarks' directions='column' register={register} {...register("remarks")} />
+          )}
+        />
+
+        <Controller
+          name='Description'
+          control={control}
+          render={({ field }) => (
+            <TextArea {...field} defaultValue='' label='Description' directions='column' register={register} {...register("description")} />
+          )}
+        />
+
         <Column>
           <ImageUploader
             name='mainImage'

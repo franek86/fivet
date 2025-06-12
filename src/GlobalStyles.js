@@ -224,7 +224,7 @@ const GlobalStyles = styled.createGlobalStyle`
     animation: shimmer-animation 1.35s infinite ease-in-out;
     margin-bottom: 1rem;
   }
-  .simmer-data-placehoder {
+  .simmer-data-placeholder {
     display: inline-block;
     width: 100%;
     height: 16px;

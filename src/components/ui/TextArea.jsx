@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Label from "./Label.jsx";
+import { forwardRef } from "react";
 
 const Wrap = styled.div`
   display: flex;
@@ -20,15 +21,13 @@ const StyledTextArea = styled.textarea`
   }
 `;
 
-function TextArea({ directions, placeholder, register, label, name }) {
+const TextArea = forwardRef(({ directions, register, label, name }, ref) => {
   return (
     <Wrap $directions={directions}>
       {label && <Label>{label}</Label>}
-      <StyledTextArea rows='5' cols='15' id={name} {...(register ? register(name) : {})}>
-        {placeholder}
-      </StyledTextArea>
+      <StyledTextArea ref={ref} rows='5' cols='15' id={name} {...(register ? register(name) : {})}></StyledTextArea>
     </Wrap>
   );
-}
+});
 
 export default TextArea;

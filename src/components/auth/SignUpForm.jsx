@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 
 import Input from "../ui/Input.jsx";
@@ -14,13 +14,15 @@ import { toast } from "react-toastify";
 
 import { registerUser, verifyOtpApi } from "../../services/apiAuth.js";
 
-const Form = styled.form`
+const FormWrapper = styled.form`
   display: flex;
   flex-direction: column;
 `;
 
-const Column = styled(Form)`
+const Column = styled.div`
   margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
 `;
 const PasswordWrap = styled.div`
   position: relative;
@@ -149,7 +151,7 @@ function SignUpForm() {
   return (
     <>
       {!showOtp ? (
-        <Form onSubmit={handleSubmit(onHandleSubmit)}>
+        <FormWrapper onSubmit={handleSubmit(onHandleSubmit)}>
           <Column>
             <Input
               directions='column'
@@ -210,7 +212,7 @@ function SignUpForm() {
             <InputErrorMessage message={errors.repeatPassword?.message} />
           </Column>
           <Button disabled={isPending}>{isPending ? "Signing up ..." : "Sign up"}</Button>
-        </Form>
+        </FormWrapper>
       ) : (
         <>
           <Title tag='h4'>Enter OTP</Title>

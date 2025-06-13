@@ -1,4 +1,5 @@
 import apiClient from "../utils/axiosConfig.js";
+import { PAGE_SIZE } from "../utils/constants.js";
 import { getResizedImageUrl } from "../utils/resizedImage.js";
 import supabase from "./databaseConfig.js";
 
@@ -6,15 +7,18 @@ import supabase from "./databaseConfig.js";
     Get all ships depend if is user or admin with pagination
     TO DO: add filters
 */
-export const getShips = async ({ page, role, userId }) => {
+export const getShips = async ({ page, role, userId, sortBy = "desc", limit = PAGE_SIZE }) => {
   try {
-    const res = await apiClient.get("/ships", {
-      params: {
-        page,
-        role,
-        userId,
-      },
-    });
+    const params = new URLSearchParams();
+
+    params.append("page", page);
+    params.append("limit", limit);
+
+    if (sortBy?.field && sortBy?.direction) {
+      params.append("sortBy", `${sortBy.field}-${sortBy.direction}`);
+    }
+
+    const res = await apiClient.get(`/ships?${params.toString()}`);
 
     return res.data;
   } catch (error) {

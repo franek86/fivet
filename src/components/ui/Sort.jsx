@@ -1,9 +1,14 @@
+import { useEffect } from "react";
 import { useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import CustomSelect from "./CustomSelect.jsx";
-import { useEffect } from "react";
+import styled from "styled-components";
 
-function Sort({ items }) {
+const SortWrap = styled.div`
+  margin-top: 2.8rem;
+`;
+
+function Sort({ items, label }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const sortBy = searchParams.get("sortBy") || "";
 
@@ -18,7 +23,11 @@ function Sort({ items }) {
     }
   }, [selectedValue]);
 
-  return <CustomSelect name='sortBy' control={control} options={items} size='small' variation='primary' valueKey='value' />;
+  return (
+    <SortWrap>
+      <CustomSelect name='sortBy' control={control} options={items} size='small' variation='primary' valueKey='value' label={label} />
+    </SortWrap>
+  );
 }
 
 export default Sort;

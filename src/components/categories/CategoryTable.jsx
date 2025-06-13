@@ -32,7 +32,7 @@ function CategoryTable() {
 
   return (
     <>
-      <Sort items={items} />
+      <Sort items={items} label='Sort by:' />
       {isFetching ? (
         <TablePlaceholder count={dataLength} />
       ) : (

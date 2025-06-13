@@ -23,6 +23,7 @@ export const useCategories = () => {
         return Array.from({ length: previousData.length }, () => ({}));
       }
     },
+    staleTime: 30 * 60 * 1000,
   });
 
   return { categories: data?.data || [], totalShipsType: data?.count || 0, isLoading, error, isFetching };

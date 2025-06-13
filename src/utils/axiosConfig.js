@@ -36,6 +36,10 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    if (originalRequest.url.includes("/auth/login") || originalRequest.url.includes("/auth/register")) {
+      return Promise.reject(error);
+    }
+
     //Prevent infinite loop
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
@@ -58,14 +62,15 @@ apiClient.interceptors.response.use(
 
         return apiClient(originalRequest);
       } catch (error) {
-        isRefreshing = false;
+        console.log("Error axios interctor refresh token");
+        /* isRefreshing = false;
         refreshSubscribers = [];
 
         store.dispatch(logoutUser());
         if (window.location.pathname !== "/") {
           window.location.replace("/");
         }
-        return Promise.reject(error);
+        return Promise.reject(error); */
       }
     }
     return Promise.reject(error);

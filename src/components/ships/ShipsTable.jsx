@@ -8,9 +8,30 @@ import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import CustomTable from "../ui/CustomTable.jsx";
 import EmptyState from "../EmptyState.jsx";
 
+import styled from "styled-components";
+import Sort from "../ui/Sort.jsx";
+
+const FlexWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2.5rem;
+`;
+
+const ShipFilters = styled.div``;
+
 function ShipsTable() {
   const { ships, count, isLoading, error, isFetching } = useShips();
   const role = useSelector((state) => state.auth.role);
+
+  const sortItems = [
+    { value: "shipName-asc", name: "Ship name (A-Z)" },
+    { value: "shipName-desc", name: "Ship name (Z-A)" },
+    { value: "price-asc", name: "Cheapest" },
+    { value: "price-desc", name: "Expensive" },
+    { value: "createdAt-desc", name: "Newest first" },
+    { value: "createdAt-asc", name: "Oldest first" },
+  ];
 
   const tableColumns = [
     { header: "", accessor: "delete row" },
@@ -33,6 +54,10 @@ function ShipsTable() {
   if (dataLength < 1) return <EmptyState message='No ships for now. Please create ship' />;
   return (
     <>
+      <FlexWrapper>
+        <ShipFilters>Filter</ShipFilters>
+        <Sort items={sortItems} label='Sort by:' />
+      </FlexWrapper>
       {isFetching ? <TablePlaceholder count={dataLength} /> : <CustomTable columns={tableColumns} renderRow={renderRow} data={ships} />}
       <Pagination count={count} />
     </>

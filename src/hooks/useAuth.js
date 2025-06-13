@@ -15,7 +15,8 @@ export const useUser = () => {
       dispatch(setUser({ role: user.role, user }));
       return user;
     },
-    refetchInterval: 4 * 60 * 1000, //every 4 minutes check user
+    refetchOnWindowFocus: false,
+    refetchInterval: 4 * 60 * 1000,
   });
 
   return { data, isLoading };

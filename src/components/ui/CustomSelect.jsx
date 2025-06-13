@@ -34,6 +34,8 @@ const Wrap = styled.div`
   position: relative;
   max-width: max-content;
   min-width: 100%;
+  display: flex;
+  flex-direction: ${(props) => props.$directions};
 `;
 
 const Select = styled.div`
@@ -70,7 +72,7 @@ const SelectOption = styled.div`
   }
 `;
 
-const CustomSelect = forwardRef(({ name, control, options, label, size, variation, valueKey = "name" }, ref) => {
+const CustomSelect = forwardRef(({ name, control, options, label, size, directions = "column", variation, valueKey = "name" }, ref) => {
   if (!control) {
     console.error(`❌ CustomSelect: Missing 'control' prop for ${name}`);
     return null;
@@ -87,8 +89,8 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, variatio
   };
 
   return (
-    <Wrap>
-      <Label>{label}</Label>
+    <Wrap $directions={directions}>
+      <Label htmlFor={field.value}>{label}</Label>
 
       <Select ref={ref} onClick={() => setIsOpen(!isOpen)} $size={size} $variation={variation}>
         {selectedOption ? selectedOption.name : "Select item"}

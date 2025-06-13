@@ -1,48 +1,43 @@
-import Spinner from "../Spinner.jsx";
-
-import { useGetAllUserProfile } from "../../hooks/useProfile.js";
-import { customFormatDate } from "../../utils/formatDate.js";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+
+import Spinner from "../Spinner.jsx";
+import { customFormatDate } from "../../utils/formatDate.js";
+import Modal from "../Modal.jsx";
+import ConfirmDialog from "../ConfirmDialog.jsx";
+
+import { useDeleteUserProfile, useGetAllUserProfile } from "../../hooks/useProfile.js";
+import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 
 const CardWrap = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
   margin-top: 4rem;
-
-  @media screen and (min-width: 640px) {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @media screen and (min-width: 1024px) {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @media screen and (min-width: 1200px) {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
 `;
 
 const Card = styled.article`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   background-color: var(--color-grey-0);
   border-radius: var(--border-radius-md);
-  box-shadow: var(--box-shadow-md);
+  box-shadow: var(--shadow-md);
 `;
 
 const CardTop = styled.div`
   display: flex;
   gap: 2rem;
+  align-items: center;
   justify-content: space-between;
-  padding: 2rem;
+  padding: 1.2rem;
 `;
 
 const CardBottom = styled.div`
   display: grid;
-  gap: 2rem;
-  padding: 1.8rem;
-  grid-template-columns: 1fr 1fr;
+  gap: 1.8rem;
+  margin-right: 1.8rem;
+  grid-template-columns: 1fr;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -58,12 +53,12 @@ const CardButton = styled.div`
   border-radius: 2rem;
 `;
 
-const CardButtonEdit = styled(CardButton)`
+/* const CardButtonEdit = styled(CardButton)`
   &:hover {
     color: var(--color-grey-0);
     background-color: var(--color-green-700);
   }
-`;
+`; */
 const CardButtonDelete = styled(CardButton)`
   &:hover {
     color: var(--color-grey-0);
@@ -93,7 +88,7 @@ const Link = styled.a`
 
 const DateWrapp = styled.p`
   font-size: 1.25rem;
-  padding-top: 1.2rem;
+  padding-top: 0.8rem;
   color: var(--color-grey-500);
   font-style: italic;
 `;
@@ -139,32 +134,42 @@ function UserProfileListPlaceholder() {
 
 function UserProfileList() {
   const { data, isPending, isError, isFetching } = useGetAllUserProfile();
+  const { mutate } = useDeleteUserProfile();
+  const dispatch = useDispatch();
 
   if (isPending) return <Spinner />;
   if (isError) return <div>Error</div>;
 
   return (
-    <CardWrap>
-      {isFetching
-        ? data.map((_, index) => <UserProfileListPlaceholder key={index} />)
-        : data.map((item) => (
-            <Card key={item.id}>
-              <CardTop>
-                <CardContent>
-                  <strong>{item.fullName}</strong>
-                  <Link href={`mailto:${item.email}`}>{item.email}</Link>
-                  <DateWrapp>Created at {customFormatDate(item.createdAt)}</DateWrapp>
-                </CardContent>
-
-                {item.avatar ? <CardImage src={item.avatar} alt={item.fullName} /> : <CardImage />}
-              </CardTop>
-              <CardBottom>
-                <CardButtonEdit>Edit</CardButtonEdit>
-                <CardButtonDelete>Delete</CardButtonDelete>
-              </CardBottom>
-            </Card>
-          ))}
-    </CardWrap>
+    <>
+      <CardWrap>
+        {isFetching
+          ? data.map((_, index) => <UserProfileListPlaceholder key={index} />)
+          : data.map((item) => (
+              <Card key={item.id}>
+                <CardTop>
+                  {item.avatar ? <CardImage src={item.avatar} alt={item.fullName} /> : <CardImage />}
+                  <CardContent>
+                    <strong>{item.fullName}</strong>
+                    <Link href={`mailto:${item.email}`}>{item.email}</Link>
+                    <DateWrapp>Created at {customFormatDate(item.createdAt)}</DateWrapp>
+                  </CardContent>
+                </CardTop>
+                <CardBottom>
+                  {/*  <CardButtonEdit>Edit</CardButtonEdit> */}
+                  <CardButtonDelete onClick={() => dispatch(openModalByName(item.id))}>Delete</CardButtonDelete>
+                </CardBottom>
+                <Modal name={item.id} onClose={() => dispatch(closeModalByName())}>
+                  <ConfirmDialog
+                    itemName={item.fullName}
+                    onConfirm={() => mutate(item.id)}
+                    onCloseModal={() => dispatch(closeModalByName())}
+                  />
+                </Modal>
+              </Card>
+            ))}
+      </CardWrap>
+    </>
   );
 }
 

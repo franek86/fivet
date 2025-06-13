@@ -76,11 +76,6 @@ const ShipsForm = () => {
     if (singleShipData && isEditSession) {
       reset({
         ...singleShipData,
-        /*  imo: singleShipData?.imoNumber ? String(singleShipData?.imoNumber) : "",
-        price: singleShipData?.price ? String(singleShipData?.price) : "",
-        mainImage: singleShipData?.mainImage || null,
-        buildYear: singleShipData?.buildYear || "",
-        refitYear: singleShipData?.refitYear || "", */
       });
     }
   }, [singleShipData, reset]);

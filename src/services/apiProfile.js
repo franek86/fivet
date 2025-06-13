@@ -43,3 +43,16 @@ export const updateProfileApi = async (updatedData, userId) => {
     throw new Error(message);
   }
 };
+
+/* Delete user admin only */
+export const deleteUserProfileApi = async (userId) => {
+  if (!userId) throw new Error("User id does not exists.");
+
+  try {
+    const res = await apiClient.delete(`/profile/${userId}`);
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};

@@ -32,6 +32,7 @@ function CreateCategoryForm({ categoryToEdit = {} }) {
 
   const {
     register,
+    control,
     formState: { errors },
     handleSubmit,
     reset,

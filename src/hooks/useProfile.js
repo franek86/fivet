@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAllProfileApi, getProfileApi, updateProfileApi } from "../services/apiProfile.js";
+import { deleteUserProfileApi, getAllProfileApi, getProfileApi, updateProfileApi } from "../services/apiProfile.js";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -40,6 +40,23 @@ export const useGetAllUserProfile = () => {
         return Array.from({ length: previousData.length }, () => ({}));
       }
     },
+    staleTime: 30 * 60 * 1000,
   });
   return { data, isPending, isError, isFetching };
+};
+
+export const useDeleteUserProfile = () => {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: (id) => deleteUserProfileApi(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["profile"]);
+      toast.success("Profile deleted!");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  return { mutate };
 };

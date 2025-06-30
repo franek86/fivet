@@ -14,20 +14,41 @@ import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
 import { formatedPrice } from "../../utils/formattedPrice.js";
+import { usePublishShip } from "../../hooks/ships/usePublishShip.js";
 
 const StyledImage = styled.img`
   width: 80px;
 `;
 
+const PublishButton = styled.div`
+  color: white;
+  padding: 0.35rem;
+  border-radius: var(--border-radius-md);
+  max-width: 80%;
+  margin: auto;
+`;
+
+const PublishButtonGreen = styled(PublishButton)`
+  background-color: var(--color-green-700);
+`;
+
+const PublishButtonRed = styled(PublishButton)`
+  background-color: var(--color-red-700);
+`;
+
 function ShipsColumn({ ship }) {
   const [selectedItem, setSelectedItem] = useState([]);
+
   const role = useSelector((state) => state.auth.role);
+
   const dispatch = useDispatch();
   const { mutate } = useDeleteShip();
+  const { mutate: mutatePublishShip, isPending } = usePublishShip();
+
   const {
     id: shipId,
     mainImage,
-    published,
+    isPublished,
     shipName,
     imo,
     price,
@@ -37,8 +58,20 @@ function ShipsColumn({ ship }) {
     },
   } = ship;
 
+  const [isPublish, setIsPublish] = useState(isPublished);
   const handleSelectedItem = (id) => {
     setSelectedItem((prev) => (prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]));
+  };
+
+  const handleToggle = (id) => {
+    mutatePublishShip(
+      { id, isPublished: !isPublish },
+      {
+        onSuccess: () => {
+          setIsPublish((prev) => !prev);
+        },
+      }
+    );
   };
 
   return (
@@ -49,7 +82,14 @@ function ShipsColumn({ ship }) {
       <td>
         <StyledImage src={mainImage && !mainImage.error ? mainImage : "/images/no-image.webp"} alt={shipName} />
       </td>
-      {role !== "ADMIN" ? null : <td>{published ? "Yes" : "No"}</td>}
+      {role !== "ADMIN" ? null : (
+        <td>
+          <button onClick={() => handleToggle(shipId)} disabled={isPending}>
+            {isPending ? "Updating..." : isPublish ? "Unpublish" : "Publish"}
+          </button>
+          {isPublish ? <PublishButtonGreen>Yes</PublishButtonGreen> : <PublishButtonRed>No</PublishButtonRed>}
+        </td>
+      )}
 
       <td>{role !== "ADMIN" ? shipTypeName : `${fullName}`}</td>
 

@@ -22,7 +22,6 @@ export const getShips = async ({ page, role, userId, sortBy = "desc", limit = PA
 
     return res.data;
   } catch (error) {
-    console.log(error);
     const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);
   }
@@ -67,6 +66,20 @@ export const deleteShip = async (id) => {
   try {
     const res = await apiClient.delete(`/ships/${id}`);
     return res;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
+/* publish ship by id admin only */
+
+export const publishShipApi = async (id, isPublished) => {
+  try {
+    const response = await apiClient.patch(`/ships/${id}/publish`, {
+      isPublished,
+    });
+    return response;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);

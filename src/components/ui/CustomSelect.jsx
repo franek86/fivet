@@ -52,6 +52,7 @@ const Select = styled.div`
 const SelectDropdown = styled.div`
   position: absolute;
   left: 0;
+  top: 100%;
   width: max-content;
   background-color: var(--color-grey-100);
   border: 1px solid var(--color-grey-200);

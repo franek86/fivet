@@ -1,8 +1,10 @@
-import { forwardRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { forwardRef, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useController } from "react-hook-form";
 import Label from "./Label.jsx";
 import styled, { css } from "styled-components";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
+import { closeDropdown, toggleDropdown } from "../../slices/uiSlice.js";
 
 const sizes = {
   small: css`
@@ -51,7 +53,7 @@ const Select = styled.div`
 
 const SelectDropdown = styled.div`
   position: absolute;
-  left: 0;
+  ${(props) => (props.$alignRight ? "right: 0;" : "left: 0;")}
   top: 100%;
   width: max-content;
   background-color: var(--color-grey-100);
@@ -80,26 +82,56 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, directio
   }
 
   const { field } = useController({ name, control });
-  const [isOpen, setIsOpen] = useState(false);
+
+  const isOpen = useSelector((state) => state.ui.isDropdownOpen);
+  const dispatch = useDispatch();
+  //const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const triggerRef = useRef(null);
+  const [alignRight, setAlignRight] = useState(false);
 
   const selectedOption = options?.find((option) => option[valueKey] === field.value) || null;
 
   const handleSelect = (option) => {
     field.onChange(option[valueKey]);
-    setIsOpen(false);
+    dispatch(closeDropdown());
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target) && triggerRef.current && !triggerRef.current.contains(e.target)) {
+        dispatch(closeDropdown());
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [dispatch]);
+
+  useLayoutEffect(() => {
+    if (!isOpen) return;
+
+    const timer = setTimeout(() => {
+      if (dropdownRef.current) {
+        const rect = dropdownRef.current.getBoundingClientRect();
+        setAlignRight(rect.right > window.innerWidth);
+      }
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [isOpen]);
 
   return (
     <Wrap $directions={directions}>
       <Label htmlFor={field.value}>{label}</Label>
 
-      <Select ref={ref} onClick={() => setIsOpen(!isOpen)} $size={size} $variation={variation}>
+      <Select ref={triggerRef} onClick={() => dispatch(toggleDropdown())} $size={size} $variation={variation}>
         {selectedOption ? selectedOption.name : "Select item"}
         {isOpen ? <LuChevronUp /> : <LuChevronDown />}
       </Select>
 
       {isOpen && (
-        <SelectDropdown>
+        <SelectDropdown ref={dropdownRef} $alignRight={alignRight}>
           {options?.map((option) => (
             <SelectOption key={option.name} $selected={field.value === option[valueKey]} onClick={() => handleSelect(option)}>
               {option.name}

@@ -9,7 +9,7 @@ import Modal from "../Modal.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 
-import { LuPencil, LuTrash2 } from "react-icons/lu";
+import { LuChevronDown, LuPencil, LuTrash2 } from "react-icons/lu";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
@@ -24,20 +24,28 @@ const PublishButton = styled.div`
   color: white;
   padding: 0.35rem;
   border-radius: var(--border-radius-md);
-  max-width: 80%;
-  margin: auto;
+  width: 80%;
+  margin-top: 0.8rem;
+`;
+
+const StyledPublish = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 const PublishButtonGreen = styled(PublishButton)`
   background-color: var(--color-green-700);
+  cursor: pointer;
 `;
 
 const PublishButtonRed = styled(PublishButton)`
   background-color: var(--color-red-700);
+  cursor: pointer;
 `;
 
 function ShipsColumn({ ship }) {
   const [selectedItem, setSelectedItem] = useState([]);
+  const [visibleDropdown, setVisibleDropdown] = useState(false);
 
   const role = useSelector((state) => state.auth.role);
 
@@ -84,10 +92,20 @@ function ShipsColumn({ ship }) {
       </td>
       {role !== "ADMIN" ? null : (
         <td>
-          <button onClick={() => handleToggle(shipId)} disabled={isPending}>
-            {isPending ? "Updating..." : isPublish ? "Unpublish" : "Publish"}
-          </button>
-          {isPublish ? <PublishButtonGreen>Yes</PublishButtonGreen> : <PublishButtonRed>No</PublishButtonRed>}
+          <StyledPublish onClick={() => setVisibleDropdown(!visibleDropdown)}>
+            {isPublish ? <PublishButtonGreen>Live</PublishButtonGreen> : <PublishButtonRed>Unpublish</PublishButtonRed>} <LuChevronDown />
+          </StyledPublish>
+          {visibleDropdown && (
+            <div onClick={() => handleToggle(shipId)} disabled={isPending}>
+              {isPending ? (
+                "Updating..."
+              ) : isPublish ? (
+                <PublishButtonRed>Unpublish</PublishButtonRed>
+              ) : (
+                <PublishButtonGreen>Publish</PublishButtonGreen>
+              )}
+            </div>
+          )}
         </td>
       )}
 

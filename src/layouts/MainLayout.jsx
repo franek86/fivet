@@ -1,6 +1,8 @@
 import { Outlet } from "react-router";
 import Sidebar from "../components/Sidebar.jsx";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { closeDropdown } from "../slices/uiSlice.js";
 
 const LayoutGrid = styled.div`
   display: grid;

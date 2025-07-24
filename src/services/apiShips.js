@@ -7,7 +7,7 @@ import supabase from "./databaseConfig.js";
     Get all ships depend if is user or admin with pagination
     TO DO: add filters
 */
-export const getShips = async ({ page, role, userId, sortBy = "desc", limit = PAGE_SIZE }) => {
+export const getShips = async ({ page, role, userId, sortBy = "desc", limit = PAGE_SIZE, filters = {} }) => {
   try {
     const params = new URLSearchParams();
 
@@ -17,6 +17,13 @@ export const getShips = async ({ page, role, userId, sortBy = "desc", limit = PA
     if (sortBy?.field && sortBy?.direction) {
       params.append("sortBy", `${sortBy.field}-${sortBy.direction}`);
     }
+
+    // Add dynamic filters
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== "") {
+        params.append(key, value);
+      }
+    });
 
     const res = await apiClient.get(`/ships?${params.toString()}`);
 

@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
-import { forwardRef, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { useController } from "react-hook-form";
 import Label from "./Label.jsx";
 import styled, { css } from "styled-components";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 import { closeDropdown, toggleDropdown } from "../../slices/uiSlice.js";
+import { adjustDropdownAlignment } from "../../utils/isOverflowRight.js";
 
 const sizes = {
   small: css`
@@ -108,17 +109,10 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, directio
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [dispatch]);
 
-  useLayoutEffect(() => {
-    if (!isOpen) return;
-
-    const timer = setTimeout(() => {
-      if (dropdownRef.current) {
-        const rect = dropdownRef.current.getBoundingClientRect();
-        setAlignRight(rect.right > window.innerWidth);
-      }
-    }, 0);
-
-    return () => clearTimeout(timer);
+  useEffect(() => {
+    if (isOpen && dropdownRef.current) {
+      adjustDropdownAlignment(dropdownRef.current, setAlignRight);
+    }
   }, [isOpen]);
 
   return (

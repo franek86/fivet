@@ -4,9 +4,7 @@ import { useForm } from "react-hook-form";
 import CustomSelect from "./CustomSelect.jsx";
 import styled from "styled-components";
 
-const SortWrap = styled.div`
-  margin-top: 2.8rem;
-`;
+const SortWrap = styled.div``;
 
 function Sort({ items, label }) {
   const [searchParams, setSearchParams] = useSearchParams();

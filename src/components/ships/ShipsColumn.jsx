@@ -15,6 +15,7 @@ import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
 import { formatedPrice } from "../../utils/formattedPrice.js";
 import { usePublishShip } from "../../hooks/ships/usePublishShip.js";
+import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 
 const StyledImage = styled.img`
   width: 80px;
@@ -25,7 +26,7 @@ const PublishButton = styled.div`
   padding: 0.35rem;
   border-radius: var(--border-radius-md);
   width: 80%;
-  margin-top: 0.8rem;
+  margin-right: 0.5rem;
 `;
 
 const StyledPublish = styled.div`
@@ -43,8 +44,13 @@ const PublishButtonRed = styled(PublishButton)`
   cursor: pointer;
 `;
 
+const StyledPublishDropdown = styled.div`
+  margin-top: 0.8rem;
+`;
+
 function ShipsColumn({ ship }) {
   const [selectedItem, setSelectedItem] = useState([]);
+
   const [visibleDropdown, setVisibleDropdown] = useState(false);
 
   const role = useSelector((state) => state.auth.role);
@@ -92,20 +98,7 @@ function ShipsColumn({ ship }) {
       </td>
       {role !== "ADMIN" ? null : (
         <td>
-          <StyledPublish onClick={() => setVisibleDropdown(!visibleDropdown)}>
-            {isPublish ? <PublishButtonGreen>Live</PublishButtonGreen> : <PublishButtonRed>Unpublish</PublishButtonRed>} <LuChevronDown />
-          </StyledPublish>
-          {visibleDropdown && (
-            <div onClick={() => handleToggle(shipId)} disabled={isPending}>
-              {isPending ? (
-                "Updating..."
-              ) : isPublish ? (
-                <PublishButtonRed>Unpublish</PublishButtonRed>
-              ) : (
-                <PublishButtonGreen>Publish</PublishButtonGreen>
-              )}
-            </div>
-          )}
+          <ToggleSwitch checked={isPublish} onChange={() => handleToggle(shipId)} />
         </td>
       )}
 

@@ -1,6 +1,5 @@
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import ReactQuill from "react-quill";
 
 import Button from "../ui/Button.jsx";
 import Input from "../ui/Input.jsx";

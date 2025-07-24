@@ -4,10 +4,11 @@ import { MdOutlineCheck } from "react-icons/md";
 const StyledCheckbox = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: ${(props) => (props.$position ? props.$position : "center")};
   gap: 10px;
   cursor: pointer;
   font-size: 18px;
+  position: relative;
 `;
 
 const StyleHiddenCheckbox = styled.input`
@@ -29,12 +30,19 @@ const StyledIconCheckmark = styled(MdOutlineCheck)`
   display: ${(props) => (props.$checked ? "block" : "none")};
 `;
 
-function Checkbox({ checked, onChange }) {
+const StyledCheckboxLabel = styled.label`
+  position: absolute;
+  left: 3rem;
+  font-size: 1.4rem;
+`;
+
+function Checkbox({ checked, onChange, label, position }) {
   return (
-    <StyledCheckbox onClick={onChange}>
+    <StyledCheckbox onClick={onChange} $position={position}>
       <StyleHiddenCheckbox type='checkbox' $checked={checked} readOnly />
       <StyledCheckmark>
         <StyledIconCheckmark $checked={checked} size={14} />
+        {label && <StyledCheckboxLabel>{label}</StyledCheckboxLabel>}
       </StyledCheckmark>
     </StyledCheckbox>
   );

@@ -2,7 +2,6 @@ import { createGlobalStyle } from "styled-components";
 import "react-date-picker/dist/DatePicker.css";
 import "react-calendar/dist/Calendar.css";
 import "react-phone-input-2/lib/style.css";
-import "react-quill/dist/quill.snow.css";
 
 const styled = { createGlobalStyle };
 
@@ -273,6 +272,25 @@ const GlobalStyles = styled.createGlobalStyle`
     }
   }
 
+  // Range react
+  .range-wrapper {
+    position: relative;
+    height: 6px;
+    border-radius: 5px;
+  }
+
+  .range {
+    position: absolute;
+    height: 100%;
+  }
+
+  .range-thumb {
+    width: 16px;
+    height: 16px;
+    background-color: var(--color-brand-600);
+    border-radius: 50%;
+  }
+
   //React Tostify
   .Toastify__toast {
     font-size: 1.2rem;
@@ -299,13 +317,6 @@ const GlobalStyles = styled.createGlobalStyle`
     bottom: 0;
     border: 0;
     background: transparent;
-  }
-
-  //React Quill
-  .quill .ql-toolbar,
-  .quill .ql-container {
-    border-radius: var(--border-radius-md);
-    border-color: var(--color-grey-500);
   }
 
   @keyframes shimmer-animation {

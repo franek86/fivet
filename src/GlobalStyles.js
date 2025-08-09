@@ -277,6 +277,7 @@ const GlobalStyles = styled.createGlobalStyle`
     position: relative;
     height: 6px;
     border-radius: 5px;
+    margin-top: 1.3rem;
   }
 
   .range {

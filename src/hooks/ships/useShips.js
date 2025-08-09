@@ -7,31 +7,30 @@ export const useShips = () => {
   const [searchParams] = useSearchParams();
   const role = useSelector((state) => state.auth.role);
   const user = useSelector((state) => state.auth.user);
+  const searchTerm = useSelector((state) => state.search.term);
 
   //const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
   const page = Number(searchParams.get("page") || 1);
 
-  /* let sortByRow = searchParams.get("sortBy");
-  sortByRow = sortByRow && sortByRow !== "undefined" ? sortByRow : "createdAt-desc"; */
   const sortByRow = searchParams.get("sortBy") || "createdAt-desc";
   const [field, direction] = sortByRow.split("-");
   const sortBy = { field, direction };
 
   const filters = {
     isPublished: searchParams.get("isPublished") || undefined,
-    minPrice: searchParams.get("minPrice") || undefined,
-    maxPrice: searchParams.get("maxPrice") || undefined,
+    price: searchParams.get("price") || undefined,
+    q: searchTerm?.trim() || undefined,
   };
 
   const { data, isLoading, error, isFetching } = useQuery({
-    queryKey: ["ships", page, role, user?.id, sortBy, filters],
+    queryKey: ["ships", page, role, user?.id, sortBy, filters, searchTerm],
     queryFn: () => getShips({ page, role, userId: user.id, sortBy, filters }),
     placeholderData: (previousData) => {
       if (previousData && previousData.length > 0) {
         return Array.from({ length: previousData.length }, () => ({}));
       }
     },
-    staleTime: 30 * 60 * 1000,
+    staleTime: 0,
   });
 
   return { ships: data?.data || [], count: data?.count || 0, isLoading, error, isFetching };

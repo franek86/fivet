@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useShips } from "../../hooks/ships/useShips.js";
 
 import Pagination from "../Pagination.jsx";
@@ -14,12 +14,14 @@ import Sort from "../ui/Sort.jsx";
 
 import { Range } from "react-range";
 import styled from "styled-components";
+import { setSearchTerm } from "../../slices/searchSlice.js";
 
 const FlexWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   margin-top: 2.8rem;
+  gap: 3rem;
 `;
 
 const P = styled.p`
@@ -29,12 +31,18 @@ const P = styled.p`
   margin-bottom: 0.4rem;
 `;
 
-const ShipFilters = styled.div``;
+const ShipFilters = styled.div`
+  background-color: var(--color-grey-50);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  flex: 1;
+  border-radius: var(--border-radius-md);
+`;
 
 const ShipFiltersDropdown = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  gap: 5rem;
 `;
 
 const RangeLabel = styled.div`
@@ -43,16 +51,53 @@ const RangeLabel = styled.div`
   margin-bottom: 0.8rem;
 `;
 
+const ButtonWrap = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 1.8rem;
+  align-items: center;
+`;
+
+const ButtonStyle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.7rem;
+  font-weight: 600;
+  font-size: 1.3rem;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+`;
+
+const FilterButton = styled(ButtonStyle)`
+  background-color: var(--color-brand-200);
+  &:hover {
+    background-color: var(--color-brand-600);
+    color: var(--color-grey-100);
+  }
+`;
+
+const ResetButton = styled(ButtonStyle)`
+  background-color: var(--color-grey-300);
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+
 function ShipsTable() {
-  const { ships, count, isLoading, error, isFetching } = useShips();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const dispatch = useDispatch();
+
   const role = useSelector((state) => state.auth.role);
+
+  const { ships, count, isLoading, error, isFetching } = useShips();
 
   const prices = ships?.map((s) => s.price) || [];
   const MIN = 0;
   const MAX = prices.length ? Math.max(...prices) : 1000;
   const [rangeValue, setRangeValue] = useState([MIN, MAX]);
   const [isPublished, setIsPublished] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
 
   const sortItems = [
     { value: "shipName-asc", name: "Ship name (A-Z)" },
@@ -84,31 +129,53 @@ function ShipsTable() {
 
   const renderRow = (item) => <ShipsColumn key={item.id} ship={item} />;
   const dataLength = ships?.length;
-
   if (dataLength < 1) return <EmptyState message='No ships for now. Please create ship' />;
 
-  const togglePublishFilter = () => {
-    const newValue = !isPublished;
-    setIsPublished(newValue);
-    setSearchParams(newValue);
+  const updatedQueryParams = (params) => {
+    const newParams = new URLSearchParams(searchParams);
+
+    Object.entries(params).forEach(([key, value]) => (value ?? "" ? newParams.set(key, value) : newParams.delete(key)));
+    setSearchParams(newParams);
   };
 
-  const filterShips = () => {
-    const query = new URLSearchParams(searchParams);
+  const togglePublishFilter = () => {
+    setIsPublished((prev) => !prev);
+  };
 
-    if (isPublished) query.set("isPublished", isPublished);
+  const onChangePriceFilter = (newRange) => {
+    setRangeValue(newRange);
+  };
 
-    console.log(query.toString());
+  const applayFilter = () => {
+    const query = {
+      isPublished,
+      price: rangeValue.join("-"),
+    };
+
+    updatedQueryParams(query);
+  };
+
+  const resetFilter = () => {
+    setIsPublished(false);
+    setRangeValue([MIN, MAX]);
+    dispatch(setSearchTerm(""));
+
+    updatedQueryParams({
+      isPublished: null,
+      price: null,
+      q: null,
+    });
   };
 
   return (
     <>
       <FlexWrapper>
         <ShipFilters>
-          <P>Publish filter</P>
-
           <ShipFiltersDropdown>
-            <Checkbox checked={isPublished} label='Published' position='left' onChange={togglePublishFilter} />
+            <div>
+              <P>Publish filter</P>
+              <Checkbox checked={isPublished} label='Published' position='left' onChange={togglePublishFilter} />
+            </div>
             <div>
               <RangeLabel>
                 Price filter: ${rangeValue[0]} - ${rangeValue[1]}
@@ -118,7 +185,7 @@ function ShipsTable() {
                 min={MIN}
                 max={MAX}
                 values={rangeValue}
-                onChange={setRangeValue}
+                onChange={onChangePriceFilter}
                 renderTrack={({ props, children }) => {
                   const [min, max] = rangeValue;
                   const leftPercent = ((min - MIN) / (MAX - MIN)) * 100;
@@ -142,10 +209,14 @@ function ShipsTable() {
                   );
                 }}
                 renderThumb={({ props, index }) => {
-                  return <div {...props} key={index} style={props.style} className='range-thumb' />;
+                  return <div {...props} key={index} style={props.style} className='range-thumb'></div>;
                 }}
               />
             </div>
+            <ButtonWrap>
+              <FilterButton onClick={applayFilter}>Filter now</FilterButton>
+              <ResetButton onClick={resetFilter}>Reset</ResetButton>
+            </ButtonWrap>
           </ShipFiltersDropdown>
         </ShipFilters>
         <Sort items={sortItems} label='Sort by:' />

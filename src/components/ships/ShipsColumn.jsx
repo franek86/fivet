@@ -9,7 +9,7 @@ import Modal from "../Modal.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 
-import { LuChevronDown, LuPencil, LuTrash2 } from "react-icons/lu";
+import { LuPencil, LuTrash2 } from "react-icons/lu";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
@@ -21,43 +21,13 @@ const StyledImage = styled.img`
   width: 80px;
 `;
 
-const PublishButton = styled.div`
-  color: white;
-  padding: 0.35rem;
-  border-radius: var(--border-radius-md);
-  width: 80%;
-  margin-right: 0.5rem;
-`;
-
-const StyledPublish = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const PublishButtonGreen = styled(PublishButton)`
-  background-color: var(--color-green-700);
-  cursor: pointer;
-`;
-
-const PublishButtonRed = styled(PublishButton)`
-  background-color: var(--color-red-700);
-  cursor: pointer;
-`;
-
-const StyledPublishDropdown = styled.div`
-  margin-top: 0.8rem;
-`;
-
 function ShipsColumn({ ship }) {
   const [selectedItem, setSelectedItem] = useState([]);
-
-  const [visibleDropdown, setVisibleDropdown] = useState(false);
-
   const role = useSelector((state) => state.auth.role);
 
   const dispatch = useDispatch();
   const { mutate } = useDeleteShip();
-  const { mutate: mutatePublishShip, isPending } = usePublishShip();
+  const { mutate: mutatePublishShip } = usePublishShip();
 
   const {
     id: shipId,

@@ -32,9 +32,12 @@ export const useUpdateProfile = () => {
 };
 
 export const useGetAllUserProfile = () => {
+  const searchTerm = useSelector((state) => state.search.term);
+  const search = searchTerm?.trim() || undefined;
+
   const { data, isPending, isFetching, isError } = useQuery({
-    queryKey: ["all-profile"],
-    queryFn: getAllProfileApi,
+    queryKey: ["all-profile", search],
+    queryFn: () => getAllProfileApi({ search }),
     placeholderData: (previousData) => {
       if (previousData && previousData.length > 0) {
         return Array.from({ length: previousData.length }, () => ({}));

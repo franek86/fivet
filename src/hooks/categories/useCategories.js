@@ -2,9 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 import { getCategories } from "../../services/apiCategories.js";
 import { PAGE_SIZE } from "../../utils/constants.js";
+import { useSelector } from "react-redux";
 
 export const useCategories = () => {
   const [searchParams] = useSearchParams();
+  const searchTerm = useSelector((state) => state.search.term);
 
   const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
   const limit = !searchParams.get("limit") ? PAGE_SIZE : Number(searchParams.get("limit"));
@@ -15,9 +17,11 @@ export const useCategories = () => {
   const [field, direction] = sortByRow.split("-");
   const sortBy = { field, direction };
 
+  const search = searchTerm?.trim() || undefined;
+
   const { data, isLoading, error, isFetching } = useQuery({
-    queryKey: ["categories", page, sortBy, limit],
-    queryFn: () => getCategories({ page, sortBy, limit }),
+    queryKey: ["categories", page, sortBy, limit, search],
+    queryFn: () => getCategories({ page, sortBy, limit, search }),
     placeholderData: (previousData) => {
       if (previousData && previousData.length > 0) {
         return Array.from({ length: previousData.length }, () => ({}));

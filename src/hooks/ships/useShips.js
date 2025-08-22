@@ -19,7 +19,7 @@ export const useShips = () => {
   const filters = {
     isPublished: searchParams.get("isPublished") || undefined,
     price: searchParams.get("price") || undefined,
-    q: searchTerm?.trim() || undefined,
+    search: searchTerm?.trim() || undefined,
   };
 
   const { data, isLoading, error, isFetching } = useQuery({

@@ -24,7 +24,7 @@ export const getShips = async ({ page, role, userId, sortBy = "desc", limit = PA
         params.append(key, value);
       }
     });
-    console.log("Calling API /ships with params:", params.toString());
+
     const res = await apiClient.get(`/ships?${params.toString()}`);
 
     return res.data;

@@ -163,7 +163,7 @@ function ShipsTable() {
     updatedQueryParams({
       isPublished: null,
       price: null,
-      q: null,
+      search: null,
     });
   };
 

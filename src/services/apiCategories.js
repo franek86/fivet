@@ -16,7 +16,7 @@ export const getAllShipTypes = async () => {
     Get all categories with pagination
 */
 
-export const getCategories = async ({ page = 1, sortBy = "desc", limit = PAGE_SIZE }) => {
+export const getCategories = async ({ page = 1, sortBy = "desc", limit = PAGE_SIZE, search = "" }) => {
   try {
     const params = new URLSearchParams();
 
@@ -26,6 +26,9 @@ export const getCategories = async ({ page = 1, sortBy = "desc", limit = PAGE_SI
     if (sortBy?.field && sortBy?.direction) {
       params.append("sortBy", `${sortBy.field}-${sortBy.direction}`);
     }
+
+    if (search) params.append("search", search);
+
     let response = await apiClient(`/shipType?${params.toString()}`);
     return response.data;
   } catch (error) {

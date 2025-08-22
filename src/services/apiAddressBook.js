@@ -40,11 +40,13 @@ export const editAddressBookPriorityApi = async (id, newPriority) => {
 };
 
 /* Get address book list */
-export const fecthAddressBookApi = async (userId) => {
+export const fecthAddressBookApi = async ({ userId, search = "" }) => {
+  const params = new URLSearchParams();
   if (!userId) throw new Error("User does not exists");
+  if (search) params.append("search", search);
 
   try {
-    const res = await apiClient.get("/address-book");
+    const res = await apiClient.get(`/address-book?${params.toString()}`);
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

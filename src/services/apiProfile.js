@@ -2,9 +2,12 @@ import apiClient from "../utils/axiosConfig.js";
 import supabase from "./databaseConfig.js";
 
 /* Get all user profile olny for admin*/
-export const getAllProfileApi = async () => {
+export const getAllProfileApi = async ({ search = "" }) => {
   try {
-    const res = await apiClient.get("/profile");
+    const params = new URLSearchParams();
+    if (search) params.append("search", search);
+
+    const res = await apiClient.get(`/profile?${params.toString()}`);
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

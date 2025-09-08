@@ -40,7 +40,7 @@ function Dropdown({ children, label }) {
   const handleClick = () => {
     if (!isOpen && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
-      console.log(triggerRef.current);
+
       setPosition({
         y: rect.height,
         x: 0,

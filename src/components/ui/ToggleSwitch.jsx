@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 
 const SwitchWrapper = styled.div`
@@ -57,12 +56,12 @@ const Slider = styled.span`
   }
 `;
 
-function ToggleSwitch({ label, onChange, checked }) {
+function ToggleSwitch({ label, onChange, checked, register, name }) {
   return (
     <SwitchWrapper>
       {label && <Label>{label}</Label>}
       <Switch>
-        <Checkbox type='checkbox' checked={checked} onChange={onChange} />
+        <Checkbox type='checkbox' checked={checked} onChange={onChange} {...(register ? register(name) : {})} />
         <Slider />
       </Switch>
     </SwitchWrapper>

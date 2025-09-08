@@ -9,7 +9,7 @@ import Modal from "../Modal.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 
-import { LuPencil, LuTrash2 } from "react-icons/lu";
+import { LuPencil, LuTrash2, LuEye } from "react-icons/lu";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
@@ -19,6 +19,13 @@ import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 
 const StyledImage = styled.img`
   width: 80px;
+`;
+
+const ButtonInner = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 `;
 
 function ShipsColumn({ ship }) {
@@ -83,14 +90,26 @@ function ShipsColumn({ ship }) {
       <td>
         <Dropdown>
           <Button $variation='icon'>
+            <Link to={`${shipId}`}>
+              <ButtonInner>
+                <LuEye />
+                View
+              </ButtonInner>
+            </Link>
+          </Button>
+          <Button $variation='icon'>
             <Link to={`edit/${shipId}`}>
-              <LuPencil />
-              Edit
+              <ButtonInner>
+                <LuPencil />
+                Edit
+              </ButtonInner>
             </Link>
           </Button>
           <Button $variation='icon' onClick={() => dispatch(openModalByName(shipId))}>
-            <LuTrash2 />
-            Delete
+            <ButtonInner>
+              <LuTrash2 />
+              Delete
+            </ButtonInner>
           </Button>
         </Dropdown>
       </td>

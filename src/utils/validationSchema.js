@@ -1,5 +1,15 @@
 import { z } from "zod";
 const StatusEnum = z.enum(["REGULAR", "IMPORTANT"]);
+
+const parseOptionalNumber = (val) => {
+  if (val == null) return null;
+  if (Array.isArray(val)) val = val[0];
+  if (val === "") return null;
+
+  const num = Number(val);
+  return isNaN(num) ? null : num;
+};
+
 const stringToFloat = (fieldName) =>
   z
     .string()
@@ -17,12 +27,17 @@ const optionalInt = (fieldName) =>
     .refine((val) => !val || /^\d{1,4}$/.test(val), {
       message: `${fieldName} must be a whole number`,
     })
-    .transform((val) => (val ? parseInt(val) : undefined));
+    .transform((val) => {
+      if (!val || val.trim() === "") return undefined;
+      const parsed = parseInt(val, 10);
+      return isNaN(parsed) ? undefined : parsed;
+    });
 
 export const createShipSchema = z.object({
   shipName: z.string().min(1, { message: "Ship name is required" }),
   imo: z.string().min(1, { message: "IMO number is required" }),
   typeId: z.string().uuid().min(1, "Ship type is required"),
+  isPublished: z.boolean().optional(),
   price: z
     .string()
     .min(1, "Price is required")
@@ -30,7 +45,7 @@ export const createShipSchema = z.object({
     .transform((val) => Number(val)),
   location: z.string().min(1, "Location is required"),
   mainEngine: z.string().min(1, "Main engine is required"),
-  lengthOverall: z.string().optional(),
+  lengthOverall: z.string().min(1, "Leght overall is required"),
   length: stringToFloat("Length"),
   beam: stringToFloat("Beam"),
   depth: stringToFloat("Depth"),
@@ -38,11 +53,20 @@ export const createShipSchema = z.object({
   tonnage: stringToFloat("Tonnage"),
   cargoCapacity: z.string().min(1, "Cargo capacity is required"),
   buildYear: optionalInt("Build year"),
-  buildCountry: z.string().optional(),
   refitYear: optionalInt("Refit year"),
+  buildCountry: z.string().optional(),
   remarks: z.string().optional(),
   description: z.string().optional(),
   userId: z.string().uuid(),
+  images: z
+    .array(
+      z.object({
+        file: z.instanceof(File),
+        url: z.string().optional(),
+      })
+    )
+    .optional(),
+
   mainImage: z
     .instanceof(File, { message: "An image file is required" })
     .refine((file) => file.size <= 5 * 1024 * 1024, {
@@ -55,9 +79,11 @@ export const createShipSchema = z.object({
 
 // edit ship form schema
 export const editShipSchema = z.object({
+  userId: z.string().uuid(),
   shipName: z.string().optional(),
   imo: z.string().optional(),
   typeId: z.string().optional(),
+  isPublished: z.boolean().optional(),
   price: z.number().int().optional(),
   location: z.string().optional(),
   mainEngine: z.string().optional(),
@@ -68,11 +94,12 @@ export const editShipSchema = z.object({
   draft: z.coerce.number().optional(),
   tonnage: z.coerce.number().optional(),
   cargoCapacity: z.string().optional(),
-  buildYear: optionalInt("Build year"),
+  buildYear: z.preprocess(parseOptionalNumber, z.number().int().positive().nullable().optional()),
+  refitYear: z.preprocess(parseOptionalNumber, z.number().int().positive().nullable().optional()),
   buildCountry: z.string().optional(),
-  refitYear: optionalInt("Refit year"),
   remarks: z.string().optional(),
   description: z.string().optional(),
+  images: z.any().optional(),
   mainImage: z.union([z.instanceof(File), z.string().url("Must be a valid image URL")]).refine((value) => {
     if (typeof value === "string") return true;
     return value instanceof File && value.type.startsWith("image/");

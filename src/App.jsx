@@ -8,6 +8,7 @@ import AuthLayout from "./layouts/AuthLayout.jsx";
 
 import Dashboard from "./pages/Dashboard.jsx";
 import Ships from "./pages/Ships.jsx";
+import SingleShip from "./pages/SingleShip.jsx";
 import Categories from "./pages/Categories.jsx";
 import Users from "./pages/Users.jsx";
 import SignUp from "./pages/SignUp.jsx";
@@ -39,6 +40,7 @@ function App() {
             <Route path='/ships' element={<Ships />} />
             <Route path='/ships/create' element={<CreateShip />} />
             <Route path='/ships/edit/:id' element={<EditShip />} />
+            <Route path='/ships/:id' element={<SingleShip />} />
             <Route path='/address-book' element={<AddressBook />} />
 
             <Route path='/profile' element={<Profile />} />

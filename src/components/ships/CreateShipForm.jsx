@@ -10,6 +10,7 @@ import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import TextArea from "../ui/TextArea.jsx";
 import ImageUploader from "../ImageUploader.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
+import MultipleImagesUploader from "../MultipleImagesUploader.jsx";
 
 import { createShipSchema, editShipSchema } from "../../utils/validationSchema.js";
 import styled from "styled-components";
@@ -17,10 +18,10 @@ import styled from "styled-components";
 import { useCreateShip } from "../../hooks/ships/useCreateShip.js";
 import { useEditShip } from "../../hooks/ships/useEditShip.js";
 import { useShip } from "../../hooks/ships/useShip.js";
-import { useUploadSingleImage } from "../../hooks/files/useUploadSingleImage.js";
-import { useImagePublicUrl } from "../../hooks/files/useImagePublicUrl.js";
+
 import { useUser } from "../../hooks/useAuth.js";
 import { useAllShipType } from "../../hooks/useShipType.js";
+import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 
 const Form = styled.div`
   display: grid;
@@ -44,6 +45,18 @@ const Row = styled.div`
 const Column = styled(Row)`
   flex-direction: column;
   gap: 0;
+`;
+
+const ColumnPublish = styled(Row)`
+  grid-column: 1 / -1;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 2rem 0;
+
+  span {
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
 `;
 
 const ShipsForm = () => {
@@ -74,34 +87,47 @@ const ShipsForm = () => {
 
   useEffect(() => {
     if (singleShipData && isEditSession) {
+      const normalizedImages = (singleShipData.images || []).map((img) => (typeof img === "string" ? { url: img } : img));
+
       reset({
         ...singleShipData,
+        images: normalizedImages,
       });
     }
   }, [singleShipData, reset]);
 
-  const onSubmit = (data) => {
-    const file = data.mainImage;
+  const onSubmit = async (data) => {
+    const formData = new FormData();
 
-    if (file instanceof File) {
-      const formData = new FormData();
-      Object.entries(data).forEach(([key, value]) => {
-        if (key === "image") return;
-        formData.append(key, value);
-      });
+    // Handle mainImage
+    if (data.mainImage instanceof File) {
+      formData.append("mainImage", data.mainImage);
+    } else if (typeof data.mainImage === "string") {
+      formData.append("mainImage", data.mainImage);
+    }
 
-      // Append the image file
-      if (data.image && data.mainImage.length > 0) {
-        formData.append("mainImage", data.mainImage[0]);
+    // Handle multiple images
+    if (data.images && data.images.length > 0) {
+      Array.from(data.images).forEach((img) => formData.append("images", img.file));
+    }
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (key !== "images" && key !== "mainImage") {
+        formData.append(key, value ?? "");
       }
+    });
 
-      if (isEditSession) {
-        editShip({ newData: data, id: shipId });
-      } else {
-        submitData(data);
-      }
+    // numeric fields → convert to string or empty string for null
+    formData.append("buildYear", data.buildYear ? String(Number(data.buildYear)) : "");
+    formData.append("refitYear", data.refitYear ? String(Number(data.refitYear)) : "");
+    console.log(data);
+    if (isEditSession) {
+      /* for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      } */
+      editShip({ newData: formData, id: shipId });
     } else {
-      isEditSession && editShip({ newData: data, id: shipId });
+      submitData(formData);
     }
   };
 
@@ -110,13 +136,24 @@ const ShipsForm = () => {
     navigate(-1);
   };
 
+  console.log(errors);
+
   if (isLoading) return <Spinner />;
   if (isError) return <div>Error</div>;
-
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Form>
         <input type='hidden' {...register("userId")} value={user.id} />
+        <ColumnPublish>
+          <ToggleSwitch
+            label='Publish on web'
+            name='isPublished'
+            checked={!!watch("isPublished")}
+            register={register}
+            {...register("isPublished")}
+          />
+        </ColumnPublish>
+
         <Column>
           <Input
             label='Ship name *'
@@ -155,7 +192,7 @@ const ShipsForm = () => {
               />
             )}
           />
-          <InputErrorMessage message={errors.shipType?.message} />
+          <InputErrorMessage message={errors.typeId?.message} />
         </Column>
         <Column>
           <Input
@@ -193,7 +230,7 @@ const ShipsForm = () => {
       <Form>
         <Column>
           <Input
-            label='Length overall'
+            label='Length overall *'
             directions='column'
             placeholder='e.g. 94 m'
             register={register}
@@ -273,7 +310,14 @@ const ShipsForm = () => {
           <InputErrorMessage message={errors.buildYear?.message} />
         </Column>
         <Column>
-          <Input label='Refit year' directions='column' placeholder='e.g. 2011' register={register} {...register("refitYear")} />
+          <Input
+            type='number'
+            label='Refit year'
+            directions='column'
+            placeholder='e.g. 2011'
+            register={register}
+            {...register("refitYear", { setValueAs: (v) => (v === "" ? undefined : parseInt(v, 10)) })}
+          />
           <InputErrorMessage message={errors.refitYear?.message} />
         </Column>
         <Input label='Build country' directions='column' placeholder='e.g. Poland' register={register} {...register("buildCountry")} />
@@ -304,6 +348,11 @@ const ShipsForm = () => {
           />
 
           <InputErrorMessage message={errors.mainImage?.message} />
+        </Column>
+
+        <Column>
+          <MultipleImagesUploader name='images' value={watch("images")} onChange={(files) => setValue("images", files)} />
+          <InputErrorMessage message={errors.images?.message} />
         </Column>
       </Form>
 

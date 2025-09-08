@@ -55,6 +55,7 @@ export const createEditShip = async (newData, id) => {
   try {
     const method = id ? "patch" : "post";
     const endpoint = id ? `/ships/${id}` : "/ships/create";
+
     const res = await apiClient[method](endpoint, newData, {
       headers: { "Content-Type": "multipart/form-data" },
     });

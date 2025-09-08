@@ -16,6 +16,7 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import { handleApiError } from "../../utils/handleApiError.js";
 import { useState } from "react";
+import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 
 const Form = styled.form`
   display: grid;
@@ -40,12 +41,12 @@ const RemberMeWrap = styled.div`
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [remeberMe, setRemeberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const navigate = useNavigate();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: ({ email, password }) => loginApi({ email, password }),
+    mutationFn: ({ email, password, rememberMe }) => loginApi({ email, password, rememberMe }),
     onSuccess: async () => {
       toast.success("Your are loggedin");
       navigate("/dashboard");
@@ -58,10 +59,12 @@ function LoginForm() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm({ resolver: zodResolver(loginSchema) });
 
   const onSubmit = (data) => {
+    console.log(data);
     mutate(data);
   };
 
@@ -96,7 +99,8 @@ function LoginForm() {
       <InputErrorMessage message={errors.password?.message} />
 
       <RemberMeWrap>
-        <Checkbox checked={remeberMe} onChange={() => setRemeberMe(!remeberMe)} />
+        <ToggleSwitch checked={!!watch("rememberMe")} register={register} name='rememberMe' />
+        {/* <Checkbox checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} /> */}
         <p>Remember me</p>
       </RemberMeWrap>
 

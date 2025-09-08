@@ -33,8 +33,8 @@ const StyledIcon = styled(LuImageDown)`
 
 const StyledIconClose = styled(LuCircleX)`
   position: absolute;
-  top: -10px;
-  right: -10px;
+  top: -20px;
+  right: -20px;
   color: var(--color-grey-500);
   height: 2rem;
   width: 2rem;
@@ -69,7 +69,7 @@ const P = styled.p`
   margin-bottom: 0.4rem;
 `;
 
-const ImageUploader = ({ name, onChange, initialImage }) => {
+const ImageUploader = ({ name, onChange, initialImage, title }) => {
   const [file, setFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(initialImage || null);
 
@@ -116,7 +116,7 @@ const ImageUploader = ({ name, onChange, initialImage }) => {
         <StyledPreviewImageWrap>
           <StyledIconClose onClick={removeImage} />
           <Column>
-            <P>Main image</P>
+            {title ? <P>Main image</P> : title}
             {previewImage && <StyledPreviewImage src={previewImage} alt='' />}
           </Column>
         </StyledPreviewImageWrap>

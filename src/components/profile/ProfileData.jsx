@@ -44,17 +44,9 @@ const StyledAvatar = styled.div`
   }
 `;
 
-const StyledImage = styled.img`
-  //height: 30rem;
-  width: 30rem;
-  border-radius: 50%;
-`;
-
 function ProfileData() {
-  const { mutate: uploadAvatar } = useUploadSingleImage();
-  const { mutate: getImageUrl } = useImagePublicUrl();
   const { data, isLoading } = useUser();
-  const { mutate: updateProfile } = useUpdateProfile();
+  const { mutate: updateProfile, isPending: loadUpdateProfile } = useUpdateProfile();
 
   const {
     register,
@@ -102,14 +94,10 @@ function ProfileData() {
       <StyledInfo>
         <Input register={register} {...register("fullName")} />
         <Input type='email' register={register} {...register("email")} />
-        <Button>Edit</Button>
+        <Button>{loadUpdateProfile ? "Updating..." : "Edit"}</Button>
       </StyledInfo>
       <StyledAvatar>
-        {data.profile.avatar ? (
-          <StyledImage src={data.profile.avatar} />
-        ) : (
-          <ImageUploader name='avatar' value={watch("avatar")} initialImage={data.profile.avatar} onChange={handleAvatarChange} />
-        )}
+        <ImageUploader name='avatar' value={watch("avatar")} initialImage={data.profile.avatar} onChange={handleAvatarChange} />
       </StyledAvatar>
     </StyledForm>
   );

@@ -75,9 +75,9 @@ export const resetPasswordApi = async ({ email, password }) => {
 };
 
 /* LOGIN USER */
-export const loginApi = async ({ email, password }) => {
+export const loginApi = async ({ email, password, rememberMe }) => {
   try {
-    const res = await apiClient.post("/auth/login", { email, password });
+    const res = await apiClient.post("/auth/login", { email, password, rememberMe });
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

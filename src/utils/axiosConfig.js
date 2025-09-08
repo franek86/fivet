@@ -63,14 +63,14 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
       } catch (error) {
         console.log("Error axios interctor refresh token");
-        /* isRefreshing = false;
+        isRefreshing = false;
         refreshSubscribers = [];
 
         store.dispatch(logoutUser());
         if (window.location.pathname !== "/") {
           window.location.replace("/");
         }
-        return Promise.reject(error); */
+        return Promise.reject(error);
       }
     }
     return Promise.reject(error);

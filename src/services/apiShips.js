@@ -93,3 +93,16 @@ export const publishShipApi = async (id, isPublished) => {
     throw new Error(message);
   }
 };
+
+/* 
+  Get dashboard statistic
+*/
+export const getDashboardStatistic = async () => {
+  try {
+    const res = await apiClient.get("ships/dashboard/statistic");
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};

@@ -5,7 +5,6 @@ import { Link, useNavigate } from "react-router";
 
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
-import Checkbox from "../ui/Checkbox.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 
@@ -41,7 +40,6 @@ const RemberMeWrap = styled.div`
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
 
   const navigate = useNavigate();
 
@@ -64,7 +62,6 @@ function LoginForm() {
   } = useForm({ resolver: zodResolver(loginSchema) });
 
   const onSubmit = (data) => {
-    console.log(data);
     mutate(data);
   };
 
@@ -100,7 +97,6 @@ function LoginForm() {
 
       <RemberMeWrap>
         <ToggleSwitch checked={!!watch("rememberMe")} register={register} name='rememberMe' />
-        {/* <Checkbox checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} /> */}
         <p>Remember me</p>
       </RemberMeWrap>
 

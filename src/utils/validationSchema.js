@@ -1,5 +1,27 @@
 import { z } from "zod";
+import moment from "moment";
+
 const StatusEnum = z.enum(["REGULAR", "IMPORTANT"]);
+const statusEnum = z.enum(["planned", "done", "canceled"]);
+const priorityEnum = z.enum(["low", "medium", "high"]);
+
+const datePreprocess = (arg) => {
+  if (!arg) return undefined;
+  if (arg instanceof Date) return arg;
+  if (moment.isMoment(arg)) return arg.toDate();
+  if (typeof arg === "string") return new Date(arg);
+  return undefined;
+};
+
+const tagsPreprocess = (val) => {
+  if (typeof val === "string") {
+    return val
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+  }
+  return val;
+};
 
 const parseOptionalNumber = (val) => {
   if (val == null) return null;
@@ -138,3 +160,22 @@ export const addressBookSchema = z.object({
   note: z.string().optional().nullable(),
   userId: z.string().uuid(),
 });
+
+//Event schema
+export const eventSchema = z
+  .object({
+    title: z.string().min(1, "Title is required"),
+    description: z.string().optional(),
+    start: z.preprocess(datePreprocess, z.date({ required_error: "Start date are required" })),
+    end: z.preprocess(datePreprocess, z.date({ required_error: "End date are required" })),
+    location: z.string().optional(),
+    reminder: z.number().int().min(0).optional(),
+    status: statusEnum.optional(),
+    priority: priorityEnum.optional(),
+    tags: z.preprocess(tagsPreprocess, z.array(z.string()).optional()),
+    userId: z.string().uuid("User ID must be valid"),
+  })
+  .refine((data) => data.start < data.end, {
+    message: "Start datum must be before end date",
+    path: ["start"],
+  });

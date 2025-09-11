@@ -4,7 +4,7 @@ import { useController } from "react-hook-form";
 import Label from "./Label.jsx";
 import styled, { css } from "styled-components";
 import { LuChevronDown, LuChevronUp } from "react-icons/lu";
-import { closeDropdown, toggleDropdown } from "../../slices/uiSlice.js";
+import { closeDropdown, toggleDropdownByName, toggleDropdown } from "../../slices/uiSlice.js";
 import { adjustDropdownAlignment } from "../../utils/isOverflowRight.js";
 
 const sizes = {
@@ -84,14 +84,14 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, directio
 
   const { field } = useController({ name, control });
 
-  const isOpen = useSelector((state) => state.ui.isDropdownOpen);
+  const isOpen = useSelector((state) => state.ui.isDropdownOpenByName);
   const dispatch = useDispatch();
-  //const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const triggerRef = useRef(null);
   const [alignRight, setAlignRight] = useState(false);
 
   const selectedOption = options?.find((option) => option[valueKey] === field.value) || null;
+  const openedSelect = isOpen === name;
 
   const handleSelect = (option) => {
     field.onChange(option[valueKey]);
@@ -110,21 +110,21 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, directio
   }, [dispatch]);
 
   useEffect(() => {
-    if (isOpen && dropdownRef.current) {
+    if (openedSelect && dropdownRef.current) {
       adjustDropdownAlignment(dropdownRef.current, setAlignRight);
     }
-  }, [isOpen]);
+  }, [openedSelect]);
 
   return (
     <Wrap $directions={directions}>
       <Label htmlFor={field.value}>{label}</Label>
 
-      <Select ref={triggerRef} onClick={() => dispatch(toggleDropdown())} $size={size} $variation={variation}>
+      <Select ref={triggerRef} onClick={() => dispatch(toggleDropdownByName(name))} $size={size} $variation={variation}>
         {selectedOption ? selectedOption.name : "Select item"}
-        {isOpen ? <LuChevronUp /> : <LuChevronDown />}
+        {openedSelect ? <LuChevronUp /> : <LuChevronDown />}
       </Select>
 
-      {isOpen && (
+      {openedSelect && (
         <SelectDropdown ref={dropdownRef} $alignRight={alignRight}>
           {options?.map((option) => (
             <SelectOption key={option.name} $selected={field.value === option[valueKey]} onClick={() => handleSelect(option)}>

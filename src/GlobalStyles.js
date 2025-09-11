@@ -1,6 +1,5 @@
 import { createGlobalStyle } from "styled-components";
-import "react-date-picker/dist/DatePicker.css";
-import "react-calendar/dist/Calendar.css";
+import "react-datetime/css/react-datetime.css";
 import "react-phone-input-2/lib/style.css";
 
 const styled = { createGlobalStyle };
@@ -318,6 +317,78 @@ const GlobalStyles = styled.createGlobalStyle`
     bottom: 0;
     border: 0;
     background: transparent;
+  }
+
+  /* Date picker box */
+  .rdtPicker {
+    border-radius: var(--border-radius-md);
+    padding: 10px;
+    background-color: var(--color-grey-0);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .rdtPicker td.rdtDay:hover,
+  .rdtPicker .rdtTimeToggle,
+  .rdtPicker thead tr:first-of-type th {
+    background-color: var(--color-brand-500);
+    color: var(--color-grey-0);
+  }
+
+  .rdtPicker thead tr:first-of-type th:hover {
+    background: var(--color-brand-200);
+    color: var(--color-grey-700);
+  }
+
+  .rdtPicker .rdtDays .dow {
+    color: var(--color-grey-500);
+  }
+
+  .rdtPicker .rdtDays td span {
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .rdtPicker .rdtDays td span:hover {
+    background-color: var(--color-brand-500);
+    color: var(--color-grey-0);
+  }
+
+  .rdtPicker .rdtActive {
+    background-color: var(--color-brand-500) !important;
+    color: var(--color-grey-0);
+    border-radius: 50%;
+  }
+
+  /* Disable dani */
+  .rdtPicker .rdtDisabled {
+    color: #ccc !important;
+    cursor: not-allowed;
+  }
+
+  /* Time picker stilovi */
+  .rdtPicker .rdtTime td span {
+    border-radius: 50%;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .rdtPicker .rdtTime td span:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  /* Input field */
+  .rdt input {
+    border: 1px solid var(--color-grey-500);
+    border-radius: 5px;
+    padding: 1.25rem 0.9rem;
+    width: 100%;
+  }
+
+  .rdt input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
   }
 
   @keyframes shimmer-animation {

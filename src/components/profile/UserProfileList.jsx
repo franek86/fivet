@@ -53,12 +53,6 @@ const CardButton = styled.div`
   border-radius: 2rem;
 `;
 
-/* const CardButtonEdit = styled(CardButton)`
-  &:hover {
-    color: var(--color-grey-0);
-    background-color: var(--color-green-700);
-  }
-`; */
 const CardButtonDelete = styled(CardButton)`
   &:hover {
     color: var(--color-grey-0);

@@ -4,8 +4,9 @@ import Spinner from "../Spinner.jsx";
 
 import { FaRegEye } from "react-icons/fa";
 import { formatedPrice } from "../../utils/formattedPrice.js";
+import { Link } from "react-router";
 
-const Container = styled.div`
+const Container = styled.section`
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -43,7 +44,7 @@ const Image = styled.img`
   height: 4rem;
 `;
 
-const Views = styled.div`
+const Views = styled(Link)`
   display: flex;
   align-items: center;
   gap: 1.2rem;
@@ -66,12 +67,12 @@ function TopShips() {
         <p>Views</p>
       </WrapperTop>
       {topShips.map((ship) => (
-        <Wrapper>
+        <Wrapper key={ship.id}>
           <Image src={ship.mainImage} alt={ship.shipName} />
           <p>{ship.shipName}</p>
           <p>{ship.imo}</p>
           <p>{formatedPrice(ship.price)}</p>
-          <Views>
+          <Views to={`/ships/${ship.id}`}>
             <FaRegEye />
             {ship.clicks}
           </Views>

@@ -21,6 +21,7 @@ import ProtectedRoute from "./pages/ProtectedRoute.jsx";
 import Profile from "./pages/Profile.jsx";
 import AddressBook from "./pages/AddressBook.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
+import Events from "./pages/Events.jsx";
 
 function App() {
   return (
@@ -42,7 +43,7 @@ function App() {
             <Route path='/ships/edit/:id' element={<EditShip />} />
             <Route path='/ships/:id' element={<SingleShip />} />
             <Route path='/address-book' element={<AddressBook />} />
-
+            <Route path='/events' element={<Events />} />
             <Route path='/profile' element={<Profile />} />
           </Route>
         </Route>

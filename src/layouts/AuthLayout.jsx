@@ -24,15 +24,16 @@ const FormSection = styled.section`
 `;
 
 const ImageSection = styled.section`
+  display: none;
   flex: 1;
   height: 100%;
-  display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
   background-color: var(--color-brand-100);
 
   @media screen and (min-width: 640px) {
+    display: flex;
     clip-path: polygon(15% 0, 100% 0, 100% 100%, 18% 100%, 0 52%);
   }
 `;

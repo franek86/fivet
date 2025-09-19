@@ -18,9 +18,9 @@ const SytledButton = styled.button`
   justify-content: center;
   border: none;
   background-color: var(--color-brand-600);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  padding: 0.8rem 2.5rem;
+  padding: 0.85rem 1.25rem;
   color: var(--color-brand-200);
   border-radius: var(--border-radius-sm);
 

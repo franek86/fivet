@@ -169,9 +169,9 @@ export const eventSchema = z
     start: z.preprocess(datePreprocess, z.date({ required_error: "Start date are required" })),
     end: z.preprocess(datePreprocess, z.date({ required_error: "End date are required" })),
     location: z.string().optional(),
-    reminder: z.number().int().min(0).optional(),
-    status: statusEnum.optional(),
-    priority: priorityEnum.optional(),
+    reminder: z.number().int().min(0).nullable().optional(),
+    status: statusEnum.nullable().optional(),
+    priority: priorityEnum.nullable().optional(),
     tags: z.preprocess(tagsPreprocess, z.array(z.string()).optional()),
     userId: z.string().uuid("User ID must be valid"),
   })

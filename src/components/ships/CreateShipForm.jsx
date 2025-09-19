@@ -136,8 +136,6 @@ const ShipsForm = () => {
     navigate(-1);
   };
 
-  console.log(errors);
-
   if (isLoading) return <Spinner />;
   if (isError) return <div>Error</div>;
   return (

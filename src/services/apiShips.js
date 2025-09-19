@@ -1,7 +1,5 @@
 import apiClient from "../utils/axiosConfig.js";
 import { PAGE_SIZE } from "../utils/constants.js";
-import { getResizedImageUrl } from "../utils/resizedImage.js";
-import supabase from "./databaseConfig.js";
 
 /* 
     Get all ships depend if is user or admin with pagination
@@ -88,19 +86,6 @@ export const publishShipApi = async (id, isPublished) => {
       isPublished,
     });
     return response;
-  } catch (error) {
-    const message = error.response?.data?.message || error.message || "Something went wrong";
-    throw new Error(message);
-  }
-};
-
-/* 
-  Get dashboard statistic
-*/
-export const getDashboardStatistic = async () => {
-  try {
-    const res = await apiClient.get("ships/dashboard/statistic");
-    return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);

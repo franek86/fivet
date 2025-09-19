@@ -8,8 +8,8 @@ const sizes = {
     text-align: center;
   `,
   medium: css`
-    font-size: 1.4rem;
-    padding: 1.2rem 1.6rem;
+    font-size: 1.25rem;
+    padding: 0.85rem 1.2rem;
   `,
 };
 
@@ -45,7 +45,6 @@ const variations = {
   danger: css`
     color: var(--color-red-100);
     background: var(--color-red-700);
-    border: 1px solid var(--color-red-700);
 
     &:hover {
       color: var(--color-red-700);
@@ -69,6 +68,10 @@ const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &:focus {
+    outline: none;
+  }
 
   ${(props) => sizes[props.$size]};
   ${(props) => variations[props.$variation]}

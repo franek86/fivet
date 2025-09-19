@@ -215,6 +215,22 @@ const GlobalStyles = styled.createGlobalStyle`
   tr:nth-child(odd) {
     background-color: var(--color-grey-100);
   }
+
+  //Title and search container
+  .search-container {
+    display: grid;
+    gap: 1rem;
+
+    @media screen and (min-width: 992px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .search-container-right {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   //Simmer animation
   .simmer {
     background: var(--linear-gradient);

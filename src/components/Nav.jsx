@@ -11,10 +11,14 @@ const StyledNav = styled.nav`
 const NavList = styled(NavLink)`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
+
   gap: 10px;
   padding: 1.2rem 2rem;
   font-size: 1.85rem;
+  @media screen and (min-width: 640px) {
+    justify-content: center;
+  }
   @media screen and (min-width: 1024px) {
     justify-content: start;
   }

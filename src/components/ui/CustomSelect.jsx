@@ -10,7 +10,7 @@ import { adjustDropdownAlignment } from "../../utils/isOverflowRight.js";
 const sizes = {
   small: css`
     padding: 0.5rem 0.75rem;
-    font-size: 1.4rem;
+    font-size: 1.25rem;
   `,
   medium: css`
     padding: 1.25rem 0.9rem;
@@ -95,13 +95,15 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, directio
 
   const handleSelect = (option) => {
     field.onChange(option[valueKey]);
-    dispatch(closeDropdown());
+    //dispatch(closeDropdown());
+    dispatch(toggleDropdownByName(name));
   };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target) && triggerRef.current && !triggerRef.current.contains(e.target)) {
-        dispatch(closeDropdown());
+        //dispatch(closeDropdown());
+        dispatch(toggleDropdownByName(name));
       }
     };
 

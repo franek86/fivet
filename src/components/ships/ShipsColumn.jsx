@@ -105,7 +105,7 @@ function ShipsColumn({ ship }) {
               </ButtonInner>
             </Link>
           </Button>
-          <Button $variation='icon' onClick={() => dispatch(openModalByName(shipId))}>
+          <Button $variation='icon' $size='small'>
             <ButtonInner>
               <LuTrash2 />
               Delete

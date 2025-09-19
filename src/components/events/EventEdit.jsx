@@ -1,77 +1,74 @@
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useSelector } from "react-redux";
-import styled from "styled-components";
-import Input from "../ui/Input.jsx";
-import InputErrorMessage from "../ui/InputErrorMessage.jsx";
-import TextArea from "../ui/TextArea.jsx";
 import DateTime from "react-datetime";
-import Button from "../ui/Button.jsx";
-import CustomSelect from "../ui/CustomSelect.jsx";
-import Label from "../ui/Label.jsx";
+import moment from "moment";
 
+import Label from "../ui/Label.jsx";
+import InputErrorMessage from "../ui/InputErrorMessage.jsx";
+import CustomSelect from "../ui/CustomSelect.jsx";
+import Input from "../ui/Input.jsx";
+import TextArea from "../ui/TextArea.jsx";
+import Button from "../ui/Button.jsx";
+
+import styled from "styled-components";
+import { useEditEvent, useGetSingleEvent } from "../../hooks/useEvents.js";
 import { EVENT_PRIORITY, EVENT_REMINDER, EVENT_STATUS } from "../../utils/constants.js";
 import { eventSchema } from "../../utils/validationSchema.js";
 import { zodResolver } from "@hookform/resolvers/zod";
-import moment from "moment";
-import { useCreateEvent } from "../../hooks/useEvents.js";
 
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-
-  @media screen and (min-width: 640px) {
-    grid-template-columns: 1fr 1fr;
-  }
-`;
-
-const Row = styled.div`
-  display: flex;
-  gap: 15px;
-`;
-
-const Column = styled(Row)`
-  flex-direction: column;
-  gap: 0;
-`;
-
-const FullColumn = styled(Row)`
+const Column = styled.div``;
+const ColumnFull = styled.div`
   grid-column: 1 / -1;
   & > div {
     width: 100%;
   }
 `;
+const Wrapper = styled.div`
+  display: grid;
+  grid-template-columns: 50% 1fr;
+  gap: 1rem;
+`;
 
-function FormEvent() {
-  const user = useSelector((state) => state.auth.user);
-  const { mutate, isPending, isSuccess, isError } = useCreateEvent();
+function EventEdit({ editId }) {
+  const { mutate, isPending } = useEditEvent();
+  const { data: singleData } = useGetSingleEvent(editId);
 
   const {
     register,
     control,
-    formState: { errors },
     handleSubmit,
+    reset,
+    formState: { errors },
   } = useForm({
+    defaultValues: {
+      ...singleData,
+    },
     resolver: zodResolver(eventSchema),
   });
 
+  useEffect(() => {
+    if (singleData) {
+      const formatStartDate = moment(singleData.start);
+      const formatEndDate = moment(singleData.end);
+      reset({ ...singleData, start: formatStartDate, end: formatEndDate });
+    }
+  }, [singleData, reset]);
+
   const onSubmit = (data) => {
-    mutate(data);
+    mutate({ id: editId, data });
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input type='hidden' {...register("userId")} value={user.id} />
-      <Grid>
+      <Wrapper>
         <Column>
-          <Label>Date start *</Label>
+          <Label>Date start</Label>
           <Controller
             control={control}
             name='start'
             render={({ field }) => (
               <DateTime
                 value={field.value}
-                initialValue={moment()}
                 onChange={field.onChange}
                 isValidDate={(current) => current.isSameOrAfter(moment(), "minute")}
                 dateFormat='DD-MM-YYYY'
@@ -82,14 +79,13 @@ function FormEvent() {
           <InputErrorMessage message={errors.start?.message} />
         </Column>
         <Column>
-          <Label>Date end *</Label>
+          <Label>Date end</Label>
           <Controller
             control={control}
             name='end'
             render={({ field }) => (
               <DateTime
                 value={field.value}
-                initialValue={moment()}
                 isValidDate={(current) => current.isSameOrAfter(moment(), "minute")}
                 onChange={field.onChange}
                 dateFormat='DD-MM-YYYY'
@@ -147,7 +143,7 @@ function FormEvent() {
         </Column>
 
         <Column>
-          <Input directions='column' label='Title *' register={register} placeholder='Enter title' {...register("title")} />
+          <Input directions='column' label='Title' register={register} placeholder='Enter title' {...register("title")} />
           <InputErrorMessage message={errors.title?.message} />
         </Column>
 
@@ -181,15 +177,15 @@ function FormEvent() {
           <Input directions='column' label='Tags' register={register} placeholder='best, expensive ...' {...register("tags")} />
           <InputErrorMessage message={errors.tags?.message} />
         </Column>
-        <FullColumn>
+        <ColumnFull>
           <TextArea directions='column' label='Description' register={register} {...register("description")} />
           <InputErrorMessage message={errors.description?.message} />
-        </FullColumn>
+        </ColumnFull>
 
-        <Button>{isPending ? "Creating..." : "Create"}</Button>
-      </Grid>
+        <Button>{isPending ? "Editing..." : "Edit"}</Button>
+      </Wrapper>
     </form>
   );
 }
 
-export default FormEvent;
+export default EventEdit;

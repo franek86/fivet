@@ -9,7 +9,6 @@ export const useShips = () => {
   const user = useSelector((state) => state.auth.user);
   const searchTerm = useSelector((state) => state.search.term);
 
-  //const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
   const page = Number(searchParams.get("page") || 1);
 
   const sortByRow = searchParams.get("sortBy") || "createdAt-desc";

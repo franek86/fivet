@@ -9,9 +9,13 @@ import { useLocation, useNavigate } from "react-router";
 const SearchWrap = styled.div`
   background-color: var(--color-grey-50);
   border: 1px solid var(--color-grey-200);
-  width: ${({ width }) => width || "30rem"};
+  width: 23rem;
   position: relative;
   border-radius: 20px;
+
+  @media screen and (min-width: 640px) {
+    width: ${({ width }) => width || "30rem"};
+  }
 `;
 
 const SearchIcon = styled(MdSearch)`
@@ -19,7 +23,7 @@ const SearchIcon = styled(MdSearch)`
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 3.2rem;
+  font-size: 3rem;
   background: var(--color-brand-500);
   border-radius: 50%;
   padding: 0.5rem;
@@ -27,13 +31,14 @@ const SearchIcon = styled(MdSearch)`
 `;
 
 const SearchInput = styled.input`
+  font-size: 1.25rem;
+  padding: 0.85rem 1.2rem;
   border: none;
   width: 100%;
   border-radius: 20px;
-  padding: 1rem 1.5rem;
 `;
 
-function SearchBar({ paramKey = "search", width = "30rem" }) {
+function SearchBar({ paramKey = "search", width = "27rem" }) {
   const lastKey = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -68,12 +73,19 @@ function SearchBar({ paramKey = "search", width = "30rem" }) {
   };
 
   const handleChange = (e) => {
-    setInputValue(e.target.value);
+    const value = e.target.value;
+    setInputValue(value);
     if (lastKey.current === "Backspace") {
       const params = new URLSearchParams(location.search);
-      params.set(paramKey, e.target.value);
+
+      if (value) {
+        params.set(paramKey, value);
+      } else {
+        params.delete(paramKey);
+      }
+
       navigate({ search: params.toString() }, { replace: true });
-      dispatch(setSearchTerm(e.target.value));
+      dispatch(setSearchTerm(value));
     }
   };
 

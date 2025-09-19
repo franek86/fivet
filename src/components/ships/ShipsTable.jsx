@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
+import { Range } from "react-range";
 import { useShips } from "../../hooks/ships/useShips.js";
 
 import Pagination from "../Pagination.jsx";
@@ -12,9 +13,10 @@ import EmptyState from "../EmptyState.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 import Sort from "../ui/Sort.jsx";
 
-import { Range } from "react-range";
 import styled from "styled-components";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { setSearchTerm } from "../../slices/searchSlice.js";
+import Button from "../ui/Button.jsx";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -32,17 +34,16 @@ const P = styled.p`
 `;
 
 const ShipFilters = styled.div`
-  background-color: var(--color-grey-50);
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  flex: 1;
-  border-radius: var(--border-radius-md);
+  background-color: var(--color-brand-500);
+  color: var(--color-grey-0);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
 `;
 
 const ShipFiltersDropdown = styled.div`
   display: flex;
   gap: 5rem;
+  margin: 2rem 0;
 `;
 
 const RangeLabel = styled.div`
@@ -86,6 +87,7 @@ const ResetButton = styled(ButtonStyle)`
 `;
 
 function ShipsTable() {
+  const [toggleFilter, setToggleFilter] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
 
@@ -170,57 +172,63 @@ function ShipsTable() {
   return (
     <>
       <FlexWrapper>
-        <ShipFilters>
-          <ShipFiltersDropdown>
-            <div>
-              <P>Publish filter</P>
-              <Checkbox checked={isPublished} label='Published' position='left' onChange={togglePublishFilter} />
-            </div>
-            <div>
-              <RangeLabel>
-                Price filter: ${rangeValue[0]} - ${rangeValue[1]}
-              </RangeLabel>
-              <Range
-                step={1}
-                min={MIN}
-                max={MAX}
-                values={rangeValue}
-                onChange={onChangePriceFilter}
-                renderTrack={({ props, children }) => {
-                  const [min, max] = rangeValue;
-                  const leftPercent = ((min - MIN) / (MAX - MIN)) * 100;
-                  const rightPercent = ((max - MIN) / (MAX - MIN)) * 100;
-                  return (
-                    <div
-                      {...props}
-                      style={{
-                        ...props.style,
-                        height: "6px",
-                        width: "100%",
-                        background: `linear-gradient(to right,#ccc ${leftPercent}%,
-                        #548BF4 ${leftPercent}%,
-                        #548BF4 ${rightPercent}%,
-                        #ccc ${rightPercent}%)`,
-                      }}
-                      className='range-wrapper'
-                    >
-                      {children}
-                    </div>
-                  );
-                }}
-                renderThumb={({ props, index }) => {
-                  return <div {...props} key={index} style={props.style} className='range-thumb'></div>;
-                }}
-              />
-            </div>
-            <ButtonWrap>
-              <FilterButton onClick={applayFilter}>Filter now</FilterButton>
-              <ResetButton onClick={resetFilter}>Reset</ResetButton>
-            </ButtonWrap>
-          </ShipFiltersDropdown>
+        <ShipFilters onClick={() => setToggleFilter(!toggleFilter)}>
+          <Button $variation='icon'>
+            Filters
+            {toggleFilter ? <FiChevronUp /> : <FiChevronDown />}
+          </Button>
         </ShipFilters>
         <Sort items={sortItems} label='Sort by:' />
       </FlexWrapper>
+      {toggleFilter && (
+        <ShipFiltersDropdown>
+          <div>
+            <P>Publish filter</P>
+            <Checkbox checked={isPublished} label='Published' position='left' onChange={togglePublishFilter} />
+          </div>
+          <div>
+            <RangeLabel>
+              Price filter: ${rangeValue[0]} - ${rangeValue[1]}
+            </RangeLabel>
+            <Range
+              step={1}
+              min={MIN}
+              max={MAX}
+              values={rangeValue}
+              onChange={onChangePriceFilter}
+              renderTrack={({ props, children }) => {
+                const [min, max] = rangeValue;
+                const leftPercent = ((min - MIN) / (MAX - MIN)) * 100;
+                const rightPercent = ((max - MIN) / (MAX - MIN)) * 100;
+                return (
+                  <div
+                    {...props}
+                    style={{
+                      ...props.style,
+                      height: "6px",
+                      width: "100%",
+                      background: `linear-gradient(to right,#ccc ${leftPercent}%,
+                        #548BF4 ${leftPercent}%,
+                        #548BF4 ${rightPercent}%,
+                        #ccc ${rightPercent}%)`,
+                    }}
+                    className='range-wrapper'
+                  >
+                    {children}
+                  </div>
+                );
+              }}
+              renderThumb={({ props, index }) => {
+                return <div {...props} key={index} style={props.style} className='range-thumb'></div>;
+              }}
+            />
+          </div>
+          <ButtonWrap>
+            <FilterButton onClick={applayFilter}>Filter now</FilterButton>
+            <ResetButton onClick={resetFilter}>Reset</ResetButton>
+          </ButtonWrap>
+        </ShipFiltersDropdown>
+      )}
       {isFetching ? <TablePlaceholder count={dataLength} /> : <CustomTable columns={tableColumns} renderRow={renderRow} data={ships} />}
       <Pagination count={count} />
     </>

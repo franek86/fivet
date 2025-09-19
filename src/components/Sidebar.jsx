@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Nav from "./Nav.jsx";
 import Logo from "./Logo.jsx";
@@ -7,12 +8,25 @@ import Logout from "./Logout.jsx";
 const Aside = styled.aside`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 `;
 
-const AsideWrapper = styled.div``;
-
 const AsideWrapperBottom = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  height: ${({ $props }) => ($props ? "100%" : "0")};
+  opacity: ${({ $props }) => ($props ? "1" : "0")};
+  visibility: ${({ $props }) => ($props ? "visible" : "hidden")};
+
+  @media screen and (min-width: 640px) {
+    height: 100%;
+    opacity: 1;
+    visibility: visible;
+  }
+`;
+
+const AsideFooter = styled.div`
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -20,15 +34,17 @@ const AsideWrapperBottom = styled.div`
 `;
 
 function Sidebar() {
+  const toggleNav = useSelector((state) => state.ui.isToggleNav);
   return (
     <Aside>
-      <AsideWrapper>
-        <Logo />
+      <Logo />
+
+      <AsideWrapperBottom $props={toggleNav}>
         <Nav />
-      </AsideWrapper>
-      <AsideWrapperBottom>
-        <Avatar />
-        <Logout />
+        <AsideFooter>
+          <Avatar />
+          <Logout />
+        </AsideFooter>
       </AsideWrapperBottom>
     </Aside>
   );

@@ -23,7 +23,6 @@ const data = [
 
 function DashboardChart() {
   const test = useDashboardStatistic();
-  console.log(test.data);
 
   return (
     <Wrapper>

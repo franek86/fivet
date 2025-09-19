@@ -5,7 +5,7 @@ function AddShip() {
   return (
     <>
       <Link to='/ships/create'>
-        <Button>Add new ship</Button>
+        <Button>Add ship</Button>
       </Link>
     </>
   );

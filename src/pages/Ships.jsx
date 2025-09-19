@@ -4,20 +4,16 @@ import AddShip from "../components/ships/AddShip.jsx";
 import styled from "styled-components";
 import SearchBar from "../components/SearchBar.jsx";
 
-const Wrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
 function Ships() {
   return (
     <>
-      <Wrap>
+      <div class='search-container'>
         <Title tag='h1'>Ships</Title>
-        <SearchBar />
-        <AddShip />
-      </Wrap>
+        <div className='search-container-right'>
+          <SearchBar />
+          <AddShip />
+        </div>
+      </div>
       <ShipsTable />
     </>
   );

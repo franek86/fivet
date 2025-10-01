@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router";
 
 import Button from "../ui/Button.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
@@ -80,12 +79,12 @@ function AddressBookColumn({ addressBook }) {
 
   return (
     <tr>
-      <td>
+      <td className='table-td'>
         <Checkbox />
       </td>
       <td>{fullName}</td>
 
-      <td>
+      <td className='table-td'>
         <StyledPriority $props={changePriority}>
           <div onClick={() => setVisibleDropdown(!visibleDropdown)}>
             {changePriority} <LuChevronDown />

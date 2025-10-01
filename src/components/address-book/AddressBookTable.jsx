@@ -9,9 +9,9 @@ import { useGetAddressBook } from "../../hooks/useAddressBook.js";
 function AddressBookTable() {
   const { data, isLoading, isError, isFetching } = useGetAddressBook();
   const tableColumns = [
-    { header: "", accessor: "delete row" },
+    { header: "", accessor: "delete row", style: "hidden-table-sm" },
     { header: "Name", accessor: "name" },
-    { header: "Type", accessor: "type" },
+    { header: "Type", accessor: "type", style: "hidden-table-sm" },
     { header: "Email", accessor: "Email" },
     { header: "Mobile number", accessor: "mobile" },
     { header: "Actions", accessor: "actions" },

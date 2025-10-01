@@ -22,6 +22,7 @@ import Profile from "./pages/Profile.jsx";
 import AddressBook from "./pages/AddressBook.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import Events from "./pages/Events.jsx";
+import Notifications from "./pages/Notifications.jsx";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
           <Route element={<MainLayout />}>
             <Route path='/users' element={<Users />} />
             <Route path='/categories' element={<Categories />} />
+            <Route path='/notifications' element={<Notifications />} />
           </Route>
         </Route>
         <Route path='*' element={<NotFound />} />

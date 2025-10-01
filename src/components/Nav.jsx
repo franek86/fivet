@@ -1,7 +1,8 @@
 import { NavLink } from "react-router";
 import { navLinks } from "../utils/links.js";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { closeNav } from "../slices/uiSlice.js";
 
 const StyledNav = styled.nav`
   display: flex;
@@ -45,12 +46,13 @@ const NavItem = styled.div`
 
 function Nav() {
   const role = useSelector((state) => state.auth.role);
+  const dispatch = useDispatch();
   return (
     <StyledNav>
       {navLinks
         .filter((item) => item.allowRoles.includes(role))
         .map((item) => (
-          <NavList to={item.href} key={item.label}>
+          <NavList to={item.href} key={item.label} onClick={() => dispatch(closeNav())}>
             <item.icon />
             <NavItem>{item.label}</NavItem>
           </NavList>

@@ -24,8 +24,11 @@ const uiSlice = createSlice({
     toggleNav: (state) => {
       state.isToggleNav = !state.isToggleNav;
     },
+    closeNav(state) {
+      state.isToggleNav = false;
+    },
   },
 });
-export const { openDropdown, isDropdownOpenByName, isToggleNav, closeDropdown, toggleDropdown, toggleDropdownByName, toggleNav } =
+export const { openDropdown, isDropdownOpenByName, isToggleNav, closeDropdown, closeNav, toggleDropdown, toggleDropdownByName, toggleNav } =
   uiSlice.actions;
 export default uiSlice.reducer;

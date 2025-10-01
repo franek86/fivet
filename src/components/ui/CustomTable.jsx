@@ -31,7 +31,9 @@ function CustomTable({ columns, data, renderRow }) {
         <thead>
           <tr>
             {columns.map((column) => (
-              <TableHeader key={column.accessor}>{column.header}</TableHeader>
+              <TableHeader key={column.accessor} className={column.style}>
+                {column.header}
+              </TableHeader>
             ))}
           </tr>
         </thead>

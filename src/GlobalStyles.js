@@ -312,7 +312,7 @@ const GlobalStyles = styled.createGlobalStyle`
     font-size: 1.2rem;
   }
 
-  // Custom phone input
+  /* REACT TELEPHONE INPUT STYLE */
   .react-tel-input .form-control {
     border: 1px solid var(--color-grey-500);
     border-radius: var(--border-radius-sm);
@@ -335,7 +335,7 @@ const GlobalStyles = styled.createGlobalStyle`
     background: transparent;
   }
 
-  /* Date picker box */
+  /* DATEPICKER STYLE */
   .rdtPicker {
     border-radius: var(--border-radius-md);
     padding: 10px;
@@ -375,13 +375,11 @@ const GlobalStyles = styled.createGlobalStyle`
     border-radius: 50%;
   }
 
-  /* Disable dani */
   .rdtPicker .rdtDisabled {
     color: #ccc !important;
     cursor: not-allowed;
   }
 
-  /* Time picker stilovi */
   .rdtPicker .rdtTime td span {
     border-radius: 50%;
     padding: 0;
@@ -407,12 +405,27 @@ const GlobalStyles = styled.createGlobalStyle`
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
   }
 
+  /* ANIMATION KEYFRAME */
   @keyframes shimmer-animation {
     0% {
       background-position: -100% 0;
     }
     100% {
       background-position: 100% 0;
+    }
+  }
+
+  /* RESPONSIVE > 640px  */
+  @media screen and (max-width: 640px) {
+    .hidden-table-sm {
+      display: none;
+    }
+  }
+
+  .table-td {
+    display: none;
+    @media screen and (min-width: 640px) {
+      display: table-cell;
     }
   }
 `;

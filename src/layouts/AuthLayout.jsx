@@ -42,7 +42,6 @@ function AuthLayout() {
   return (
     <Wrap>
       <FormSection>
-        <Logo />
         <Outlet />
       </FormSection>
       <ImageSection>

@@ -1,10 +1,9 @@
+import { Link } from "react-router";
 import styled from "styled-components";
 import { useDashboardStatistic } from "../../hooks/useDashboardStatistic.js";
-import Spinner from "../Spinner.jsx";
 
 import { FaRegEye } from "react-icons/fa";
 import { formatedPrice } from "../../utils/formattedPrice.js";
-import { Link } from "react-router";
 
 const Container = styled.section`
   display: flex;
@@ -19,11 +18,15 @@ const Container = styled.section`
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 60px repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   align-items: center;
   padding: 1rem;
   gap: 2rem;
   font-size: 1.5rem;
+
+  @media screen and (min-width: 640px) {
+    grid-template-columns: 60px repeat(5, 1fr);
+  }
 
   &:nth-child(odd) {
     background-color: var(--color-brand-100);
@@ -40,8 +43,13 @@ const WrapperTop = styled(Wrapper)`
 `;
 
 const Image = styled.img`
+  display: none;
   width: 4rem;
   height: 4rem;
+
+  @media screen and (min-width: 640px) {
+    display: block;
+  }
 `;
 
 const Views = styled(Link)`
@@ -51,22 +59,21 @@ const Views = styled(Link)`
 `;
 
 function TopShips() {
-  const { data, isFetching, isError } = useDashboardStatistic();
+  const { data, isError } = useDashboardStatistic();
 
-  if (isFetching) return <Spinner />;
   if (isError) return <div>Error</div>;
-  const { topShips } = data;
+
   return (
     <Container>
       <h3>Popular ships</h3>
       <WrapperTop>
-        <p>Image</p>
+        <p className='hidden-table-sm'>Image</p>
         <p>Name</p>
         <p>IMO</p>
         <p>Price</p>
         <p>Views</p>
       </WrapperTop>
-      {topShips.map((ship) => (
+      {data?.topShips?.map((ship) => (
         <Wrapper key={ship.id}>
           <Image src={ship.mainImage} alt={ship.shipName} />
           <p>{ship.shipName}</p>

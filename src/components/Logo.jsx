@@ -1,8 +1,9 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router";
 import styled from "styled-components";
+import NotificationBadge from "./notification/NotificationBadge.jsx";
 
-import { FaBars } from "react-icons/fa";
+import { MdClose, MdMenu } from "react-icons/md";
 import { toggleNav } from "../slices/uiSlice.js";
 
 const LogoWrapper = styled.div`
@@ -12,6 +13,21 @@ const LogoWrapper = styled.div`
   padding: 2rem;
   @media screen and (min-width: 640px) {
     padding: 3rem 2rem;
+  }
+`;
+
+const LogoNotification = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  @media screen and (min-width: 640px) {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  @media screen and (min-width: 1024px) {
+    flex-direction: row;
   }
 `;
 
@@ -26,6 +42,7 @@ const StyledLogo = styled(NavLink)`
 
 const StyledBar = styled.div`
   display: block;
+  margin-left: 2rem;
   cursor: pointer;
   @media screen and (min-width: 640px) {
     display: none;
@@ -35,12 +52,14 @@ const StyledBar = styled.div`
 
 function Logo() {
   const dispatch = useDispatch();
+  const isToggle = useSelector((state) => state.ui.isToggleNav);
   return (
     <LogoWrapper>
-      <StyledLogo>Fivet</StyledLogo>
-      <StyledBar>
-        <FaBars onClick={() => dispatch(toggleNav())} />
-      </StyledBar>
+      <LogoNotification>
+        <StyledLogo>Fivet</StyledLogo>
+        <NotificationBadge />
+      </LogoNotification>
+      <StyledBar onClick={() => dispatch(toggleNav())}>{isToggle ? <MdClose size={25} /> : <MdMenu size={25} />}</StyledBar>
     </LogoWrapper>
   );
 }

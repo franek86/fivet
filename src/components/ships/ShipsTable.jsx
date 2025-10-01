@@ -42,8 +42,15 @@ const ShipFilters = styled.div`
 
 const ShipFiltersDropdown = styled.div`
   display: flex;
-  gap: 5rem;
+  flex-direction: column;
+  gap: 2rem;
   margin: 2rem 0;
+
+  @media screen and (min-width: 640px) {
+    display: flex;
+    flex-direction: row;
+    gap: 5rem;
+  }
 `;
 
 const RangeLabel = styled.div`
@@ -111,9 +118,9 @@ function ShipsTable() {
   ];
 
   const tableColumns = [
-    { header: "", accessor: "delete row" },
-    { header: "Image", accessor: "image" },
-    ...(role === "ADMIN" ? [{ header: "Published", accessor: "published" }] : []),
+    { header: "", accessor: "delete row", style: "hidden-table-sm" },
+    { header: "Image", accessor: "image", style: "hidden-table-sm" },
+    ...(role === "ADMIN" ? [{ header: "Published", accessor: "published", style: "hidden-table-sm" }] : []),
     { header: `${role !== "ADMIN" ? "Ship type" : "User"}`, accessor: "ship-type-user" },
     { header: "Ship Name", accessor: "ship name" },
     { header: "IMO no.", accessor: "imo" },
@@ -183,10 +190,6 @@ function ShipsTable() {
       {toggleFilter && (
         <ShipFiltersDropdown>
           <div>
-            <P>Publish filter</P>
-            <Checkbox checked={isPublished} label='Published' position='left' onChange={togglePublishFilter} />
-          </div>
-          <div>
             <RangeLabel>
               Price filter: ${rangeValue[0]} - ${rangeValue[1]}
             </RangeLabel>
@@ -222,6 +225,10 @@ function ShipsTable() {
                 return <div {...props} key={index} style={props.style} className='range-thumb'></div>;
               }}
             />
+          </div>
+          <div>
+            <P>Publish filter</P>
+            <Checkbox checked={isPublished} label='Published' position='left' onChange={togglePublishFilter} />
           </div>
           <ButtonWrap>
             <FilterButton onClick={applayFilter}>Filter now</FilterButton>

@@ -67,14 +67,14 @@ function ShipsColumn({ ship }) {
 
   return (
     <tr>
-      <td>
+      <td className='table-td'>
         <Checkbox checked={selectedItem.includes(shipId)} onChange={() => handleSelectedItem(shipId)} />
       </td>
-      <td>
+      <td className='table-td'>
         <StyledImage src={mainImage && !mainImage.error ? mainImage : "/images/no-image.webp"} alt={shipName} />
       </td>
       {role !== "ADMIN" ? null : (
-        <td>
+        <td className='table-td'>
           <ToggleSwitch checked={isPublish} onChange={() => handleToggle(shipId)} />
         </td>
       )}
@@ -105,7 +105,7 @@ function ShipsColumn({ ship }) {
               </ButtonInner>
             </Link>
           </Button>
-          <Button $variation='icon' $size='small'>
+          <Button $variation='icon' onClick={() => dispatch(openModalByName(shipId))}>
             <ButtonInner>
               <LuTrash2 />
               Delete
@@ -115,7 +115,7 @@ function ShipsColumn({ ship }) {
       </td>
 
       <Modal name={shipId} onClose={() => dispatch(closeModalByName())}>
-        <ConfirmDialog itemName={shipName} onConfirm={() => mutate(shipId)} onCloseModal={() => dispatch(closeModalByName())} />
+        <ConfirmDialog itemName={shipName} onConfirm={() => mutate(shipId)} onCloseModal={() => dispatch(closeModalByName(shipId))} />
       </Modal>
     </tr>
   );

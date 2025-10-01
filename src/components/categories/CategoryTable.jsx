@@ -15,7 +15,7 @@ function CategoryTable() {
   ];
 
   const tableColumns = [
-    { header: "", accessor: "delete row" },
+    { header: "", accessor: "delete row", style: "hidden-table-sm" },
     { header: "Name", accessor: "name" },
     { header: "Description", accessor: "description" },
     { header: "Actions", accessor: "actions" },

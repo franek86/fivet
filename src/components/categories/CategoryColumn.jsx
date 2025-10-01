@@ -20,7 +20,7 @@ function CategoryColumn({ category }) {
 
   return (
     <tr>
-      <td>
+      <td className='table-td'>
         <Checkbox />
       </td>
       <td>{name}</td>

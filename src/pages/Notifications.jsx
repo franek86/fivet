@@ -1,21 +1,21 @@
+import React from "react";
 import Title from "../components/ui/Title.jsx";
-import ShipsTable from "../components/ships/ShipsTable.jsx";
-import AddShip from "../components/ships/AddShip.jsx";
 import SearchBar from "../components/SearchBar.jsx";
+import NotificationLists from "../components/notification/NotificationLists.jsx";
 
-function Ships() {
+function Notifications() {
   return (
     <>
       <div className='search-container'>
-        <Title tag='h1'>Ships</Title>
+        <Title tag='h1'>Notifications</Title>
         <div className='search-container-right'>
+          <div></div>
           <SearchBar />
-          <AddShip />
         </div>
       </div>
-      <ShipsTable />
+      <NotificationLists />
     </>
   );
 }
 
-export default Ships;
+export default Notifications;

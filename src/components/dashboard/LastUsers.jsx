@@ -1,8 +1,7 @@
+import { Link } from "react-router";
 import styled from "styled-components";
 import { useGetAllUserProfile } from "../../hooks/useProfile.js";
 import { customFormatDate } from "../../utils/formatDate.js";
-import Spinner from "../Spinner.jsx";
-import { Link } from "react-router";
 
 const Container = styled.section`
   display: flex;
@@ -42,15 +41,14 @@ const Date = styled.p`
 `;
 
 function LastUsers() {
-  const { data, isPending, isError } = useGetAllUserProfile();
+  const { data, isError } = useGetAllUserProfile();
 
-  if (isPending) return <Spinner />;
   if (isError) return <div>Error</div>;
 
   return (
     <Container>
       <h3>Last users</h3>
-      {data.map((user) => (
+      {data?.map((user) => (
         <Box key={user.id}>
           <Image src={user.avatar} alt={user.fullName} />
           <BoxContent>

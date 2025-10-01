@@ -120,7 +120,7 @@ const ShipsForm = () => {
     // numeric fields → convert to string or empty string for null
     formData.append("buildYear", data.buildYear ? String(Number(data.buildYear)) : "");
     formData.append("refitYear", data.refitYear ? String(Number(data.refitYear)) : "");
-    console.log(data);
+
     if (isEditSession) {
       /* for (let [key, value] of formData.entries()) {
         console.log(key, value);

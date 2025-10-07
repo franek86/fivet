@@ -6,7 +6,7 @@ import EventList from "../components/events/EventList.jsx";
 function Events() {
   return (
     <>
-      <div class='search-container'>
+      <div className='search-container'>
         <Title tag='h1'>Events</Title>
         <div className='search-container-right'>
           <SearchBar />

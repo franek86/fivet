@@ -29,7 +29,6 @@ export const useShips = () => {
         return Array.from({ length: previousData.length }, () => ({}));
       }
     },
-    staleTime: 0,
   });
 
   return { ships: data?.data || [], count: data?.count || 0, isLoading, error, isFetching };

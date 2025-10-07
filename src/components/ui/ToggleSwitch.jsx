@@ -56,12 +56,12 @@ const Slider = styled.span`
   }
 `;
 
-function ToggleSwitch({ label, onChange, checked, register, name }) {
+function ToggleSwitch({ label, onChange, checked }) {
   return (
     <SwitchWrapper>
       {label && <Label>{label}</Label>}
       <Switch>
-        <Checkbox type='checkbox' checked={checked} onChange={onChange} {...(register ? register(name) : {})} />
+        <Checkbox type='checkbox' checked={checked} onChange={onChange} />
         <Slider />
       </Switch>
     </SwitchWrapper>

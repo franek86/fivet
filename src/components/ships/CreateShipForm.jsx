@@ -81,7 +81,7 @@ const ShipsForm = () => {
     handleSubmit,
     reset,
   } = useForm({
-    defaultValues: isEditSession ? { ...singleShipData } : {},
+    defaultValues: {},
     resolver: zodResolver(schema),
   });
 
@@ -117,14 +117,7 @@ const ShipsForm = () => {
       }
     });
 
-    // numeric fields → convert to string or empty string for null
-    formData.append("buildYear", data.buildYear ? String(Number(data.buildYear)) : "");
-    formData.append("refitYear", data.refitYear ? String(Number(data.refitYear)) : "");
-
     if (isEditSession) {
-      /* for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      } */
       editShip({ newData: formData, id: shipId });
     } else {
       submitData(formData);
@@ -138,17 +131,18 @@ const ShipsForm = () => {
 
   if (isLoading) return <Spinner />;
   if (isError) return <div>Error</div>;
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Form>
         <input type='hidden' {...register("userId")} value={user.id} />
         <ColumnPublish>
-          <ToggleSwitch
-            label='Publish on web'
+          <Controller
             name='isPublished'
-            checked={!!watch("isPublished")}
-            register={register}
-            {...register("isPublished")}
+            control={control}
+            render={({ field }) => (
+              <ToggleSwitch label='Publish on web' name='isPublished' checked={!!field.value} onChange={field.onChange} />
+            )}
           />
         </ColumnPublish>
 
@@ -164,11 +158,12 @@ const ShipsForm = () => {
         </Column>
         <Column>
           <Input
+            type='number'
             label='IMO number *'
             placeholder='e.g. 0000001'
             directions='column'
             register={register}
-            {...register("imo", { required: "IMO number is required" })}
+            {...register("imo")}
           />
           <InputErrorMessage message={errors.imo?.message} />
         </Column>
@@ -193,14 +188,7 @@ const ShipsForm = () => {
           <InputErrorMessage message={errors.typeId?.message} />
         </Column>
         <Column>
-          <Input
-            type='number'
-            label='Price (USD) *'
-            directions='column'
-            placeholder='2000000'
-            register={register}
-            {...register("price", { required: "Price is required" })}
-          />
+          <Input type='number' label='Price (USD) *' directions='column' placeholder='2000000' register={register} {...register("price")} />
           <InputErrorMessage message={errors.price?.message} />
         </Column>
         <Column>

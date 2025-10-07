@@ -23,6 +23,7 @@ function Dashboard() {
   const role = useSelector((state) => state.auth.role);
   const isFetchingStatistic = useIsFetching({ queryKey: ["statistic"] });
   const isFetchingLastUsers = useIsFetching({ queryKey: ["all-profile"] });
+
   const isLoading = isFetchingLastUsers + isFetchingStatistic > 0;
 
   return (

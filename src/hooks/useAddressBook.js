@@ -44,7 +44,8 @@ export const useGetAddressBook = () => {
         return Array.from({ length: previousData.length }, () => ({}));
       }
     },
-    staleTime: 30 * 60 * 1000,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   });
 
   return { data, isLoading, isError, isFetching };

@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { IoMdNotifications, IoIosCloseCircle } from "react-icons/io";
 import styled from "styled-components";
 import Button from "../ui/Button.jsx";
+import EmptyState from "../EmptyState.jsx";
 
 import { customFormatDate } from "../../utils/formatDate.js";
 import { useAllUnreadNotification } from "../../hooks/useNotification.js";
@@ -32,6 +33,7 @@ const Count = styled.div`
 
 const DropdownWrapper = styled.div`
   display: flex;
+  width: max-content;
   background-color: rgba(255, 255, 255, 0.95);
   flex-direction: column;
   position: absolute;
@@ -68,7 +70,6 @@ function NotificationBadge() {
   const dispatch = useDispatch();
   const isToggleDropdown = useSelector((state) => state.ui.isDropdownOpen);
 
-  const dataLenght = data?.lenght > 0;
   return (
     <>
       <Wrapper>
@@ -88,12 +89,15 @@ function NotificationBadge() {
                 <p>{customFormatDate(item.createdAt)}</p>
               </Card>
             ))}
-
-            <Link to='/notifications' onClick={() => dispatch(closeDropdown())}>
-              <Button $size='small' $variation='third'>
-                View
-              </Button>
-            </Link>
+            {data?.notifications.length > 0 ? (
+              <Link to='/notifications' onClick={() => dispatch(closeDropdown())}>
+                <Button $size='small' $variation='third'>
+                  View
+                </Button>
+              </Link>
+            ) : (
+              <p>No notifications</p>
+            )}
           </DropdownWrapper>
         )}
       </Wrapper>

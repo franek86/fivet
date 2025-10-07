@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router";
@@ -58,6 +58,7 @@ function LoginForm() {
     register,
     handleSubmit,
     watch,
+    control,
     formState: { errors },
   } = useForm({ resolver: zodResolver(loginSchema) });
 
@@ -96,7 +97,11 @@ function LoginForm() {
       <InputErrorMessage message={errors.password?.message} />
 
       <RemberMeWrap>
-        <ToggleSwitch checked={!!watch("rememberMe")} register={register} name='rememberMe' />
+        <Controller
+          name='rememberMe'
+          control={control}
+          render={({ field }) => <ToggleSwitch checked={!!field.value} onChange={field.onChange} />}
+        />
         <p>Remember me</p>
       </RemberMeWrap>
 

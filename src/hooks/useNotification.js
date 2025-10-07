@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAllUnreadNotifications, getNotifications, updateReadNotification } from "../services/apiNotification.js";
+import { deleteNotificationApi, getAllUnreadNotifications, getNotifications, updateReadNotification } from "../services/apiNotification.js";
 import { toast } from "react-toastify";
 
 export const useNotificationList = () => {
@@ -15,7 +15,6 @@ export const useAllUnreadNotification = () => {
   const { data } = useQuery({
     queryKey: ["unread-notification"],
     queryFn: getAllUnreadNotifications,
-    refetchInterval: 5000,
   });
 
   return { data };
@@ -34,4 +33,19 @@ export const useUpdateReadNotification = () => {
     },
   });
   return { mutate, isPending };
+};
+
+export const useDeleteNotification = () => {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: (id) => deleteNotificationApi(id),
+    onSuccess: () => {
+      toast.success("Notification successfully deleted.");
+      queryClient.invalidateQueries(["unread-notification,notifications"]);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  return { mutate };
 };

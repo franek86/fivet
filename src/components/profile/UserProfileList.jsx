@@ -2,9 +2,10 @@ import styled from "styled-components";
 import { useDispatch } from "react-redux";
 
 import Spinner from "../Spinner.jsx";
-import { customFormatDate } from "../../utils/formatDate.js";
 import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
+import { FaUserCircle } from "react-icons/fa";
+import { customFormatDate } from "../../utils/formatDate.js";
 
 import { useDeleteUserProfile, useGetAllUserProfile } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
@@ -142,7 +143,7 @@ function UserProfileList() {
           : data.map((item) => (
               <Card key={item.id}>
                 <CardTop>
-                  {item.avatar ? <CardImage src={item.avatar} alt={item.fullName} /> : <CardImage />}
+                  {item.avatar ? <CardImage src={item.avatar} alt={item.fullName} /> : <FaUserCircle size={60} />}
                   <CardContent>
                     <strong>{item.fullName}</strong>
                     <Link href={`mailto:${item.email}`}>{item.email}</Link>

@@ -33,8 +33,8 @@ function StatisticCard({ text, icon, iconColor, data }) {
   return (
     <Box>
       <div>
-        {data && <h2>{data}</h2>}
-        {text && <p>{text}</p>}
+        <h2> {data && data}</h2>
+        <p> {text && text}</p>
       </div>
       <BoxIcon $iconColor={iconColor}>{icon && icon}</BoxIcon>
     </Box>

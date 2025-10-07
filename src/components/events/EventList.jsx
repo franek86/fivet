@@ -16,6 +16,7 @@ import { useDeleteEvent, useGetAllEvents } from "../../hooks/useEvents.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import EmptyState from "../EmptyState.jsx";
 import EventEdit from "./EventEdit.jsx";
+import ConfirmDialog from "../ConfirmDialog.jsx";
 
 const Container = styled.div`
   display: flex;
@@ -310,7 +311,7 @@ function EventList() {
                         <Button $size='small' $variation='third' onClick={() => dispatch(openModalByName("edit-event"))}>
                           Edit
                         </Button>
-                        <Button $size='small' $variation='danger' onClick={() => mutate(item.id)}>
+                        <Button $size='small' $variation='danger' onClick={() => dispatch(openModalByName("delete-event"))}>
                           Delete
                         </Button>
                       </EventCardFooter>
@@ -320,6 +321,14 @@ function EventList() {
 
                 <Modal name='edit-event' onClose={() => dispatch(closeModalByName("edit-event"))}>
                   <EventEdit editId={item.id} />
+                </Modal>
+
+                <Modal name='delete-event' onClose={() => dispatch(closeModalByName("delete-event"))}>
+                  <ConfirmDialog
+                    itemName={item.title}
+                    onConfirm={() => mutate(item.id)}
+                    onCloseModal={() => dispatch(closeModalByName("delete-event"))}
+                  />
                 </Modal>
               </>
             )}

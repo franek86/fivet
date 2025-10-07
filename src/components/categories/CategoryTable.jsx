@@ -5,6 +5,7 @@ import CustomTable from "../ui/CustomTable.jsx";
 import Sort from "../ui/Sort.jsx";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import CategoryColumn from "./CategoryColumn.jsx";
+import EmptyState from "../EmptyState.jsx";
 
 function CategoryTable() {
   const items = [
@@ -27,6 +28,8 @@ function CategoryTable() {
   if (isLoading) return <Spinner />;
 
   if (error) return <div>Error something went wrong</div>;
+
+  if (dataLength < 1) return <EmptyState message='No categories for now. Please create category' />;
 
   const renderRow = (item) => <CategoryColumn key={item.id} category={item} />;
 

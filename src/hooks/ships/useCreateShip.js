@@ -10,7 +10,7 @@ export const useCreateShip = () => {
     mutationFn: createEditShip,
     onSuccess: () => {
       toast.success("New ship added");
-      clientQuery.invalidateQueries(["ships"]);
+      clientQuery.invalidateQueries(["ships", "statistic"]);
       navigate("/ships");
     },
     onError: (error) => {

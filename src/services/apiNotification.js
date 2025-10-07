@@ -22,7 +22,17 @@ export const getAllUnreadNotifications = async () => {
 
 export const updateReadNotification = async ({ id, data }) => {
   try {
-    const response = apiClient.put(`/notification/${id}/read`, { data });
+    const response = await apiClient.put(`/notification/${id}/read`, { ...data, isRead: data });
+    return response;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
+export const deleteNotificationApi = async (id) => {
+  try {
+    const response = await apiClient.delete(`/notification/${id}`);
     return response;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

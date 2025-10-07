@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useGetAllUserProfile } from "../../hooks/useProfile.js";
 import { customFormatDate } from "../../utils/formatDate.js";
 
+import { FaUserCircle } from "react-icons/fa";
+
 const Container = styled.section`
   display: flex;
   flex-direction: column;
@@ -50,7 +52,7 @@ function LastUsers() {
       <h3>Last users</h3>
       {data?.map((user) => (
         <Box key={user.id}>
-          <Image src={user.avatar} alt={user.fullName} />
+          {user.avatar ? <Image src={user.avatar} alt={user.fullName} /> : <FaUserCircle size={60} />}
           <BoxContent>
             <strong>{user.fullName}</strong>
             <Link href={`mailto:${user.email}`}>{user.email}</Link>

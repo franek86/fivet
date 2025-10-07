@@ -23,63 +23,25 @@ const tagsPreprocess = (val) => {
   return val;
 };
 
-const parseOptionalNumber = (val) => {
-  if (val == null) return null;
-  if (Array.isArray(val)) val = val[0];
-  if (val === "") return null;
-
-  const num = Number(val);
-  return isNaN(num) ? null : num;
-};
-
-const stringToFloat = (fieldName) =>
-  z
-    .string()
-    .min(1, `${fieldName} is required`)
-    .refine((val) => /^-?\d+(\.\d+)?$/.test(val), {
-      message: `${fieldName} must be a valid number`,
-    })
-    .transform((val) => parseFloat(val));
-
-const optionalInt = (fieldName) =>
-  z
-    .string()
-    .optional()
-    .nullable()
-    .refine((val) => !val || /^\d{1,4}$/.test(val), {
-      message: `${fieldName} must be a whole number`,
-    })
-    .transform((val) => {
-      if (!val || val.trim() === "") return undefined;
-      const parsed = parseInt(val, 10);
-      return isNaN(parsed) ? undefined : parsed;
-    });
-
 export const createShipSchema = z.object({
-  shipName: z.string().min(1, { message: "Ship name is required" }),
-  imo: z.string().min(1, { message: "IMO number is required" }),
-  typeId: z.string().uuid().min(1, "Ship type is required"),
-  isPublished: z.boolean().optional(),
-  price: z
-    .string()
-    .min(1, "Price is required")
-    .refine((val) => /^\d+$/.test(val), { message: "Price must be a whole number without dots or commas" })
-    .transform((val) => Number(val)),
-  location: z.string().min(1, "Location is required"),
-  mainEngine: z.string().min(1, "Main engine is required"),
-  lengthOverall: z.string().min(1, "Leght overall is required"),
-  length: stringToFloat("Length"),
-  beam: stringToFloat("Beam"),
-  depth: stringToFloat("Depth"),
-  draft: stringToFloat("Draft"),
-  tonnage: stringToFloat("Tonnage"),
-  cargoCapacity: z.string().min(1, "Cargo capacity is required"),
-  buildYear: optionalInt("Build year"),
-  refitYear: optionalInt("Refit year"),
+  shipName: z.string().min(1, "Ship name is required"),
+  typeId: z.string().min(1, "Ship type is required"),
+  imo: z.coerce.number({ invalid_type_error: "IMO must be a number" }).int().min(1, "IMO is required"),
+  refitYear: z.coerce.number().optional(),
+  buildYear: z.coerce.number().optional(),
+  price: z.coerce.number({ invalid_type_error: "Price must be a number" }).int().min(1, "Price is required"),
+  location: z.string().optional(),
+  mainEngine: z.string().optional(),
+  lengthOverall: z.coerce.number().optional(),
+  beam: z.coerce.number().optional(),
+  length: z.coerce.number().optional(),
+  depth: z.coerce.number().optional(),
+  draft: z.coerce.number().optional(),
+  tonnage: z.coerce.number().optional(),
+  cargoCapacity: z.string().optional(),
   buildCountry: z.string().optional(),
   remarks: z.string().optional(),
   description: z.string().optional(),
-  userId: z.string().uuid(),
   images: z
     .array(
       z.object({
@@ -97,30 +59,11 @@ export const createShipSchema = z.object({
     .refine((file) => file.type.startsWith("image/"), {
       message: "Only image files are allowed",
     }),
+  isPublished: z.boolean().optional(),
 });
 
 // edit ship form schema
-export const editShipSchema = z.object({
-  userId: z.string().uuid(),
-  shipName: z.string().optional(),
-  imo: z.string().optional(),
-  typeId: z.string().optional(),
-  isPublished: z.boolean().optional(),
-  price: z.number().int().optional(),
-  location: z.string().optional(),
-  mainEngine: z.string().optional(),
-  lengthOverall: z.string().optional(),
-  length: z.coerce.number().optional(),
-  beam: z.coerce.number().optional(),
-  depth: z.coerce.number().optional(),
-  draft: z.coerce.number().optional(),
-  tonnage: z.coerce.number().optional(),
-  cargoCapacity: z.string().optional(),
-  buildYear: z.preprocess(parseOptionalNumber, z.number().int().positive().nullable().optional()),
-  refitYear: z.preprocess(parseOptionalNumber, z.number().int().positive().nullable().optional()),
-  buildCountry: z.string().optional(),
-  remarks: z.string().optional(),
-  description: z.string().optional(),
+export const editShipSchema = createShipSchema.partial().extend({
   images: z.any().optional(),
   mainImage: z.union([z.instanceof(File), z.string().url("Must be a valid image URL")]).refine((value) => {
     if (typeof value === "string") return true;

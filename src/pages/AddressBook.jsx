@@ -6,7 +6,7 @@ import SearchBar from "../components/SearchBar.jsx";
 function AddressBook() {
   return (
     <>
-      <div class='search-container'>
+      <div className='search-container'>
         <Title tag='h1'>Address book</Title>
         <div className='search-container-right'>
           <SearchBar />

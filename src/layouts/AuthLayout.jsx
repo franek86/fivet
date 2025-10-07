@@ -1,8 +1,6 @@
 import { Outlet } from "react-router";
 import styled from "styled-components";
 
-import Logo from "../components/Logo.jsx";
-
 const Wrap = styled.div`
   display: grid;
   height: 100vh;
@@ -25,16 +23,15 @@ const FormSection = styled.section`
 
 const ImageSection = styled.section`
   display: none;
-  flex: 1;
   height: 100%;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  background-color: var(--color-brand-100);
+
+  img {
+    height: 100%;
+    object-fit: cover;
+  }
 
   @media screen and (min-width: 640px) {
-    display: flex;
-    clip-path: polygon(15% 0, 100% 0, 100% 100%, 18% 100%, 0 52%);
+    display: block;
   }
 `;
 
@@ -45,7 +42,7 @@ function AuthLayout() {
         <Outlet />
       </FormSection>
       <ImageSection>
-        <img src='/images/login-image.png' alt='Login' />
+        <img src='/images/login-image.webp' alt='Login' />
       </ImageSection>
     </Wrap>
   );

@@ -52,12 +52,13 @@ const StyledBar = styled.div`
 
 function Logo() {
   const dispatch = useDispatch();
+  const role = useSelector((state) => state.auth.role);
   const isToggle = useSelector((state) => state.ui.isToggleNav);
   return (
     <LogoWrapper>
       <LogoNotification>
         <StyledLogo>Fivet</StyledLogo>
-        <NotificationBadge />
+        {role === "ADMIN" && <NotificationBadge />}
       </LogoNotification>
       <StyledBar onClick={() => dispatch(toggleNav())}>{isToggle ? <MdClose size={25} /> : <MdMenu size={25} />}</StyledBar>
     </LogoWrapper>

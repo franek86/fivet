@@ -5,7 +5,8 @@ export const useDashboardStatistic = () => {
   const { data, isFetching, isError } = useQuery({
     queryKey: ["statistic"],
     queryFn: getDashboardStatistic,
-    staleTime: 30 * 60 * 1000,
+    staleTime: 1000,
+    refetchOnWindowFocus: true,
   });
 
   return { data, isFetching, isError };

@@ -6,8 +6,17 @@ const uiSlice = createSlice({
     isDropdownOpen: false,
     isDropdownOpenByName: null,
     isToggleNav: null,
+    isDrawerOpen: false,
   },
   reducers: {
+    setIsDrawerOpen: (state) => {
+      state.isDrawerOpen = true;
+    },
+
+    setIsDrawerClose: (state) => {
+      state.isDrawerOpen = false;
+    },
+
     toggleDropdownByName: (state, action) => {
       state.isDropdownOpenByName = state.isDropdownOpenByName === action.payload ? null : action.payload;
     },
@@ -29,6 +38,17 @@ const uiSlice = createSlice({
     },
   },
 });
-export const { openDropdown, isDropdownOpenByName, isToggleNav, closeDropdown, closeNav, toggleDropdown, toggleDropdownByName, toggleNav } =
-  uiSlice.actions;
+export const {
+  isDrawerOpen,
+  setIsDrawerClose,
+  setIsDrawerOpen,
+  openDropdown,
+  isDropdownOpenByName,
+  isToggleNav,
+  closeDropdown,
+  closeNav,
+  toggleDropdown,
+  toggleDropdownByName,
+  toggleNav,
+} = uiSlice.actions;
 export default uiSlice.reducer;

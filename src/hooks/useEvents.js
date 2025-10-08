@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { closeModalByName } from "../slices/modalSlice.js";
 import { useSearchParams } from "react-router";
+import { setIsDrawerClose } from "../slices/uiSlice.js";
 
 export const useCreateEvent = () => {
   const dispatch = useDispatch();
@@ -12,7 +13,7 @@ export const useCreateEvent = () => {
     mutationFn: (newData) => createEventApi(newData),
     onSuccess: () => {
       toast.success("Event successfully added");
-      dispatch(closeModalByName("event"));
+      dispatch(setIsDrawerClose());
       queryClient.invalidateQueries(["events"]);
     },
     onError: (error) => {

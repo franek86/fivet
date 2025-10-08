@@ -1,4 +1,3 @@
-import React from "react";
 import { createPortal } from "react-dom";
 
 import { TfiClose } from "react-icons/tfi";
@@ -23,10 +22,6 @@ const StyledModal = styled.div`
     bottom: unset;
     transform: translate(-50%, -50%);
   }
-
-  /* @media screen and (min-width: 768px) {
-    grid-template-columns: 1fr 1fr 1fr;
-  } */
 `;
 
 const StyledOverlay = styled.div`

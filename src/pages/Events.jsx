@@ -1,7 +1,7 @@
 import SearchBar from "../components/SearchBar.jsx";
 import Title from "../components/ui/Title.jsx";
 import AddEvent from "../components/events/AddEvent.jsx";
-import EventList from "../components/events/EventList.jsx";
+import EventCalendar from "../components/events/EventCalendar.jsx";
 
 function Events() {
   return (
@@ -13,7 +13,7 @@ function Events() {
           <AddEvent />
         </div>
       </div>
-      <EventList />
+      <EventCalendar />
     </>
   );
 }

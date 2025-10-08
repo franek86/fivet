@@ -44,11 +44,12 @@ const FullColumn = styled(Row)`
 
 function FormEvent() {
   const user = useSelector((state) => state.auth.user);
-  const { mutate, isPending, isSuccess, isError } = useCreateEvent();
+  const { mutate, isPending } = useCreateEvent();
 
   const {
     register,
     control,
+    reset,
     formState: { errors },
     handleSubmit,
   } = useForm({
@@ -57,6 +58,7 @@ function FormEvent() {
 
   const onSubmit = (data) => {
     mutate(data);
+    reset();
   };
 
   return (
@@ -161,8 +163,8 @@ function FormEvent() {
                 name='reminder'
                 control={control}
                 options={EVENT_REMINDER}
-                placeholder='Set reminder'
-                label='Set reminder'
+                placeholder='Set reminder time'
+                label='Set reminder time'
                 size='medium'
                 variation='transparent'
                 valueKey='value'
@@ -174,7 +176,7 @@ function FormEvent() {
           <InputErrorMessage message={errors.reminder?.message} />
         </Column>
         <Column>
-          <Input directions='column' label='Location' register={register} placeholder='Enter url location' {...register("location")} />
+          <Input directions='column' label='Related link' register={register} placeholder='Zoom link etc.' {...register("location")} />
           <InputErrorMessage message={errors.location?.message} />
         </Column>
         <Column>

@@ -1,14 +1,14 @@
 export const PAGE_SIZE = 5;
 export const MAX_PAGE_BUTTONS = 2;
 export const EVENT_STATUS = [
-  { value: "planned", name: "Planned" },
-  { value: "done", name: "Done" },
-  { value: "canceled", name: "Canceled" },
+  { value: "PLANNED", name: "Planned" },
+  { value: "DONE", name: "Done" },
+  { value: "CANCELLED", name: "Cancelled" },
 ];
 export const EVENT_PRIORITY = [
-  { value: "low", name: "Low" },
-  { value: "medium", name: "Medium" },
-  { value: "high", name: "High" },
+  { value: "LOW", name: "Low" },
+  { value: "MEDIUM", name: "Medium" },
+  { value: "HIGH", name: "High" },
 ];
 
 export const EVENT_REMINDER = [

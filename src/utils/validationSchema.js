@@ -1,9 +1,9 @@
 import { z } from "zod";
 import moment from "moment";
 
-const StatusEnum = z.enum(["REGULAR", "IMPORTANT"]);
-const statusEnum = z.enum(["planned", "done", "canceled"]);
-const priorityEnum = z.enum(["low", "medium", "high"]);
+const addressStatusEnum = z.enum(["REGULAR", "IMPORTANT"]);
+const statusEnum = z.enum(["PLANNED", "DONE", "CANCELLED"]);
+const priorityEnum = z.enum(["LOW", "MEDIUM", "HIGH"]);
 
 const datePreprocess = (arg) => {
   if (!arg) return undefined;
@@ -97,7 +97,7 @@ export const addressBookSchema = z.object({
   facebook_link: z.string().optional().nullable(),
   instagram_link: z.string().optional().nullable(),
   tiktok_link: z.string().optional().nullable(),
-  priority: StatusEnum.default("REGULAR"),
+  priority: addressStatusEnum.default("REGULAR"),
   company: z.string().optional().nullable(),
   address: z.string().optional().nullable(),
   note: z.string().optional().nullable(),
@@ -112,7 +112,7 @@ export const eventSchema = z
     start: z.preprocess(datePreprocess, z.date({ required_error: "Start date are required" })),
     end: z.preprocess(datePreprocess, z.date({ required_error: "End date are required" })),
     location: z.string().optional(),
-    reminder: z.number().int().min(0).nullable().optional(),
+    reminder: z.number().nullable().optional(),
     status: statusEnum.nullable().optional(),
     priority: priorityEnum.nullable().optional(),
     tags: z.preprocess(tagsPreprocess, z.array(z.string()).optional()),

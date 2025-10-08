@@ -46,11 +46,11 @@ const EventCard = styled.article`
   border-left: 10px solid;
   border-color: ${({ $priority }) => {
     switch ($priority) {
-      case "low":
+      case "LOW":
         return "#51cab2";
-      case "medium":
+      case "MEDIUM":
         return "#ffc88d";
-      case "high":
+      case "HIGH":
         return "#b91c1c";
       default:
         return "#000";
@@ -111,11 +111,11 @@ const Status = styled.div`
   text-transform: uppercase;
   background-color: ${({ $status }) => {
     switch ($status) {
-      case "done":
+      case "DONE":
         return "#51cab2";
-      case "canceled":
+      case "CANCALLED":
         return "#b91c1c";
-      case "planned":
+      case "PLANNED":
         return "#312e81";
       default:
         return "#d1d5db";

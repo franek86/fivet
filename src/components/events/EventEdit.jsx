@@ -40,9 +40,7 @@ function EventEdit({ editId }) {
     reset,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      ...singleData,
-    },
+    defaultValues: { ...singleData },
     resolver: zodResolver(eventSchema),
   });
 

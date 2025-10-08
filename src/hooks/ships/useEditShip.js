@@ -11,7 +11,7 @@ export const useEditShip = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["ships", "ship"]);
       toast.success("Succesfully edited");
-      //navigate("/ships");
+      navigate("/ships");
     },
     onError: (error) => {
       toast.success(error);

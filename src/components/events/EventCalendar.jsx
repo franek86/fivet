@@ -3,6 +3,8 @@ import CustomBigCalendar from "../CustomBigCalendar.jsx";
 import Modal from "../Modal.jsx";
 import { useGetAllEvents } from "../../hooks/useEvents.js";
 
+import EventRenderContent from "./EventRenderContent.jsx";
+
 function EventCalendar() {
   const { data, isPending, isError } = useGetAllEvents();
 
@@ -13,7 +15,7 @@ function EventCalendar() {
       data={data.events}
       renderEventModal={(event, onClose) => (
         <Modal name={event.id} onClose={onClose}>
-          {event?.title}
+          <EventRenderContent data={event} />
         </Modal>
       )}
     />

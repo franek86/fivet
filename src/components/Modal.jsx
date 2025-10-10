@@ -11,7 +11,7 @@ const StyledModal = styled.div`
   bottom: 0;
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-lg);
-  padding: 2rem;
+  padding: 1.5rem;
   transition: all 0.4s ease-in-out;
   z-index: 10;
   overflow-x: scroll;

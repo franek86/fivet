@@ -1,7 +1,7 @@
-import moment from "moment";
-import DateTime from "react-datetime";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import { format } from "date-fns";
+import DatePicker from "react-datepicker";
 
 import Button from "../ui/Button.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
@@ -84,10 +84,10 @@ function EventsFilters() {
 
       <Column>
         <Label>Start Date:</Label>
-        <DateTime
-          initialValue={moment(new Date()).format("YYYY-MM-DD")}
-          value={startDate ? moment(startDate) : null}
-          onChange={(date) => setValue("startDate", moment(date).format("YYYY-MM-DD"))}
+        <DatePicker
+          initialValue={format(new Date(date), "dd.MM.yyyy")}
+          value={startDate ? format(startDate) : null}
+          onChange={(date) => setValue("startDate", format(date, "YYYY-MM-DD"))}
           timeFormat={false}
           closeOnSelect={true}
         />
@@ -95,10 +95,10 @@ function EventsFilters() {
 
       <Column>
         <Label>End Date:</Label>
-        <DateTime
-          initialValue={moment(new Date()).format("YYYY-MM-DD")}
-          value={endDate ? moment(endDate) : null}
-          onChange={(date) => setValue("endDate", moment(date).format("YYYY-MM-DD"))}
+        <DatePicker
+          initialValue={format(new Date(), "YYYY-MM-DD")}
+          value={endDate ? format(endDate) : null}
+          onChange={(date) => setValue("endDate", format(date, "YYYY-MM-DD"))}
           timeFormat={false}
           closeOnSelect={true}
         />

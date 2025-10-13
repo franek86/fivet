@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import DateTime from "react-datetime";
-import moment from "moment";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { format } from "date-fns";
+
+import DatePicker from "react-datepicker";
 
 import Label from "../ui/Label.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
@@ -14,7 +16,6 @@ import styled from "styled-components";
 import { useEditEvent, useGetSingleEvent } from "../../hooks/useEvents.js";
 import { EVENT_PRIORITY, EVENT_REMINDER, EVENT_STATUS } from "../../utils/constants.js";
 import { eventSchema } from "../../utils/validationSchema.js";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 const Column = styled.div``;
 const ColumnFull = styled.div`
@@ -46,8 +47,8 @@ function EventEdit({ editId }) {
 
   useEffect(() => {
     if (singleData) {
-      const formatStartDate = moment(singleData.start);
-      const formatEndDate = moment(singleData.end);
+      const formatStartDate = format(singleData.start);
+      const formatEndDate = format(singleData.end);
       reset({ ...singleData, start: formatStartDate, end: formatEndDate });
     }
   }, [singleData, reset]);
@@ -65,13 +66,7 @@ function EventEdit({ editId }) {
             control={control}
             name='start'
             render={({ field }) => (
-              <DateTime
-                value={field.value}
-                onChange={field.onChange}
-                isValidDate={(current) => current.isSameOrAfter(moment(), "minute")}
-                dateFormat='DD-MM-YYYY'
-                timeFormat='HH:mm'
-              />
+              <DatePicker value={field.value} onChange={field.onChange} showTimeSelect dateFormat='dd.MM.yyyy HH:mm' withPortal />
             )}
           />
           <InputErrorMessage message={errors.start?.message} />
@@ -82,13 +77,7 @@ function EventEdit({ editId }) {
             control={control}
             name='end'
             render={({ field }) => (
-              <DateTime
-                value={field.value}
-                isValidDate={(current) => current.isSameOrAfter(moment(), "minute")}
-                onChange={field.onChange}
-                dateFormat='DD-MM-YYYY'
-                timeFormat='HH:mm'
-              />
+              <DatePicker value={field.value} onChange={field.onChange} showTimeSelect dateFormat='dd.MM.yyyy HH:mm' />
             )}
           />
           <InputErrorMessage message={errors.end?.message} />

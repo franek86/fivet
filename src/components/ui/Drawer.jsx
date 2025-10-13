@@ -31,7 +31,6 @@ const Wrapper = styled.aside`
   background-color: var(--color-grey-0);
   box-shadow: var(--shadow-lg);
   padding: 2rem;
-  overflow: hidden;
   z-index: 10;
 
   ${({ $position, $open }) => {

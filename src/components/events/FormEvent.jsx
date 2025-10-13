@@ -1,10 +1,11 @@
 import { Controller, useForm } from "react-hook-form";
 import { useSelector } from "react-redux";
+import DatePicker from "react-datepicker";
 import styled from "styled-components";
+
 import Input from "../ui/Input.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import TextArea from "../ui/TextArea.jsx";
-import DateTime from "react-datetime";
 import Button from "../ui/Button.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
 import Label from "../ui/Label.jsx";
@@ -12,7 +13,7 @@ import Label from "../ui/Label.jsx";
 import { EVENT_PRIORITY, EVENT_REMINDER, EVENT_STATUS } from "../../utils/constants.js";
 import { eventSchema } from "../../utils/validationSchema.js";
 import { zodResolver } from "@hookform/resolvers/zod";
-import moment from "moment";
+import { format, isSameDay, setHours, setMinutes } from "date-fns";
 import { useCreateEvent } from "../../hooks/useEvents.js";
 
 const Grid = styled.div`
@@ -46,15 +47,26 @@ function FormEvent() {
   const user = useSelector((state) => state.auth.user);
   const { mutate, isPending } = useCreateEvent();
 
+  const today = new Date();
+  const formatToday = format(new Date(), "dd.MM.yyyy");
+
   const {
     register,
     control,
     reset,
+    watch,
     formState: { errors },
     handleSubmit,
   } = useForm({
+    defaultValues: {
+      start: null,
+      end: null,
+    },
     resolver: zodResolver(eventSchema),
   });
+
+  const start = watch("start");
+  const end = watch("end");
 
   const onSubmit = (data) => {
     mutate(data);
@@ -70,16 +82,30 @@ function FormEvent() {
           <Controller
             control={control}
             name='start'
-            render={({ field }) => (
-              <DateTime
-                value={field.value}
-                initialValue={moment()}
-                onChange={field.onChange}
-                isValidDate={(current) => current.isSameOrAfter(moment(), "minute")}
-                dateFormat='DD-MM-YYYY'
-                timeFormat='HH:mm'
-              />
-            )}
+            render={({ field }) => {
+              const minTime = field.value && isSameDay(field.value, today) ? today : setHours(setMinutes(new Date(), 0), 0);
+
+              return (
+                <DatePicker
+                  selected={field.value}
+                  onChange={(date) => {
+                    field.onChange(date);
+                    if (end && date && end < date) setValue("end", null);
+                  }}
+                  dateFormat='dd.MM.yyyy HH:mm'
+                  calendarClassName='custom-calendar'
+                  showTimeSelect
+                  placeholderText={formatToday}
+                  timeIntervals={15}
+                  selectsStart
+                  startDate={field.value}
+                  endDate={end}
+                  minDate={today}
+                  minTime={minTime}
+                  maxTime={setHours(setMinutes(new Date(), 59), 23)}
+                />
+              );
+            }}
           />
           <InputErrorMessage message={errors.start?.message} />
         </Column>
@@ -89,13 +115,20 @@ function FormEvent() {
             control={control}
             name='end'
             render={({ field }) => (
-              <DateTime
-                value={field.value}
-                initialValue={moment()}
-                isValidDate={(current) => current.isSameOrAfter(moment(), "minute")}
+              <DatePicker
+                selected={field.value}
                 onChange={field.onChange}
-                dateFormat='DD-MM-YYYY'
-                timeFormat='HH:mm'
+                dateFormat='dd.MM.yyyy HH:mm'
+                calendarClassName='custom-calendar'
+                showTimeSelect
+                placeholderText={formatToday}
+                timeIntervals={15}
+                selectsEnd
+                startDate={start}
+                endDate={field.value}
+                minDate={start}
+                minTime={start && field.value && isSameDay(start, field.value) ? start : setHours(setMinutes(new Date(), 0), 0)}
+                maxTime={setHours(setMinutes(new Date(), 59), 23)}
               />
             )}
           />

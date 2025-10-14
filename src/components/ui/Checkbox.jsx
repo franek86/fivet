@@ -37,8 +37,11 @@ const StyledCheckboxLabel = styled.label`
 `;
 
 function Checkbox({ checked, onChange, label, position }) {
+  const handleClick = () => {
+    if (onChange) onChange(!checked);
+  };
   return (
-    <StyledCheckbox onClick={onChange} $position={position}>
+    <StyledCheckbox onClick={handleClick} $position={position}>
       <StyleHiddenCheckbox type='checkbox' $checked={checked} readOnly />
       <StyledCheckmark>
         <StyledIconCheckmark $checked={checked} size={14} />

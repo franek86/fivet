@@ -13,7 +13,7 @@ import { useDeleteCategory } from "../../hooks/categories/useDeleteCategory.js";
 import { useDispatch } from "react-redux";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 
-function CategoryColumn({ category }) {
+function CategoryColumn({ category, selectedCat, onCheckboxChange }) {
   const { id: categoryId, name, description } = category;
   const { mutate } = useDeleteCategory();
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ function CategoryColumn({ category }) {
   return (
     <tr>
       <td className='table-td'>
-        <Checkbox />
+        <Checkbox checked={selectedCat.includes(categoryId)} onChange={() => onCheckboxChange(categoryId)} />
       </td>
       <td>{name}</td>
       <td>{description}</td>

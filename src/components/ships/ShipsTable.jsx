@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { Range } from "react-range";
-import { useShips } from "../../hooks/ships/useShips.js";
 
 import Pagination from "../Pagination.jsx";
 import Spinner from "../Spinner.jsx";
@@ -12,11 +11,15 @@ import CustomTable from "../ui/CustomTable.jsx";
 import EmptyState from "../EmptyState.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 import Sort from "../ui/Sort.jsx";
+import Button from "../ui/Button.jsx";
 
 import styled from "styled-components";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { LuTrash2 } from "react-icons/lu";
+
+import { useShips } from "../../hooks/ships/useShips.js";
 import { setSearchTerm } from "../../slices/searchSlice.js";
-import Button from "../ui/Button.jsx";
+import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -94,19 +97,26 @@ const ResetButton = styled(ButtonStyle)`
 `;
 
 function ShipsTable() {
-  const [toggleFilter, setToggleFilter] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useDispatch();
-
   const role = useSelector((state) => state.auth.role);
 
+  const [toggleFilter, setToggleFilter] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedShip, setSelectedShip] = useState([]);
+
   const { ships, count, isLoading, error, isFetching } = useShips();
+  const { mutate } = useDeleteShip();
 
   const prices = ships?.map((s) => s.price) || [];
   const MIN = 0;
   const MAX = prices.length ? Math.max(...prices) : 1000;
   const [rangeValue, setRangeValue] = useState([MIN, MAX]);
   const [isPublished, setIsPublished] = useState(false);
+
+  const handleSelectAll = (checked) => {
+    if (checked) setSelectedShip(ships?.map((c) => c.id));
+    else setSelectedShip([]);
+  };
 
   const sortItems = [
     { value: "shipName-asc", name: "Ship name (A-Z)" },
@@ -118,7 +128,16 @@ function ShipsTable() {
   ];
 
   const tableColumns = [
-    { header: "", accessor: "delete row", style: "hidden-table-sm" },
+    {
+      header: (
+        <Checkbox
+          checked={selectedShip?.length > 0 && selectedShip?.length === ships?.length}
+          onChange={(checked) => handleSelectAll(checked)}
+        />
+      ),
+      accessor: "delete row",
+      style: "hidden-table-sm",
+    },
     { header: "Image", accessor: "image", style: "hidden-table-sm" },
     ...(role === "ADMIN" ? [{ header: "Published", accessor: "published", style: "hidden-table-sm" }] : []),
     { header: `${role !== "ADMIN" ? "Ship type" : "User"}`, accessor: "ship-type-user" },
@@ -132,11 +151,20 @@ function ShipsTable() {
     setRangeValue([MIN, MAX]);
   }, [MIN, MAX]);
 
-  if (isLoading) return <Spinner />;
+  const handleCheckboxChange = (shipId) => {
+    setSelectedShip((prev) => (prev.includes(shipId) ? prev.filter((id) => id !== shipId) : [...prev, shipId]));
+  };
 
+  const handleDeleteSelected = () => {
+    selectedShip.forEach((id) => mutate(id));
+    setSelectedShip([]);
+  };
+
+  if (isLoading) return <Spinner />;
   if (error) return <div>Error</div>;
 
-  const renderRow = (item) => <ShipsColumn key={item.id} ship={item} />;
+  const renderRow = (item) => <ShipsColumn key={item.id} ship={item} selectedShip={selectedShip} onCheckboxChange={handleCheckboxChange} />;
+
   const dataLength = ships?.length;
   if (dataLength < 1) return <EmptyState message='No ships for now. Please create ship' />;
 
@@ -186,6 +214,15 @@ function ShipsTable() {
           </Button>
         </ShipFilters>
         <Sort items={sortItems} label='Sort by:' />
+        {selectedShip.length > 0 && (
+          <div>
+            <Button $variation='danger' onClick={handleDeleteSelected}>
+              <LuTrash2 />
+              Delete {selectedShip.length} item
+              {selectedShip.length > 1 ? "s" : ""}
+            </Button>
+          </div>
+        )}
       </FlexWrapper>
       {toggleFilter && (
         <ShipFiltersDropdown>

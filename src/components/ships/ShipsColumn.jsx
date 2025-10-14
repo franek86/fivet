@@ -28,8 +28,7 @@ const ButtonInner = styled.div`
   gap: 1rem;
 `;
 
-function ShipsColumn({ ship }) {
-  const [selectedItem, setSelectedItem] = useState([]);
+function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
   const role = useSelector((state) => state.auth.role);
 
   const dispatch = useDispatch();
@@ -50,9 +49,6 @@ function ShipsColumn({ ship }) {
   } = ship;
 
   const [isPublish, setIsPublish] = useState(isPublished);
-  const handleSelectedItem = (id) => {
-    setSelectedItem((prev) => (prev.includes(id) ? prev.filter((itemId) => itemId !== id) : [...prev, id]));
-  };
 
   const handleToggle = (id) => {
     mutatePublishShip(
@@ -68,7 +64,7 @@ function ShipsColumn({ ship }) {
   return (
     <tr>
       <td className='table-td'>
-        <Checkbox checked={selectedItem.includes(shipId)} onChange={() => handleSelectedItem(shipId)} />
+        <Checkbox checked={selectedShip.includes(shipId)} onChange={() => onCheckboxChange(shipId)} />
       </td>
       <td className='table-td'>
         <StyledImage src={mainImage && !mainImage.error ? mainImage : "/images/no-image.webp"} alt={shipName} />

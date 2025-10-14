@@ -7,6 +7,7 @@ import styled from "styled-components";
 import { useDeleteEvent } from "../../hooks/useEvents.js";
 import { useDispatch } from "react-redux";
 import { closeModalByName } from "../../slices/modalSlice.js";
+import { setIsDrawerOpen } from "../../slices/uiSlice.js";
 
 const Wrapper = styled.div`
   padding: 1rem;
@@ -136,7 +137,7 @@ function EventRenderContent({ data }) {
       </Content>
 
       <Footer>
-        <Button $size='small' $variation='third'>
+        <Button $size='small' $variation='third' onClick={() => dispatch(setIsDrawerOpen())}>
           Edit
         </Button>
 

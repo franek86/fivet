@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { LuChevronDown, LuEye, LuPencil, LuTrash2 } from "react-icons/lu";
 
 import Button from "../ui/Button.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
@@ -7,13 +8,12 @@ import Dropdown from "../ui/Dropdown.jsx";
 import FormAddressBook from "./FormAddressBook.jsx";
 import Modal from "../Modal.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
+import SingleAddressBook from "./SingleAddressBook.jsx";
 
-import { LuChevronDown, LuEye, LuPencil, LuTrash2 } from "react-icons/lu";
-import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
+import styled from "styled-components";
 import useMediaQuery from "../../hooks/useMediaQuery.js";
 import { useDeleteAddressBook, useEditAddressBookPriority } from "../../hooks/useAddressBook.js";
-import styled from "styled-components";
-import SingleAddressBook from "./SingleAddressBook.jsx";
+import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 
 const StyledPriority = styled.div`
   max-width: max-content;
@@ -36,7 +36,7 @@ const StyledDropdown = styled.form`
   text-align: center;
 `;
 
-function AddressBookColumn({ addressBook }) {
+function AddressBookColumn({ addressBook, selectedAddress, onCheckboxChange }) {
   const [visibleDropdown, setVisibleDropdown] = useState(false);
 
   const { id, fullName, email, mobile_number, priority } = addressBook;
@@ -80,7 +80,7 @@ function AddressBookColumn({ addressBook }) {
   return (
     <tr>
       <td className='table-td'>
-        <Checkbox />
+        <Checkbox checked={selectedAddress.includes(id)} onChange={() => onCheckboxChange(id)} />
       </td>
       <td>{fullName}</td>
 

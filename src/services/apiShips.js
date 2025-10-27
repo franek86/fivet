@@ -1,29 +1,11 @@
 import apiClient from "../utils/axiosConfig.js";
-import { PAGE_SIZE } from "../utils/constants.js";
 
 /* 
     Get all ships depend if is user or admin with pagination
-    TO DO: add filters
 */
-export const getShips = async ({ page, role, userId, sortBy = "desc", limit = PAGE_SIZE, filters = {} }) => {
+export const getShips = async (params = {}) => {
   try {
-    const params = new URLSearchParams();
-
-    params.append("page", page);
-    params.append("limit", limit);
-
-    if (sortBy?.field && sortBy?.direction) {
-      params.append("sortBy", `${sortBy.field}-${sortBy.direction}`);
-    }
-
-    // Add dynamic filters
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== "") {
-        params.append(key, value);
-      }
-    });
-
-    const res = await apiClient.get(`/ships?${params.toString()}`);
+    const res = await apiClient.get("/ships", { params });
 
     return res.data;
   } catch (error) {

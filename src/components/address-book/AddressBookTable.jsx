@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import Spinner from "../Spinner.jsx";
 import AddressBookColumn from "./AddressBookColumn.jsx";
 import CustomTable from "../ui/CustomTable.jsx";
@@ -11,11 +9,12 @@ import Checkbox from "../ui/Checkbox.jsx";
 import { LuTrash2 } from "react-icons/lu";
 
 import { useDeleteAddressBook, useGetAddressBook } from "../../hooks/useAddressBook.js";
+import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
 
 function AddressBookTable() {
-  const [selected, setSelected] = useState([]);
   const { data, isLoading, isError, isFetching } = useGetAddressBook();
   const { mutate } = useDeleteAddressBook();
+  const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(data, mutate);
 
   const tableColumns = [
     {
@@ -31,20 +30,6 @@ function AddressBookTable() {
     { header: "Mobile number", accessor: "mobile" },
     { header: "Actions", accessor: "actions" },
   ];
-
-  const handleSelectAll = (checked) => {
-    if (checked) setSelected(data?.map((c) => c.id));
-    else setSelected([]);
-  };
-
-  const handleCheckboxChange = (dataId) => {
-    setSelected((prev) => (prev.includes(dataId) ? prev.filter((id) => id !== dataId) : [...prev, dataId]));
-  };
-
-  const handleDeleteSelected = () => {
-    selected.forEach((id) => mutate(id));
-    setSelected([]);
-  };
 
   if (isLoading) return <Spinner />;
   if (isError) return <div>Error</div>;

@@ -15,22 +15,10 @@ export const getAllShipTypes = async () => {
 /* 
     Get all categories with pagination
 */
-
-export const getCategories = async ({ page = 1, sortBy = "desc", limit = PAGE_SIZE, search = "" }) => {
+export const getCategories = async (params = {}) => {
   try {
-    const params = new URLSearchParams();
-
-    params.append("page", page);
-    params.append("limit", limit);
-
-    if (sortBy?.field && sortBy?.direction) {
-      params.append("sortBy", `${sortBy.field}-${sortBy.direction}`);
-    }
-
-    if (search) params.append("search", search);
-
-    let response = await apiClient(`/shipType?${params.toString()}`);
-    return response.data;
+    const res = await apiClient.get("shipType", { params });
+    return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);

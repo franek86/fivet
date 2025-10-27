@@ -14,11 +14,16 @@ const PageWrapper = styled.div`
 
 const Header = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 3rem;
   background: var(--color-grey-0);
   padding: 2rem;
   border-radius: var(--border-radius-md);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+
+  @media screen and (min-width: 1024px) {
+    flex-direction: row;
+  }
 `;
 
 const MainImage = styled.img`
@@ -102,14 +107,14 @@ const Description = styled.p`
 `;
 
 const Gallery = styled.div`
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1.5rem;
-  margin-top: 1.5rem;
   overflow-x: auto;
 `;
 
 const GalleryImage = styled.img`
-  width: 180px;
+  width: 100%;
   height: 120px;
   border-radius: var(--border-radius-md);
   object-fit: cover;
@@ -153,9 +158,9 @@ function SingleShipData() {
         <MainImage src={mainImage} alt={shipName} />
         <ShipInfo>
           <div>
+            <Status published={isPublished}>{isPublished ? "Published" : "Unpublished"}</Status>
             <TitleRow>
               <Title>{shipName}</Title>
-              <Status published={isPublished}>{isPublished ? "Published" : "Unpublished"}</Status>
             </TitleRow>
             <SubTitle>
               IMO: {imo} • {name}

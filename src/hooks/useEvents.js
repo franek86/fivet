@@ -1,9 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createEventApi, deleteEventByIdApi, getAllEventsApi, singleEventApi, updateEventByIdApi } from "../services/apiEvents.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { closeModalByName } from "../slices/modalSlice.js";
-import { useSearchParams } from "react-router";
 import { setIsDrawerClose } from "../slices/uiSlice.js";
 
 export const useCreateEvent = () => {
@@ -25,8 +24,10 @@ export const useCreateEvent = () => {
 };
 
 export const useGetAllEvents = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const filters = {
+  const searchTerm = useSelector((state) => state.search.term);
+  const search = searchTerm?.trim() || undefined;
+  /*  const filters = {
+    const [searchParams, setSearchParams] = useSearchParams();
     status: searchParams.get("status") || undefined,
     priority: searchParams.get("priority") || undefined,
     search: searchParams.get("search") || undefined,
@@ -34,7 +35,7 @@ export const useGetAllEvents = () => {
     endDate: searchParams.get("endDate") || undefined,
     page: searchParams.get("page") || 1,
     pageSize: searchParams.get("pageSize") || 10,
-  };
+  }; 
 
   const updateFilter = (key, value) => {
     const newParams = new URLSearchParams(searchParams);
@@ -52,11 +53,11 @@ export const useGetAllEvents = () => {
   const resetFilters = () => {
     const defaultParams = new URLSearchParams();
     setSearchParams(defaultParams);
-  };
+  };*/
 
   const { data, isError, isPending } = useQuery({
-    queryKey: ["events", filters],
-    queryFn: () => getAllEventsApi(filters),
+    queryKey: ["events", search],
+    queryFn: () => getAllEventsApi(search),
     placeholderData: (previousData) => {
       if (previousData && previousData.length > 0) {
         return Array.from({ length: previousData.length }, () => ({}));
@@ -64,7 +65,7 @@ export const useGetAllEvents = () => {
     },
   });
 
-  return { data, isError, isPending, filters, updateFilter, resetFilters };
+  return { data, isError, isPending };
 };
 
 export const useEditEvent = () => {

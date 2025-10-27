@@ -1,32 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router";
 import { getCategories } from "../../services/apiCategories.js";
 import { PAGE_SIZE } from "../../utils/constants.js";
-import { useSelector } from "react-redux";
 
-export const useCategories = () => {
-  const [searchParams] = useSearchParams();
-  const searchTerm = useSelector((state) => state.search.term);
+export const useCategories = ({ pageNumber = 1, pageSize = PAGE_SIZE, sortBy = "createdAt-desc", search }) => {
+  const [field, direction] = sortBy.split("-");
+  const sort = `${field}-${direction}`;
 
-  const page = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
-  const limit = !searchParams.get("limit") ? PAGE_SIZE : Number(searchParams.get("limit"));
-
-  let sortByRow = searchParams.get("sortBy");
-  sortByRow = sortByRow && sortByRow !== "undefined" ? sortByRow : "createdAt-desc";
-
-  const [field, direction] = sortByRow.split("-");
-  const sortBy = { field, direction };
-
-  const search = searchTerm?.trim() || undefined;
+  const queryParams = {
+    sortBy: sort,
+    pageNumber,
+    pageSize,
+    search,
+  };
 
   const { data, isLoading, error, isFetching } = useQuery({
-    queryKey: ["categories", page, sortBy, limit, search],
-    queryFn: () => getCategories({ page, sortBy, limit, search }),
-    placeholderData: (previousData) => {
-      if (previousData && previousData.length > 0) {
-        return Array.from({ length: previousData.length }, () => ({}));
-      }
-    },
+    queryKey: ["categories", queryParams],
+    queryFn: () => getCategories(queryParams),
+    keepPreviousData: true,
     staleTime: 30 * 60 * 1000,
   });
 

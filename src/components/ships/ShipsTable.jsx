@@ -20,6 +20,7 @@ import { LuTrash2 } from "react-icons/lu";
 import { useShips } from "../../hooks/ships/useShips.js";
 import { setSearchTerm } from "../../slices/searchSlice.js";
 import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
+import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -97,27 +98,49 @@ const ResetButton = styled(ButtonStyle)`
 `;
 
 function ShipsTable() {
+  //Dispatch and actions
   const dispatch = useDispatch();
   const role = useSelector((state) => state.auth.role);
+  const searchTerm = useSelector((state) => state.search.term);
 
-  const [toggleFilter, setToggleFilter] = useState(false);
+  // React Hooks
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedShip, setSelectedShip] = useState([]);
 
-  const { ships, count, isLoading, error, isFetching } = useShips();
-  const { mutate } = useDeleteShip();
+  //Local state
+  const [toggleFilter, setToggleFilter] = useState(false);
+  const [isPublished, setIsPublished] = useState(false);
 
+  //Read query params from URL
+  const pageNumber = Number(searchParams.get("pageNumber") ?? 1);
+  const sortBy = searchParams.get("sortBy") ?? "createdAt-desc";
+
+  //Fetch ships data using custom hook
+  const { ships, count, isLoading, error, isFetching } = useShips({
+    pageNumber,
+    sortBy,
+    filters: {
+      isPublished: searchParams.get("isPublished"),
+      price: searchParams.get("price"),
+      search: searchTerm?.trim() || undefined,
+    },
+  });
+
+  /* const { mutate } = useDeleteShip(); */
+  // Custom hook for selection and deletion
+  const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(ships, useDeleteShip().mutate);
+
+  // Calculate dynamic min/max price from fetched ships
   const prices = ships?.map((s) => s.price) || [];
   const MIN = 0;
   const MAX = prices.length ? Math.max(...prices) : 1000;
   const [rangeValue, setRangeValue] = useState([MIN, MAX]);
-  const [isPublished, setIsPublished] = useState(false);
 
-  const handleSelectAll = (checked) => {
-    if (checked) setSelectedShip(ships?.map((c) => c.id));
-    else setSelectedShip([]);
-  };
+  // Set dynamic price range when ships change
+  useEffect(() => {
+    setRangeValue([MIN, MAX]);
+  }, [MIN, MAX]);
 
+  // Sorting options
   const sortItems = [
     { value: "shipName-asc", name: "Ship name (A-Z)" },
     { value: "shipName-desc", name: "Ship name (Z-A)" },
@@ -127,13 +150,11 @@ function ShipsTable() {
     { value: "createdAt-asc", name: "Oldest first" },
   ];
 
+  // Table columns configuration
   const tableColumns = [
     {
       header: (
-        <Checkbox
-          checked={selectedShip?.length > 0 && selectedShip?.length === ships?.length}
-          onChange={(checked) => handleSelectAll(checked)}
-        />
+        <Checkbox checked={selected?.length > 0 && selected?.length === ships?.length} onChange={(checked) => handleSelectAll(checked)} />
       ),
       accessor: "delete row",
       style: "hidden-table-sm",
@@ -147,30 +168,9 @@ function ShipsTable() {
     { header: "Actions", accessor: "actions" },
   ];
 
-  useEffect(() => {
-    setRangeValue([MIN, MAX]);
-  }, [MIN, MAX]);
-
-  const handleCheckboxChange = (shipId) => {
-    setSelectedShip((prev) => (prev.includes(shipId) ? prev.filter((id) => id !== shipId) : [...prev, shipId]));
-  };
-
-  const handleDeleteSelected = () => {
-    selectedShip.forEach((id) => mutate(id));
-    setSelectedShip([]);
-  };
-
-  if (isLoading) return <Spinner />;
-  if (error) return <div>Error</div>;
-
-  const renderRow = (item) => <ShipsColumn key={item.id} ship={item} selectedShip={selectedShip} onCheckboxChange={handleCheckboxChange} />;
-
-  const dataLength = ships?.length;
-  if (dataLength < 1) return <EmptyState message='No ships for now. Please create ship' />;
-
+  // Function to update URL query parameters
   const updatedQueryParams = (params) => {
     const newParams = new URLSearchParams(searchParams);
-
     Object.entries(params).forEach(([key, value]) => (value ?? "" ? newParams.set(key, value) : newParams.delete(key)));
     setSearchParams(newParams);
   };
@@ -183,6 +183,7 @@ function ShipsTable() {
     setRangeValue(newRange);
   };
 
+  // Apply filter values to URL and trigger data reload
   const applayFilter = () => {
     const query = {
       isPublished,
@@ -192,6 +193,7 @@ function ShipsTable() {
     updatedQueryParams(query);
   };
 
+  // Reset filters and search term, update URL
   const resetFilter = () => {
     setIsPublished(false);
     setRangeValue([MIN, MAX]);
@@ -204,6 +206,14 @@ function ShipsTable() {
     });
   };
 
+  // Render single row
+  const renderRow = (item) => <ShipsColumn key={item.id} ship={item} selectedShip={selected} onCheckboxChange={handleCheckboxChange} />;
+
+  // Loading, error, and empty states
+  if (isLoading) return <Spinner />;
+  if (error) return <div>Error loading ships</div>;
+  if (!ships.length) return <EmptyState message='No ships for now. Please create ship' />;
+
   return (
     <>
       <FlexWrapper>
@@ -214,12 +224,12 @@ function ShipsTable() {
           </Button>
         </ShipFilters>
         <Sort items={sortItems} label='Sort by:' />
-        {selectedShip.length > 0 && (
+        {selected.length > 0 && (
           <div>
             <Button $variation='danger' onClick={handleDeleteSelected}>
               <LuTrash2 />
-              Delete {selectedShip.length} item
-              {selectedShip.length > 1 ? "s" : ""}
+              Delete {selected.length} item
+              {selected.length > 1 ? "s" : ""}
             </Button>
           </div>
         )}
@@ -273,7 +283,7 @@ function ShipsTable() {
           </ButtonWrap>
         </ShipFiltersDropdown>
       )}
-      {isFetching ? <TablePlaceholder count={dataLength} /> : <CustomTable columns={tableColumns} renderRow={renderRow} data={ships} />}
+      {isFetching ? <TablePlaceholder count={ships.length} /> : <CustomTable columns={tableColumns} renderRow={renderRow} data={ships} />}
       <Pagination count={count} />
     </>
   );

@@ -1,4 +1,3 @@
-import React from "react";
 import { useSearchParams } from "react-router";
 import styled from "styled-components";
 import { MAX_PAGE_BUTTONS, PAGE_SIZE } from "../utils/constants.js";

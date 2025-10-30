@@ -111,12 +111,12 @@ function ShipsTable() {
   const [isPublished, setIsPublished] = useState(false);
 
   //Read query params from URL
-  const pageNumber = Number(searchParams.get("pageNumber") ?? 1);
+  const page = Number(searchParams.get("page") ?? 1);
   const sortBy = searchParams.get("sortBy") ?? "createdAt-desc";
 
   //Fetch ships data using custom hook
   const { ships, count, isLoading, error, isFetching } = useShips({
-    pageNumber,
+    page,
     sortBy,
     filters: {
       isPublished: searchParams.get("isPublished"),

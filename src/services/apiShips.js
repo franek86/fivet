@@ -6,7 +6,6 @@ import apiClient from "../utils/axiosConfig.js";
 export const getShips = async (params = {}) => {
   try {
     const res = await apiClient.get("/ships", { params });
-
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

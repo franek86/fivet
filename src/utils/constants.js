@@ -1,4 +1,4 @@
-export const PAGE_SIZE = 5;
+export const PAGE_SIZE = 10;
 export const MAX_PAGE_BUTTONS = 2;
 export const EVENT_STATUS = [
   { value: "PLANNED", name: "Planned" },

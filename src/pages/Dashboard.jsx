@@ -7,6 +7,7 @@ import styled from "styled-components";
 import DashboardChart from "../components/dashboard/DashboardChart.jsx";
 import { useIsFetching } from "@tanstack/react-query";
 import Spinner from "../components/Spinner.jsx";
+import Subscribe from "../components/StrapiTestBtn.jsx";
 
 const TwoColumns = styled.article`
   display: grid;
@@ -29,6 +30,7 @@ function Dashboard() {
   return (
     <>
       <Title tag='h1'>Dashboard</Title>
+      <Subscribe />
       {isLoading ? (
         <Spinner />
       ) : (

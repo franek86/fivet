@@ -31,12 +31,12 @@ function CategoryTable() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Read params from URL
-  const pageNumber = Number(searchParams.get("pageNumber") ?? 1);
+  const page = Number(searchParams.get("pageNumber") ?? 1);
   const sortBy = searchParams.get("sortBy") ?? "createdAt-desc";
 
   // Fetch  data using custom hook
   const { categories, count, isLoading, error, isFetching } = useCategories({
-    pageNumber,
+    page,
     sortBy,
     search: searchTerm?.trim() || undefined,
   });

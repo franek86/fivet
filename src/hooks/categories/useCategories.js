@@ -2,14 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { getCategories } from "../../services/apiCategories.js";
 import { PAGE_SIZE } from "../../utils/constants.js";
 
-export const useCategories = ({ pageNumber = 1, pageSize = PAGE_SIZE, sortBy = "createdAt-desc", search }) => {
+export const useCategories = ({ page = 1, limit = PAGE_SIZE, sortBy = "createdAt-desc", search }) => {
   const [field, direction] = sortBy.split("-");
   const sort = `${field}-${direction}`;
 
   const queryParams = {
+    page,
+    limit,
     sortBy: sort,
-    pageNumber,
-    pageSize,
     search,
   };
 
@@ -20,5 +20,5 @@ export const useCategories = ({ pageNumber = 1, pageSize = PAGE_SIZE, sortBy = "
     staleTime: 30 * 60 * 1000,
   });
 
-  return { categories: data?.data || [], totalShipsType: data?.count || 0, isLoading, error, isFetching };
+  return { categories: data?.data, count: data?.meta?.total, isLoading, error, isFetching };
 };

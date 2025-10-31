@@ -1,5 +1,5 @@
 import { RxDashboard } from "react-icons/rx";
-import { MdOutlineDirectionsBoat, MdOutlineCategory, MdEventNote } from "react-icons/md";
+import { MdOutlineDirectionsBoat, MdOutlineCategory, MdEventNote, MdPayment } from "react-icons/md";
 import { FaUsers, FaCircleUser, FaRegAddressCard } from "react-icons/fa6";
 
 export const navLinks = [
@@ -10,4 +10,5 @@ export const navLinks = [
   { href: "/events", label: "Events", icon: MdEventNote, allowRoles: ["ADMIN"] },
   { href: "/address-book", label: "Address book", icon: FaRegAddressCard, allowRoles: ["ADMIN", "USER"] },
   { href: "/profile", label: "Profile", icon: FaCircleUser, allowRoles: ["ADMIN", "USER"] },
+  { href: "/payments", label: "Payments", icon: MdPayment, allowRoles: ["ADMIN"] },
 ];

@@ -23,6 +23,7 @@ import AddressBook from "./pages/AddressBook.jsx";
 import ForgotPassword from "./pages/ForgotPassword.jsx";
 import Events from "./pages/Events.jsx";
 import Notifications from "./pages/Notifications.jsx";
+import Payments from "./pages/Payments.jsx";
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
             <Route path='/users' element={<Users />} />
             <Route path='/categories' element={<Categories />} />
             <Route path='/events' element={<Events />} />
+            <Route path='/payments' element={<Payments />} />
             <Route path='/notifications' element={<Notifications />} />
           </Route>
         </Route>

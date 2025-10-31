@@ -1,4 +1,3 @@
-/* import Table from "../ui/Table.jsx"; */
 import Dropdown from "../ui/Dropdown.jsx";
 import Button from "../ui/Button.jsx";
 import Modal from "../Modal.jsx";

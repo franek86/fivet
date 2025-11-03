@@ -2,10 +2,9 @@ import { Link } from "react-router";
 import { IoMdNotifications, IoIosCloseCircle } from "react-icons/io";
 import styled from "styled-components";
 import Button from "../ui/Button.jsx";
-import EmptyState from "../EmptyState.jsx";
 
 import { customFormatDate } from "../../utils/formatDate.js";
-import { useAllUnreadNotification } from "../../hooks/useNotification.js";
+import { useAllUnreadNotification, useNotifications } from "../../hooks/useNotification.js";
 import { useDispatch, useSelector } from "react-redux";
 import { closeDropdown, toggleDropdown } from "../../slices/uiSlice.js";
 

@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router";
 import styled from "styled-components";
-import NotificationBadge from "./notification/NotificationBadge.jsx";
+
+import NotificationIcon from "./notification/NotificationIcon.jsx";
 
 import { MdClose, MdMenu } from "react-icons/md";
 import { toggleNav } from "../slices/uiSlice.js";
+import { useNotificationSocket } from "../hooks/useNotification.js";
 
 const LogoWrapper = styled.div`
   display: flex;
@@ -51,14 +53,17 @@ const StyledBar = styled.div`
 `;
 
 function Logo() {
+  const { unreadCount } = useNotificationSocket();
   const dispatch = useDispatch();
   const role = useSelector((state) => state.auth.role);
   const isToggle = useSelector((state) => state.ui.isToggleNav);
+
   return (
     <LogoWrapper>
       <LogoNotification>
         <StyledLogo>Fivet</StyledLogo>
-        {role === "ADMIN" && <NotificationBadge />}
+
+        {role === "ADMIN" && <NotificationIcon count={unreadCount} />}
       </LogoNotification>
       <StyledBar onClick={() => dispatch(toggleNav())}>{isToggle ? <MdClose size={25} /> : <MdMenu size={25} />}</StyledBar>
     </LogoWrapper>

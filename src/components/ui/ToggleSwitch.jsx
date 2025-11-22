@@ -14,8 +14,8 @@ const Label = styled.span`
 const Switch = styled.label`
   position: relative;
   display: inline-block;
-  width: 50px;
-  height: 28px;
+  width: 40px;
+  height: 22px;
 `;
 
 const Checkbox = styled.input`
@@ -28,7 +28,7 @@ const Checkbox = styled.input`
   }
 
   &:checked + span:before {
-    transform: translateX(22px);
+    transform: translateX(18px);
   }
 `;
 
@@ -46,10 +46,10 @@ const Slider = styled.span`
   &:before {
     content: "";
     position: absolute;
-    height: 22px;
-    width: 22px;
-    left: 3px;
-    bottom: 3px;
+    height: 18px;
+    width: 18px;
+    left: 2px;
+    bottom: 2px;
     background-color: white;
     transition: 0.4s;
     border-radius: 50%;

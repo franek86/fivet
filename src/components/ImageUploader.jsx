@@ -1,16 +1,21 @@
 import { useEffect, useRef, useState } from "react";
+import styled from "styled-components";
 
 import Label from "./ui/Label.jsx";
+
 import { LuCircleX } from "react-icons/lu";
 import { LuImageDown } from "react-icons/lu";
 
-import styled from "styled-components";
-
 const ImageUploadContainer = styled.section`
+  height: 16rem;
+  width: 16rem;
   display: flex;
+  justify-content: center;
   align-items: center;
   cursor: pointer;
   position: relative;
+  box-shadow: var(--shadow-lg);
+  border-radius: 50%;
 
   input {
     display: none;
@@ -20,10 +25,16 @@ const ImageUploadContainer = styled.section`
 const StyledImageUpload = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background-color: var(--color-grey-100);
-  border-radius: var(--border-radius-sm);
-  padding: 1.2rem;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.02);
+  }
 `;
 
 const StyledIcon = styled(LuImageDown)`
@@ -42,13 +53,17 @@ const StyledIconClose = styled(LuCircleX)`
 
 const StyledPreviewImageWrap = styled.div`
   display: flex;
+  height: 16rem;
+  width: 16rem;
   flex-direction: column;
   position: relative;
 `;
 
 const StyledPreviewImage = styled.img`
-  height: 148px;
-  border-radius: var(--border-radius-sm);
+  height: 16rem;
+  width: 16rem;
+  object-fit: cover;
+  border-radius: 50%;
 `;
 
 const Row = styled.div`
@@ -116,8 +131,8 @@ const ImageUploader = ({ name, onChange, initialImage, title }) => {
         <StyledPreviewImageWrap>
           <StyledIconClose onClick={removeImage} />
           <Column>
-            {title ? <P>Main image</P> : title}
             {previewImage && <StyledPreviewImage src={previewImage} alt='' />}
+            {title ? <P>Main image</P> : title}
           </Column>
         </StyledPreviewImageWrap>
       )}

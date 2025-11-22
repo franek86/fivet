@@ -4,6 +4,7 @@ import modalReducer from "./slices/modalSlice";
 import authReducer from "./slices/authSlice.js";
 import uiReducer from "./slices/uiSlice.js";
 import searchReducer from "./slices/searchSlice.js";
+import notificationReducer from "./slices/notificationSlice.js";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     auth: authReducer,
     ui: uiReducer,
     search: searchReducer,
+    notifications: notificationReducer,
   },
 });
 

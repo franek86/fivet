@@ -1,10 +1,7 @@
-import { useState, useEffect } from "react";
-import { io } from "socket.io-client";
-import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 import { deleteNotificationApi, getAllUnreadNotifications, getNotifications, updateReadNotification } from "../services/apiNotification.js";
-
-const SOCKET_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const useNotificationList = () => {
   const { data, isLoading, isError } = useQuery({
@@ -52,23 +49,4 @@ export const useDeleteNotification = () => {
     },
   });
   return { mutate };
-};
-
-export const useNotificationSocket = () => {
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [notifications, setNotifications] = useState([]);
-  useEffect(() => {
-    const socket = io(SOCKET_URL, { withCredentials: true });
-
-    socket.emit("admins");
-
-    socket.on("newShip", (data) => {
-      setUnreadCount((prev) => prev + 1);
-      setNotifications((prev) => [...prev, data]);
-    });
-
-    return () => socket.disconnect();
-  }, []);
-
-  return { unreadCount, notifications, setNotifications, setUnreadCount };
 };

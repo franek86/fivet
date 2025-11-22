@@ -46,6 +46,7 @@ function App() {
             <Route path='/ships/edit/:id' element={<EditShip />} />
             <Route path='/ships/:id' element={<SingleShip />} />
             <Route path='/address-book' element={<AddressBook />} />
+            <Route path='/notifications' element={<Notifications />} />
             <Route path='/profile' element={<Profile />} />
           </Route>
         </Route>
@@ -56,7 +57,6 @@ function App() {
             <Route path='/categories' element={<Categories />} />
             <Route path='/events' element={<Events />} />
             <Route path='/payments' element={<Payments />} />
-            <Route path='/notifications' element={<Notifications />} />
           </Route>
         </Route>
         <Route path='*' element={<NotFound />} />

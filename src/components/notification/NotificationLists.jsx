@@ -1,4 +1,5 @@
 import styled from "styled-components";
+
 import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 import EmptyState from "../EmptyState.jsx";
 import Spinner from "../Spinner.jsx";
@@ -6,8 +7,8 @@ import Button from "../../components/ui/Button.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 import Modal from "../Modal.jsx";
 
-import { useDeleteNotification, useNotificationList, useUpdateReadNotification } from "../../hooks/useNotification.js";
 import { customFormatDate } from "../../utils/formatDate.js";
+import { useDeleteNotification, useNotificationList, useUpdateReadNotification } from "../../hooks/useNotification.js";
 import { useDispatch } from "react-redux";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 
@@ -38,8 +39,19 @@ const Buttons = styled.div`
   gap: 1.5rem;
 `;
 
+const SwitchWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  p {
+    font-size: 1.35rem;
+  }
+`;
+
 function NotificationLists() {
   const dispatch = useDispatch();
+
   const { data, isLoading, isError } = useNotificationList();
   const { mutate } = useUpdateReadNotification();
   const { mutate: deleteNotification } = useDeleteNotification();
@@ -55,17 +67,17 @@ function NotificationLists() {
   return (
     <Wrapper>
       {data.map((item) => (
-        <>
-          <Card key={item.id} $props={item.isRead}>
+        <div key={item.id}>
+          <Card $props={item.isRead}>
             <div>
               <h4>{item.message}</h4>
               <p>Created at {customFormatDate(item.createdAt)}</p>
             </div>
             <Buttons>
-              <div>
+              <SwitchWrapper>
                 <p>Mark as read</p>
                 <ToggleSwitch checked={item.isRead} onChange={(e) => handleChange(item.id, e.target.checked)} />
-              </div>
+              </SwitchWrapper>
               <Button $size='small' $variation='danger' onClick={() => dispatch(openModalByName(item.id))}>
                 Delete
               </Button>
@@ -78,7 +90,7 @@ function NotificationLists() {
               onCloseModal={() => dispatch(closeModalByName(item.id))}
             />
           </Modal>
-        </>
+        </div>
       ))}
     </Wrapper>
   );

@@ -8,6 +8,7 @@ import Dropdown from "../ui/Dropdown.jsx";
 import Modal from "../Modal.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
+import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 
 import { LuPencil, LuTrash2, LuEye } from "react-icons/lu";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
@@ -15,7 +16,7 @@ import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
 import { formatedPrice } from "../../utils/formattedPrice.js";
 import { usePublishShip } from "../../hooks/ships/usePublishShip.js";
-import ToggleSwitch from "../ui/ToggleSwitch.jsx";
+import socket from "../../shared/socket.js";
 
 const StyledImage = styled.img`
   width: 80px;
@@ -43,6 +44,7 @@ function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
     imo,
     price,
     shipType: { name: shipTypeName },
+    userId,
     user: {
       profile: { fullName },
     },
@@ -50,9 +52,9 @@ function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
 
   const [isPublish, setIsPublish] = useState(isPublished);
 
-  const handleToggle = (id) => {
+  const handleToggle = (id, userId) => {
     mutatePublishShip(
-      { id, isPublished: !isPublish },
+      { id, isPublished: !isPublish, userId },
       {
         onSuccess: () => {
           setIsPublish((prev) => !prev);
@@ -71,7 +73,7 @@ function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
       </td>
       {role !== "ADMIN" ? null : (
         <td className='table-td'>
-          <ToggleSwitch checked={isPublish} onChange={() => handleToggle(shipId)} />
+          <ToggleSwitch checked={isPublish} onChange={() => handleToggle(shipId, userId)} />
         </td>
       )}
 

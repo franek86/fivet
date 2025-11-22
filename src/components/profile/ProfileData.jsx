@@ -8,10 +8,9 @@ import ImageUploader from "../ImageUploader.jsx";
 import Spinner from "../Spinner.jsx";
 
 import styled from "styled-components";
-import { useUploadSingleImage } from "../../hooks/files/useUploadSingleImage.js";
-import { useImagePublicUrl } from "../../hooks/files/useImagePublicUrl.js";
+
 import { useUser } from "../../hooks/useAuth.js";
-import { useProfileData, useUpdateProfile } from "../../hooks/useProfile.js";
+import { useUpdateProfile } from "../../hooks/useProfile.js";
 
 const StyledForm = styled.form`
   display: grid;
@@ -28,34 +27,12 @@ const StyledInfo = styled.div`
   display: grid;
   gap: 10px;
 `;
-const StyledAvatar = styled.div`
-  height: 20rem;
-  width: 20rem;
-  padding: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-lg);
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-
-  &:hover {
-    transform: scale(1.02);
-  }
-`;
 
 function ProfileData() {
   const { data, isLoading } = useUser();
   const { mutate: updateProfile, isPending: loadUpdateProfile } = useUpdateProfile();
 
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    setValue,
-    watch,
-    reset,
-  } = useForm({
+  const { register, formState, handleSubmit, setValue, watch, reset } = useForm({
     defaultValues: {
       fullName: "",
       email: "",
@@ -96,9 +73,7 @@ function ProfileData() {
         <Input type='email' register={register} {...register("email")} />
         <Button>{loadUpdateProfile ? "Updating..." : "Edit"}</Button>
       </StyledInfo>
-      <StyledAvatar>
-        <ImageUploader name='avatar' value={watch("avatar")} initialImage={data.profile.avatar} onChange={handleAvatarChange} />
-      </StyledAvatar>
+      <ImageUploader name='avatar' value={watch("avatar")} initialImage={data.profile.avatar} onChange={handleAvatarChange} />
     </StyledForm>
   );
 }

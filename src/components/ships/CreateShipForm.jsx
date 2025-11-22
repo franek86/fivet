@@ -22,6 +22,8 @@ import { useShip } from "../../hooks/ships/useShip.js";
 import { useUser } from "../../hooks/useAuth.js";
 import { useAllShipType } from "../../hooks/useShipType.js";
 import ToggleSwitch from "../ui/ToggleSwitch.jsx";
+import { useSelector } from "react-redux";
+import socket from "../../shared/socket.js";
 
 const Form = styled.div`
   display: grid;
@@ -61,6 +63,7 @@ const ColumnPublish = styled(Row)`
 
 const ShipsForm = () => {
   const navigate = useNavigate();
+  const role = useSelector((state) => state.auth.role);
   const { id: shipId } = useParams();
   const isEditSession = Boolean(shipId);
 
@@ -121,6 +124,8 @@ const ShipsForm = () => {
       editShip({ newData: formData, id: shipId });
     } else {
       submitData(formData);
+
+      socket.emit("register_admin", userId);
     }
   };
 
@@ -136,15 +141,17 @@ const ShipsForm = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Form>
         <input type='hidden' {...register("userId")} value={user.id} />
-        <ColumnPublish>
-          <Controller
-            name='isPublished'
-            control={control}
-            render={({ field }) => (
-              <ToggleSwitch label='Publish on web' name='isPublished' checked={!!field.value} onChange={field.onChange} />
-            )}
-          />
-        </ColumnPublish>
+        {role === "ADMIN" && (
+          <ColumnPublish>
+            <Controller
+              name='isPublished'
+              control={control}
+              render={({ field }) => (
+                <ToggleSwitch label='Publish on web' name='isPublished' checked={!!field.value} onChange={field.onChange} />
+              )}
+            />
+          </ColumnPublish>
+        )}
 
         <Column>
           <Input

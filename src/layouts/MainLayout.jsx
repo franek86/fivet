@@ -1,8 +1,10 @@
+import { useSelector } from "react-redux";
 import { Outlet } from "react-router";
-import Sidebar from "../components/Sidebar.jsx";
+
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { closeDropdown } from "../slices/uiSlice.js";
+
+import Sidebar from "../components/Sidebar.jsx";
+import { useNotificationSocket } from "../hooks/useSocket.js";
 
 const LayoutGrid = styled.div`
   display: grid;
@@ -27,6 +29,11 @@ const Main = styled.main`
 `;
 
 function MainLayout() {
+  const role = useSelector((state) => state.auth.role);
+  const userId = useSelector((state) => state.auth.user.id);
+
+  useNotificationSocket(role, userId);
+
   return (
     <LayoutGrid>
       <Sidebar />

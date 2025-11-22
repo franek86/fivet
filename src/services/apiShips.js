@@ -61,10 +61,11 @@ export const deleteShip = async (id) => {
 
 /* publish ship by id admin only */
 
-export const publishShipApi = async (id, isPublished) => {
+export const publishShipApi = async (id, isPublished, userId) => {
   try {
     const response = await apiClient.patch(`/ships/${id}/publish`, {
       isPublished,
+      userId,
     });
     return response;
   } catch (error) {

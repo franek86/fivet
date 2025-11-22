@@ -12,15 +12,22 @@ import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 
 const CardWrap = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 2rem;
   margin-top: 4rem;
+
+  @media screen and (min-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media screen and (min-width: 992px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 `;
 
 const Card = styled.article`
   display: flex;
   justify-content: space-between;
-  align-items: center;
   background-color: var(--color-grey-0);
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-md);
@@ -28,7 +35,7 @@ const Card = styled.article`
 
 const CardTop = styled.div`
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   align-items: center;
   justify-content: space-between;
   padding: 1.2rem;
@@ -62,8 +69,8 @@ const CardButtonDelete = styled(CardButton)`
 `;
 
 const CardImage = styled.img`
-  width: 6rem;
-  height: 6rem;
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
   background-color: var(--color-grey-200);
 `;
@@ -143,7 +150,7 @@ function UserProfileList() {
           : data.map((item) => (
               <Card key={item.id}>
                 <CardTop>
-                  {item.avatar ? <CardImage src={item.avatar} alt={item.fullName} /> : <FaUserCircle size={60} />}
+                  {item.avatar ? <CardImage src={item.avatar} alt={item.fullName} /> : <FaUserCircle size={40} />}
                   <CardContent>
                     <strong>{item.fullName}</strong>
                     <Link href={`mailto:${item.email}`}>{item.email}</Link>

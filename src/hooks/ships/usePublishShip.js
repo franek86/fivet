@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 export const usePublishShip = () => {
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
-    mutationFn: ({ id, isPublished }) => publishShipApi(id, isPublished),
+    mutationFn: ({ id, isPublished, userId }) => publishShipApi(id, isPublished, userId),
     onSuccess: () => {
       toast.success("Ship successfully published");
       queryClient.invalidateQueries(["ships"]);

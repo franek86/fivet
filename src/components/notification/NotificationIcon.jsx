@@ -1,7 +1,9 @@
+import { useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { IoMdNotifications } from "react-icons/io";
 import styled from "styled-components";
-import { useNotificationSocket } from "../../hooks/useNotification.js";
-import { useDispatch, useSelector } from "react-redux";
+
 import { toggleDropdown } from "../../slices/uiSlice.js";
 
 const Wrapper = styled.div`
@@ -13,14 +15,14 @@ const Count = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2rem;
+  height: 2rem;
   position: absolute;
-  top: -5px;
-  right: -5px;
-  font-size: 0.75rem;
+  top: -10px;
+  right: -10px;
+  font-size: 1rem;
   font-weight: bold;
-  background-color: red;
+  background-color: var(--color-red-700);
   color: white;
   border-radius: 50%;
 `;
@@ -33,38 +35,63 @@ const DropdownToggle = styled.div`
   background-color: var(--color-grey-0);
   color: var(--color-brand-900);
   box-shadow: var(--shadow-lg);
+  border-radius: var(--border-radius-md);
   width: max-content;
   max-height: 300px;
   overflow-y: auto;
   z-index: 100;
+  p {
+    font-size: 1.35rem;
+    font-weight: 600;
+  }
+  span {
+    font-size: 1rem;
+    display: block;
+  }
 `;
 
-export default function NotificationIcon({ count }) {
-  const { notifications, setNotifications, setUnreadCount } = useNotificationSocket();
+export default function NotificationIcon() {
   const dispatch = useDispatch();
+  const dropdownRef = useRef(null);
+
+  const notifications = useSelector((state) => state.notifications.notifications);
+  const unreadCount = useSelector((state) => state.notifications.unreadCount);
   const isToggleDropdown = useSelector((state) => state.ui.isDropdownOpen);
 
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        dispatch(toggleDropdown(false));
+      }
+    }
+
+    if (isToggleDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isToggleDropdown, dispatch]);
+
   const markAsRead = (shipId) => {
-    setNotifications((prev) => prev.filter((n) => n.shipId !== shipId));
-    setUnreadCount((prev) => prev - 1);
+    console.log(shipId);
   };
 
   return (
-    <Wrapper>
+    <Wrapper ref={dropdownRef}>
       <IoMdNotifications size={25} onClick={() => dispatch(toggleDropdown())} />
-      {count > 0 && <Count>{count}</Count>}
+      {unreadCount > 0 && <Count>{unreadCount}</Count>}
 
       {isToggleDropdown && (
         <DropdownToggle>
           {notifications.length === 0 && <div>No new notifications</div>}
           {notifications.map((n) => (
-            <div
-              key={n.shipId}
-              style={{ padding: "0.5rem", borderBottom: "1px solid #ccc", cursor: "pointer" }}
-              onClick={() => markAsRead(n.shipId)}
-            >
-              <strong>{n.shipName}</strong> by {n.createdBy}
-              <div style={{ fontSize: "0.75rem", color: "#555" }}>{n.createdAt}</div>
+            <div key={n.id}>
+              <div onClick={() => markAsRead(n.id)}>
+                <p>{n.message}</p>
+                <span>{n.createdAt}</span>
+              </div>
             </div>
           ))}
         </DropdownToggle>

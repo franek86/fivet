@@ -88,6 +88,7 @@ export const loginApi = async ({ email, password, rememberMe }) => {
 export const getCurrentUser = async () => {
   try {
     const res = await apiClient.get("/auth/me");
+
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

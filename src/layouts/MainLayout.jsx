@@ -29,8 +29,8 @@ const Main = styled.main`
 `;
 
 function MainLayout() {
-  const role = useSelector((state) => state.auth.role);
-  const userId = useSelector((state) => state.auth.user.id);
+  const role = useSelector((state) => state.auth?.role);
+  const userId = useSelector((state) => state.auth?.user?.id);
 
   useNotificationSocket(role, userId);
 

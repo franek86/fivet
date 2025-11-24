@@ -6,18 +6,19 @@ import { useNavigate } from "react-router";
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import Title from "../ui/Title.jsx";
+import BackBtn from "../BackBtn.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
+import ResetPasswordForm from "./ResetPasswordForm.jsx";
 
 import { forgetPasswordApi, resetPasswordApi, verifyOtpForgetPasswordApi } from "../../services/apiAuth.js";
 
 import styled from "styled-components";
 import { toast } from "react-toastify";
-import ResetPasswordForm from "./ResetPasswordForm.jsx";
 
 const Form = styled.form`
   display: grid;
   gap: 1.5rem;
-  margin-top: 2rem;
+  margin: 2rem 0;
 `;
 
 const ShowOtpWrapper = styled.div`
@@ -141,6 +142,7 @@ function ForgotPasswordForm() {
       {step === "emailStep" && (
         <>
           <Title>Forgot password</Title>
+
           <Form onSubmit={handleSubmit(onSubmitEmail)}>
             <Input
               directions='column'
@@ -159,8 +161,9 @@ function ForgotPasswordForm() {
             />
             <InputErrorMessage message={errors.email?.message} />
 
-            <Button>{isPending ? "Submitting..." : "Submit"}</Button>
+            <Button $size='medium'>{isPending ? "Submitting..." : "Submit"}</Button>
           </Form>
+          <BackBtn />
         </>
       )}
       {step === "otpStep" && (

@@ -32,7 +32,7 @@ function ProfileData() {
   const { data, isLoading } = useUser();
   const { mutate: updateProfile, isPending: loadUpdateProfile } = useUpdateProfile();
 
-  const { register, formState, handleSubmit, setValue, watch, reset } = useForm({
+  const { register, handleSubmit, setValue, watch, reset } = useForm({
     defaultValues: {
       fullName: "",
       email: "",

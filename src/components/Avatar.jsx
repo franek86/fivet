@@ -1,7 +1,6 @@
 import { RxAvatar } from "react-icons/rx";
 import styled from "styled-components";
 
-import { useProfileData } from "../hooks/useProfile.js";
 import { useUser } from "../hooks/useAuth.js";
 import Spinner from "./Spinner.jsx";
 

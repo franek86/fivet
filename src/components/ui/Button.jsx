@@ -8,8 +8,8 @@ const sizes = {
     text-align: center;
   `,
   medium: css`
-    font-size: 1.25rem;
-    padding: 0.85rem 1.2rem;
+    font-size: 1.4rem;
+    padding: 1rem 1.2rem;
   `,
 };
 

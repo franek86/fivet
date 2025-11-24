@@ -1,5 +1,4 @@
 import apiClient from "../utils/axiosConfig.js";
-import supabase from "./databaseConfig.js";
 
 /* Get all user profile olny for admin*/
 export const getAllProfileApi = async ({ search = "" }) => {
@@ -13,23 +12,6 @@ export const getAllProfileApi = async ({ search = "" }) => {
     const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);
   }
-};
-
-/* get profile data by user id */
-export const getProfileApi = async () => {
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError) throw new Error("Error fetching user: " + userError.message);
-
-  const { data, error } = await supabase.from("profile").select("*").eq("id", user.id).single();
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return data;
 };
 
 /* update profile  */

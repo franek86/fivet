@@ -1,21 +1,20 @@
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router";
+import styled from "styled-components";
+import { toast } from "react-toastify";
 
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
+import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 
 import { loginSchema } from "../../utils/validationSchema.js";
 import { loginApi } from "../../services/apiAuth.js";
-
-import styled from "styled-components";
-import { toast } from "react-toastify";
 import { handleApiError } from "../../utils/handleApiError.js";
-import { useState } from "react";
-import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 
 const Form = styled.form`
   display: grid;
@@ -38,6 +37,15 @@ const RemberMeWrap = styled.div`
   gap: 1rem;
 `;
 
+const ForgotPassword = styled(Link)`
+  font-size: 1.5rem;
+  color: var(--color-brand-500);
+
+  &:hover {
+    color: var(--color-brand-800);
+  }
+`;
+
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -57,7 +65,6 @@ function LoginForm() {
   const {
     register,
     handleSubmit,
-    watch,
     control,
     formState: { errors },
   } = useForm({ resolver: zodResolver(loginSchema) });
@@ -105,9 +112,11 @@ function LoginForm() {
         <p>Remember me</p>
       </RemberMeWrap>
 
-      <Link to='/forgot-password'>Forgot password?</Link>
+      <ForgotPassword to='/forgot-password'>Forgot password?</ForgotPassword>
 
-      <Button data-cy='login'>{isPending ? "Loading..." : "Log in"}</Button>
+      <Button $size='medium' data-cy='login'>
+        {isPending ? "Loading..." : "Login"}
+      </Button>
     </Form>
   );
 }

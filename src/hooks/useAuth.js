@@ -12,7 +12,7 @@ export const useUser = () => {
     queryKey: ["user"],
     queryFn: async () => {
       const user = await getCurrentUser();
-      dispatch(setUser({ role: user.role, user }));
+      dispatch(setUser({ role: user.role, subscription: user.subscription, user }));
       return user;
     },
     refetchOnWindowFocus: false,

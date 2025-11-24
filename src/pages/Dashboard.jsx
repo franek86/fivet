@@ -1,13 +1,13 @@
 import { useSelector } from "react-redux";
+import { useIsFetching } from "@tanstack/react-query";
+
 import LastUsers from "../components/dashboard/LastUsers.jsx";
 import StatisticBox from "../components/dashboard/StatisticBox.jsx";
 import TopShips from "../components/dashboard/TopShips.jsx";
 import Title from "../components/ui/Title.jsx";
 import styled from "styled-components";
 import DashboardChart from "../components/dashboard/DashboardChart.jsx";
-import { useIsFetching } from "@tanstack/react-query";
 import Spinner from "../components/Spinner.jsx";
-import Subscribe from "../components/StrapiTestBtn.jsx";
 
 const TwoColumns = styled.article`
   display: grid;
@@ -30,7 +30,7 @@ function Dashboard() {
   return (
     <>
       <Title tag='h1'>Dashboard</Title>
-      <Subscribe />
+
       {isLoading ? (
         <Spinner />
       ) : (

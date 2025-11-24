@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 
@@ -61,6 +61,8 @@ const ResendOtp = styled.p`
 `;
 
 function SignUpForm() {
+  const [searchParams] = useSearchParams();
+  const selectedPlan = searchParams.get("plan");
   const [showPassword, setShowPassword] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [resend, setResend] = useState(true);
@@ -102,7 +104,7 @@ function SignUpForm() {
     mutationFn: verifyOtpApi,
     onSuccess: () => {
       toast.success("OTP verified successfully");
-      navigate("/");
+      navigate(`/billing?plan=${selectedPlan}`);
     },
     onError: (error) => {
       toast.error(error.message);

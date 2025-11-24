@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import styled from "styled-components";
 
 import NotificationIcon from "./notification/NotificationIcon.jsx";
@@ -22,6 +22,7 @@ const LogoNotification = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  cursor: pointer;
 
   @media screen and (min-width: 640px) {
     flex-direction: column;
@@ -32,7 +33,7 @@ const LogoNotification = styled.div`
   }
 `;
 
-const StyledLogo = styled(NavLink)`
+const StyledLogo = styled.div`
   display: block;
   font-size: 2.5rem;
   font-weight: 700;
@@ -53,13 +54,13 @@ const StyledBar = styled.div`
 
 function Logo() {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const isToggle = useSelector((state) => state.ui.isToggleNav);
 
   return (
     <LogoWrapper>
       <LogoNotification>
-        <StyledLogo>Fivet</StyledLogo>
+        <StyledLogo onClick={() => navigate("/dashboard")}>Fivet</StyledLogo>
         <NotificationIcon />
       </LogoNotification>
       <StyledBar onClick={() => dispatch(toggleNav())}>{isToggle ? <MdClose size={25} /> : <MdMenu size={25} />}</StyledBar>

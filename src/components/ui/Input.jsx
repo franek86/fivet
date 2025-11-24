@@ -5,6 +5,7 @@ import { forwardRef } from "react";
 const Wrap = styled.div`
   display: flex;
   flex-direction: ${(props) => props.$directions};
+  align-items: baseline;
 `;
 
 const StyledInput = styled.input`

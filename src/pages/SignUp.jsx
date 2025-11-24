@@ -9,9 +9,8 @@ const FormWrap = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 2.4rem;
-  padding: 4rem 1.5rem;
-  border: 1px solid var(--color-brand-100);
-  box-shadow: var(--box-shadow-lg);
+  padding: 4rem 2.8rem;
+  box-shadow: var(--shadow-lg);
   width: 100%;
   text-align: center;
 `;

@@ -1,8 +1,7 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import styled from "styled-components";
 
 import Title from "../components/ui/Title.jsx";
-
-import styled from "styled-components";
 import LoginForm from "../components/auth/LoginForm.jsx";
 
 const FormWrap = styled.div`
@@ -10,9 +9,8 @@ const FormWrap = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 2.4rem;
-  padding: 4rem 1.5rem;
-  border: 1px solid var(--color-brand-100);
-  box-shadow: var(--box-shadow-lg);
+  padding: 4rem 2.8rem;
+  box-shadow: var(--shadow-lg);
   width: 100%;
   text-align: center;
 `;
@@ -31,9 +29,13 @@ const LinkText = styled(Link)`
 `;
 
 function Login() {
+  const navigate = useNavigate();
   return (
     <FormWrap>
-      <Title>Log in</Title>
+      <button onClick={() => navigate("/sign-up?plan=STANDARD")}>Standard</button>
+      <button onClick={() => navigate("/sign-up?plan=PREMIUM")}>Premium</button>
+      <Title>Login</Title>
+      <p>Please sign in to continue</p>
       <LoginForm />
       <TextWrap>
         Don't have a Fivet account? Please <LinkText to='/sign-up'>Sign up</LinkText>.

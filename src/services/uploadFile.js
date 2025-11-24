@@ -1,5 +1,3 @@
-import supabase from "./databaseConfig.js";
-
 /* Upload single image */
 export const uploadImage = async ({ file, bucket, filePath }) => {
   const { error } = await supabase.storage.from(bucket).upload(filePath, file);

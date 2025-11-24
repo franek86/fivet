@@ -2,37 +2,19 @@ import { Outlet } from "react-router";
 import styled from "styled-components";
 
 const Wrap = styled.div`
-  display: grid;
+  display: flex;
   height: 100vh;
-  grid-template-columns: 1fr;
+  max-width: 40rem;
+  margin: 0 auto;
   align-items: center;
   justify-content: center;
-
-  @media screen and (min-width: 640px) {
-    grid-template-columns: 1fr 1fr;
-  }
 `;
 
 const FormSection = styled.section`
   flex: 1;
   align-items: center;
   text-align: center;
-  width: 400px;
-  margin: auto;
-`;
-
-const ImageSection = styled.section`
-  display: none;
-  height: 100%;
-
-  img {
-    height: 100%;
-    object-fit: cover;
-  }
-
-  @media screen and (min-width: 640px) {
-    display: block;
-  }
+  width: 100%;
 `;
 
 function AuthLayout() {
@@ -41,9 +23,6 @@ function AuthLayout() {
       <FormSection>
         <Outlet />
       </FormSection>
-      <ImageSection>
-        <img src='/images/login-image.webp' alt='Login' />
-      </ImageSection>
     </Wrap>
   );
 }

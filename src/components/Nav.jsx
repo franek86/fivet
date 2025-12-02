@@ -3,6 +3,7 @@ import { navLinks } from "../utils/links.js";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { closeNav } from "../slices/uiSlice.js";
+import PremiumSticker from "./ui/PremiumSticker.jsx";
 
 const StyledNav = styled.nav`
   display: flex;
@@ -34,6 +35,7 @@ const NavList = styled(NavLink)`
 `;
 
 const NavItem = styled.div`
+  position: relative;
   display: block;
   font-size: 1.6rem;
   @media screen and (min-width: 640px) {
@@ -54,7 +56,10 @@ function Nav() {
         .map((item) => (
           <NavList to={item.href} key={item.label} onClick={() => dispatch(closeNav())}>
             <item.icon />
-            <NavItem>{item.label}</NavItem>
+            <NavItem>
+              {item.label}
+              {item.plan === "PREMIUM" ? <PremiumSticker /> : ""}
+            </NavItem>
           </NavList>
         ))}
     </StyledNav>

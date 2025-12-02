@@ -13,6 +13,8 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 
 import { registerUser, verifyOtpApi } from "../../services/apiAuth.js";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../slices/authSlice.js";
 
 const FormWrapper = styled.form`
   display: flex;
@@ -61,8 +63,11 @@ const ResendOtp = styled.p`
 `;
 
 function SignUpForm() {
+  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
-  const selectedPlan = searchParams.get("plan");
+  const plan = searchParams.get("plan");
+  const subscriptionLocal = useSelector((state) => state.auth.subscription);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [resend, setResend] = useState(true);
@@ -90,6 +95,12 @@ function SignUpForm() {
     mutationFn: registerUser,
     onSuccess: (_, formData) => {
       setUserData(formData);
+      dispatch(
+        setUser({
+          formData,
+          subscription: plan,
+        })
+      );
       setShowOtp(true);
       setResend(false);
       setTimer(60);
@@ -104,7 +115,7 @@ function SignUpForm() {
     mutationFn: verifyOtpApi,
     onSuccess: () => {
       toast.success("OTP verified successfully");
-      navigate(`/billing?plan=${selectedPlan}`);
+      navigate(`/billing`);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -123,7 +134,7 @@ function SignUpForm() {
   };
 
   const onHandleVerifyOtp = () => {
-    verifyOtpMutation({ data: userData, otp });
+    verifyOtpMutation({ data: userData, subscription: subscriptionLocal, otp });
   };
 
   const handleOtpChange = (index, value) => {

@@ -3,7 +3,7 @@ import Title from "../components/ui/Title.jsx";
 import styled from "styled-components";
 import BillingCard from "../components/BillingCard.jsx";
 import { LuChevronLeft } from "react-icons/lu";
-import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate } from "react-router";
 
 const Container = styled.div`
   max-width: 720px;
@@ -45,8 +45,7 @@ const Back = styled.div`
 function Billing() {
   const subscription = useSelector((state) => state.auth.subscription);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const plan = searchParams.get("plan");
+
   return (
     <Container>
       <Wrapper>
@@ -62,7 +61,7 @@ function Billing() {
         )}
       </Wrapper>
 
-      <BillingCard planUrlParam={plan} />
+      <BillingCard />
     </Container>
   );
 }

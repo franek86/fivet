@@ -26,7 +26,7 @@ import Notifications from "./pages/Notifications.jsx";
 import Payments from "./pages/Payments.jsx";
 import Billing from "./pages/Billing.jsx";
 import PremiumRoute from "./pages/PremiumRoute.jsx";
-import { useSelector } from "react-redux";
+import PaymentProtectedRoute from "./pages/PaymentProtectedRoute.jsx";
 
 function App() {
   return (
@@ -40,20 +40,22 @@ function App() {
           <Route path='/sign-up' element={<SignUp />} />
           <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route path='/unauthorized' element={<Unauthorized />} />
-          <Route path='/billing' element={<Billing />} />
         </Route>
         <Route element={<ProtectedRoute alowedRoles={["ADMIN", "USER"]} />}>
           <Route element={<MainLayout />}>
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/ships' element={<Ships />} />
-            <Route path='/ships/create' element={<CreateShip />} />
-            <Route path='/ships/edit/:id' element={<EditShip />} />
-            <Route path='/ships/:id' element={<SingleShip />} />
-            <Route element={<PremiumRoute />}>
-              <Route path='/address-book' element={<AddressBook />} />
+            <Route element={<PaymentProtectedRoute />}>
+              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/ships' element={<Ships />} />
+              <Route path='/ships/create' element={<CreateShip />} />
+              <Route path='/ships/edit/:id' element={<EditShip />} />
+              <Route path='/ships/:id' element={<SingleShip />} />
+              <Route element={<PremiumRoute />}>
+                <Route path='/address-book' element={<AddressBook />} />
+              </Route>
+              <Route path='/notifications' element={<Notifications />} />
+              <Route path='/profile' element={<Profile />} />
             </Route>
-            <Route path='/notifications' element={<Notifications />} />
-            <Route path='/profile' element={<Profile />} />
+            <Route path='/billing' element={<Billing />} />
           </Route>
         </Route>
 

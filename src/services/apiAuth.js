@@ -1,4 +1,3 @@
-import axios from "axios";
 import apiClient from "../utils/axiosConfig.js";
 
 /* Register user */
@@ -17,10 +16,11 @@ export const registerUser = async ({ email, password, fullName }) => {
 };
 
 /* Verify OTP */
-export const verifyOtpApi = async ({ data, otp }) => {
+export const verifyOtpApi = async ({ data, subscription, otp }) => {
   try {
     const res = await apiClient.post("/auth/verify-user", {
       ...data,
+      subscription,
       otp: otp.join(""),
     });
     return res.data;

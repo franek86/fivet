@@ -2,17 +2,18 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Button from "./ui/Button.jsx";
 import PremiumSticker from "./ui/PremiumSticker.jsx";
+import { useUser } from "../hooks/useAuth.js";
 
 const cardData = [
   {
-    title: "Starter plan",
+    title: "Standard plan",
     subTitle: "Perfect for starter, small business and personal use.",
     content: {
       price: 2.99,
       currency: "€",
       description: "Description here",
     },
-    subscription: "STARTER",
+    subscription: "STANDARD",
   },
 
   {
@@ -29,8 +30,8 @@ const cardData = [
 
 const Wrapper = styled.div`
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+
   gap: 2rem;
   margin-top: 4rem;
 `;
@@ -86,15 +87,14 @@ const Card = styled.div`
   padding-bottom: 3rem;
 `;
 
-export default function BillingCard({ planUrlParam }) {
-  const userId = useSelector((state) => state.auth?.user?.id);
+export default function BillingCard() {
   const userSubscription = useSelector((state) => state.auth?.subscription);
 
-  const handleSubscribe = async (plan) => {
+  const handleSubscribe = async () => {
     const res = await fetch("http://localhost:5000/stripe/create-checkout-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, plan }),
+      body: JSON.stringify({ userId }),
     });
 
     const data = await res.json();
@@ -106,17 +106,13 @@ export default function BillingCard({ planUrlParam }) {
     }
   };
 
-  const displayPlans = planUrlParam ? cardData.filter((plan) => plan.subscription === planUrlParam) : cardData;
-
-  console.log(displayPlans);
   return (
     <Wrapper>
-      {displayPlans?.map((d) => {
+      {cardData?.map((d) => {
         const isCurrent = userSubscription === d.subscription;
-        const shouldDisable = !planUrlParam && isCurrent;
 
         return (
-          <Card key={d.subscription} $disabled={shouldDisable}>
+          <Card key={d.subscription} $disabled={isCurrent}>
             <CardHeader>
               {isCurrent && <CurrentSticker>Current plan</CurrentSticker>}
               {d.subscription === "PREMIUM" && userSubscription !== "PREMIUM" && <PremiumSticker text='Upgrade now' />}
@@ -127,8 +123,8 @@ export default function BillingCard({ planUrlParam }) {
               </CardPrice>
             </CardHeader>
             <CardContent>{d.content.description}</CardContent>
-            <Button $size='medium' onClick={() => handleSubscribe(`${d.subscription}`)}>
-              {d.subscription} Plan - {planUrlParam}
+            <Button disabled={isCurrent} $size='medium' onClick={() => handleSubscribe(`${d.subscription}`)}>
+              {d.subscription} Plan
             </Button>
           </Card>
         );

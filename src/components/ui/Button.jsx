@@ -9,18 +9,20 @@ const sizes = {
   `,
   medium: css`
     font-size: 1.4rem;
-    padding: 1rem 1.2rem;
+    padding: 1rem 1.4rem;
   `,
 };
 
 const variations = {
   primary: css`
     color: var(--color-brand-50);
-    background-color: var(--color-brand-500);
+    background: var(--bg-linear-gradient);
     font-weight: 600;
+    box-shadow: var(--shadow-md);
     transition: all 0.3s ease-in-out;
     &:hover {
-      background-color: var(--color-brand-700);
+      background: var(--bg-linear-gradient-soft);
+      color: var(--color-grey-700);
     }
   `,
   secondary: css`
@@ -45,6 +47,8 @@ const variations = {
   danger: css`
     color: var(--color-red-100);
     background: var(--color-red-700);
+    gap: 4px;
+    font-size: 1.2rem;
 
     &:hover {
       color: var(--color-red-700);
@@ -54,7 +58,9 @@ const variations = {
   icon: css`
     width: 100%;
     gap: 0.75rem;
+    font-size: 1.3rem;
     background-color: transparent;
+    justify-content: space-between;
 
     &:hover {
       background-color: var(--color-brand-200);

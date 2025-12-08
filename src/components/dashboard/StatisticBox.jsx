@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 
-import { FaUsers, FaShip, FaCalendarAlt } from "react-icons/fa";
 import StatisticCard from "../ui/StatisticCard.jsx";
 
 import { useDashboardStatistic } from "../../hooks/useDashboardStatistic.js";
+import { CalendarDays, Ship, Users } from "lucide-react";
 
 const StatisticBoxWrap = styled.div`
   display: grid;
@@ -24,9 +24,9 @@ function StatisticBox() {
 
   return (
     <StatisticBoxWrap>
-      <StatisticCard iconColor='#15803d' icon={<FaUsers />} text='Total users' data={data?.totalUsers} />
-      <StatisticCard iconColor='#0369a1' icon={<FaShip />} text='Total ships' data={data?.totalShips} />
-      <StatisticCard iconColor='#4338ca' icon={<FaCalendarAlt />} text='Events' data={data?.totalEvents} />
+      <StatisticCard iconColor='#15803d' icon={<Users />} text='Total users' data={data?.totalUsers} />
+      <StatisticCard iconColor='#0369a1' icon={<Ship />} text='Total ships' data={data?.totalShips} />
+      <StatisticCard iconColor='#4338ca' icon={<CalendarDays />} text='Events' data={data?.totalEvents} />
     </StatisticBoxWrap>
   );
 }

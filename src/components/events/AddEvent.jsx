@@ -1,7 +1,6 @@
 import { useDispatch } from "react-redux";
 import Button from "../ui/Button.jsx";
-import Modal from "../Modal.jsx";
-import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
+
 import FormEvent from "./FormEvent.jsx";
 import Drawer from "../ui/Drawer.jsx";
 import { setIsDrawerOpen } from "../../slices/uiSlice.js";

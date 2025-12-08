@@ -6,10 +6,17 @@ import EmptyState from "../EmptyState.jsx";
 import Button from "../ui/Button.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 
-import { LuTrash2 } from "react-icons/lu";
-
 import { useDeleteAddressBook, useGetAddressBook } from "../../hooks/useAddressBook.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
+import { Trash2 } from "lucide-react";
+import styled from "styled-components";
+
+const Header = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  margin-top: 2.8rem;
+`;
 
 function AddressBookTable() {
   const { data, isLoading, isError, isFetching } = useGetAddressBook();
@@ -40,18 +47,20 @@ function AddressBookTable() {
 
   if (dataLength < 1) return <EmptyState message='Your address book is empty.' />;
   return (
-    <>
+    <Header>
       {selected.length > 0 && (
         <div>
           <Button $variation='danger' onClick={handleDeleteSelected}>
-            <LuTrash2 />
-            Delete {selected.length} item
-            {selected.length > 1 ? "s" : ""}
+            <Trash2 size={14} />
+            <div>
+              Delete {selected.length} item
+              {selected.length > 1 ? "s" : ""}
+            </div>
           </Button>
         </div>
       )}
       {isFetching ? <TablePlaceholder count={dataLength} /> : <CustomTable columns={tableColumns} renderRow={renderRow} data={data} />}
-    </>
+    </Header>
   );
 }
 

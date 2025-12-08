@@ -1,5 +1,4 @@
 import { useDispatch } from "react-redux";
-import { LuPencil, LuTrash2 } from "react-icons/lu";
 
 import Button from "../ui/Button.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
@@ -10,7 +9,7 @@ import ConfirmDialog from "../ConfirmDialog.jsx";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { customFormatDate } from "../../utils/formatDate.js";
 import styled from "styled-components";
-import { color } from "framer-motion";
+import { Pencil, Trash2 } from "lucide-react";
 
 const Status = styled.span`
   background-color: ${({ $status }) => {
@@ -20,7 +19,7 @@ const Status = styled.span`
       case "FAILED":
         return "#b91c1c";
       case "CANCELED":
-        return "#a16207";
+        return "#6b7280";
       default:
         return "#fff";
     }
@@ -28,7 +27,13 @@ const Status = styled.span`
   color: var(--color-grey-0);
   display: inline-block;
   padding: 0.5rem;
-  border-radius: var(--border-radius-md);
+  width: 100%;
+  font-size: 1.3rem;
+`;
+
+const P = styled.div`
+  text-align: start;
+  width: 100%;
 `;
 
 function PaymentColumn({ data, selected, onCheckboxChange }) {
@@ -51,12 +56,12 @@ function PaymentColumn({ data, selected, onCheckboxChange }) {
       <td>
         <Dropdown>
           <Button $variation='icon' onClick={() => dispatch(openModalByName(`edit-${id}`))}>
-            <LuPencil />
-            Edit
+            <Pencil size={18} />
+            <P>Edit</P>
           </Button>
           <Button $variation='icon' onClick={() => dispatch(openModalByName(id))}>
-            <LuTrash2 />
-            Delete
+            <Trash2 size={18} />
+            <P>Delete</P>
           </Button>
         </Dropdown>
       </td>

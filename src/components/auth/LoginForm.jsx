@@ -10,11 +10,11 @@ import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import ToggleSwitch from "../ui/ToggleSwitch.jsx";
-import { FiEyeOff, FiEye } from "react-icons/fi";
 
 import { loginSchema } from "../../utils/validationSchema.js";
 import { loginApi } from "../../services/apiAuth.js";
 import { handleApiError } from "../../utils/handleApiError.js";
+import { Eye, EyeClosed } from "lucide-react";
 
 const Form = styled.form`
   display: grid;
@@ -75,33 +75,37 @@ function LoginForm() {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <Input
-        directions='column'
-        placeholder='Email address'
-        label='Email *'
-        name='email'
-        register={register}
-        {...register("email")}
-        autoComplete='email'
-      />
-      <InputErrorMessage message={errors.email?.message} />
-      <PasswordWrap>
+      <div>
         <Input
           directions='column'
-          type={showPassword ? "text" : "password"}
-          placeholder='Password'
-          label='Password *'
-          name='password'
+          placeholder='Enter your email'
+          label='Email *'
+          name='email'
           register={register}
-          {...register("password")}
-          autoComplete='password'
+          {...register("email")}
+          autoComplete='email'
         />
-        <PasswordIcon onClick={() => setShowPassword(!showPassword)}>
-          {showPassword ? <FiEyeOff size={22} /> : <FiEye size={22} />}
-        </PasswordIcon>
-      </PasswordWrap>
+        <InputErrorMessage message={errors.email?.message} />
+      </div>
+      <div>
+        <PasswordWrap>
+          <Input
+            directions='column'
+            type={showPassword ? "text" : "password"}
+            placeholder='Enter your password'
+            label='Password *'
+            name='password'
+            register={register}
+            {...register("password")}
+            autoComplete='password'
+          />
+          <PasswordIcon onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <EyeClosed className='input-icon' size={20} /> : <Eye className='input-icon' size={20} />}
+          </PasswordIcon>
+        </PasswordWrap>
 
-      <InputErrorMessage message={errors.password?.message} />
+        <InputErrorMessage message={errors.password?.message} />
+      </div>
 
       <RemberMeWrap>
         <Controller

@@ -1,5 +1,6 @@
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { LuChevronDown } from "react-icons/lu";
+
 import styled from "styled-components";
 
 const AccordionItem = styled.section`
@@ -41,7 +42,7 @@ const AccordionBody = styled.main`
   transition: max-height 0.4s ease-in-out, opacity 0.5s ease-in-out, padding 0.5s ease-in-out;
 `;
 
-const StyledChevron = styled(LuChevronDown)`
+const StyledChevron = styled(ChevronDown)`
   height: 2rem;
   width: 2rem;
   color: var(--color-brand-500);

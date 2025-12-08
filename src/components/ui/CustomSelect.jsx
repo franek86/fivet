@@ -3,9 +3,10 @@ import { forwardRef, useEffect, useRef, useState } from "react";
 import { useController } from "react-hook-form";
 import Label from "./Label.jsx";
 import styled, { css } from "styled-components";
-import { LuChevronDown, LuChevronUp } from "react-icons/lu";
-import { closeDropdown, toggleDropdownByName, toggleDropdown } from "../../slices/uiSlice.js";
+
+import { toggleDropdownByName } from "../../slices/uiSlice.js";
 import { adjustDropdownAlignment } from "../../utils/isOverflowRight.js";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const sizes = {
   small: css`
@@ -24,7 +25,7 @@ const sizes = {
 const variations = {
   primary: css`
     border: 1px solid var(--color-brand-500);
-    background-color: var(--color-brand-500);
+    background: var(--bg-linear-gradient);
     color: var(--color-grey-0);
   `,
   transparent: css`
@@ -61,18 +62,20 @@ const SelectDropdown = styled.div`
   border: 1px solid var(--color-grey-200);
   padding: 1.25rem 0;
   border-radius: var(--border-radius-sm);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   z-index: 2;
 `;
 
 const SelectOption = styled.div`
   padding: 1.2rem;
   border-radius: var(--border-radius-sm);
-  background-color: ${(props) => (props.$selected ? "var(--color-brand-200)" : "var(--color-grey-100)")};
+  background: ${(props) => (props.$selected ? "var(--bg-linear-gradient)" : "var(--color-grey-100)")};
+  color: ${(props) => (props.$selected ? "var(--color-grey-50)" : "var(--color-grey-700)")};
+
   cursor: pointer;
 
   &:hover {
-    background-color: var(--color-brand-200);
+    background: var(--bg-linear-gradient-soft);
   }
 `;
 
@@ -123,7 +126,7 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, directio
 
       <Select ref={triggerRef} onClick={() => dispatch(toggleDropdownByName(name))} $size={size} $variation={variation}>
         {selectedOption ? selectedOption.name : "Select item"}
-        {openedSelect ? <LuChevronUp /> : <LuChevronDown />}
+        {openedSelect ? <ChevronUp /> : <ChevronDown />}
       </Select>
 
       {openedSelect && (

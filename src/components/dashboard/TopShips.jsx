@@ -2,8 +2,8 @@ import { Link } from "react-router";
 import styled from "styled-components";
 import { useDashboardStatistic } from "../../hooks/useDashboardStatistic.js";
 
-import { FaRegEye } from "react-icons/fa";
 import { formatedPrice } from "../../utils/formattedPrice.js";
+import { Eye } from "lucide-react";
 
 const Container = styled.section`
   display: flex;
@@ -80,7 +80,7 @@ function TopShips() {
           <p>{ship.imo}</p>
           <p>{formatedPrice(ship.price)}</p>
           <Views to={`/ships/${ship.id}`}>
-            <FaRegEye />
+            <Eye />
             {ship.clicks}
           </Views>
         </Wrapper>

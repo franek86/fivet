@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { MdSearch } from "react-icons/md";
+
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchTerm } from "../slices/searchSlice.js";
 import { useLocation, useNavigate } from "react-router";
+import { Search } from "lucide-react";
 
 const SearchWrap = styled.div`
   background-color: var(--color-grey-50);
@@ -18,7 +19,7 @@ const SearchWrap = styled.div`
   }
 `;
 
-const SearchIcon = styled(MdSearch)`
+const SearchIcon = styled(Search)`
   position: absolute;
   right: 1rem;
   top: 50%;

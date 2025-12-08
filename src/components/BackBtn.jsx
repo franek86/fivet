@@ -1,12 +1,12 @@
 import Button from "./ui/Button.jsx";
-import { LuChevronLeft } from "react-icons/lu";
 import { useNavigate } from "react-router";
+import { ChevronLeft } from "lucide-react";
 
 function BackBtn() {
   const navigate = useNavigate();
   return (
     <Button onClick={() => navigate(-1)}>
-      <LuChevronLeft />
+      <ChevronLeft size={20} />
       Back
     </Button>
   );

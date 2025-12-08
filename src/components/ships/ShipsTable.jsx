@@ -14,13 +14,12 @@ import Sort from "../ui/Sort.jsx";
 import Button from "../ui/Button.jsx";
 
 import styled from "styled-components";
-import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-import { LuTrash2 } from "react-icons/lu";
 
 import { useShips } from "../../hooks/ships/useShips.js";
 import { setSearchTerm } from "../../slices/searchSlice.js";
 import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
+import { ChevronDown, ChevronUp, SlidersHorizontal, Trash2 } from "lucide-react";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -38,10 +37,19 @@ const P = styled.p`
 `;
 
 const ShipFilters = styled.div`
-  background-color: var(--color-brand-500);
-  color: var(--color-grey-0);
-  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   cursor: pointer;
+
+  div {
+    display: flex;
+    font-size: 1.5rem;
+  }
+
+  &:hover {
+    opacity: 0.6;
+  }
 `;
 
 const ShipFiltersDropdown = styled.div`
@@ -77,16 +85,16 @@ const ButtonStyle = styled.div`
   padding: 0.7rem;
   font-weight: 600;
   font-size: 1.3rem;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
 `;
 
 const FilterButton = styled(ButtonStyle)`
-  background-color: var(--color-brand-200);
+  background: var(--bg-linear-gradient);
+  color: var(--color-grey-50);
   &:hover {
-    background-color: var(--color-brand-600);
-    color: var(--color-grey-100);
+    background: var(--bg-linear-gradient-soft);
+    color: var(--color-grey-700);
   }
 `;
 
@@ -218,18 +226,21 @@ function ShipsTable() {
     <>
       <FlexWrapper>
         <ShipFilters onClick={() => setToggleFilter(!toggleFilter)}>
-          <Button $variation='icon'>
+          <SlidersHorizontal size={25} />
+          <div>
             Filters
-            {toggleFilter ? <FiChevronUp /> : <FiChevronDown />}
-          </Button>
+            {toggleFilter ? <ChevronUp /> : <ChevronDown />}
+          </div>
         </ShipFilters>
         <Sort items={sortItems} label='Sort by:' />
         {selected.length > 0 && (
           <div>
             <Button $variation='danger' onClick={handleDeleteSelected}>
-              <LuTrash2 />
-              Delete {selected.length} item
-              {selected.length > 1 ? "s" : ""}
+              <Trash2 size={14} />
+              <div>
+                Delete {selected.length} item
+                {selected.length > 1 ? "s" : ""}
+              </div>
             </Button>
           </div>
         )}

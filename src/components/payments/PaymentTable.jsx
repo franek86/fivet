@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { LuTrash2 } from "react-icons/lu";
 
 import EmptyState from "../EmptyState.jsx";
 import Pagination from "../Pagination.jsx";
@@ -12,11 +11,13 @@ import Button from "../ui/Button.jsx";
 
 import { useGetPayments } from "../../hooks/usePayments.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
+import { Trash2 } from "lucide-react";
 
 const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 2.8rem;
 `;
 
 function PaymentTable() {
@@ -56,9 +57,11 @@ function PaymentTable() {
         {selected.length > 0 && (
           <div>
             <Button $variation='danger' onClick={handleDeleteSelected} className='flex items-center gap-2'>
-              <LuTrash2 />
-              Delete {selected.length} item
-              {selected.length > 1 ? "s" : ""}
+              <Trash2 size={14} />
+              <div>
+                Delete {selected.length} item
+                {selected.length > 1 ? "s" : ""}
+              </div>
             </Button>
           </div>
         )}

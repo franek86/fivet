@@ -1,5 +1,5 @@
+import { Check } from "lucide-react";
 import styled from "styled-components";
-import { MdOutlineCheck } from "react-icons/md";
 
 const StyledCheckbox = styled.div`
   display: flex;
@@ -26,7 +26,7 @@ const StyledCheckmark = styled.div`
   transition: all 0.3s ease;
 `;
 
-const StyledIconCheckmark = styled(MdOutlineCheck)`
+const StyledIconCheckmark = styled(Check)`
   display: ${(props) => (props.$checked ? "block" : "none")};
 `;
 

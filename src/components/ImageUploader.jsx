@@ -3,8 +3,7 @@ import styled from "styled-components";
 
 import Label from "./ui/Label.jsx";
 
-import { LuCircleX } from "react-icons/lu";
-import { LuImageDown } from "react-icons/lu";
+import { CircleX, ImageDown } from "lucide-react";
 
 const ImageUploadContainer = styled.section`
   height: 16rem;
@@ -37,12 +36,12 @@ const StyledImageUpload = styled.div`
   }
 `;
 
-const StyledIcon = styled(LuImageDown)`
+const StyledIcon = styled(ImageDown)`
   width: 3rem;
   height: 3rem;
 `;
 
-const StyledIconClose = styled(LuCircleX)`
+const StyledIconClose = styled(CircleX)`
   position: absolute;
   top: -20px;
   right: -20px;

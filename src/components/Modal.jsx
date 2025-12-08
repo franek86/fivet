@@ -1,6 +1,6 @@
+import { X } from "lucide-react";
 import { createPortal } from "react-dom";
 
-import { TfiClose } from "react-icons/tfi";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 
@@ -67,7 +67,7 @@ function Modal({ children, onClose, name }) {
       <StyledOverlay onClick={onClose}></StyledOverlay>
       <StyledModal>
         <Button onClick={onClose}>
-          <TfiClose />
+          <X />
         </Button>
         {children}
       </StyledModal>

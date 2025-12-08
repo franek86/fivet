@@ -4,11 +4,12 @@ import { useDispatch } from "react-redux";
 import Spinner from "../Spinner.jsx";
 import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
-import { FaUserCircle } from "react-icons/fa";
+
 import { customFormatDate } from "../../utils/formatDate.js";
 
 import { useDeleteUserProfile, useGetAllUserProfile } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
+import { CircleUser } from "lucide-react";
 
 const CardWrap = styled.div`
   display: grid;
@@ -150,7 +151,7 @@ function UserProfileList() {
           : data.map((item) => (
               <Card key={item.id}>
                 <CardTop>
-                  {item.avatar ? <CardImage src={item.avatar} alt={item.fullName} /> : <FaUserCircle size={40} />}
+                  {item.avatar ? <CardImage src={item.avatar} alt={item.fullName} /> : <CircleUser size={40} />}
                   <CardContent>
                     <strong>{item.fullName}</strong>
                     <Link href={`mailto:${item.email}`}>{item.email}</Link>

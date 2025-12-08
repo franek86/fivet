@@ -8,6 +8,7 @@ import Logout from "./Logout.jsx";
 const Aside = styled.aside`
   display: flex;
   flex-direction: column;
+  background-color: var(--color-grey-50);
 `;
 
 const AsideWrapperBottom = styled.div`

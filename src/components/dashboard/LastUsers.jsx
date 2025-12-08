@@ -2,8 +2,7 @@ import { Link } from "react-router";
 import styled from "styled-components";
 import { useGetAllUserProfile } from "../../hooks/useProfile.js";
 import { customFormatDate } from "../../utils/formatDate.js";
-
-import { FaUserCircle } from "react-icons/fa";
+import { CircleUser } from "lucide-react";
 
 const Container = styled.section`
   display: flex;
@@ -52,7 +51,7 @@ function LastUsers() {
       <h3>Last users</h3>
       {data?.map((user) => (
         <Box key={user.id}>
-          {user.avatar ? <Image src={user.avatar} alt={user.fullName} /> : <FaUserCircle size={60} />}
+          {user.avatar ? <Image src={user.avatar} alt={user.fullName} /> : <CircleUser size={60} />}
           <BoxContent>
             <strong>{user.fullName}</strong>
             <Link href={`mailto:${user.email}`}>{user.email}</Link>

@@ -1,8 +1,7 @@
 import { useSearchParams } from "react-router";
 import styled from "styled-components";
 import { MAX_PAGE_BUTTONS, PAGE_SIZE } from "../utils/constants.js";
-
-import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const SytledSection = styled.section`
   display: flex;
@@ -105,7 +104,7 @@ function Pagination({ count }) {
         <span>{currentPage === pageCount ? count : currentPage * PAGE_SIZE}</span> of <span>{count}</span>
       </P>
       <SytledButton onClick={prevPage} disabled={currentPage === 1}>
-        <LuChevronLeft />
+        <ChevronLeft />
         Previous
       </SytledButton>
 
@@ -123,7 +122,7 @@ function Pagination({ count }) {
 
       <SytledButton onClick={nextPage} disabled={currentPage === pageCount}>
         Next
-        <LuChevronRight />
+        <ChevronRight />
       </SytledButton>
     </SytledSection>
   );

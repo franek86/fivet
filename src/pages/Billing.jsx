@@ -2,8 +2,9 @@ import { useSelector } from "react-redux";
 import Title from "../components/ui/Title.jsx";
 import styled from "styled-components";
 import BillingCard from "../components/BillingCard.jsx";
-import { LuChevronLeft } from "react-icons/lu";
+
 import { useNavigate } from "react-router";
+import { ChevronLeft } from "lucide-react";
 
 const Container = styled.div`
   max-width: 720px;
@@ -55,7 +56,7 @@ function Billing() {
         </div>
         {subscription && (
           <Back onClick={() => navigate("/dashboard")}>
-            <LuChevronLeft />
+            <ChevronLeft />
             Back
           </Back>
         )}

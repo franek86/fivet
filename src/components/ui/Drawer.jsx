@@ -1,8 +1,9 @@
 import { createPortal } from "react-dom";
-import { MdClose } from "react-icons/md";
+
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { setIsDrawerClose } from "../../slices/uiSlice.js";
+import { X } from "lucide-react";
 
 const Overlay = styled.div`
   position: fixed;
@@ -64,7 +65,7 @@ function Drawer({ position = "right", children }) {
       <Overlay $position={position} $open={isOpen} onClick={() => dispatch(setIsDrawerClose())} />
       <Wrapper $position={position} $open={isOpen}>
         <Header>
-          <MdClose size={30} onClick={() => dispatch(setIsDrawerClose())} />
+          <X size={30} onClick={() => dispatch(setIsDrawerClose())} />
         </Header>
         <Content>{children}</Content>
       </Wrapper>

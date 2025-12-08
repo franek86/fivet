@@ -7,7 +7,6 @@ import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import Title from "../ui/Title.jsx";
-import { FiEyeOff, FiEye } from "react-icons/fi";
 
 import styled from "styled-components";
 import { toast } from "react-toastify";
@@ -15,6 +14,7 @@ import { toast } from "react-toastify";
 import { registerUser, verifyOtpApi } from "../../services/apiAuth.js";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../slices/authSlice.js";
+import { Eye, EyeClosed } from "lucide-react";
 
 const FormWrapper = styled.form`
   display: flex;
@@ -168,17 +168,20 @@ function SignUpForm() {
           <Column>
             <Input
               directions='column'
-              label='Full name *'
+              label='Name *'
+              placeholder='Enter your name'
               register={register}
               {...register("fullName", { required: "Full name is required" })}
               autoComplete='fullName'
             />
+
             <InputErrorMessage message={errors.fullName?.message} />
           </Column>
           <Column>
             <Input
               directions='column'
               label='Email *'
+              placeholder='Enter your email'
               register={register}
               {...register("email", {
                 required: "Email is required",
@@ -196,6 +199,7 @@ function SignUpForm() {
               <Input
                 directions='column'
                 label='Password *'
+                placeholder='Enter your password'
                 type={showPassword ? "text" : "password"}
                 register={register}
                 {...register("password", {
@@ -204,8 +208,9 @@ function SignUpForm() {
                 })}
                 autoComplete='password'
               />
+
               <PasswordIcon onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? <FiEyeOff size={22} /> : <FiEye size={22} />}
+                {showPassword ? <EyeClosed className='input-icon' size={20} /> : <Eye className='input-icon' size={20} />}
               </PasswordIcon>
             </PasswordWrap>
             <InputErrorMessage message={errors.password?.message} />
@@ -215,6 +220,7 @@ function SignUpForm() {
               directions='column'
               type='password'
               label='Repeat password *'
+              placeholder='Repeat your password'
               register={register}
               {...register("repeatPassword", {
                 required: "Please repeat password",

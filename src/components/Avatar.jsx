@@ -1,8 +1,8 @@
-import { RxAvatar } from "react-icons/rx";
 import styled from "styled-components";
 
 import { useUser } from "../hooks/useAuth.js";
 import Spinner from "./Spinner.jsx";
+import { CircleUserRound } from "lucide-react";
 
 const StyledAvatar = styled.div`
   display: flex;
@@ -50,7 +50,7 @@ function Avatar() {
         <StyledImageAvatar src={avatar} />
       ) : (
         <StyledNoAvatar>
-          <RxAvatar size={50} />
+          <CircleUserRound size={50} />
         </StyledNoAvatar>
       )}
       <StyledName>Welcome {fullName ? fullName : <p>User</p>}</StyledName>

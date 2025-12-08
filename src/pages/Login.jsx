@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router";
+
 import styled from "styled-components";
 
 import Title from "../components/ui/Title.jsx";
@@ -13,6 +14,8 @@ const FormWrap = styled.div`
   box-shadow: var(--shadow-lg);
   width: 100%;
   text-align: center;
+  background-color: var(--color-grey-50);
+  border-radius: var(--border-radius-md);
 `;
 
 const TextWrap = styled.p`

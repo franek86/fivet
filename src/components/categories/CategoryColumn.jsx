@@ -1,16 +1,19 @@
+import styled from "styled-components";
 import Dropdown from "../ui/Dropdown.jsx";
 import Button from "../ui/Button.jsx";
 import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 import CreateCategoryForm from "./CreateCategoryForm.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
-
-import { LuTrash2 } from "react-icons/lu";
-import { LuPencil } from "react-icons/lu";
-
 import { useDeleteCategory } from "../../hooks/categories/useDeleteCategory.js";
 import { useDispatch } from "react-redux";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
+import { Pencil, Trash2 } from "lucide-react";
+
+const P = styled.div`
+  text-align: start;
+  width: 100%;
+`;
 
 function CategoryColumn({ category, selectedCat, onCheckboxChange }) {
   const { id: categoryId, name, description } = category;
@@ -27,12 +30,12 @@ function CategoryColumn({ category, selectedCat, onCheckboxChange }) {
       <td>
         <Dropdown>
           <Button $variation='icon' onClick={() => dispatch(openModalByName(`edit-${categoryId}`))}>
-            <LuPencil />
-            Edit
+            <Pencil size={18} />
+            <P>Edit</P>
           </Button>
           <Button $variation='icon' onClick={() => dispatch(openModalByName(categoryId))}>
-            <LuTrash2 />
-            Delete
+            <Trash2 size={18} />
+            <P>Delete</P>
           </Button>
         </Dropdown>
       </td>

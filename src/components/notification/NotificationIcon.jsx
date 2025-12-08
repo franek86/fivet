@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { IoMdNotifications } from "react-icons/io";
 import styled from "styled-components";
 
 import { toggleDropdown } from "../../slices/uiSlice.js";
+import { Bell } from "lucide-react";
 
 const Wrapper = styled.div`
   position: relative;
@@ -80,7 +80,7 @@ export default function NotificationIcon() {
 
   return (
     <Wrapper ref={dropdownRef}>
-      <IoMdNotifications size={25} onClick={() => dispatch(toggleDropdown())} />
+      <Bell size={25} onClick={() => dispatch(toggleDropdown())} />
       {unreadCount > 0 && <Count>{unreadCount}</Count>}
 
       {isToggleDropdown && (

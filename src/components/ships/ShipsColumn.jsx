@@ -10,13 +10,12 @@ import Checkbox from "../ui/Checkbox.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 
-import { LuPencil, LuTrash2, LuEye } from "react-icons/lu";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
 import { formatedPrice } from "../../utils/formattedPrice.js";
 import { usePublishShip } from "../../hooks/ships/usePublishShip.js";
-import socket from "../../shared/socket.js";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 const StyledImage = styled.img`
   width: 80px;
@@ -27,6 +26,11 @@ const ButtonInner = styled.div`
   display: flex;
   align-items: center;
   gap: 1rem;
+`;
+
+const P = styled.div`
+  text-align: start;
+  width: 100%;
 `;
 
 function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
@@ -90,23 +94,23 @@ function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
           <Button $variation='icon'>
             <Link to={`${shipId}`}>
               <ButtonInner>
-                <LuEye />
-                View
+                <Eye size={16} />
+                <P>View</P>
               </ButtonInner>
             </Link>
           </Button>
           <Button $variation='icon'>
             <Link to={`edit/${shipId}`}>
               <ButtonInner>
-                <LuPencil />
-                Edit
+                <Pencil size={16} />
+                <P>Edit</P>
               </ButtonInner>
             </Link>
           </Button>
           <Button $variation='icon' onClick={() => dispatch(openModalByName(shipId))}>
             <ButtonInner>
-              <LuTrash2 />
-              Delete
+              <Trash2 size={16} />
+              <P>Delete</P>
             </ButtonInner>
           </Button>
         </Dropdown>

@@ -10,8 +10,8 @@ import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import styled from "styled-components";
 import { resetPasswordApi } from "../../services/apiAuth.js";
 
-import { FiEyeOff, FiEye } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { Eye, EyeClosed } from "lucide-react";
 
 const Form = styled.form`
   display: flex;
@@ -73,7 +73,7 @@ function ResetPasswordForm({ email }) {
             autoComplete='password'
           />
           <PasswordIcon onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? <FiEyeOff size={22} /> : <FiEye size={22} />}
+            {showPassword ? <EyeClosed size={22} /> : <Eye size={22} />}
           </PasswordIcon>
         </PasswordWrap>
         <InputErrorMessage message={errors.password?.message} />

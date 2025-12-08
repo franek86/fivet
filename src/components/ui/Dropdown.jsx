@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { LuEllipsis } from "react-icons/lu";
+
 import styled from "styled-components";
 import { adjustDropdownAlignment } from "../../utils/isOverflowRight.js";
+import { Ellipsis } from "lucide-react";
 
 const WrapDropdown = styled.div`
   display: flex;
@@ -82,7 +83,7 @@ function Dropdown({ children, label }) {
 
   return (
     <WrapDropdown ref={triggerRef} onClick={handleClick}>
-      {label ?? <LuEllipsis />}
+      {label ?? <Ellipsis />}
       {isOpen && (
         <StyledDropdown ref={dropdownRef} $alignRight={alignRight} $position={position} style={{ top: position.y }}>
           {children}

@@ -7,8 +7,8 @@ const StyleLabel = styled.label`
   margin-bottom: 0.4rem;
 `;
 
-function Label({ children }) {
-  return <StyleLabel>{children}</StyleLabel>;
+function Label({ children, htmlFor }) {
+  return <StyleLabel htmlFor={htmlFor}>{children}</StyleLabel>;
 }
 
 export default Label;

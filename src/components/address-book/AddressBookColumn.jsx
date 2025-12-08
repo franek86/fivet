@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { LuChevronDown, LuEye, LuPencil, LuTrash2 } from "react-icons/lu";
 
 import Button from "../ui/Button.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
@@ -14,6 +13,7 @@ import styled from "styled-components";
 import useMediaQuery from "../../hooks/useMediaQuery.js";
 import { useDeleteAddressBook, useEditAddressBookPriority } from "../../hooks/useAddressBook.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
+import { ChevronDown, Eye, Pencil, Trash2 } from "lucide-react";
 
 const StyledPriority = styled.div`
   max-width: max-content;
@@ -36,6 +36,15 @@ const StyledDropdown = styled.form`
   text-align: center;
 `;
 
+const Flex = styled.div`
+  display: flex;
+`;
+
+const P = styled.div`
+  text-align: start;
+  width: 100%;
+`;
+
 function AddressBookColumn({ addressBook, selectedAddress, onCheckboxChange }) {
   const [visibleDropdown, setVisibleDropdown] = useState(false);
 
@@ -50,22 +59,22 @@ function AddressBookColumn({ addressBook, selectedAddress, onCheckboxChange }) {
 
   const editButton = (
     <Button $variation='icon' onClick={() => dispatch(openModalByName(`edit-${id}`))}>
-      <LuPencil />
-      Edit
+      <Pencil size={18} />
+      <P>Edit</P>
     </Button>
   );
 
   const deleteButton = (
     <Button $variation='icon' onClick={() => dispatch(openModalByName(id))}>
-      <LuTrash2 />
-      Delete
+      <Trash2 size={18} />
+      <P>Delete</P>
     </Button>
   );
 
   const viewButton = (
     <Button $variation='icon' onClick={() => dispatch(openModalByName(`view-${id}`))}>
-      <LuEye />
-      View
+      <Eye size={18} />
+      <P>View</P>
     </Button>
   );
 
@@ -86,9 +95,9 @@ function AddressBookColumn({ addressBook, selectedAddress, onCheckboxChange }) {
 
       <td className='table-td'>
         <StyledPriority $props={changePriority}>
-          <div onClick={() => setVisibleDropdown(!visibleDropdown)}>
-            {changePriority} <LuChevronDown />
-          </div>
+          <Flex onClick={() => setVisibleDropdown(!visibleDropdown)}>
+            {changePriority} <ChevronDown size={18} />
+          </Flex>
           {visibleDropdown && (
             <StyledDropdown onClick={handleOnClick}>{changePriority === "REGULAR" ? "Important" : "Regular"}</StyledDropdown>
           )}

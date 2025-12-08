@@ -2,7 +2,6 @@ import { useSearchParams } from "react-router";
 import { useSelector } from "react-redux";
 
 import styled from "styled-components";
-import { LuTrash2 } from "react-icons/lu";
 
 import Pagination from "../Pagination.jsx";
 import Spinner from "../Spinner.jsx";
@@ -17,11 +16,13 @@ import Checkbox from "../ui/Checkbox.jsx";
 import { useCategories } from "../../hooks/categories/useCategories.js";
 import { useDeleteCategory } from "../../hooks/categories/useDeleteCategory.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
+import { Trash2 } from "lucide-react";
 
 const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 2.8rem;
 `;
 
 function CategoryTable() {
@@ -87,9 +88,11 @@ function CategoryTable() {
         {selected.length > 0 && (
           <div>
             <Button $variation='danger' onClick={handleDeleteSelected} className='flex items-center gap-2'>
-              <LuTrash2 />
-              Delete {selected.length} item
-              {selected.length > 1 ? "s" : ""}
+              <Trash2 size={14} />
+              <div>
+                Delete {selected.length} item
+                {selected.length > 1 ? "s" : ""}
+              </div>
             </Button>
           </div>
         )}

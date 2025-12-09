@@ -12,7 +12,7 @@ import { Pencil, Trash2 } from "lucide-react";
 
 const P = styled.div`
   text-align: start;
-  width: 100%;
+  width: max-content;
 `;
 
 function CategoryColumn({ category, selectedCat, onCheckboxChange }) {

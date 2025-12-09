@@ -42,7 +42,7 @@ const Flex = styled.div`
 
 const P = styled.div`
   text-align: start;
-  width: 100%;
+  width: max-content;
 `;
 
 function AddressBookColumn({ addressBook, selectedAddress, onCheckboxChange }) {

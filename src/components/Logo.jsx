@@ -5,7 +5,7 @@ import styled from "styled-components";
 import NotificationIcon from "./notification/NotificationIcon.jsx";
 
 import { toggleNav } from "../slices/uiSlice.js";
-import { Menu, X } from "lucide-react";
+import { Menu, ShipWheelIcon, X } from "lucide-react";
 
 const LogoWrapper = styled.div`
   display: flex;
@@ -34,9 +34,24 @@ const LogoNotification = styled.div`
 `;
 
 const StyledLogo = styled.div`
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+`;
+
+const LogoIcon = styled.div`
+  background: var(--bg-linear-gradient);
+  display: flex;
+  padding: 1rem;
+  border-radius: 50%;
+`;
+
+const LogoText = styled.div`
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 600;
+  background: var(--bg-linear-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   @media screen and (min-width: 640px) {
     font-size: 3rem;
   }
@@ -60,7 +75,12 @@ function Logo() {
   return (
     <LogoWrapper>
       <LogoNotification>
-        <StyledLogo onClick={() => navigate("/dashboard")}>Fivet</StyledLogo>
+        <StyledLogo onClick={() => navigate("/dashboard")}>
+          <LogoIcon>
+            <ShipWheelIcon size={24} color='#ffffff' />
+          </LogoIcon>
+          <LogoText>Fivet</LogoText>
+        </StyledLogo>
         <NotificationIcon />
       </LogoNotification>
       <StyledBar onClick={() => dispatch(toggleNav())}>{isToggle ? <X size={25} /> : <Menu size={25} />}</StyledBar>

@@ -33,7 +33,7 @@ const Status = styled.span`
 
 const P = styled.div`
   text-align: start;
-  width: 100%;
+  width: max-content;
 `;
 
 function PaymentColumn({ data, selected, onCheckboxChange }) {

@@ -71,7 +71,7 @@ const ShipsForm = () => {
   const { data: singleShipData, isLoading, isError } = useShip(shipId);
   const { data: user } = useUser();
   const { mutate: submitData, isPending } = useCreateShip();
-  const { mutate: editShip } = useEditShip();
+  const { mutate: editShip, isPending: editPendingShip } = useEditShip();
 
   const schema = isEditSession ? editShipSchema : createShipSchema;
 
@@ -125,7 +125,7 @@ const ShipsForm = () => {
     } else {
       submitData(formData);
 
-      socket.emit("register_admin", userId);
+      socket.emit("register_admin", user?.id);
     }
   };
 
@@ -140,7 +140,7 @@ const ShipsForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Form>
-        <input type='hidden' {...register("userId")} value={user.id} />
+        {/*  <input type='hidden' {...register("userId")} value={user.id} /> */}
         {role === "ADMIN" && (
           <ColumnPublish>
             <Controller
@@ -350,7 +350,7 @@ const ShipsForm = () => {
       </Form>
 
       <Row>
-        {isEditSession ? <Button>{isPending ? "Loading..." : "Edit"}</Button> : <Button>{isPending ? "Loading..." : "Save"}</Button>}
+        {isEditSession ? <Button>{editPendingShip ? "Editing..." : "Edit"}</Button> : <Button>{isPending ? "Loading..." : "Save"}</Button>}
 
         {/* <Button $variation='third'>Draft</Button> */}
         <Button onClick={cancelEditBtn} $variation='secondary'>

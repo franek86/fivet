@@ -51,7 +51,7 @@ function LastUsers() {
       <h3>Last users</h3>
       {data?.map((user) => (
         <Box key={user.id}>
-          {user.avatar ? <Image src={user.avatar} alt={user.fullName} /> : <CircleUser size={60} />}
+          {user.avatar ? <Image src={user.avatar} alt={user.fullName} /> : <CircleUser size={60} color='#d1d5db' />}
           <BoxContent>
             <strong>{user.fullName}</strong>
             <Link href={`mailto:${user.email}`}>{user.email}</Link>

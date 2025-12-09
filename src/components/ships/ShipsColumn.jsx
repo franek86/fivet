@@ -30,7 +30,7 @@ const ButtonInner = styled.div`
 
 const P = styled.div`
   text-align: start;
-  width: 100%;
+  width: max-content;
 `;
 
 function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {

@@ -80,7 +80,7 @@ export default function NotificationIcon() {
 
   return (
     <Wrapper ref={dropdownRef}>
-      <Bell size={25} onClick={() => dispatch(toggleDropdown())} />
+      <Bell size={22} onClick={() => dispatch(toggleDropdown())} />
       {unreadCount > 0 && <Count>{unreadCount}</Count>}
 
       {isToggleDropdown && (

@@ -6,9 +6,13 @@ import Avatar from "./Avatar.jsx";
 import Logout from "./Logout.jsx";
 
 const Aside = styled.aside`
+  position: sticky;
+  left: 0;
+  top: 0;
   display: flex;
   flex-direction: column;
   background-color: var(--color-grey-50);
+  height: 100vh;
 `;
 
 const AsideWrapperBottom = styled.div`

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "react-router";
@@ -73,6 +73,10 @@ const ShipsForm = () => {
   const { mutate: submitData, isPending } = useCreateShip();
   const { mutate: editShip, isPending: editPendingShip } = useEditShip();
 
+  const [existingImages, setExistingImages] = useState(singleShipData?.imageIds || []);
+  const [newImages, setNewImages] = useState([]);
+  const [deleteImageIds, setDeleteImageIds] = useState([]);
+
   const schema = isEditSession ? editShipSchema : createShipSchema;
 
   const {
@@ -110,8 +114,11 @@ const ShipsForm = () => {
     }
 
     // Handle multiple images
-    if (data.images && data.images.length > 0) {
-      Array.from(data.images).forEach((img) => formData.append("images", img.file));
+    newImages.forEach((img) => formData.append("images", img.file));
+
+    // deleteImageIds = ["publicId1", "publicId2"]
+    if (deleteImageIds && deleteImageIds.length > 0) {
+      formData.append("deleteImageIds", JSON.stringify(deleteImageIds));
     }
 
     Object.entries(data).forEach(([key, value]) => {
@@ -140,7 +147,6 @@ const ShipsForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Form>
-        {/*  <input type='hidden' {...register("userId")} value={user.id} /> */}
         {role === "ADMIN" && (
           <ColumnPublish>
             <Controller
@@ -344,7 +350,17 @@ const ShipsForm = () => {
         </Column>
 
         <Column>
-          <MultipleImagesUploader name='images' value={watch("images")} onChange={(files) => setValue("images", files)} />
+          <MultipleImagesUploader
+            name='images'
+            existingImages={existingImages}
+            setExistingImages={setExistingImages}
+            newImages={newImages}
+            deleteImageIds={deleteImageIds}
+            onNewImagesChange={setNewImages}
+            onDeleteImageIdsChange={setDeleteImageIds}
+          />
+          {/*  <MultipleImagesUploader name='images' value={watch("images")} onChange={(files) => setValue("images", files)} />
+           */}
           <InputErrorMessage message={errors.images?.message} />
         </Column>
       </Form>

@@ -61,24 +61,40 @@ const HiddenInput = styled.input`
   display: none;
 `;
 
-const MultipleImagesUploader = ({ name, value = [], onChange }) => {
+const MultipleImagesUploader = ({
+  name,
+  existingImages = [],
+  setExistingImages,
+  newImages = [],
+  onNewImagesChange,
+  deleteImageIds = [],
+  onDeleteImageIdsChange,
+}) => {
   const inputRef = useRef();
 
+  /* Add new images */
   const handleSelectImages = (e) => {
     const files = Array.from(e.target.files);
-    const newImages = files.map((file) => ({
+    const formatted = files.map((file) => ({
       file,
       url: URL.createObjectURL(file),
     }));
 
-    const updated = [...value, ...newImages];
-
-    onChange(updated);
+    onNewImagesChange([...newImages, ...formatted]);
   };
 
-  const handleRemoveImage = (index) => {
-    const updated = value.filter((_, i) => i !== index);
-    onChange(updated);
+  /* Handle remove existing image */
+  const handleRemoveExistingImage = (publicId) => {
+    onDeleteImageIdsChange([...deleteImageIds, publicId]);
+
+    //Remove from UI preview
+    const updatedExisting = existingImages.filter((id) => id !== publicId);
+    setExistingImages(updatedExisting);
+  };
+
+  /* Remove a new image */
+  const handleRemoveNewImage = (index) => {
+    onNewImagesChange(newImages.filter((_, i) => i !== index));
   };
 
   return (
@@ -88,7 +104,37 @@ const MultipleImagesUploader = ({ name, value = [], onChange }) => {
       </UploadButton>
       <HiddenInput type='file' name={name} multiple ref={inputRef} onChange={handleSelectImages} />
 
-      {value.length > 0 && (
+      {/* == Existing Images == */}
+      {existingImages.length > 0 && (
+        <PreviewContainer>
+          {existingImages.map((publicId) => (
+            <PreviewImage key={publicId}>
+              <img src={`${import.meta.env.VITE_CLOUDINARY_URL}${publicId}.jpg`} alt={`preview-${publicId}`} />
+
+              <button type='button' onClick={() => handleRemoveExistingImage(publicId)}>
+                X
+              </button>
+            </PreviewImage>
+          ))}
+        </PreviewContainer>
+      )}
+
+      {/* == New Images == */}
+      {newImages.length > 0 && (
+        <PreviewContainer>
+          {newImages.map((img, index) => (
+            <PreviewImage key={index}>
+              <img src={img.url} alt={`preview-${img.publicId}`} />
+
+              <button type='button' onClick={() => handleRemoveNewImage(index)}>
+                X
+              </button>
+            </PreviewImage>
+          ))}
+        </PreviewContainer>
+      )}
+
+      {/*  {value.length > 0 && (
         <PreviewContainer>
           {value.map((img, index) => (
             <PreviewImage key={index}>
@@ -99,7 +145,7 @@ const MultipleImagesUploader = ({ name, value = [], onChange }) => {
             </PreviewImage>
           ))}
         </PreviewContainer>
-      )}
+      )} */}
     </UploadWrapper>
   );
 };

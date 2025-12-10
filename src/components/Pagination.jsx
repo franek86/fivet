@@ -15,27 +15,28 @@ const SytledButton = styled.button`
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: var(--color-brand-600);
+  background: var(--bg-linear-gradient);
   font-size: 1.25rem;
   font-weight: 600;
-  padding: 0.85rem 1.25rem;
-  color: var(--color-brand-200);
+  padding: 0.6rem 0.8rem;
+  color: var(--color-grey-50);
   border-radius: var(--border-radius-sm);
 
   &:hover {
-    background-color: var(--color-brand-200);
-    color: var(--color-brand-600);
+    background: var(--bg-linear-gradient-soft);
+    color: var(--color-grey-700);
   }
 
   &:disabled {
-    background-color: var(--color-grey-300);
+    background: var(--color-grey-300);
     color: var(--color-grey-400);
   }
 `;
 
 const StyledNumber = styled.button`
   background-color: ${(props) => (props.active ? "#c7d2fe" : "#4f46e5")};
-  font-size: 1.35rem;
+  font-size: 1.25rem;
+  line-height: 1.2;
   color: ${(props) => (props.active ? "#4f46e5" : "#c7d2fe")};
   padding: 0.6rem 0.8rem;
   border-radius: var(--border-radius-sm);
@@ -43,7 +44,7 @@ const StyledNumber = styled.button`
 `;
 
 const P = styled.p`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   & span {
     font-weight: 600;
   }
@@ -104,7 +105,7 @@ function Pagination({ count }) {
         <span>{currentPage === pageCount ? count : currentPage * PAGE_SIZE}</span> of <span>{count}</span>
       </P>
       <SytledButton onClick={prevPage} disabled={currentPage === 1}>
-        <ChevronLeft />
+        <ChevronLeft size={16} />
         Previous
       </SytledButton>
 
@@ -122,7 +123,7 @@ function Pagination({ count }) {
 
       <SytledButton onClick={nextPage} disabled={currentPage === pageCount}>
         Next
-        <ChevronRight />
+        <ChevronRight size={16} />
       </SytledButton>
     </SytledSection>
   );

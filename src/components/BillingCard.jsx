@@ -91,6 +91,7 @@ export default function BillingCard() {
   /*  const userSubscription = useSelector((state) => state.auth?.subscription);
   const userId = useSelector((state) => state.auth?.user.id); */
   const { data } = useUser();
+  console.log(data.id);
 
   const isActiveSubscription = data?.isActiveSubscription;
 
@@ -98,7 +99,7 @@ export default function BillingCard() {
     const res = await fetch("http://localhost:5000/stripe/create-checkout-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data?.id),
+      body: JSON.stringify({ userId: data?.id }),
     });
 
     const response = await res.json();

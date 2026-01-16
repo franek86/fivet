@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "react-router";
@@ -92,6 +92,19 @@ const ShipsForm = () => {
     resolver: zodResolver(schema),
   });
 
+  const shipNameWatch = watch("shipName", "");
+
+  useEffect(() => {
+    const slugify = shipNameWatch
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
+
+    setValue("slug", slugify);
+  }, [shipNameWatch, setValue]);
+
   useEffect(() => {
     if (singleShipData && isEditSession) {
       const normalizedImages = (singleShipData.images || []).map((img) => (typeof img === "string" ? { url: img } : img));
@@ -169,6 +182,18 @@ const ShipsForm = () => {
           />
           <InputErrorMessage message={errors.shipName?.message} />
         </Column>
+
+        <Column>
+          <Input
+            label='Slug *'
+            placeholder='e.g. ten-spirit'
+            directions='column'
+            register={register}
+            {...register("slug", { required: "SLug is required", onChange: () => (slugManuallyEdited.current = true) })}
+          />
+          <InputErrorMessage message={errors.slug?.message} />
+        </Column>
+
         <Column>
           <Input
             type='number'

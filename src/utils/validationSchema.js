@@ -25,6 +25,7 @@ const tagsPreprocess = (val) => {
 
 export const createShipSchema = z.object({
   shipName: z.string().min(1, "Ship name is required"),
+  slug: z.string().min(1, "Slug is required"),
   typeId: z.string().min(1, "Ship type is required"),
   imo: z.coerce.number({ invalid_type_error: "IMO must be a number" }).int().min(1, "IMO is required"),
   refitYear: z.coerce.number().optional(),

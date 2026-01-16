@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+/* import { useSelector } from "react-redux"; */
 import styled from "styled-components";
 import Button from "./ui/Button.jsx";
 import PremiumSticker from "./ui/PremiumSticker.jsx";
@@ -88,47 +88,79 @@ const Card = styled.div`
 `;
 
 export default function BillingCard() {
-  const userSubscription = useSelector((state) => state.auth?.subscription);
+  /*  const userSubscription = useSelector((state) => state.auth?.subscription);
+  const userId = useSelector((state) => state.auth?.user.id); */
+  const { data } = useUser();
+
+  const isActiveSubscription = data?.isActiveSubscription;
 
   const handleSubscribe = async () => {
     const res = await fetch("http://localhost:5000/stripe/create-checkout-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId }),
+      body: JSON.stringify(data?.id),
     });
 
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
+    const response = await res.json();
+    if (response.url) {
+      window.location.href = response.url;
     } else {
       alert("Error creating checkout session");
       console.error(data);
     }
   };
 
+  const CardPlaceholder = ({ items }) => {
+    const currentPlan = data?.subscription;
+    const hasActiveSub = Boolean(isActiveSubscription);
+    const hasPlan = Boolean(currentPlan);
+
+    return (
+      <>
+        {items.map((d) => {
+          const isCurrentPlan = currentPlan === d.subscription;
+
+          let isVisible = true;
+
+          if (!hasPlan) {
+            isVisible = true; // new user
+          } else if (!hasActiveSub) {
+            isVisible = isCurrentPlan; // unpaid → show current
+          } else {
+            isVisible = !isCurrentPlan; // paid → show other
+          }
+
+          if (!isVisible) return null;
+
+          return (
+            <Card key={d.subscription}>
+              <CardHeader>
+                {isCurrentPlan && !hasActiveSub && <CurrentSticker>Complete payment</CurrentSticker>}
+
+                {!isCurrentPlan && hasActiveSub && d.subscription === "PREMIUM" && <PremiumSticker text='Upgrade now' />}
+
+                <CardTitle>{d.title}</CardTitle>
+                <p>{d.subTitle}</p>
+                <CardPrice>
+                  {d.content.price} {d.content.currency}
+                </CardPrice>
+              </CardHeader>
+
+              <CardContent>{d.content.description}</CardContent>
+
+              <Button $size='medium' onClick={() => handleSubscribe(d.subscription)}>
+                {!hasActiveSub ? "Continue with payment" : `${d.subscription} PLAN`}
+              </Button>
+            </Card>
+          );
+        })}
+      </>
+    );
+  };
+
   return (
     <Wrapper>
-      {cardData?.map((d) => {
-        const isCurrent = userSubscription === d.subscription;
-
-        return (
-          <Card key={d.subscription} $disabled={isCurrent}>
-            <CardHeader>
-              {isCurrent && <CurrentSticker>Current plan</CurrentSticker>}
-              {d.subscription === "PREMIUM" && userSubscription !== "PREMIUM" && <PremiumSticker text='Upgrade now' />}
-              <CardTitle>{d.title}</CardTitle>
-              <p>{d.subTitle}</p>
-              <CardPrice>
-                {d.content.price} {d.content.currency}
-              </CardPrice>
-            </CardHeader>
-            <CardContent>{d.content.description}</CardContent>
-            <Button disabled={isCurrent} $size='medium' onClick={() => handleSubscribe(`${d.subscription}`)}>
-              {d.subscription} Plan
-            </Button>
-          </Card>
-        );
-      })}
+      <CardPlaceholder items={cardData} />
     </Wrapper>
   );
 }

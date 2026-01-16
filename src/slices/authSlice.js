@@ -4,7 +4,7 @@ const initialState = {
   user: null,
   role: "",
   isAuthenticated: false,
-  subscription: "STARTER",
+  subscription: "STANDARD",
 };
 
 const authSlice = createSlice({
@@ -14,7 +14,7 @@ const authSlice = createSlice({
     setUser: (state, action) => {
       state.user = action.payload.user;
       state.role = action.payload?.role || "USER";
-      state.subscription = action.payload?.subscription || "STARTER";
+      state.subscription = action.payload?.subscription || "STANDARD";
       state.isAuthenticated = true;
     },
     logoutUser: (state) => {

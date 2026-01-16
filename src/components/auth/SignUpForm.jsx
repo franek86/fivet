@@ -72,7 +72,7 @@ function SignUpForm() {
   const [showOtp, setShowOtp] = useState(false);
   const [resend, setResend] = useState(true);
   const [timer, setTimer] = useState(60);
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [userData, setUserData] = useState(null);
   const inputRefs = useRef([]);
 

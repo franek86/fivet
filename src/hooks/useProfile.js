@@ -27,12 +27,14 @@ export const useGetAllUserProfile = () => {
   const { data, isPending, isFetching, isError } = useQuery({
     queryKey: ["all-profile", search],
     queryFn: () => getAllProfileApi({ search }),
-    placeholderData: (previousData) => {
+    keepPreviousData: true,
+    /* placeholderData: (previousData) => {
       if (previousData && previousData.length > 0) {
         return Array.from({ length: previousData.length }, () => ({}));
       }
-    },
-    staleTime: 30 * 60 * 1000,
+    }, */
+
+    /* staleTime: 30 * 60 * 1000, */
   });
   return { data, isPending, isError, isFetching };
 };

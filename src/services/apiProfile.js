@@ -14,6 +14,17 @@ export const getAllProfileApi = async ({ search = "" }) => {
   }
 };
 
+/* Get last five created users */
+export const getLastFiveUsersApi = async () => {
+  try {
+    const res = await apiClient.get("profile/last-users");
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
 /* update profile  */
 export const updateProfileApi = async (updatedData, userId) => {
   if (!userId) throw new Error("User id does not exists.");

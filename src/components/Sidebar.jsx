@@ -12,7 +12,10 @@ const Aside = styled.aside`
   display: flex;
   flex-direction: column;
   background-color: var(--color-grey-50);
-  height: 100vh;
+
+  @media screen and (min-width: 640px) {
+    height: 100vh;
+  }
 `;
 
 const AsideWrapperBottom = styled.div`

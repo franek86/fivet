@@ -10,20 +10,15 @@ import { customFormatDate } from "../../utils/formatDate.js";
 import { useDeleteUserProfile, useGetAllUserProfile } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { CircleUser } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import socket from "../../shared/socket.js";
+import { useEffect } from "react";
 
 const CardWrap = styled.div`
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 2rem;
   margin-top: 4rem;
-
-  @media screen and (min-width: 640px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  @media screen and (min-width: 992px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 `;
 
 const Card = styled.article`
@@ -115,6 +110,30 @@ const CardContentPlaceholder = styled(CardContent)`
   animation: shimmer 1.5s infinite linear;
 `;
 
+const CardNameWrapp = styled("div")`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const ActiveUser = styled("div")`
+  display: flex;
+  align-items: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: ${({ $props }) => ($props ? "#15803d" : "#b91c1c")};
+
+  span {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.5rem;
+    display: flex;
+    background-color: ${({ $props }) => ($props ? "#15803d" : "#b91c1c")};
+    border-radius: 50%;
+  }
+`;
+
 // Placeholder component
 function UserProfileListPlaceholder() {
   return (
@@ -136,9 +155,33 @@ function UserProfileListPlaceholder() {
 }
 
 function UserProfileList() {
+  const queryClient = useQueryClient();
   const { data, isPending, isError, isFetching } = useGetAllUserProfile();
   const { mutate } = useDeleteUserProfile();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const handler = (onlineUsers) => {
+      const onlineIds = new Set(onlineUsers.map((u) => u.id));
+
+      queryClient.setQueriesData({ queryKey: ["all-profile"] }, (oldData) => {
+        if (!oldData) return oldData;
+
+        console.log(oldData);
+
+        return oldData.map((user) => ({
+          ...user,
+          isActive: onlineIds.has(user.id),
+        }));
+      });
+    };
+
+    socket.on("online-users", handler);
+
+    return () => {
+      socket.off("online-users", handler);
+    };
+  }, [queryClient]);
 
   if (isPending) return <Spinner />;
   if (isError) return <div>Error</div>;
@@ -151,14 +194,21 @@ function UserProfileList() {
           : data.map((item) => (
               <Card key={item.id}>
                 <CardTop>
-                  {item.avatar ? <CardImage src={item.avatar} alt={item.fullName} /> : <CircleUser size={40} />}
+                  {item.profile.avatar ? <CardImage src={item.profile.avatar} alt={item.fullName} /> : <CircleUser size={40} />}
                   <CardContent>
-                    <strong>{item.fullName}</strong>
+                    <CardNameWrapp>
+                      <strong>{item.fullName}</strong>
+                    </CardNameWrapp>
                     <Link href={`mailto:${item.email}`}>{item.email}</Link>
                     <DateWrapp>Created at {customFormatDate(item.createdAt)}</DateWrapp>
                   </CardContent>
                 </CardTop>
                 <CardBottom>
+                  <ActiveUser $props={item.isActive}>
+                    <span></span>
+                    {item.isActive ? "Online" : "Offline"}
+                  </ActiveUser>
+
                   {/*  <CardButtonEdit>Edit</CardButtonEdit> */}
                   <CardButtonDelete onClick={() => dispatch(openModalByName(item.id))}>Delete</CardButtonDelete>
                 </CardBottom>

@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { useGetAllUserProfile } from "../../hooks/useProfile.js";
 import { customFormatDate } from "../../utils/formatDate.js";
 import { CircleUser } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getLastFiveUsersApi } from "../../services/apiProfile.js";
 
 const Container = styled.section`
   display: flex;
@@ -42,7 +44,10 @@ const Date = styled.p`
 `;
 
 function LastUsers() {
-  const { data, isError } = useGetAllUserProfile();
+  const { data, isError } = useQuery({
+    queryKey: ["last-users"],
+    queryFn: () => getLastFiveUsersApi(),
+  });
 
   if (isError) return <div>Error</div>;
 
@@ -51,7 +56,7 @@ function LastUsers() {
       <h3>Last users</h3>
       {data?.map((user) => (
         <Box key={user.id}>
-          {user.avatar ? <Image src={user.avatar} alt={user.fullName} /> : <CircleUser size={60} color='#d1d5db' />}
+          {user.profile.avatar ? <Image src={user.profile.avatar} alt={user.fullName} /> : <CircleUser size={60} color='#d1d5db' />}
           <BoxContent>
             <strong>{user.fullName}</strong>
             <Link href={`mailto:${user.email}`}>{user.email}</Link>

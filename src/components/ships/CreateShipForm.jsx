@@ -23,7 +23,6 @@ import { useUser } from "../../hooks/useAuth.js";
 import { useAllShipType } from "../../hooks/useShipType.js";
 import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 import { useSelector } from "react-redux";
-import socket from "../../shared/socket.js";
 
 const Form = styled.div`
   display: grid;
@@ -144,8 +143,6 @@ const ShipsForm = () => {
       editShip({ newData: formData, id: shipId });
     } else {
       submitData(formData);
-
-      socket.emit("register_admin", user?.id);
     }
   };
 

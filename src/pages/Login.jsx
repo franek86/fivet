@@ -35,8 +35,8 @@ function Login() {
   const navigate = useNavigate();
   return (
     <FormWrap>
-      <button onClick={() => navigate("/sign-up?plan=STANDARD")}>Standard</button>
-      <button onClick={() => navigate("/sign-up?plan=PREMIUM")}>Premium</button>
+      {/*  <button onClick={() => navigate("/sign-up?plan=STANDARD")}>Standard</button>
+      <button onClick={() => navigate("/sign-up?plan=PREMIUM")}>Premium</button> */}
       <Title>Login</Title>
       <p>Please sign in to continue</p>
       <LoginForm />

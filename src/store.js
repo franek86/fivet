@@ -5,6 +5,7 @@ import authReducer from "./slices/authSlice.js";
 import uiReducer from "./slices/uiSlice.js";
 import searchReducer from "./slices/searchSlice.js";
 import notificationReducer from "./slices/notificationSlice.js";
+import realtimeReducer from "./slices/realtimeSlice.js";
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     ui: uiReducer,
     search: searchReducer,
     notifications: notificationReducer,
+    realtime: realtimeReducer,
   },
 });
 

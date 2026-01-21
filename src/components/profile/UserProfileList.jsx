@@ -13,6 +13,7 @@ import { CircleUser } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import socket from "../../shared/socket.js";
 import { useEffect } from "react";
+import { useRealtime } from "../../hooks/useRealtime.js";
 
 const CardWrap = styled.div`
   display: grid;
@@ -160,14 +161,13 @@ function UserProfileList() {
   const { mutate } = useDeleteUserProfile();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    const handler = (onlineUsers) => {
-      const onlineIds = new Set(onlineUsers.map((u) => u.id));
+  /*  useEffect(() => {
+    const handler = (payload) => {
+      const { users } = payload;
+      const onlineIds = new Set(users.map((u) => u.id));
 
       queryClient.setQueriesData({ queryKey: ["all-profile"] }, (oldData) => {
         if (!oldData) return oldData;
-
-        console.log(oldData);
 
         return oldData.map((user) => ({
           ...user,
@@ -181,7 +181,7 @@ function UserProfileList() {
     return () => {
       socket.off("online-users", handler);
     };
-  }, [queryClient]);
+  }, [queryClient]); */
 
   if (isPending) return <Spinner />;
   if (isError) return <div>Error</div>;

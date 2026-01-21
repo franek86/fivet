@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Sidebar from "../components/Sidebar.jsx";
 
 import { useSocketAuth } from "../hooks/useSocketAuth.js";
+import { useRealtime } from "../hooks/useRealtime.js";
 
 const LayoutGrid = styled.div`
   display: grid;
@@ -30,6 +31,7 @@ const Main = styled.main`
 
 function MainLayout() {
   useSocketAuth();
+  useRealtime();
 
   return (
     <LayoutGrid>

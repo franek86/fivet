@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import { toggleDropdown } from "../../slices/uiSlice.js";
 import { Bell } from "lucide-react";
+import { markNotificationRead } from "../../slices/realtimeSlice.js";
 
 const Wrapper = styled.div`
   position: relative;
@@ -31,6 +32,10 @@ const DropdownToggle = styled.div`
   position: absolute;
   left: 0;
   top: 2.5rem;
+`;
+
+const NotificationCard = styled.div`
+  position: relative;
   padding: 1rem 2rem;
   background-color: var(--color-grey-0);
   color: var(--color-brand-900);
@@ -50,12 +55,30 @@ const DropdownToggle = styled.div`
   }
 `;
 
+const DeleteCircle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background-color: var(--color-red-700);
+  color: white;
+  border-radius: 50%;
+  z-index: 9;
+  cursor: pointer;
+`;
+
 export default function NotificationIcon() {
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);
 
-  const notifications = useSelector((state) => state.notifications.notifications);
-  const unreadCount = useSelector((state) => state.notifications.unreadCount);
+  const notifications = useSelector((state) => state.realtime.notifications);
+  const unreadCount = useSelector((state) => state.realtime.notifications.filter((n) => !n.read && n.scope === "ADMIN").length);
   const isToggleDropdown = useSelector((state) => state.ui.isDropdownOpen);
 
   useEffect(() => {
@@ -74,8 +97,8 @@ export default function NotificationIcon() {
     };
   }, [isToggleDropdown, dispatch]);
 
-  const markAsRead = (shipId) => {
-    console.log(shipId);
+  const markAsRead = (id) => {
+    dispatch(markNotificationRead(id));
   };
 
   return (
@@ -85,14 +108,13 @@ export default function NotificationIcon() {
 
       {isToggleDropdown && (
         <DropdownToggle>
-          {notifications.length === 0 && <div>No new notifications</div>}
+          {notifications.length === 0 && <NotificationCard>No new notifications</NotificationCard>}
           {notifications.map((n) => (
-            <div key={n.id}>
-              <div onClick={() => markAsRead(n.id)}>
-                <p>{n.message}</p>
-                <span>{n.createdAt}</span>
-              </div>
-            </div>
+            <NotificationCard key={n.id}>
+              <DeleteCircle onClick={() => markAsRead(n.id)}>x</DeleteCircle>
+              <p>{n.message}</p>
+              <span>{n.createdAt}</span>
+            </NotificationCard>
           ))}
         </DropdownToggle>
       )}

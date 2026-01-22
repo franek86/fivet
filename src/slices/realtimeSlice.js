@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   onlineUserIds: [],
   activeUserCount: 0,
+  notifications: [],
+  unReadCount: 0,
 };
 
 const realtimeSlice = createSlice({
@@ -13,12 +15,22 @@ const realtimeSlice = createSlice({
       state.onlineUserIds = action.payload.userIds;
       state.activeUserCount = action.payload.count;
     },
-    clearOnlineUsers(state) {
-      state.onlineUserIds = [];
-      state.activeUserCount = 0;
+
+    addNotification(state, action) {
+      state.notifications.unshift(action.payload);
+    },
+    markNotificationRead(state, action) {
+      const id = action.payload;
+      const notification = state.notifications.find((n) => n.id === id);
+      if (notification) notification.read = true;
+
+      state.unreadCount = state.notifications.filter((n) => !n.read && n.scope === "ADMIN").length;
+    },
+    clearRealTime(state) {
+      return initialState;
     },
   },
 });
 
-export const { setOnlineUsers, clearOnlineUsers, activeUserCount } = realtimeSlice.actions;
+export const { setOnlineUsers, clearRealTime, activeUserCount, markNotificationRead, addNotification } = realtimeSlice.actions;
 export default realtimeSlice.reducer;

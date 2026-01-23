@@ -9,7 +9,7 @@ import Modal from "../Modal.jsx";
 
 import { customFormatDate } from "../../utils/formatDate.js";
 import { useDeleteNotification, useNotificationList, useUpdateReadNotification } from "../../hooks/useNotification.js";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 
 const Wrapper = styled.section`
@@ -56,19 +56,26 @@ function NotificationLists() {
   const { mutate } = useUpdateReadNotification();
   const { mutate: deleteNotification } = useDeleteNotification();
 
+  const realtimeNotifications = useSelector((state) => state.realtime.notifications.filter((n) => !n.read && n.scope === "ADMIN"));
+  const notifications = [...realtimeNotifications, ...(data || [])];
   if (isLoading) return <Spinner />;
-  if (data.length < 1) return <EmptyState message='No notifications for now.' />;
+  if (notifications.length < 1) return <EmptyState message='No notifications for now.' />;
   if (isError) return <div>Error</div>;
 
-  const handleChange = (id, checked) => {
-    mutate({ id, data: checked });
+  const handleToggleRead = (id, checked) => {
+    if (dbNotifications.find((n) => n.id === id)) {
+      updateRead({ id, data: checked });
+    }
+    dispatch(markNotificationRead(id));
   };
 
   return (
     <Wrapper>
-      {data.map((item) => (
+      {notifications.length === 0 && <p>No new notifications</p>}
+
+      {notifications.map((item) => (
         <div key={item.id}>
-          <Card $props={item.isRead}>
+          <Card $props={item.isRead || item.read}>
             <div>
               <h4>{item.message}</h4>
               <p>Created at {customFormatDate(item.createdAt)}</p>

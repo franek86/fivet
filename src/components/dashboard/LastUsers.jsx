@@ -1,12 +1,12 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import styled from "styled-components";
-import { useGetAllUserProfile } from "../../hooks/useProfile.js";
-import { customFormatDate } from "../../utils/formatDate.js";
 import { CircleUser } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { customFormatDate } from "../../utils/formatDate.js";
 import { getLastFiveUsersApi } from "../../services/apiProfile.js";
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
-const Container = styled.section`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -43,18 +43,15 @@ const Date = styled.p`
   font-style: italic;
 `;
 
-function LastUsers() {
-  const { data, isError } = useQuery({
-    queryKey: ["last-users"],
-    queryFn: () => getLastFiveUsersApi(),
-  });
-
-  if (isError) return <div>Error</div>;
+function LastUsers({ data, isLoading }) {
+  if (isLoading) {
+    return <TablePlaceholder count={5} />;
+  }
 
   return (
     <Container>
       <h3>Last users</h3>
-      {data?.map((user) => (
+      {data?.lastFiveUsers?.map((user) => (
         <Box key={user.id}>
           {user.profile.avatar ? <Image src={user.profile.avatar} alt={user.fullName} /> : <CircleUser size={60} color='#d1d5db' />}
           <BoxContent>

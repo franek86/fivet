@@ -4,12 +4,12 @@ import { useDashboardStatistic } from "../../hooks/useDashboardStatistic.js";
 
 import { formatedPrice } from "../../utils/formattedPrice.js";
 import { Eye } from "lucide-react";
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
-const Container = styled.section`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-top: 3rem;
   padding: 2rem;
   background-color: var(--color-grey-0);
   border-radius: var(--border-radius-md);
@@ -25,7 +25,7 @@ const Wrapper = styled.div`
   font-size: 1.5rem;
 
   @media screen and (min-width: 640px) {
-    grid-template-columns: 60px repeat(5, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 
   &:nth-child(odd) {
@@ -58,10 +58,10 @@ const Views = styled(Link)`
   gap: 1.2rem;
 `;
 
-function TopShips() {
-  const { data, isError } = useDashboardStatistic();
-
-  if (isError) return <div>Error</div>;
+function TopShips({ data, isLoading }) {
+  if (isLoading) {
+    return <TablePlaceholder count={6} />;
+  }
 
   return (
     <Container>

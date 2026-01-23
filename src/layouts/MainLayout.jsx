@@ -8,14 +8,15 @@ import { useSocketAuth } from "../hooks/useSocketAuth.js";
 import { useRealtime } from "../hooks/useRealtime.js";
 
 const LayoutGrid = styled.div`
-  display: grid;
+  display: flex;
+  /* display: grid;
   grid-template-columns: 1fr;
   @media screen and (min-width: 640px) {
     grid-template-columns: 10rem 1fr;
   }
   @media screen and (min-width: 1024px) {
     grid-template-columns: 20rem 1fr;
-  }
+  } */
 `;
 
 const Main = styled.main`
@@ -26,6 +27,10 @@ const Main = styled.main`
 
   @media (min-width: 640px) {
     padding: 1.6rem 2rem;
+    margin-left: 10rem;
+  }
+  @media screen and (min-width: 1024px) {
+    margin-left: 20rem;
   }
 `;
 

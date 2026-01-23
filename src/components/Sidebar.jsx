@@ -6,7 +6,8 @@ import Avatar from "./Avatar.jsx";
 import Logout from "./Logout.jsx";
 
 const Aside = styled.aside`
-  position: sticky;
+  width: 100%;
+  position: fixed;
   left: 0;
   top: 0;
   display: flex;
@@ -15,6 +16,11 @@ const Aside = styled.aside`
 
   @media screen and (min-width: 640px) {
     height: 100vh;
+    width: 10rem;
+  }
+
+  @media screen and (min-width: 1024px) {
+    width: 20rem;
   }
 `;
 

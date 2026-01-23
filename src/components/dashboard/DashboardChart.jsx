@@ -1,6 +1,8 @@
 import { Legend, RadialBar, RadialBarChart, ResponsiveContainer, Tooltip } from "recharts";
 import styled from "styled-components";
 import { useDashboardStatistic } from "../../hooks/useDashboardStatistic.js";
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
+import { useMemo } from "react";
 
 const Wrapper = styled.section`
   background-color: var(--color-grey-0);
@@ -8,7 +10,7 @@ const Wrapper = styled.section`
   box-shadow: var(--shadow-md);
 `;
 
-const data = [
+const dataDummy = [
   {
     name: "Total ships",
     uv: 31.47,
@@ -21,15 +23,33 @@ const data = [
   },
 ];
 
-function DashboardChart() {
-  const test = useDashboardStatistic();
+const COLORS = ["#0088FE", "#00C49F"];
+const userStatsToChartData = (totalUsers = 0, totalShips = 0) => [
+  { name: "Users", value: totalUsers, fill: COLORS[0] },
+  { name: "Ships", value: totalShips, fill: COLORS[1] },
+];
 
+/* const userStatsToChartData = (stats) => {
+  Object.entries(stats).map(([key, value], index) => ({
+    name: key,
+    value,
+    fill: COLORS[index % COLORS.length],
+  }));
+}; */
+
+function DashboardChart({ data, isLoading }) {
+  if (isLoading) {
+    return <TablePlaceholder count={3} />;
+  }
+
+  const userStats = useMemo(() => userStatsToChartData(data?.totalUsers, data?.totalShips), [data?.totalUsers, data?.totalShips]);
+  console.log(userStats);
   return (
     <Wrapper>
-      <ResponsiveContainer>
-        <RadialBarChart cx='50%' cy='50%' innerRadius='40%' outerRadius='100%' data={data}>
-          <RadialBar background dataKey='uv' />
-          <Legend iconSize={10} width={120} height={140} layout='vertical' verticalAlign='middle' align='right' />
+      <ResponsiveContainer width='100%' height='100%'>
+        <RadialBarChart cx='50%' cy='50%' innerRadius='40%' outerRadius='100%' data={userStats}>
+          <Legend height={100} layout='horizontal' verticalAlign='top' align='right' />
+          <RadialBar background dataKey='value' />
         </RadialBarChart>
       </ResponsiveContainer>
     </Wrapper>

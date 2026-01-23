@@ -2,11 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 
 import StatisticCard from "../ui/StatisticCard.jsx";
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 import { useDashboardStatistic } from "../../hooks/useDashboardStatistic.js";
 import { CalendarDays, Ship, Users } from "lucide-react";
 
-const StatisticBoxWrap = styled.div`
+const StatisticBoxWrap = styled.section`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
@@ -17,10 +18,10 @@ const StatisticBoxWrap = styled.div`
   }
 `;
 
-function StatisticBox() {
-  const { data, isError } = useDashboardStatistic();
-
-  if (isError) return <div>Error</div>;
+function StatisticBox({ data, isLoading }) {
+  if (isLoading) {
+    return <TablePlaceholder count={3} />;
+  }
 
   return (
     <StatisticBoxWrap>

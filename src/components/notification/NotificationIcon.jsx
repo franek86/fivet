@@ -77,8 +77,12 @@ export default function NotificationIcon() {
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);
 
-  const notifications = useSelector((state) => state.realtime.notifications);
+  /*  const notifications = useSelector((state) => state.realtime.notifications);
   const unreadCount = useSelector((state) => state.realtime.notifications.filter((n) => !n.read && n.scope === "ADMIN").length);
+  */
+  const unreadNotifications = useSelector((state) => state.realtime.notifications.filter((n) => !n.read && n.scope === "ADMIN"));
+  const unreadCount = unreadNotifications.length;
+
   const isToggleDropdown = useSelector((state) => state.ui.isDropdownOpen);
 
   useEffect(() => {
@@ -108,8 +112,8 @@ export default function NotificationIcon() {
 
       {isToggleDropdown && (
         <DropdownToggle>
-          {notifications.length === 0 && <NotificationCard>No new notifications</NotificationCard>}
-          {notifications.map((n) => (
+          {unreadNotifications.length === 0 && <NotificationCard>No new notifications</NotificationCard>}
+          {unreadNotifications.map((n) => (
             <NotificationCard key={n.id}>
               <DeleteCircle onClick={() => markAsRead(n.id)}>x</DeleteCircle>
               <p>{n.message}</p>

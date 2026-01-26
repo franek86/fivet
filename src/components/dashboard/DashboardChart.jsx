@@ -1,8 +1,9 @@
-import { Legend, RadialBar, RadialBarChart, ResponsiveContainer, Tooltip } from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, RadialBar, RadialBarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import styled from "styled-components";
 import { useDashboardStatistic } from "../../hooks/useDashboardStatistic.js";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import { useMemo } from "react";
+import { formatMonth } from "../../utils/formatMonth.js";
 
 const Wrapper = styled.section`
   background-color: var(--color-grey-0);
@@ -10,47 +11,37 @@ const Wrapper = styled.section`
   box-shadow: var(--shadow-md);
 `;
 
-const dataDummy = [
-  {
-    name: "Total ships",
-    uv: 31.47,
-    fill: "#8884d8",
-  },
-  {
-    name: "Total users",
-    uv: 26.69,
-    fill: "#83a6ed",
-  },
-];
-
-const COLORS = ["#0088FE", "#00C49F"];
-const userStatsToChartData = (totalUsers = 0, totalShips = 0) => [
-  { name: "Users", value: totalUsers, fill: COLORS[0] },
-  { name: "Ships", value: totalShips, fill: COLORS[1] },
-];
-
-/* const userStatsToChartData = (stats) => {
-  Object.entries(stats).map(([key, value], index) => ({
-    name: key,
-    value,
-    fill: COLORS[index % COLORS.length],
-  }));
-}; */
-
 function DashboardChart({ data, isLoading }) {
   if (isLoading) {
     return <TablePlaceholder count={3} />;
   }
 
-  const userStats = useMemo(() => userStatsToChartData(data?.totalUsers, data?.totalShips), [data?.totalUsers, data?.totalShips]);
-  console.log(userStats);
+  const chartData = data.monthlyStats.map((item) => ({
+    month: formatMonth(item.month, "EN"),
+    users: item.users,
+    ships: item.ships,
+  }));
+
   return (
     <Wrapper>
       <ResponsiveContainer width='100%' height='100%'>
-        <RadialBarChart cx='50%' cy='50%' innerRadius='40%' outerRadius='100%' data={userStats}>
-          <Legend height={100} layout='horizontal' verticalAlign='top' align='right' />
-          <RadialBar background dataKey='value' />
-        </RadialBarChart>
+        <BarChart data={chartData}>
+          <Legend
+            layout='horizontal'
+            align='right'
+            verticalAlign='top'
+            wrapperStyle={{
+              fontSize: 12,
+              paddingBottom: 12,
+            }}
+          />
+          <CartesianGrid strokeDasharray='3 3' />
+          <XAxis dataKey='month' tick={{ fontSize: 12 }} />
+          <YAxis width='auto' tick={{ fontSize: 12 }} />
+          <Tooltip />
+          <Bar dataKey='users' fill='#4f39f6' isAnimationActive={true} />
+          <Bar dataKey='ships' fill='#0088fe' isAnimationActive={true} /> */
+        </BarChart>
       </ResponsiveContainer>
     </Wrapper>
   );

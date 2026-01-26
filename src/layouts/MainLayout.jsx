@@ -8,7 +8,7 @@ import { useSocketAuth } from "../hooks/useSocketAuth.js";
 import { useRealtime } from "../hooks/useRealtime.js";
 
 const LayoutGrid = styled.div`
-  display: flex;
+  width: 100%;
   /* display: grid;
   grid-template-columns: 1fr;
   @media screen and (min-width: 640px) {

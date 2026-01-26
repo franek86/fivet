@@ -12,7 +12,7 @@ const Section = styled.section`
 
 // #endregion
 const RADIAN = Math.PI / 180;
-const COLORS = ["#0369a1", "#b91c1c", "#15803d"];
+const COLORS = ["#0088FE", "#b91c1c", "#00C49F"];
 
 const subscriptionStatsToChartData = (stats) =>
   Object.entries(stats).map(([key, value], index) => ({
@@ -62,7 +62,14 @@ export default function SubcriptionChart({ isAnimationActive = true, data, isLoa
             isAnimationActive={isAnimationActive}
             shape={MyCustomPie}
           />
-          <Legend layout='horizontal' align='right' verticalAlign='top' />
+          <Legend
+            layout='horizontal'
+            align='right'
+            verticalAlign='top'
+            wrapperStyle={{
+              fontSize: 12,
+            }}
+          />
         </PieChart>
       </ResponsiveContainer>
     </Section>

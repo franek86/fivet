@@ -15,17 +15,21 @@ const TwoColumnsRole = styled.section`
   gap: 2rem;
   margin: 2rem 0;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 1200px) {
     grid-template-columns: ${({ $role }) => ($role === "ADMIN" ? "1fr 1fr" : "1fr")};
   }
 `;
 
 const TwoColumns = styled.section`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 2rem;
   margin: 2rem 0;
   height: 500px;
+
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: 1fr 1fr;
+  }
 `;
 
 function Dashboard() {
@@ -42,10 +46,12 @@ function Dashboard() {
           <TopShips data={data} isLoading={isLoading} />
           {role === "ADMIN" && <LastUsers data={data} isLoading={isLoading} />}
         </TwoColumnsRole>
-        <TwoColumns>
-          <DashboardChart data={data} isLoading={isLoading} />
-          <SubcriptionChart data={data} isLoading={isLoading} />
-        </TwoColumns>
+        {role === "ADMIN" && (
+          <TwoColumns>
+            <DashboardChart data={data} isLoading={isLoading} />
+            <SubcriptionChart data={data} isLoading={isLoading} />
+          </TwoColumns>
+        )}
       </>
     </>
   );

@@ -5,6 +5,7 @@ import { useDashboardStatistic } from "../../hooks/useDashboardStatistic.js";
 import { formatedPrice } from "../../utils/formattedPrice.js";
 import { Eye } from "lucide-react";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   display: flex;
@@ -59,6 +60,7 @@ const Views = styled(Link)`
 `;
 
 function TopShips({ data, isLoading }) {
+  const role = useSelector((state) => state.auth.role);
   if (isLoading) {
     return <TablePlaceholder count={6} />;
   }
@@ -71,7 +73,7 @@ function TopShips({ data, isLoading }) {
         <p>Name</p>
         <p>IMO</p>
         <p>Price</p>
-        <p>Views</p>
+        {role === "ADMIN" && <p>Views</p>}
       </WrapperTop>
       {data?.topShips?.map((ship) => (
         <Wrapper key={ship.id}>
@@ -79,10 +81,12 @@ function TopShips({ data, isLoading }) {
           <p>{ship.shipName}</p>
           <p>{ship.imo}</p>
           <p>{formatedPrice(ship.price)}</p>
-          <Views to={`/ships/${ship.id}`}>
-            <Eye />
-            {ship.clicks}
-          </Views>
+          {role === "ADMIN" && (
+            <Views to={`/ships/${ship.id}`}>
+              <Eye />
+              {ship.clicks}
+            </Views>
+          )}
         </Wrapper>
       ))}
     </Container>

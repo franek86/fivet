@@ -68,7 +68,6 @@ const ShipsForm = () => {
 
   const { allShipType } = useAllShipType();
   const { data: singleShipData, isLoading, isError } = useShip(shipId);
-  const { data: user } = useUser();
   const { mutate: submitData, isPending } = useCreateShip();
   const { mutate: editShip, isPending: editPendingShip } = useEditShip();
 

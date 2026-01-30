@@ -91,7 +91,6 @@ export default function BillingCard() {
   /*  const userSubscription = useSelector((state) => state.auth?.subscription);
   const userId = useSelector((state) => state.auth?.user.id); */
   const { data } = useUser();
-  console.log(data.id);
 
   const isActiveSubscription = data?.isActiveSubscription;
 

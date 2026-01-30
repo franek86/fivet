@@ -7,14 +7,17 @@ const uiSlice = createSlice({
     isDropdownOpenByName: null,
     isToggleNav: null,
     isDrawerOpen: false,
+    editId: null,
   },
   reducers: {
-    setIsDrawerOpen: (state) => {
+    setIsDrawerOpen: (state, action) => {
       state.isDrawerOpen = true;
+      state.editId = action.payload;
     },
 
     setIsDrawerClose: (state) => {
       state.isDrawerOpen = false;
+      state.editId = null;
     },
 
     toggleDropdownByName: (state, action) => {

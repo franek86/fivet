@@ -25,8 +25,8 @@ function StatisticBox({ data, isLoading }) {
 
   return (
     <StatisticBoxWrap>
-      <StatisticCard iconColor='#15803d' icon={<Users />} text='Total users' data={data?.totalUsers} />
       <StatisticCard iconColor='#0369a1' icon={<Ship />} text='Total ships' data={data?.totalShips} />
+      <StatisticCard iconColor='#15803d' icon={<Users />} text='Total users' data={data?.totalUsers} />
       <StatisticCard iconColor='#4338ca' icon={<CalendarDays />} text='Events' data={data?.totalEvents} />
     </StatisticBoxWrap>
   );

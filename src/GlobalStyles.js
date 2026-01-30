@@ -125,7 +125,9 @@ const GlobalStyles = styled.createGlobalStyle`
     margin: 0;
 
     /* Creating animations for dark mode */
-    transition: background-color 0.3s, border 0.3s;
+    transition:
+      background-color 0.3s,
+      border 0.3s;
   }
 
   html {
@@ -137,7 +139,9 @@ const GlobalStyles = styled.createGlobalStyle`
     color: var(--color-grey-700);
     background-color: var(--color-grey-100);
 
-    transition: color 0.3s, background-color 0.3s;
+    transition:
+      color 0.3s,
+      background-color 0.3s;
     min-height: 100vh;
     line-height: 1.5;
     font-size: 1.6rem;
@@ -262,6 +266,10 @@ const GlobalStyles = styled.createGlobalStyle`
     border: 1px solid var(--color-grey-500);
     border-radius: var(--border-radius-sm);
     min-width: 100%;
+  }
+
+  .react-datepicker-popper {
+    z-index: 10;
   }
 
   .custom-calendar {

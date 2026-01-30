@@ -137,7 +137,7 @@ function EventRenderContent({ data }) {
       </Content>
 
       <Footer>
-        <Button $size='small' $variation='third' onClick={() => dispatch(setIsDrawerOpen())}>
+        <Button $size='small' $variation='third' onClick={() => dispatch(setIsDrawerOpen(id))}>
           Edit
         </Button>
 

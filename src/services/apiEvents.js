@@ -24,6 +24,17 @@ export const getAllEventsApi = async (filter) => {
   }
 };
 
+/* Get users recent events */
+export const getRecentEvents = async (query) => {
+  try {
+    const { data } = await apiClient.get("/events/recent", { params: query });
+    return data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
 /* Get single event */
 export const singleEventApi = async (id) => {
   if (!id) throw new Error("Event id does not exists");

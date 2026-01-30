@@ -1,15 +1,15 @@
-import Spinner from "../Spinner.jsx";
 import CustomBigCalendar from "../CustomBigCalendar.jsx";
 import Modal from "../Modal.jsx";
 import { useGetAllEvents } from "../../hooks/useEvents.js";
 
 import EventRenderContent from "./EventRenderContent.jsx";
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 function EventCalendar() {
-  const { data, isPending, isError } = useGetAllEvents();
+  const { data, isLoading } = useGetAllEvents();
 
-  if (isPending) return <Spinner />;
-  if (isError) return <div>Error</div>;
+  if (isLoading) return <TablePlaceholder count={6} />;
+
   return (
     <CustomBigCalendar
       data={data.events}

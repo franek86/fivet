@@ -49,6 +49,7 @@ function App() {
               <Route path='/ships/create' element={<CreateShip />} />
               <Route path='/ships/edit/:id' element={<EditShip />} />
               <Route path='/ships/:id' element={<SingleShip />} />
+              <Route path='/events' element={<Events />} />
               <Route element={<PremiumRoute />}>
                 <Route path='/address-book' element={<AddressBook />} />
               </Route>
@@ -63,7 +64,6 @@ function App() {
           <Route element={<MainLayout />}>
             <Route path='/users' element={<Users />} />
             <Route path='/categories' element={<Categories />} />
-            <Route path='/events' element={<Events />} />
             <Route path='/payments' element={<Payments />} />
           </Route>
         </Route>

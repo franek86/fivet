@@ -16,6 +16,7 @@ import styled from "styled-components";
 import { useEditEvent, useGetSingleEvent } from "../../hooks/useEvents.js";
 import { EVENT_PRIORITY, EVENT_REMINDER, EVENT_STATUS } from "../../utils/constants.js";
 import { eventSchema } from "../../utils/validationSchema.js";
+import { useSelector } from "react-redux";
 
 const Column = styled.div``;
 const ColumnFull = styled.div`
@@ -30,7 +31,9 @@ const Wrapper = styled.div`
   gap: 1rem;
 `;
 
-function EventEdit({ editId }) {
+function EventEdit() {
+  const { editId } = useSelector((state) => state.ui);
+  const { isDropdownOpen } = useSelector((state) => state.ui);
   const { mutate, isPending } = useEditEvent();
   const { data: singleData } = useGetSingleEvent(editId);
 
@@ -51,7 +54,7 @@ function EventEdit({ editId }) {
       const formatEndDate = format(singleData.end);
       reset({ ...singleData, start: formatStartDate, end: formatEndDate });
     }
-  }, [singleData, reset]);
+  }, [singleData, reset, editId]);
 
   const onSubmit = (data) => {
     mutate({ id: editId, data });
@@ -60,6 +63,7 @@ function EventEdit({ editId }) {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Wrapper>
+        <p>Test </p> {editId} - {isDropdownOpen}
         <Column>
           <Label>Date start</Label>
           <Controller
@@ -82,7 +86,6 @@ function EventEdit({ editId }) {
           />
           <InputErrorMessage message={errors.end?.message} />
         </Column>
-
         <Column>
           <Controller
             name='status'
@@ -105,7 +108,6 @@ function EventEdit({ editId }) {
 
           <InputErrorMessage message={errors.status?.message} />
         </Column>
-
         <Column>
           <Controller
             name='priority'
@@ -128,12 +130,10 @@ function EventEdit({ editId }) {
 
           <InputErrorMessage message={errors.priority?.message} />
         </Column>
-
         <Column>
           <Input directions='column' label='Title' register={register} placeholder='Enter title' {...register("title")} />
           <InputErrorMessage message={errors.title?.message} />
         </Column>
-
         <Column>
           <Controller
             name='reminder'
@@ -168,7 +168,6 @@ function EventEdit({ editId }) {
           <TextArea directions='column' label='Description' register={register} {...register("description")} />
           <InputErrorMessage message={errors.description?.message} />
         </ColumnFull>
-
         <Button>{isPending ? "Editing..." : "Edit"}</Button>
       </Wrapper>
     </form>

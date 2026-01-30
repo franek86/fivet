@@ -50,7 +50,7 @@ function LastUsers({ data, isLoading }) {
 
   return (
     <Container>
-      <h3>Last users</h3>
+      <h3>Recent users</h3>
       {data?.lastFiveUsers?.map((user) => (
         <Box key={user.id}>
           {user.profile.avatar ? <Image src={user.profile.avatar} alt={user.fullName} /> : <CircleUser size={60} color='#d1d5db' />}

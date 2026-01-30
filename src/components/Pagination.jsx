@@ -34,10 +34,10 @@ const SytledButton = styled.button`
 `;
 
 const StyledNumber = styled.button`
-  background-color: ${(props) => (props.active ? "#c7d2fe" : "#4f46e5")};
+  background-color: ${($active) => ($active ? "#c7d2fe" : "#4f46e5")};
   font-size: 1.25rem;
   line-height: 1.2;
-  color: ${(props) => (props.active ? "#4f46e5" : "#c7d2fe")};
+  color: ${($active) => ($active ? "#4f46e5" : "#c7d2fe")};
   padding: 0.6rem 0.8rem;
   border-radius: var(--border-radius-sm);
   border: none;
@@ -115,10 +115,10 @@ function Pagination({ count }) {
             ...
           </span>
         ) : (
-          <StyledNumber key={num} onClick={() => handlePageChange(num)} active={num === currentPage}>
+          <StyledNumber key={num} onClick={() => handlePageChange(num)} $active={num === currentPage}>
             {num}
           </StyledNumber>
-        )
+        ),
       )}
 
       <SytledButton onClick={nextPage} disabled={currentPage === pageCount}>

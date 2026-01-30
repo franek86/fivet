@@ -48,7 +48,7 @@ export const createShipSchema = z.object({
       z.object({
         file: z.instanceof(File),
         url: z.string().optional(),
-      })
+      }),
     )
     .optional(),
 
@@ -117,7 +117,7 @@ export const eventSchema = z
     status: statusEnum.nullable().optional(),
     priority: priorityEnum.nullable().optional(),
     tags: z.preprocess(tagsPreprocess, z.array(z.string()).optional()),
-    userId: z.string().uuid("User ID must be valid"),
+    //userId: z.string().uuid("User ID must be valid"),
   })
   .refine((data) => data.start < data.end, {
     message: "Start datum must be before end date",

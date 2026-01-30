@@ -14,7 +14,8 @@ import { EVENT_PRIORITY, EVENT_REMINDER, EVENT_STATUS } from "../../utils/consta
 import { eventSchema } from "../../utils/validationSchema.js";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, isSameDay, setHours, setMinutes } from "date-fns";
-import { useCreateEvent } from "../../hooks/useEvents.js";
+import { useCreateEvent, useGetSingleEvent } from "../../hooks/useEvents.js";
+import { useEffect } from "react";
 
 const Grid = styled.div`
   display: grid;
@@ -44,8 +45,10 @@ const FullColumn = styled(Row)`
 `;
 
 function FormEvent() {
-  const user = useSelector((state) => state.auth.user);
+  const { editId } = useSelector((state) => state.ui);
+  const editMode = Boolean(editId);
   const { mutate, isPending } = useCreateEvent();
+  const { data: singleData } = useGetSingleEvent(editId);
 
   const today = new Date();
   const formatToday = format(new Date(), "dd.MM.yyyy");
@@ -68,14 +71,39 @@ function FormEvent() {
   const start = watch("start");
   const end = watch("end");
 
+  useEffect(() => {
+    if (!editMode) {
+      reset({
+        start: null,
+        end: null,
+        status: "",
+        priority: "",
+        title: "",
+        reminder: "",
+        location: "",
+        tags: "",
+        description: "",
+      });
+      return;
+    }
+    if (singleData) {
+      reset({
+        ...singleData,
+      });
+    }
+  }, [singleData, editMode, reset]);
+
   const onSubmit = (data) => {
-    mutate(data);
-    reset();
+    if (editMode) {
+      console.log(data);
+    } else {
+      mutate(data);
+      reset();
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input type='hidden' {...register("userId")} value={user.id} />
       <Grid>
         <Column>
           <Label>Date start *</Label>
@@ -165,7 +193,7 @@ function FormEvent() {
             render={({ field }) => (
               <CustomSelect
                 {...field}
-                name='prority'
+                name='priority'
                 control={control}
                 options={EVENT_PRIORITY}
                 placeholder='Priority'
@@ -220,8 +248,7 @@ function FormEvent() {
           <TextArea directions='column' label='Description' register={register} {...register("description")} />
           <InputErrorMessage message={errors.description?.message} />
         </FullColumn>
-
-        <Button>{isPending ? "Creating..." : "Create"}</Button>
+        {editMode ? <Button>{isPending ? "Editing..." : "Edit"}</Button> : <Button>{isPending ? "Creating..." : "Create"}</Button>}
       </Grid>
     </form>
   );

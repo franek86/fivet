@@ -55,7 +55,7 @@ export const useGetAllEvents = () => {
     setSearchParams(defaultParams);
   };*/
 
-  const { data, isError, isPending } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["events", search],
     queryFn: () => getAllEventsApi(search),
     placeholderData: (previousData) => {
@@ -65,7 +65,7 @@ export const useGetAllEvents = () => {
     },
   });
 
-  return { data, isError, isPending };
+  return { data, isLoading };
 };
 
 export const useEditEvent = () => {
@@ -76,7 +76,7 @@ export const useEditEvent = () => {
     onSuccess: () => {
       toast.success("Event successfully updated");
       dispatch(closeModalByName("event-edit"));
-      queryClient.invalidateQueries(["events"]);
+      queryClient.invalidateQueries(["events", "recent-events"]);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -91,7 +91,7 @@ export const useDeleteEvent = () => {
     mutationFn: (id) => deleteEventByIdApi(id),
     onSuccess: () => {
       toast.success("Event deleted.");
-      queryClient.invalidateQueries(["events"]);
+      queryClient.invalidateQueries(["events", "recent-events"]);
     },
     onError: (error) => {
       toast.error(error.message);

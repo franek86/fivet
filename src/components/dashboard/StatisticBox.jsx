@@ -33,11 +33,23 @@ function StatisticBox({ data, isLoading }) {
     return personalStats?.[key] ?? 0;
   };
 
+  // Total Ships
+  const totalShips = getStatisticByRole(data, "totalShips", userRole);
+  const shipsTrend = userRole === "ADMIN" ? data?.shipsTrend?.trend : data?.userStats?.[0]?.trends?.ships.trend;
+  const shipChange = userRole === "ADMIN" ? data?.shipsTrend?.change : data?.userStats?.[0]?.trends?.ships.change;
+
   return (
     <StatisticBoxWrap>
-      <StatisticCard iconColor='#0369a1' icon={<Ship />} text='Total ships' data={getStatisticByRole(data, "totalShips", userRole)} />
+      <StatisticCard iconColor='#0369a1' icon={<Ship />} text='Total ships' data={totalShips} trend={shipsTrend} trendChange={shipChange} />
       {userRole === "ADMIN" && (
-        <StatisticCard iconColor='#15803d' icon={<Users />} text='Total users' data={data?.userStats.publishedShips} />
+        <StatisticCard
+          iconColor='#15803d'
+          icon={<Users />}
+          text='Total users'
+          data={data?.totalUsers}
+          trend={data?.usersTrend?.trend}
+          trendChange={data?.usersTrend?.change}
+        />
       )}
       {userRole === "USER" && <StatisticCard iconColor='#15803d' icon={<CheckCheck />} text='Published ships' data={data?.totalUsers} />}
 

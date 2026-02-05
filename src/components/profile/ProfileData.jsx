@@ -13,18 +13,17 @@ import { useUser } from "../../hooks/useAuth.js";
 import { useUpdateProfile } from "../../hooks/useProfile.js";
 
 const StyledForm = styled.form`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   margin-top: 3rem;
-
-  @media screen and (min-width: 640px) {
-    grid-template-columns: 1fr 1fr;
-  }
 `;
 
 const StyledInfo = styled.div`
   display: grid;
+  align-items: center;
+  width: 40rem;
   gap: 10px;
 `;
 
@@ -69,11 +68,11 @@ function ProfileData() {
   return (
     <StyledForm onSubmit={handleSubmit(handleOnSubmit)}>
       <StyledInfo>
+        <ImageUploader name='avatar' value={watch("avatar")} initialImage={data.profile.avatar} onChange={handleAvatarChange} />
         <Input register={register} {...register("fullName")} />
         <Input type='email' register={register} {...register("email")} />
         <Button>{loadUpdateProfile ? "Updating..." : "Edit"}</Button>
       </StyledInfo>
-      <ImageUploader name='avatar' value={watch("avatar")} initialImage={data.profile.avatar} onChange={handleAvatarChange} />
     </StyledForm>
   );
 }

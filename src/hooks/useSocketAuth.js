@@ -7,14 +7,14 @@ export function useSocketAuth() {
 
   useEffect(() => {
     if (isAuthenticated && !socket.connected) {
-      console.log("Connecting socket for authenticated user...");
+      //console.log("Connecting socket for authenticated user...");
       socket.connect();
     }
 
     // Optional: disconnect on logout
     return () => {
       if (!isAuthenticated && socket.connected) {
-        console.log("Disconnecting socket for logout...");
+        //console.log("Disconnecting socket for logout...");
         socket.emit("logout");
         socket.disconnect();
       }

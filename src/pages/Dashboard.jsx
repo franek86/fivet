@@ -26,7 +26,7 @@ const TwoColumns = styled.section`
   grid-template-columns: 1fr;
   gap: 2rem;
   margin: 2rem 0;
-  height: 500px;
+  min-height: 500px;
 
   @media screen and (min-width: 1200px) {
     grid-template-columns: 1fr 1fr;
@@ -43,20 +43,24 @@ function Dashboard() {
 
       <>
         <StatisticBox data={data} isLoading={isLoading} />
+
+        {role === "ADMIN" && (
+          <>
+            <TwoColumns>
+              <p>Earnings</p>
+              <SubcriptionChart data={data} isLoading={isLoading} />
+            </TwoColumns>
+
+            <TwoColumns>
+              <DashboardChart data={data} isLoading={isLoading} />
+              <MapChart />
+            </TwoColumns>
+          </>
+        )}
         <TwoColumnsRole $role={role}>
           <TopShips data={data} isLoading={isLoading} />
           {role === "ADMIN" && <LastUsers data={data} isLoading={isLoading} />}
         </TwoColumnsRole>
-        {role === "ADMIN" && (
-          <>
-            <TwoColumns>
-              <DashboardChart data={data} isLoading={isLoading} />
-              <SubcriptionChart data={data} isLoading={isLoading} />
-            </TwoColumns>
-
-            <MapChart />
-          </>
-        )}
       </>
     </>
   );

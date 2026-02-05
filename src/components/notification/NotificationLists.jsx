@@ -11,6 +11,7 @@ import { customFormatDate } from "../../utils/formatDate.js";
 import { useDeleteNotification, useNotificationList, useUpdateReadNotification } from "../../hooks/useNotification.js";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
+import { createSelector } from "@reduxjs/toolkit";
 
 const Wrapper = styled.section`
   display: flex;
@@ -49,6 +50,11 @@ const SwitchWrapper = styled.div`
   }
 `;
 
+const selectNotifications = (state) => state.realtime.notifications;
+export const selectUnreadAdminNotifications = createSelector([selectNotifications], (notifications) =>
+  notifications.filter((n) => !n.read && n.scope === "ADMIN"),
+);
+
 function NotificationLists() {
   const dispatch = useDispatch();
 
@@ -56,7 +62,7 @@ function NotificationLists() {
   const { mutate } = useUpdateReadNotification();
   const { mutate: deleteNotification } = useDeleteNotification();
 
-  const realtimeNotifications = useSelector((state) => state.realtime.notifications.filter((n) => !n.read && n.scope === "ADMIN"));
+  const realtimeNotifications = useSelector(selectUnreadAdminNotifications);
   const notifications = [...realtimeNotifications, ...(data || [])];
   if (isLoading) return <Spinner />;
   if (notifications.length < 1) return <EmptyState message='No notifications for now.' />;

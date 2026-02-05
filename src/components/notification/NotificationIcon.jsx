@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { toggleDropdown } from "../../slices/uiSlice.js";
 import { Bell } from "lucide-react";
 import { markNotificationRead } from "../../slices/realtimeSlice.js";
+import { createSelector } from "@reduxjs/toolkit";
 
 const Wrapper = styled.div`
   position: relative;
@@ -73,6 +74,10 @@ const DeleteCircle = styled.div`
   cursor: pointer;
 `;
 
+const selectNotifications = (state) => state.realtime.notifications;
+export const selectUnreadAdminNotifications = createSelector([selectNotifications], (notifications) =>
+  notifications.filter((n) => !n.read && n.scope === "ADMIN"),
+);
 export default function NotificationIcon() {
   const dispatch = useDispatch();
   const dropdownRef = useRef(null);
@@ -80,7 +85,7 @@ export default function NotificationIcon() {
   /*  const notifications = useSelector((state) => state.realtime.notifications);
   const unreadCount = useSelector((state) => state.realtime.notifications.filter((n) => !n.read && n.scope === "ADMIN").length);
   */
-  const unreadNotifications = useSelector((state) => state.realtime.notifications.filter((n) => !n.read && n.scope === "ADMIN"));
+  const unreadNotifications = useSelector(selectUnreadAdminNotifications);
   const unreadCount = unreadNotifications.length;
 
   const isToggleDropdown = useSelector((state) => state.ui.isDropdownOpen);

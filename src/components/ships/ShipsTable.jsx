@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { Range } from "react-range";
 
 import Pagination from "../Pagination.jsx";
 import Spinner from "../Spinner.jsx";
@@ -24,6 +22,7 @@ import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
 import { SlidersHorizontal, Trash2 } from "lucide-react";
 import { useAllShipType } from "../../hooks/useShipType.js";
+import { urlFormatDate } from "../../utils/formatDate.js";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -47,6 +46,14 @@ const ShipFilterWrap = styled.div`
   &:hover {
     opacity: 0.6;
   }
+`;
+
+const FilterState = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
 `;
 
 function ShipsTable() {
@@ -74,6 +81,8 @@ function ShipsTable() {
       price: searchParams.get("price"),
       search: searchTerm?.trim() || undefined,
       shipType: searchParams.get("shipType"),
+      dateFrom: searchParams.get("dateFrom"),
+      dateTo: searchParams.get("dateTo"),
     },
   });
 
@@ -116,11 +125,13 @@ function ShipsTable() {
   };
 
   // Apply filter values to URL and trigger data reload
-  const handleApplyFilters = ({ isPublished, priceRange, shipType }) => {
+  const handleApplyFilters = ({ isPublished, priceRange, shipType, dateFrom, dateTo }) => {
     updatedQueryParams({
       isPublished: isPublished ? "true" : null,
       price: priceRange ? priceRange : null,
       shipType: shipType ? shipType : null,
+      dateFrom: dateFrom ? urlFormatDate(dateFrom) : null,
+      dateTo: dateTo ? urlFormatDate(dateTo) : null,
     });
     /* dispatch(closeModalByName("ship-filter")); */
   };
@@ -133,6 +144,8 @@ function ShipsTable() {
       price: null,
       search: null,
       shipType: null,
+      dateFrom: null,
+      dateTo: null,
     });
     dispatch(closeModalByName("ship-filter"));
   };
@@ -140,9 +153,24 @@ function ShipsTable() {
   // Render single row
   const renderRow = (item) => <ShipsColumn key={item.id} ship={item} selectedShip={selected} onCheckboxChange={handleCheckboxChange} />;
 
+  // check if filter exists in url params
+  const hasFilters = [...searchParams.keys()].length > 0;
+
   // Loading, error, and empty states
   if (isLoading) return <Spinner />;
-  if (!ships.length) return <EmptyState message='No ships for now. Please create ship' />;
+  if (!isLoading && ships.length === 0) {
+    if (!hasFilters) {
+      return <EmptyState message='No ships for now. Please create ship' />;
+    }
+
+    return (
+      <FilterState>
+        <h2>No ships match your filters</h2>
+        <p>Please clear filters or adjust your search.</p>
+        <Button onClick={() => setSearchParams({})}>Clear filters</Button>
+      </FilterState>
+    );
+  }
 
   return (
     <>

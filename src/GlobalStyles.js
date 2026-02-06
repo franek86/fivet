@@ -273,14 +273,36 @@ const GlobalStyles = styled.createGlobalStyle`
   }
 
   .custom-calendar {
-    min-width: 350px !important;
+    //min-width: 350px !important;
     font-size: 1.4rem;
+    border: none;
+    background-color: var(--color-grey-50);
+    box-shadow: var(--shadow-lg);
   }
 
+  .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle {
+    fill: oklch(62.7% 0.265 303.9);
+    color: oklch(54.6% 0.245 262.881);
+  }
+
+  .react-datepicker__day--keyboard-selected,
+  .react-datepicker__month-text--keyboard-selected,
+  .react-datepicker__quarter-text--keyboard-selected,
+  .react-datepicker__year-text--keyboard-selected {
+    background-color: oklch(62.7% 0.265 303.9);
+    color: var(--color-grey-0);
+  }
+
+  .react-datepicker__day--keyboard-selected:not([aria-disabled="true"]):hover,
+  .react-datepicker__month-text--keyboard-selected:not([aria-disabled="true"]):hover,
+  .react-datepicker__quarter-text--keyboard-selected:not([aria-disabled="true"]):hover,
+  .react-datepicker__year-text--keyboard-selected:not([aria-disabled="true"]):hover {
+    background-color: oklch(54.6% 0.245 262.881);
+  }
   .custom-calendar .react-datepicker__header {
     padding: 10px 0;
     font-size: 1.2rem;
-    background-color: var(--color-brand-500);
+    background: var(--bg-linear-gradient);
   }
 
   .custom-calendar .react-datepicker__current-month,
@@ -288,13 +310,14 @@ const GlobalStyles = styled.createGlobalStyle`
   .custom-calendar .react-datepicker-year-header {
     font-size: 1.3rem;
     color: var(--color-grey-0);
+    font-weight: 600;
   }
   .custom-calendar .react-datepicker__day-name,
   .custom-calendar .react-datepicker__day {
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
-    margin: 2px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 1.2rem;
   }
 
   .custom-calendar .react-datepicker__time-container {
@@ -333,6 +356,7 @@ const GlobalStyles = styled.createGlobalStyle`
 
   .custom-calendar .react-datepicker__navigation {
     top: 4px;
+    outline: none;
   }
 
   .custom-calendar .react-datepicker__navigation--next--with-time:not(.react-datepicker__navigation--next--with-today-button) {

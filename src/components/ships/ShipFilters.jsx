@@ -3,8 +3,8 @@ import { useSearchParams } from "react-router";
 import { Range } from "react-range";
 import styled from "styled-components";
 import Checkbox from "../ui/Checkbox.jsx";
-import Label from "../ui/Label.jsx";
-import { useAllShipType } from "../../hooks/useShipType.js";
+import DatePicker from "react-datepicker";
+import { customFormatDate } from "../../utils/formatDate.js";
 
 /* ================= styles ================= */
 
@@ -20,7 +20,7 @@ const P = styled.p`
   font-size: 1.4rem;
   font-weight: 600;
   margin-right: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.7rem;
 `;
 
 const CheckboxGrid = styled.div`
@@ -48,6 +48,12 @@ const ButtonWrap = styled.div`
   margin-top: 2rem;
   gap: 1rem;
   align-items: center;
+`;
+
+const DateWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
 `;
 
 const ButtonStyle = styled.div`
@@ -80,6 +86,8 @@ const ResetButton = styled(ButtonStyle)`
 
 const ShipFilters = ({ data, shipTypes, onApply, onReset }) => {
   const [searchParams] = useSearchParams();
+  const today = new Date();
+  const formatToday = customFormatDate(today);
 
   /* Get values from url query params  */
   const currentIsPublished = searchParams.get("isPublished") ?? false;
@@ -98,6 +106,8 @@ const ShipFilters = ({ data, shipTypes, onApply, onReset }) => {
   /*  Set local state */
   const [isPublished, setIsPublished] = useState(currentIsPublished);
   const [selectedShipType, setSelectedShipType] = useState(currentShipType);
+  const [minDate, setMinDate] = useState("");
+  const [maxDate, setMaxDate] = useState("");
 
   // Calculate dynamic min/max price from fetched ships
   const { minPrice, maxPrice } = useMemo(() => {
@@ -136,6 +146,8 @@ const ShipFilters = ({ data, shipTypes, onApply, onReset }) => {
       isPublished,
       priceRange: priceRange ? priceRange.join("-") : null,
       shipType: selectedShipType ? selectedShipType.join(",") : null,
+      dateFrom: minDate ? minDate : null,
+      dateTo: maxDate ? maxDate : null,
     });
   };
 
@@ -144,6 +156,8 @@ const ShipFilters = ({ data, shipTypes, onApply, onReset }) => {
     setIsPublished(false);
     setPriceRange([minPrice, maxPrice]);
     setSelectedShipType([]);
+    setMinDate();
+    setMaxDate();
     onReset?.();
   };
 
@@ -174,6 +188,30 @@ const ShipFilters = ({ data, shipTypes, onApply, onReset }) => {
         </CheckboxGrid>
       </div>
 
+      {/* Date filter */}
+      <DateWrap>
+        <div>
+          <P>Date from</P>
+          <DatePicker
+            selected={minDate}
+            dateFormat='dd.MM.yyyy'
+            onChange={(date) => setMinDate(date)}
+            placeholderText={formatToday}
+            calendarClassName='custom-calendar'
+          />
+        </div>
+        <div>
+          <P>Date to</P>
+          <DatePicker
+            selected={maxDate}
+            dateFormat='dd.MM.yyyy'
+            onChange={(date) => setMaxDate(date)}
+            placeholderText={formatToday}
+            calendarClassName='custom-calendar'
+          />
+        </div>
+      </DateWrap>
+
       {/* Publish checkbox */}
       <div>
         <P>Publish filter</P>
@@ -185,7 +223,7 @@ const ShipFilters = ({ data, shipTypes, onApply, onReset }) => {
         <RangeLabel>
           Price filter:
           <span>
-            ${min} – ${max}
+            ${min} - ${max}
           </span>
         </RangeLabel>
         <Range

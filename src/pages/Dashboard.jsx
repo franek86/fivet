@@ -7,8 +7,9 @@ import Title from "../components/ui/Title.jsx";
 import styled from "styled-components";
 import DashboardChart from "../components/dashboard/DashboardChart.jsx";
 import SubcriptionChart from "../components/dashboard/SubscriptionChart.jsx";
-import { useDashboardStatistic } from "../hooks/useDashboardStatistic.js";
+import { useDashboardEarnings, useDashboardStatistic } from "../hooks/useDashboardStatistic.js";
 import MapChart from "../components/dashboard/MapChart.jsx";
+import Earnings from "../components/dashboard/Earnings.jsx";
 
 const TwoColumnsRole = styled.section`
   display: grid;
@@ -47,7 +48,7 @@ function Dashboard() {
         {role === "ADMIN" && (
           <>
             <TwoColumns>
-              <p>Earnings</p>
+              <Earnings />
               <SubcriptionChart data={data} isLoading={isLoading} />
             </TwoColumns>
 

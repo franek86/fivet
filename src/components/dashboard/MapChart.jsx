@@ -78,7 +78,7 @@ export default function MapChart() {
                 .map((geo) => {
                   const countryName = geo.properties.name;
                   const count = countryName ? (dataMap[countryName] ?? 0) : 0;
-                  console.log(geo);
+                  //console.log(geo);
                   /* const [cx, cy] = geo.centroid; */
 
                   return (

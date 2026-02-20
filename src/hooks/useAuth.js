@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
@@ -25,11 +25,14 @@ export const useUser = () => {
 export const useLogout = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: logoutUserApi,
     onSuccess: () => {
       dispatch(logoutUser());
+      queryClient.removeQueries({ queryKey: ["user"] });
+      queryClient.clear();
       toast.success("Your are logged out!");
       navigate("/", { replace: true });
     },

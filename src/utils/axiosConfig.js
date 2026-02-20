@@ -27,7 +27,7 @@ const onRefreshSuccess = () => {
 //Handle api request
 apiClient.interceptors.request.use(
   (config) => config,
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 //Handle expired token and refresh logic
@@ -36,7 +36,16 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (originalRequest.url.includes("/auth/login") || originalRequest.url.includes("/auth/register")) {
+    /* if (originalRequest.url.includes("/auth/login") || originalRequest.url.includes("/auth/register")) {
+      return Promise.reject(error);
+    }
+ */
+    if (
+      originalRequest.url.includes("/auth/login") ||
+      originalRequest.url.includes("/auth/register") ||
+      originalRequest.url.includes("/auth/logout") ||
+      originalRequest.url.includes("/auth/refresh-token")
+    ) {
       return Promise.reject(error);
     }
 
@@ -55,7 +64,7 @@ apiClient.interceptors.response.use(
           {},
           {
             withCredentials: true,
-          }
+          },
         );
         isRefreshing = false;
         onRefreshSuccess();
@@ -74,7 +83,7 @@ apiClient.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default apiClient;

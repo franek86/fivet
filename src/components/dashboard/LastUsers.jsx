@@ -1,9 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
 import styled from "styled-components";
 import { CircleUser } from "lucide-react";
 import { customFormatDate } from "../../utils/formatDate.js";
-import { getLastFiveUsersApi } from "../../services/apiProfile.js";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 const Container = styled.div`

@@ -95,7 +95,7 @@ export default function BillingCard() {
   const isActiveSubscription = data?.isActiveSubscription;
 
   const handleSubscribe = async () => {
-    const res = await fetch("http://localhost:5000/stripe/create-checkout-session", {
+    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}stripe/create-checkout-session`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId: data?.id }),
@@ -114,6 +114,8 @@ export default function BillingCard() {
     const currentPlan = data?.subscription;
     const hasActiveSub = Boolean(isActiveSubscription);
     const hasPlan = Boolean(currentPlan);
+
+    console.log(hasPlan);
 
     return (
       <>

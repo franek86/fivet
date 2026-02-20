@@ -1,5 +1,7 @@
-import { useUser } from "../hooks/useAuth.js";
+import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router";
+
+import { useUser } from "../hooks/useAuth.js";
 
 import Spinner from "../components/Spinner.jsx";
 import styled from "styled-components";
@@ -10,17 +12,17 @@ const FullPage = styled.div`
 `;
 
 function ProtectedRoute({ alowedRoles }) {
-  const { isLoading, data } = useUser();
-
+  const { isLoading } = useUser();
+  const { isAuthenticated, role } = useSelector((state) => state.auth);
   if (isLoading)
     return (
       <FullPage>
         <Spinner />
       </FullPage>
     );
-  if (!data) return <Navigate to='/' replace />;
-  if (!alowedRoles.includes(data.role)) return <Navigate to='/unauthorized' replace />;
-
+  if (!isAuthenticated) return <Navigate to='/' replace />;
+  if (!alowedRoles.includes(role)) return <Navigate to='/unauthorized' replace />;
+  console.log(isAuthenticated);
   return <Outlet />;
 }
 

@@ -1,8 +1,8 @@
-import { Bar, BarChart, CartesianGrid, Legend, RadialBar, RadialBarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import styled from "styled-components";
-import { useDashboardStatistic } from "../../hooks/useDashboardStatistic.js";
+
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
-import { useMemo } from "react";
+
 import { formatMonth } from "../../utils/formatMonth.js";
 
 const Wrapper = styled.section`

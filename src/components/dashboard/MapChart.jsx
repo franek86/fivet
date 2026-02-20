@@ -1,7 +1,11 @@
+import { useEffect, useState } from "react";
+
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
+
 import { scaleLinear } from "d3-scale";
+
 import styled from "styled-components";
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 const MapChartWrapp = styled.section`
   position: relative;
@@ -23,28 +27,42 @@ const ZoomBtn = styled.div`
   }
 `;
 
-const geoUrl = "https://unpkg.com/world-atlas@2/countries-110m.json";
-
-const conutries = [
-  { country: "Croatia", count: 12 },
-  { country: "India", count: 7 },
-  { country: "Germany", count: 4 },
-];
-
-const dataMap = {};
-conutries.forEach((d) => {
-  dataMap[d.country] = d.count;
-});
-
-const maxCount = Math.max(...conutries.map((d) => d.count), 1);
-
-const colorScale = scaleLinear().domain([0, maxCount]).range(["#a3b3ff", "#155dfc"]);
-
 export default function MapChart() {
   const [zoom, setZoom] = useState(1);
   const [tooltip, setTooltip] = useState("");
   const [tooltipX, setTooltipX] = useState(0);
   const [tooltipY, setTooltipY] = useState(0);
+
+  const getGeoUrl = async () => {
+    try {
+      const response = await fetch("https://unpkg.com/world-atlas@2/countries-110m.json");
+      return response.json();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const { data: geoUrl } = useQuery({
+    queryKey: ["geoUrl"],
+    queryFn: getGeoUrl,
+    staleTime: 24 * 60 * 60 * 1000, // 1 day
+    cacheTime: 48 * 60 * 60 * 1000, // 2 days
+  });
+
+  const conutries = [
+    { country: "Croatia", count: 12 },
+    { country: "India", count: 7 },
+    { country: "Germany", count: 4 },
+  ];
+
+  const dataMap = {};
+  conutries.forEach((d) => {
+    dataMap[d.country] = d.count;
+  });
+
+  const maxCount = Math.max(...conutries.map((d) => d.count), 1);
+
+  const colorScale = scaleLinear().domain([0, maxCount]).range(["#a3b3ff", "#155dfc"]);
 
   return (
     <MapChartWrapp>

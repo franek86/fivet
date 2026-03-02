@@ -22,7 +22,7 @@ function ProtectedRoute({ alowedRoles }) {
     );
   if (!isAuthenticated) return <Navigate to='/' replace />;
   if (!alowedRoles.includes(role)) return <Navigate to='/unauthorized' replace />;
-  console.log(isAuthenticated);
+
   return <Outlet />;
 }
 

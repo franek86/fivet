@@ -3,6 +3,15 @@ import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import { Minus, TrendingDown, TrendingUp } from "lucide-react";
 import { useDashboardEarnings } from "../../hooks/useDashboardStatistic.js";
 import styled from "styled-components";
+import DashboardChart from "./DashboardChart.jsx";
+
+const Section = styled.section`
+  padding: 2rem;
+  margin: 2rem 0;
+  background-color: var(--color-grey-0);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--border-radius-md);
+`;
 
 const Tabs = styled.div`
   display: flex;
@@ -14,7 +23,7 @@ const Tab = styled.div`
   padding: 0.8rem 1rem;
   font-size: 1rem;
   text-transform: uppercase;
-  background-color: ${({ $active }) => ($active ? "#0ea5e9" : "#9ca3af")};
+  background: ${({ $active }) => ($active ? "linear-gradient(to right, oklch(54.6% 0.245 262.881), oklch(62.7% 0.265 303.9))" : "#9ca3af")};
   border-radius: var(--border-radius-md);
   color: var(--color-grey-50);
   margin-bottom: 1rem;
@@ -23,7 +32,7 @@ const Tab = styled.div`
 
 const TabContent = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
 
   @media screen and (min-width: 1200px) {
@@ -36,7 +45,6 @@ const TabCard = styled.div`
   flex-direction: column;
   width: 100%;
   padding: 1.8rem;
-  box-shadow: var(--shadow-lg);
   border: 1px solid var(--color-grey-200);
   background-color: var(--color-grey-50);
   border-radius: var(--border-radius-md);
@@ -45,9 +53,7 @@ const TabCard = styled.div`
 const TabCardValue = styled.div`
   font-size: 3rem;
   font-weight: 600;
-  background: var(--bg-linear-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--color-grey-600);
 
   span {
     font-weight: normal;
@@ -110,44 +116,44 @@ function Earnings() {
   const isSame = trend.value === 0;
 
   return (
-    <div>
-      <h3>Earning</h3>
-      <Tabs>
-        {period.map((p, index) => (
-          <Tab onClick={() => handlePeriodTab(p)} key={index} $active={activePeriod === p}>
-            {p}
-          </Tab>
-        ))}
-      </Tabs>
+    <Section>
+      <h3>Earnings</h3>
+      <div>
+        <Tabs>
+          {period.map((p, index) => (
+            <Tab onClick={() => handlePeriodTab(p)} key={index} $active={activePeriod === p}>
+              {p}
+            </Tab>
+          ))}
+        </Tabs>
 
-      <TabContent>
-        {data?.period === activePeriod &&
-          data?.data.map((d) =>
-            Object.entries(d.subscriptions).map(([type, value]) => (
-              <TabCard key={`${d.label}-${type}`}>
-                <p>{type}</p>
-                <TabCardValue>
-                  <span>$</span>
-                  {value}
-                </TabCardValue>
-                {trend && (
-                  <TrendBadge $up={isUp} $down={isDown}>
-                    <IconStyle>
-                      {isUp && <IconStyleUp size={25} />}
-                      {isDown && <IconStyleDown size={25} />}
-                      {isSame && <IconStyleMinus size={25} />}
-                      <TrendValue $up={isUp} $down={isDown}>
-                        {Math.abs(trend.value)}%
-                      </TrendValue>
-                      <p> Last {trend.windowDays} days</p>
-                    </IconStyle>
-                  </TrendBadge>
-                )}
-              </TabCard>
-            )),
-          )}
-      </TabContent>
-    </div>
+        <TabContent>
+          {data?.period === activePeriod &&
+            data?.data.map((d) =>
+              Object.entries(d.subscriptions).map(([type, value]) => (
+                <TabCard key={`${d.label}-${type}`}>
+                  <p>{type}</p>
+                  <TabCardValue>${value}</TabCardValue>
+                  {trend && (
+                    <TrendBadge $up={isUp} $down={isDown}>
+                      <IconStyle>
+                        {isUp && <IconStyleUp size={25} />}
+                        {isDown && <IconStyleDown size={25} />}
+                        {isSame && <IconStyleMinus size={25} />}
+                        <TrendValue $up={isUp} $down={isDown}>
+                          {Math.abs(trend.value)}%
+                        </TrendValue>
+                        <p> Last {trend.windowDays} days</p>
+                      </IconStyle>
+                    </TrendBadge>
+                  )}
+                </TabCard>
+              )),
+            )}
+        </TabContent>
+      </div>
+      <div>{/*  <DashboardChart data={data} isLoading={isLoading} /> */}</div>
+    </Section>
   );
 }
 

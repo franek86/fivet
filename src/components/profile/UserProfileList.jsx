@@ -11,9 +11,9 @@ import { useDeleteUserProfile, useGetAllUserProfile } from "../../hooks/useProfi
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { CircleUser } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import socket from "../../shared/socket.js";
+/* import socket from "../../shared/socket.js";
 import { useEffect } from "react";
-import { useRealtime } from "../../hooks/useRealtime.js";
+import { useRealtime } from "../../hooks/useRealtime.js"; */
 
 const CardWrap = styled.div`
   display: grid;
@@ -49,18 +49,18 @@ const CardBottom = styled.div`
 `;
 
 const CardButton = styled.div`
-  color: var(--color-grey-400);
+  background-color: var(--color-red-300);
+  color: var(--color-grey-0);
   padding: 0.5rem;
   font-size: 1.25rem;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  border: 1px solid var(--color-grey-400);
-  border-radius: 2rem;
+  box-shadow: var(--shadow-md);
+  border-radius: var(--border-radius-sm);
 `;
 
 const CardButtonDelete = styled(CardButton)`
   &:hover {
-    color: var(--color-grey-0);
     background-color: var(--color-red-700);
   }
 `;
@@ -156,7 +156,7 @@ function UserProfileListPlaceholder() {
 }
 
 function UserProfileList() {
-  const queryClient = useQueryClient();
+  /*  const queryClient = useQueryClient(); */
   const { data, isPending, isError, isFetching } = useGetAllUserProfile();
   const { mutate } = useDeleteUserProfile();
   const dispatch = useDispatch();

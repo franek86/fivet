@@ -59,11 +59,11 @@ const variations = {
     width: 100%;
     gap: 0.75rem;
     font-size: 1.3rem;
-    background-color: transparent;
+    background: transparent;
     justify-content: space-between;
 
     &:hover {
-      background-color: var(--color-brand-200);
+      background: var(--bg-linear-gradient-soft);
     }
   `,
 };

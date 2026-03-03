@@ -6,92 +6,48 @@ const styled = { createGlobalStyle };
 
 const GlobalStyles = styled.createGlobalStyle`
   :root {
-    &,
-    &.light-mode {
-      /* Grey */
-      --color-grey-0: #fff;
-      --color-grey-50: #f9fafb;
-      --color-grey-100: #f3f4f6;
-      --color-grey-200: #e5e7eb;
-      --color-grey-300: #d1d5db;
-      --color-grey-400: #9ca3af;
-      --color-grey-500: #6b7280;
-      --color-grey-600: #4b5563;
-      --color-grey-700: #374151;
-      --color-grey-800: #1f2937;
-      --color-grey-900: #111827;
+    /* LIGHT MODE (default) */
+    /* Grey */
+    --color-grey-0: #fff;
+    --color-grey-50: #f9fafb;
+    --color-grey-100: #f3f4f6;
+    --color-grey-200: #e5e7eb;
+    --color-grey-300: #d1d5db;
+    --color-grey-400: #9ca3af;
+    --color-grey-500: #6b7280;
+    --color-grey-600: #4b5563;
+    --color-grey-700: #374151;
+    --color-grey-800: #1f2937;
+    --color-grey-900: #111827;
 
-      --color-blue-100: #e0f2fe;
-      --color-blue-500: #0ea5e9;
-      --color-blue-700: #0369a1;
-      --color-green-100: #dcfce7;
-      --color-green-200: #99f6e4;
-      --color-green-700: #15803d;
-      --color-yellow-100: #fef9c3;
-      --color-yellow-700: #a16207;
-      --color-silver-100: #e5e7eb;
-      --color-silver-700: #374151;
-      --color-indigo-100: oklch(93% 0.034 272.788);
-      --color-indigo-400: oklch(78.5% 0.115 274.713);
-      --color-indigo-600: oklch(58.5% 0.233 277.117);
-      --color-indigo-700: oklch(51.1% 0.262 276.966);
+    --color-blue-100: #e0f2fe;
+    --color-blue-500: #0ea5e9;
+    --color-blue-700: #0369a1;
 
-      --color-red-100: #fee2e2;
-      --color-red-700: #b91c1c;
-      --color-red-800: #991b1b;
+    --color-green-100: #dcfce7;
+    --color-green-200: oklch(92.5% 0.084 155.995);
+    --color-green-700: #15803d;
 
-      --backdrop-color: rgba(255, 255, 255, 0.1);
-      --linear-gradient: linear-gradient(90deg, #e0e0e0 25%, #ffffff 50%, #f0f0f0 75%);
-      --bg-linear-gradient: linear-gradient(to right, oklch(54.6% 0.245 262.881), oklch(62.7% 0.265 303.9));
-      --bg-linear-gradient-soft: linear-gradient(to right, oklch(80.9% 0.105 251.813), oklch(82.7% 0.119 306.383));
+    --color-yellow-100: #fef9c3;
+    --color-yellow-700: #a16207;
 
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.07);
-      --shadow-md: 0px 1rem 2.8rem rgba(0, 0, 0, 0.1);
-      --shadow-lg: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.12);
+    --color-red-100: oklch(93.6% 0.032 17.717);
+    --color-red-300: oklch(80.8% 0.114 19.571);
+    --color-red-700: oklch(50.5% 0.213 27.518);
+    --color-red-800: oklch(44.4% 0.177 26.899);
 
-      --image-grayscale: 0;
-      --image-opacity: 100%;
-    }
+    --backdrop-color: rgba(255, 255, 255, 0.1);
+    --linear-gradient: linear-gradient(90deg, #e0e0e0 25%, #ffffff 50%, #f0f0f0 75%);
+    --bg-linear-gradient: linear-gradient(to right, oklch(54.6% 0.245 262.881), oklch(62.7% 0.265 303.9));
+    --bg-linear-gradient-soft: linear-gradient(to right, oklch(80.9% 0.105 251.813), oklch(82.7% 0.119 306.383));
 
-    &.dark-mode {
-      --color-grey-0: #18212f;
-      --color-grey-50: #111827;
-      --color-grey-100: #1f2937;
-      --color-grey-200: #374151;
-      --color-grey-300: #4b5563;
-      --color-grey-400: #6b7280;
-      --color-grey-500: #9ca3af;
-      --color-grey-600: #d1d5db;
-      --color-grey-700: #e5e7eb;
-      --color-grey-800: #f3f4f6;
-      --color-grey-900: #f9fafb;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.07);
+    --shadow-md: 0px 1rem 2.8rem rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.12);
 
-      --color-blue-100: #075985;
-      --color-blue-700: #e0f2fe;
-      --color-green-100: #166534;
-      --color-green-700: #dcfce7;
-      --color-yellow-100: #854d0e;
-      --color-yellow-700: #fef9c3;
-      --color-silver-100: #374151;
-      --color-silver-700: #f3f4f6;
-      --color-indigo-100: #3730a3;
-      --color-indigo-700: #e0e7ff;
+    --image-grayscale: 0;
+    --image-opacity: 100%;
 
-      --color-red-100: #fee2e2;
-      --color-red-700: #b91c1c;
-      --color-red-800: #991b1b;
-
-      --backdrop-color: rgba(0, 0, 0, 0.3);
-
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-      --shadow-md: 0px 0.6rem 2.4rem rgba(0, 0, 0, 0.3);
-      --shadow-lg: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.4);
-
-      --image-grayscale: 10%;
-      --image-opacity: 90%;
-    }
-
-    /* Color brand */
     --color-brand-50: oklch(97% 0.014 254.604);
     --color-brand-100: oklch(93.2% 0.032 255.585);
     --color-brand-200: oklch(88.2% 0.059 254.128);
@@ -109,12 +65,11 @@ const GlobalStyles = styled.createGlobalStyle`
 
     --toastify-font-family: "Urbanist", serif;
 
-    //responsive brakepoints
-    --device-sm: 640px; //640px
-    --device-md: 48rem; //768px
-    --device-lg: 64rem; //1024px
-    --device-xl: 80rem; //1280px
-    --device-xxl: 96rem; //1536px
+    --device-sm: 640px; /* 640px */
+    --device-md: 48rem; /* 768px */
+    --device-lg: 64rem; /* 1024px */
+    --device-xl: 80rem; /* 1280px */
+    --device-xxl: 96rem; /* 1536px */
   }
 
   *,
@@ -130,6 +85,42 @@ const GlobalStyles = styled.createGlobalStyle`
       border 0.3s;
   }
 
+  /* DARK MODE */
+  body.dark-mode {
+    --color-grey-0: #18212f;
+    --color-grey-50: #111827;
+    --color-grey-100: #1f2937;
+    --color-grey-200: #374151;
+    --color-grey-300: #4b5563;
+    --color-grey-400: #6b7280;
+    --color-grey-500: #9ca3af;
+    --color-grey-600: #d1d5db;
+    --color-grey-700: #e5e7eb;
+    --color-grey-800: #f3f4f6;
+    --color-grey-900: #f9fafb;
+
+    --color-blue-100: #075985;
+    --color-blue-700: #e0f2fe;
+
+    --color-green-100: #166534;
+    --color-green-200: oklch(44.8% 0.119 151.328);
+
+    --color-yellow-100: #854d0e;
+    --color-yellow-700: #fef9c3;
+
+    --backdrop-color: rgba(0, 0, 0, 0.3);
+    --linear-gradient: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
+    --bg-linear-gradient: linear-gradient(to right, oklch(45% 0.22 262.881), oklch(52% 0.24 303.9));
+    --bg-linear-gradient-soft: linear-gradient(to right, oklch(35% 0.08 251.813), oklch(38% 0.09 306.383));
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0px 0.6rem 2.4rem rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.4);
+
+    --image-grayscale: 10%;
+    --image-opacity: 90%;
+  }
+
   html {
     font-size: 62.5%;
   }
@@ -137,7 +128,7 @@ const GlobalStyles = styled.createGlobalStyle`
   body {
     font-family: "Urbanist", serif;
     color: var(--color-grey-700);
-    background-color: var(--color-grey-100);
+    background-color: var(--color-grey-200);
 
     transition:
       color 0.3s,
@@ -230,7 +221,7 @@ const GlobalStyles = styled.createGlobalStyle`
     color: var(--color-grey-400);
   }
 
-  //Title and search container
+  /* Title and search container */
   .search-container {
     display: grid;
     gap: 1rem;
@@ -246,7 +237,7 @@ const GlobalStyles = styled.createGlobalStyle`
     gap: 3rem;
   }
 
-  //Simmer animation
+  /* Simmer animation */
   .simmer {
     background: var(--linear-gradient);
     background-size: 400% 100%;
@@ -260,12 +251,13 @@ const GlobalStyles = styled.createGlobalStyle`
     padding: 1.35rem 0.5rem;
   }
 
-  //React date time
+  /* React date time */
   .react-datepicker__input-container input {
     padding: 1.25rem 0.9rem;
     border: 1px solid var(--color-grey-500);
     border-radius: var(--border-radius-sm);
     min-width: 100%;
+    background-color: transparent;
   }
 
   .react-datepicker-popper {
@@ -273,7 +265,7 @@ const GlobalStyles = styled.createGlobalStyle`
   }
 
   .custom-calendar {
-    //min-width: 350px !important;
+    /* min-width: 350px !important; */
     font-size: 1.4rem;
     border: none;
     background-color: var(--color-grey-50);
@@ -370,7 +362,7 @@ const GlobalStyles = styled.createGlobalStyle`
     border-color: var(--color-grey-0);
   }
 
-  // Range react
+  /* Range react */
   .range-wrapper {
     position: relative;
     height: 6px;
@@ -390,7 +382,7 @@ const GlobalStyles = styled.createGlobalStyle`
     border-radius: 50%;
   }
 
-  //React Tostify
+  /* React Tostify */
   .Toastify__toast {
     font-size: 1.2rem;
   }

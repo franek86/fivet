@@ -37,6 +37,7 @@ const SearchInput = styled.input`
   border: none;
   width: 100%;
   border-radius: 20px;
+  background-color: transparent;
 `;
 
 function SearchBar({ paramKey = "search", width = "27rem" }) {

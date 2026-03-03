@@ -5,11 +5,10 @@ import StatisticBox from "../components/dashboard/StatisticBox.jsx";
 import TopShips from "../components/dashboard/TopShips.jsx";
 import Title from "../components/ui/Title.jsx";
 import styled from "styled-components";
-import DashboardChart from "../components/dashboard/DashboardChart.jsx";
-import SubcriptionChart from "../components/dashboard/SubscriptionChart.jsx";
-import { useDashboardEarnings, useDashboardStatistic } from "../hooks/useDashboardStatistic.js";
 import MapChart from "../components/dashboard/MapChart.jsx";
 import Earnings from "../components/dashboard/Earnings.jsx";
+
+import { useDashboardStatistic } from "../hooks/useDashboardStatistic.js";
 
 const TwoColumnsRole = styled.section`
   display: grid;
@@ -27,7 +26,6 @@ const TwoColumns = styled.section`
   grid-template-columns: 1fr;
   gap: 2rem;
   margin: 2rem 0;
-  min-height: 500px;
 
   @media screen and (min-width: 1200px) {
     grid-template-columns: 1fr 1fr;
@@ -47,15 +45,10 @@ function Dashboard() {
 
         {role === "ADMIN" && (
           <>
-            <TwoColumns>
-              <Earnings />
-              <SubcriptionChart data={data} isLoading={isLoading} />
-            </TwoColumns>
+            <Earnings />
 
-            <TwoColumns>
-              <DashboardChart data={data} isLoading={isLoading} />
-              <MapChart />
-            </TwoColumns>
+            {/*  <SubcriptionChart data={data} isLoading={isLoading} /> */}
+            <MapChart />
           </>
         )}
         <TwoColumnsRole $role={role}>

@@ -18,7 +18,8 @@ import { ChevronDown, Eye, Pencil, Trash2 } from "lucide-react";
 const StyledPriority = styled.div`
   max-width: max-content;
   margin: auto;
-  background-color: ${({ $props }) => ($props === "REGULAR" ? "#c7d2fe" : "#99f6e4")};
+  background-color: ${({ $props }) => ($props === "REGULAR" ? "var(--color-blue-100)" : "var(--color-green-200)")};
+
   padding: 0.5rem 0.85rem;
   font-size: 1.2rem;
   border-radius: var(--border-radius-lg);

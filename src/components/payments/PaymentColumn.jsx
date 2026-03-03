@@ -25,6 +25,7 @@ const Status = styled.span`
     }
   }};
   color: var(--color-grey-0);
+  border-radius: var(--border-radius-md);
   display: inline-block;
   padding: 0.5rem;
   width: 100%;

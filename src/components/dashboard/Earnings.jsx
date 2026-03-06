@@ -3,7 +3,7 @@ import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import { Minus, TrendingDown, TrendingUp } from "lucide-react";
 import { useDashboardEarnings } from "../../hooks/useDashboardStatistic.js";
 import styled from "styled-components";
-import DashboardChart from "./DashboardChart.jsx";
+/* import DashboardChart from "./DashboardChart.jsx"; */
 
 const Section = styled.section`
   padding: 2rem;

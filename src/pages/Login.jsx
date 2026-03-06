@@ -18,16 +18,14 @@ const FormWrap = styled.div`
   border-radius: var(--border-radius-md);
 `;
 
-const TextWrap = styled.p`
-  font-size: 1.5rem;
-  font-weight: 600;
-`;
-
-const LinkText = styled(Link)`
-  color: var(--color-brand-600);
+const ButtonTest = styled.div`
+  background: var(--bg-linear-gradient);
+  padding: 1rem;
+  color: var(--color-grey-0);
+  cursor: pointer;
 
   &:hover {
-    color: var(--color-brand-400);
+    background: var(--bg-linear-gradient-soft);
   }
 `;
 
@@ -35,14 +33,18 @@ function Login() {
   const navigate = useNavigate();
   return (
     <FormWrap>
-      {/*  <button onClick={() => navigate("/sign-up?plan=STANDARD")}>Standard</button>
-      <button onClick={() => navigate("/sign-up?plan=PREMIUM")}>Premium</button> */}
+      <ButtonTest className='btn bg-gradient' onClick={() => navigate("/sign-up?plan=STANDARD")}>
+        Standard test
+      </ButtonTest>
+      <ButtonTest className='btn bg-gradient' onClick={() => navigate("/sign-up?plan=PREMIUM")}>
+        Premium test
+      </ButtonTest>
       <Title>Login</Title>
       <p>Please sign in to continue</p>
       <LoginForm />
-      <TextWrap>
+      {/*  <TextWrap>
         Don't have a Fivet account? Please <LinkText to='/sign-up'>Sign up</LinkText>.
-      </TextWrap>
+      </TextWrap> */}
     </FormWrap>
   );
 }

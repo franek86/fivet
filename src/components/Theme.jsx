@@ -1,4 +1,3 @@
-import React from "react";
 import { useTheme } from "../hooks/useTheme.js";
 import { Moon, Sun } from "lucide-react";
 import styled from "styled-components";

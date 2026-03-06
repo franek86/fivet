@@ -10,7 +10,7 @@ import BackBtn from "../BackBtn.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import ResetPasswordForm from "./ResetPasswordForm.jsx";
 
-import { forgetPasswordApi, resetPasswordApi, verifyOtpForgetPasswordApi } from "../../services/apiAuth.js";
+import { forgetPasswordApi, verifyOtpForgetPasswordApi } from "../../services/apiAuth.js";
 
 import styled from "styled-components";
 import { toast } from "react-toastify";
@@ -46,17 +46,24 @@ const ResendOtp = styled.p`
   }
 `;
 
+const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+`;
+
 function ForgotPasswordForm() {
   const [step, setStep] = useState("emailStep");
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [userEmail, setUserEmail] = useState(null);
   const [resend, setResend] = useState(true);
   const [timer, setTimer] = useState(60);
   const inputRefs = useRef([]);
 
-  const navigate = useNavigate();
-
   const startResendTimer = () => {
+    setTimer(60);
+    setResend(false);
     const interval = setInterval(() => {
       setTimer((prev) => {
         if (prev <= 1) {
@@ -85,20 +92,8 @@ function ForgotPasswordForm() {
 
   const { mutate: verifyOtpMutation, isPending: verifyOtpPending } = useMutation({
     mutationFn: verifyOtpForgetPasswordApi,
-    onSuccess: (_, { email, otp }) => {
+    onSuccess: () => {
       setStep("resetStep");
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
-  const { mutate: resetPasswordMutation } = useMutation({
-    mutationFn: resetPasswordApi,
-    onSuccess: (_, { email, password }) => {
-      setStep("emailStep");
-      toast.success("Password reset successfully! Please login with your new password.");
-      navigate("/");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -135,6 +130,11 @@ function ForgotPasswordForm() {
 
   const onHandleVerifyOtp = () => {
     verifyOtpMutation({ email: userEmail, otp });
+  };
+
+  const handleResendOtp = (email) => {
+    forgetPasswordMutation({ email });
+    startResendTimer();
   };
 
   return (
@@ -184,10 +184,12 @@ function ForgotPasswordForm() {
               />
             ))}
           </ShowOtpWrapper>
-          <Button disabled={verifyOtpPending} onClick={onHandleVerifyOtp}>
-            {verifyOtpPending ? "Verifing..." : "Verify OTP"}
-          </Button>
-          <>{resend ? <ResendOtp onClick={resendOtp}>Resend OTP</ResendOtp> : `Resend OTP in ${timer}`}</>
+          <ButtonWrapper>
+            <Button className='' disabled={verifyOtpPending} onClick={onHandleVerifyOtp}>
+              {verifyOtpPending ? "Verifing..." : "Verify OTP"}
+            </Button>
+          </ButtonWrapper>
+          <>{resend ? <ResendOtp onClick={() => handleResendOtp(userEmail)}>Resend OTP</ResendOtp> : `Resend OTP in ${timer}`}</>
         </>
       )}
 

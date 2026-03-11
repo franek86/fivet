@@ -11,7 +11,7 @@ import Checkbox from "../ui/Checkbox.jsx";
 import Sort from "../ui/Sort.jsx";
 import Button from "../ui/Button.jsx";
 import Modal from "../Modal.jsx";
-import ShipFilters from "./ShipFIlters.jsx";
+import ShipFilters from "./ShipFilters.jsx";
 
 import styled from "styled-components";
 

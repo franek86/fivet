@@ -9,14 +9,6 @@ import { useRealtime } from "../hooks/useRealtime.js";
 
 const LayoutGrid = styled.div`
   width: 100%;
-  /* display: grid;
-  grid-template-columns: 1fr;
-  @media screen and (min-width: 640px) {
-    grid-template-columns: 10rem 1fr;
-  }
-  @media screen and (min-width: 1024px) {
-    grid-template-columns: 20rem 1fr;
-  } */
 `;
 
 const Main = styled.main`

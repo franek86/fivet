@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import BackBtn from "../components/BAckBtn.jsx";
+import BackBtn from "../components/BackBtn.jsx";
 import Logo from "../components/Logo.jsx";
 
 const Wrap = styled.main`

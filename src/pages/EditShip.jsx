@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import styled from "styled-components";
 
-import BackBtn from "../components/BAckBtn.jsx";
+import BackBtn from "../components/BackBtn.jsx";
 import Title from "../components/ui/Title.jsx";
 import CreateShipForm from "../components/ships/CreateShipForm.jsx";
 

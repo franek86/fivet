@@ -11,3 +11,14 @@ export const getPayments = async (params = {}) => {
     throw new Error(message);
   }
 };
+
+/* Delete payment by id */
+export const deletePayment = async (id) => {
+  try {
+    const response = await apiClient.delete(`/payments/${id}`);
+    return response.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};

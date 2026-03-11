@@ -9,7 +9,6 @@ const PageWrapper = styled.div`
   max-width: 100%;
   margin: 0 auto;
   padding: 2rem;
-  background: #f9fafb;
 `;
 
 const Header = styled.div`
@@ -92,17 +91,17 @@ const InfoGrid = styled.div`
 
 const InfoItem = styled.div`
   font-size: 1.35rem;
-  color: #374151;
+  color: var(--color-grey-900);
 
   span {
     font-weight: bold;
-    color: #111827;
+    color: var(--color-grey-900);
   }
 `;
 
 const Description = styled.p`
   font-size: 1.35rem;
-  color: #374151;
+  color: var(--color-grey-900);
   line-height: 1.5;
 `;
 
@@ -200,17 +199,21 @@ function SingleShipData() {
             <span>Cargo Capacity:</span> {cargoCapacity}
           </InfoItem>
 
-          {buildYear && (
-            <InfoItem>
-              <span>Build Year:</span> {buildYear}
-            </InfoItem>
-          )}
+          {(buildYear) =>
+            0(
+              <InfoItem>
+                <span>Build Year:</span> {buildYear}
+              </InfoItem>,
+            )
+          }
 
-          {refitYear && (
-            <InfoItem>
-              <span>Refit Year:</span> {refitYear}
-            </InfoItem>
-          )}
+          {(refitYear) =>
+            0(
+              <InfoItem>
+                <span>Refit Year:</span> {refitYear}
+              </InfoItem>,
+            )
+          }
 
           {buildCountry && (
             <InfoItem>

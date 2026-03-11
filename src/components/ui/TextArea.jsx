@@ -30,4 +30,6 @@ const TextArea = forwardRef(({ directions, register, label, name }, ref) => {
   );
 });
 
+TextArea.displayName = "TextArea";
+
 export default TextArea;

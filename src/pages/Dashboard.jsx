@@ -21,17 +21,6 @@ const TwoColumnsRole = styled.section`
   }
 `;
 
-const TwoColumns = styled.section`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  margin: 2rem 0;
-
-  @media screen and (min-width: 1200px) {
-    grid-template-columns: 1fr 1fr;
-  }
-`;
-
 function Dashboard() {
   const role = useSelector((state) => state.auth.role);
   const { data, isLoading } = useDashboardStatistic();

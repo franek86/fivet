@@ -10,7 +10,7 @@ import { customFormatDate } from "../../utils/formatDate.js";
 import { useDeleteUserProfile, useGetAllUserProfile } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { CircleUser } from "lucide-react";
-import { useQueryClient } from "@tanstack/react-query";
+
 /* import socket from "../../shared/socket.js";
 import { useEffect } from "react";
 import { useRealtime } from "../../hooks/useRealtime.js"; */

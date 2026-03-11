@@ -21,7 +21,7 @@ export const editAddressBoookContactApi = async (newData, id) => {
     const response = await apiClient.patch(`/address-book/${id}`, { ...newData });
     return response.data;
   } catch (error) {
-    console.log(error);
+    const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);
   }
 };
@@ -34,7 +34,7 @@ export const editAddressBookPriorityApi = async (id, newPriority) => {
     const response = await apiClient.patch(`/address-book/${id}`, { priority: newPriority });
     return response.data;
   } catch (error) {
-    console.log(error);
+    const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);
   }
 };

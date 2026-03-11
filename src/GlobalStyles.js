@@ -108,6 +108,8 @@ const GlobalStyles = styled.createGlobalStyle`
     --color-yellow-100: #854d0e;
     --color-yellow-700: #fef9c3;
 
+    --color-brand-100: oklch(37.9% 0.146 265.522);
+
     --backdrop-color: rgba(0, 0, 0, 0.3);
     --linear-gradient: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);
     --bg-linear-gradient: linear-gradient(to right, oklch(45% 0.22 262.881), oklch(52% 0.24 303.9));

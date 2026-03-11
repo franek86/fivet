@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import styled from "styled-components";
-import { useDashboardStatistic } from "../../hooks/useDashboardStatistic.js";
+/* import { useDashboardStatistic } from "../../hooks/useDashboardStatistic.js"; */
 
 import { formatedPrice } from "../../utils/formattedPrice.js";
 import { Eye } from "lucide-react";

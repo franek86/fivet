@@ -1,5 +1,7 @@
 import { useDispatch } from "react-redux";
 
+import { Pencil, Trash2 } from "lucide-react";
+
 import Button from "../ui/Button.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 import Dropdown from "../ui/Dropdown.jsx";
@@ -7,9 +9,11 @@ import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
+
 import { customFormatDate } from "../../utils/formatDate.js";
 import styled from "styled-components";
-import { Pencil, Trash2 } from "lucide-react";
+
+import { useDeletePayment } from "../../hooks/usePayments.js";
 
 const Status = styled.span`
   background-color: ${({ $status }) => {
@@ -40,6 +44,7 @@ const P = styled.div`
 function PaymentColumn({ data, selected, onCheckboxChange }) {
   const dispatch = useDispatch();
   const { id, userId, status, amount, currency, createdAt } = data;
+  const { mutate } = useDeletePayment();
 
   return (
     <tr>
@@ -68,7 +73,7 @@ function PaymentColumn({ data, selected, onCheckboxChange }) {
       </td>
 
       <Modal name={id} onClose={() => dispatch(closeModalByName(id))}>
-        <ConfirmDialog itemName={id} onConfirm={() => mutate(categoryId)} onCloseModal={() => dispatch(closeModalByName(id))} />
+        <ConfirmDialog itemName={id} onConfirm={() => mutate(id)} onCloseModal={() => dispatch(closeModalByName(id))} />
       </Modal>
     </tr>
   );

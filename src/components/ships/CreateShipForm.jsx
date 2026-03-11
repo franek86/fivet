@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "react-router";
@@ -19,7 +19,6 @@ import { useCreateShip } from "../../hooks/ships/useCreateShip.js";
 import { useEditShip } from "../../hooks/ships/useEditShip.js";
 import { useShip } from "../../hooks/ships/useShip.js";
 
-import { useUser } from "../../hooks/useAuth.js";
 import { useAllShipType } from "../../hooks/useShipType.js";
 import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 import { useSelector } from "react-redux";
@@ -112,7 +111,7 @@ const ShipsForm = () => {
         images: normalizedImages,
       });
     }
-  }, [singleShipData, reset]);
+  }, [singleShipData, reset, isEditSession]);
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -120,12 +119,12 @@ const ShipsForm = () => {
     // Handle mainImage
     if (data.mainImage instanceof File) {
       formData.append("mainImage", data.mainImage);
-    } else if (typeof data.mainImage === "string") {
-      formData.append("mainImage", data.mainImage);
     }
 
     // Handle multiple images
-    newImages.forEach((img) => formData.append("images", img.file));
+    newImages.forEach((img) => {
+      formData.append("images", img.file);
+    });
 
     // deleteImageIds = ["publicId1", "publicId2"]
     if (deleteImageIds && deleteImageIds.length > 0) {
@@ -185,7 +184,7 @@ const ShipsForm = () => {
             placeholder='e.g. ten-spirit'
             directions='column'
             register={register}
-            {...register("slug", { required: "SLug is required", onChange: () => (slugManuallyEdited.current = true) })}
+            {...register("slug", { required: "SLug is required" })}
           />
           <InputErrorMessage message={errors.slug?.message} />
         </Column>

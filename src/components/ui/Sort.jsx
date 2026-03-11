@@ -19,7 +19,7 @@ function Sort({ items, label }) {
       searchParams.set("sortBy", selectedValue);
       setSearchParams(searchParams);
     }
-  }, [selectedValue]);
+  }, [selectedValue, searchParams, setSearchParams]);
 
   return (
     <SortWrap>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import styled from "styled-components";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getRecentEvents } from "../../services/apiEvents.js";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 

@@ -1,4 +1,3 @@
-"use client";
 import { Legend, Pie, PieChart, ResponsiveContainer, Sector } from "recharts";
 import styled from "styled-components";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
@@ -43,11 +42,11 @@ const MyCustomPie = (props) => {
 };
 
 export default function SubcriptionChart({ isAnimationActive = true, data, isLoading }) {
+  const chartData = useMemo(() => subscriptionStatsToChartData(data?.subscriptionStats), [data?.subscriptionStats]);
+
   if (isLoading) {
     return <TablePlaceholder count={6} />;
   }
-
-  const chartData = useMemo(() => subscriptionStatsToChartData(data?.subscriptionStats), [data?.subscriptionStats]);
 
   return (
     <Section>

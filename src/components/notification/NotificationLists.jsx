@@ -50,29 +50,33 @@ const SwitchWrapper = styled.div`
   }
 `;
 
-const selectNotifications = (state) => state.realtime.notifications;
-export const selectUnreadAdminNotifications = createSelector([selectNotifications], (notifications) =>
-  notifications.filter((n) => !n.read && n.scope === "ADMIN"),
-);
-
 function NotificationLists() {
   const dispatch = useDispatch();
 
   const { data, isLoading, isError } = useNotificationList();
-  const { mutate } = useUpdateReadNotification();
+  const { mutate: updateRead } = useUpdateReadNotification();
   const { mutate: deleteNotification } = useDeleteNotification();
 
-  const realtimeNotifications = useSelector(selectUnreadAdminNotifications);
+  const selectNotifications = (state) => state.realtime.notifications;
+  /*  const selectUnreadAdminNotifications = createSelector([selectNotifications], (notifications) =>
+    notifications.filter((n) => !n.read && n.scope === "ADMIN"),
+  );
+   const selectUnreadUserNotifications = createSelector([selectNotifications], (notifications) =>
+    notifications.filter((n) => !n.read && n.scope === "USER"),
+  ); */
+
+  const selectUnreadNotifications = createSelector([selectNotifications], (notifications) => notifications.filter((n) => !n.read));
+
+  const realtimeNotifications = useSelector(selectUnreadNotifications);
   const notifications = [...realtimeNotifications, ...(data || [])];
   if (isLoading) return <Spinner />;
   if (notifications.length < 1) return <EmptyState message='No notifications for now.' />;
   if (isError) return <div>Error</div>;
 
   const handleToggleRead = (id, checked) => {
-    if (dbNotifications.find((n) => n.id === id)) {
+    if (notifications.find((n) => n.id === id)) {
       updateRead({ id, data: checked });
     }
-    dispatch(markNotificationRead(id));
   };
 
   return (
@@ -89,7 +93,7 @@ function NotificationLists() {
             <Buttons>
               <SwitchWrapper>
                 <p>Mark as read</p>
-                <ToggleSwitch checked={item.isRead} onChange={(e) => handleChange(item.id, e.target.checked)} />
+                <ToggleSwitch checked={item.isRead} onChange={(e) => handleToggleRead(item.id, e.target.checked)} />
               </SwitchWrapper>
               <Button $size='small' $variation='danger' onClick={() => dispatch(openModalByName(item.id))}>
                 Delete

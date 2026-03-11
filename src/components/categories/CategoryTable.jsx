@@ -29,7 +29,7 @@ function CategoryTable() {
   const searchTerm = useSelector((state) => state.search.term);
 
   // React Hooks
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   // Read params from URL
   const page = Number(searchParams.get("pageNumber") ?? 1);
@@ -45,7 +45,7 @@ function CategoryTable() {
   // Custom hook for selection and deletion
   const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(
     categories,
-    useDeleteCategory().mutate
+    useDeleteCategory().mutate,
   );
 
   // Sort options

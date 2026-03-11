@@ -16,6 +16,7 @@ const notificationSlice = createSlice({
     markAllAsRead: (state) => {
       state.unreadCount = 0;
     },
+
     clearNotifications: (state) => {
       state.notifications = [];
       state.unreadCount = 0;

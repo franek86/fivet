@@ -79,16 +79,10 @@ const SelectOption = styled.div`
   }
 `;
 
-const CustomSelect = forwardRef(({ name, control, options, label, size, directions = "column", variation, valueKey = "name" }, ref) => {
-  if (!control) {
-    console.error(`❌ CustomSelect: Missing 'control' prop for ${name}`);
-    return null;
-  }
-
+const CustomSelect = forwardRef(({ name, control, options, label, size, directions = "column", variation, valueKey = "name" }) => {
   const { field } = useController({ name, control });
-
-  const isOpen = useSelector((state) => state.ui.isDropdownOpenByName);
   const dispatch = useDispatch();
+  const isOpen = useSelector((state) => state.ui.isDropdownOpenByName);
   const dropdownRef = useRef(null);
   const triggerRef = useRef(null);
   const [alignRight, setAlignRight] = useState(false);
@@ -112,13 +106,18 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, directio
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [dispatch]);
+  }, [dispatch, name]);
 
   useEffect(() => {
     if (openedSelect && dropdownRef.current) {
       adjustDropdownAlignment(dropdownRef.current, setAlignRight);
     }
   }, [openedSelect]);
+
+  if (!control) {
+    console.error(`❌ CustomSelect: Missing 'control' prop for ${name}`);
+    return null;
+  }
 
   return (
     <Wrap $directions={directions}>
@@ -141,5 +140,7 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, directio
     </Wrap>
   );
 });
+
+CustomSelect.displayName = "CustomSelect";
 
 export default CustomSelect;

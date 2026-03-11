@@ -10,7 +10,7 @@ export const usePublishShip = () => {
       toast.success("Ship successfully published");
       queryClient.invalidateQueries(["ships"]);
     },
-    onError: () => {
+    onError: (error) => {
       toast.success(error.message || "Failed to publish ship");
     },
   });

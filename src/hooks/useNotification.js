@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { deleteNotificationApi, getAllUnreadNotifications, getNotifications, updateReadNotification } from "../services/apiNotification.js";

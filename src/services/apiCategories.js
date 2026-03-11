@@ -1,5 +1,4 @@
 import apiClient from "../utils/axiosConfig.js";
-import { PAGE_SIZE } from "../utils/constants.js";
 
 /* GET ALL SHIP TYPES */
 export const getAllShipTypes = async () => {

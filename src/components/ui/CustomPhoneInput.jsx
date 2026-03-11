@@ -36,4 +36,6 @@ const CustomPhoneInput = forwardRef(({ control, name, label, defaultValue }, ref
   );
 });
 
+CustomPhoneInput.displayName = "CustomPhoneInput";
+
 export default CustomPhoneInput;

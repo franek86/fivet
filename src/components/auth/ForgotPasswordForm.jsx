@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router";
 
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";

@@ -56,6 +56,7 @@ function FormEvent() {
   const {
     register,
     control,
+    setValue,
     reset,
     watch,
     formState: { errors },

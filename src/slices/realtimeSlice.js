@@ -26,7 +26,7 @@ const realtimeSlice = createSlice({
 
       state.unreadCount = state.notifications.filter((n) => !n.read && n.scope === "ADMIN").length;
     },
-    clearRealTime(state) {
+    clearRealTime() {
       return initialState;
     },
   },

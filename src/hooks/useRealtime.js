@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
 import socket from "../shared/socket.js";
@@ -43,12 +43,28 @@ export const useRealtime = () => {
       );
     };
 
+    const shipPublished = (payload) => {
+      let message = `Your ship - ${payload.shipTitle} has been published`;
+      toast.success(message);
+      dispatch(
+        addNotification({
+          shipTitle: payload.shipName,
+          createdAt: payload.createdAt,
+          message,
+          scope: "USER",
+          read: false,
+        }),
+      );
+    };
+
     socket.on("online-users", handler);
     socket.on("new-ship", newPostHandler);
+    socket.on("ship-published", shipPublished);
 
     return () => {
       socket.off("online-users", handler);
       socket.off("new-post", newPostHandler);
+      socket.off("ship-published", shipPublished);
     };
   }, [dispatch, queryClient]);
 };

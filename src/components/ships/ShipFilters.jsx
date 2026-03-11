@@ -92,16 +92,6 @@ const ShipFilters = ({ data, shipTypes, onApply, onReset }) => {
   /* Get values from url query params  */
   const currentIsPublished = searchParams.get("isPublished") ?? false;
   const currentShipType = searchParams.get("shipType")?.split(",") ?? "";
-  const currentPricePramas = searchParams.get("price");
-
-  const currentPrice = currentPricePramas ? currentPricePramas?.split("-").map(Number) : [];
-
-  /* Check active filters */
-  /*  const isShipTypeActive = !!currentShipType;
-
-  const hasActiveFilter = isShipTypeActive;
-
-  const activeFilterCount = isShipTypeActive.filter(Boolean).length; */
 
   /*  Set local state */
   const [isPublished, setIsPublished] = useState(currentIsPublished);

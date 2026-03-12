@@ -259,7 +259,11 @@ const GlobalStyles = styled.createGlobalStyle`
     border: 1px solid var(--color-grey-500);
     border-radius: var(--border-radius-sm);
     min-width: 100%;
-    background-color: transparent;
+    background-color: var(--color-grey-50);
+
+    &::placeholder {
+      color: var(--color-grey-500);
+    }
   }
 
   .react-datepicker-popper {
@@ -480,6 +484,11 @@ const GlobalStyles = styled.createGlobalStyle`
     border-color: #007bff;
     outline: none;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  }
+
+  /* React range calendar */
+  .rbc-off-range-bg {
+    background: var(--color-grey-200);
   }
 
   /* ANIMATION KEYFRAME */

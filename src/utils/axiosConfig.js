@@ -2,6 +2,10 @@ import axios from "axios";
 import store from "../store.js";
 import { logoutUser } from "../slices/authSlice.js";
 
+let accessToken = null;
+let isRefreshing = false;
+let subscribers = [];
+
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
@@ -10,24 +14,26 @@ const apiClient = axios.create({
   withCredentials: true,
 });
 
-let isRefreshing = false;
-let refreshSubscribers = [];
-
 //Handle adding a new access token
 const subscribeTokenRefresh = (callback) => {
-  refreshSubscribers.push(callback);
+  subscribers.push(callback);
 };
 
 //Execute request after refresh
-const onRefreshSuccess = () => {
-  refreshSubscribers.forEach((callback) => callback());
-  refreshSubscribers = [];
+const onRefreshed = (newToken) => {
+  subscribers.forEach((callback) => callback(newToken));
+  subscribers = [];
 };
 
 //Handle api request
 apiClient.interceptors.request.use(
-  (config) => config,
-  (error) => Promise.reject(error),
+  (config) => {
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (err) => Promise.reject(err),
 );
 
 //Handle expired token and refresh logic
@@ -36,47 +42,38 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    /* if (originalRequest.url.includes("/auth/login") || originalRequest.url.includes("/auth/register")) {
-      return Promise.reject(error);
-    }
- */
-    if (
-      originalRequest.url.includes("/auth/login") ||
-      originalRequest.url.includes("/auth/register") ||
-      originalRequest.url.includes("/auth/logout") ||
-      originalRequest.url.includes("/auth/refresh-token")
-    ) {
-      return Promise.reject(error);
-    }
-
     //Prevent infinite loop
     if (error.response?.status === 401 && !originalRequest._retry) {
-      if (isRefreshing) {
-        return new Promise((resolve) => {
-          subscribeTokenRefresh(() => resolve(originalRequest));
-        });
-      }
       originalRequest._retry = true;
+      if (isRefreshing) {
+        return new Promise((resolve) =>
+          subscribeTokenRefresh((newToken) => {
+            originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+            resolve(apiClient(originalRequest));
+          }),
+        );
+      }
+
       isRefreshing = true;
       try {
-        await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/auth/refresh-token`,
+        const { data } = await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}auth/refresh-token`,
           {},
           {
             withCredentials: true,
           },
         );
+        accessToken = data.accessToken;
         isRefreshing = false;
-        onRefreshSuccess();
+        onRefreshed(accessToken);
 
+        originalRequest.headers["Authorization"] = `Bearer ${accessToken}`;
         return apiClient(originalRequest);
       } catch (error) {
         console.log("Error axios interctor refresh token");
         isRefreshing = false;
-        refreshSubscribers = [];
-
-        store.dispatch(logoutUser());
-        if (window.location.pathname !== "/") {
+        if (error.response?.status === 401) {
+          store.dispatch(logoutUser());
           window.location.replace("/");
         }
         return Promise.reject(error);
@@ -85,5 +82,9 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+export const setAccessToken = (token) => {
+  accessToken = token;
+};
 
 export default apiClient;

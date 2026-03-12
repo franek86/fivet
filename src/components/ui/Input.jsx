@@ -17,7 +17,6 @@ const StyledInput = styled.input`
 
   &::placeholder {
     color: var(--color-grey-500);
-    font-size: 1.3rem;
   }
 `;
 

@@ -9,7 +9,7 @@ const Wrap = styled.div`
 `;
 
 const StyledTextArea = styled.textarea`
-  background-color: var(--color-silver-50);
+  background-color: var(--color-grey-50);
   padding: 1.25rem 0.9rem;
   border: 1px solid var(--color-grey-500);
   border-radius: var(--border-radius-sm);

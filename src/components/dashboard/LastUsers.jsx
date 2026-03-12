@@ -16,7 +16,14 @@ const Container = styled.div`
 
 const Box = styled.div`
   display: flex;
+  padding: 1rem;
   gap: 2rem;
+  &:nth-child(odd) {
+    background-color: var(--color-brand-100);
+  }
+  &:nth-child(even) {
+    background-color: var(--color-grey-100);
+  }
 `;
 
 const Image = styled.img`

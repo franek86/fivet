@@ -36,7 +36,12 @@ const CalendarWrapper = styled.div`
   }
 
   .rbc-toolbar button.rbc-active {
-    background-color: var(--color-brand-200);
+    background-color: var(--color-brand-100);
+    color: var(--color-grey-800);
+  }
+
+  .rbc-toolbar button {
+    color: var(--color-grey-800);
   }
 
   /* --- Day slot events --- */
@@ -51,7 +56,7 @@ const CalendarWrapper = styled.div`
 
   /* today */
   .rbc-today {
-    background-color: var(--color-brand-200);
+    background-color: var(--color-brand-100);
   }
 
   /* Hover efekat */
@@ -61,7 +66,7 @@ const CalendarWrapper = styled.div`
   }
 
   .rbc-event.low {
-    background-color: #3b82f6;
+    background-color: #51cab2;
   }
 
   .rbc-event.medium {

@@ -30,7 +30,7 @@ const variations = {
   `,
   transparent: css`
     border: 1px solid var(--color-grey-500);
-    background-color: transparent;
+    background-color: var(--color-grey-50);
   `,
 };
 
@@ -46,11 +46,12 @@ const Select = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: transparent;
+
   ${(props) => sizes[props.$size || ""]};
   ${(props) => variations[props.$variation || ""]};
   border-radius: var(--border-radius-sm);
   cursor: pointer;
+  color: var(--color-brand-50);
 `;
 
 const SelectDropdown = styled.div`

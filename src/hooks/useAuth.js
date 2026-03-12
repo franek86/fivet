@@ -11,12 +11,16 @@ export const useUser = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
-      const user = await getCurrentUser();
-      dispatch(setUser({ role: user.role, subscription: user.subscription, user }));
-      return user;
+      try {
+        const user = await getCurrentUser();
+        dispatch(setUser({ role: user.role, subscription: user.subscription, user }));
+        return user;
+      } catch (error) {
+        dispatch(logoutUser());
+        return null;
+      }
     },
-    /*  refetchOnWindowFocus: false,
-    refetchInterval: 4 * 60 * 1000, */
+    retry: false,
   });
 
   return { data, isLoading };

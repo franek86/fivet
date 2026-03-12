@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { logoutUser, setUser } from "../slices/authSlice.js";
 import { useEffect } from "react";
+import { setAccessToken } from "../utils/axiosConfig.js";
 
 export const useAuthInit = () => {
   const dispatch = useDispatch();
@@ -9,7 +10,7 @@ export const useAuthInit = () => {
     const initAuth = async () => {
       try {
         const res = await apiClient.post("auth/refresh-token");
-
+        setAccessToken(res.data.accessToken);
         dispatch(
           setUser({
             user: res.data.user,
@@ -18,6 +19,7 @@ export const useAuthInit = () => {
           }),
         );
       } catch {
+        setAccessToken(null);
         dispatch(logoutUser());
       }
     };

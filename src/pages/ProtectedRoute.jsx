@@ -12,14 +12,14 @@ const FullPage = styled.div`
 `;
 
 function ProtectedRoute({ alowedRoles }) {
-  //const { isLoading } = useUser();
+  const { isLoading } = useUser();
   const { isAuthenticated, role } = useSelector((state) => state.auth);
-  /* if (isLoading)
+  if (isLoading)
     return (
       <FullPage>
         <Spinner />
       </FullPage>
-    ); */
+    );
   if (!isAuthenticated) return <Navigate to='/' replace />;
   if (!alowedRoles.includes(role)) return <Navigate to='/unauthorized' replace />;
 

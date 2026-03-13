@@ -18,7 +18,8 @@ const apiClient = axios.create({
   headers: {
     "Content-type": "application/json",
   },
-  withCredentials: true,
+
+  //withCredentials: true,
 });
 
 // Attach access token to requests
@@ -65,7 +66,7 @@ apiClient.interceptors.response.use(
         isRefreshing = false;
         onRefreshed(newToken);
 
-        originalRequest.headers["Authorization"] = `Bearer newToken`;
+        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
         return apiClient(originalRequest);
       } catch (err) {
         isRefreshing = false;

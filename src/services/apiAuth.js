@@ -79,9 +79,6 @@ export const loginApi = async ({ email, password, rememberMe }) => {
   try {
     const res = await apiClient.post("/auth/login", { email, password, rememberMe });
 
-    if (res.data.accessToken) {
-      setAccessToken(res.data.accessToken);
-    }
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

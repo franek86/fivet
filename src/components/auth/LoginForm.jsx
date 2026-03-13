@@ -15,6 +15,8 @@ import { loginSchema } from "../../utils/validationSchema.js";
 import { loginApi } from "../../services/apiAuth.js";
 import { handleApiError } from "../../utils/handleApiError.js";
 import { Eye, EyeClosed } from "lucide-react";
+import { setAccessToken } from "../../utils/axiosConfig.js";
+import { setUser } from "../../slices/authSlice.js";
 
 const Form = styled.form`
   display: grid;
@@ -53,8 +55,14 @@ function LoginForm() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: ({ email, password, rememberMe }) => loginApi({ email, password, rememberMe }),
-    onSuccess: async () => {
-      toast.success("Your are loggedin");
+    onSuccess: (data) => {
+      setAccessToken(data.accessToken);
+      (setUser({
+        user: data.user,
+        role: data.role,
+        subscription: data.subscription,
+      }),
+        toast.success("Your are loggedin"));
       navigate("/dashboard");
     },
     onError: (error) => {

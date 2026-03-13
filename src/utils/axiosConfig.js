@@ -1,6 +1,4 @@
 import axios from "axios";
-import store from "../store.js";
-import { logoutUser } from "../slices/authSlice.js";
 import { refreshTokenApi } from "../services/apiAuth.js";
 
 let accessToken = null;
@@ -18,8 +16,7 @@ const apiClient = axios.create({
   headers: {
     "Content-type": "application/json",
   },
-
-  //withCredentials: true,
+  withCredentials: true,
 });
 
 // Attach access token to requests

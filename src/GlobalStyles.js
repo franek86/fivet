@@ -38,8 +38,8 @@ const GlobalStyles = styled.createGlobalStyle`
 
     --backdrop-color: rgba(255, 255, 255, 0.1);
     --linear-gradient: linear-gradient(90deg, #e0e0e0 25%, #ffffff 50%, #f0f0f0 75%);
-    --bg-linear-gradient: linear-gradient(to right, rgb(21 93 252), rgb(173 70 255))
-      --bg-linear-gradient-soft: linear-gradient(to right, oklch(80.9% 0.105 251.813), oklch(82.7% 0.119 306.383));
+    --bg-linear-gradient: linear-gradient(to right, rgb(21 93 252), rgb(173 70 255));
+    --bg-linear-gradient-soft: linear-gradient(to right, oklch(80.9% 0.105 251.813), oklch(82.7% 0.119 306.383));
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.07);
     --shadow-md: 0px 1rem 2.8rem rgba(0, 0, 0, 0.1);

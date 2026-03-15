@@ -12,7 +12,6 @@ import { toast } from "react-toastify";
 import { closeModalByName } from "../slices/modalSlice.js";
 
 export const useCreateAddressBook = () => {
-  //const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const { mutate, isPending, isSuccess } = useMutation({
@@ -30,25 +29,25 @@ export const useCreateAddressBook = () => {
   return { mutate, isPending, isSuccess };
 };
 
-export const useGetAddressBook = () => {
+export const useGetAddressBook = (userId) => {
   const searchTerm = useSelector((state) => state.search.term);
-  const user = useSelector((state) => state.auth.user);
-  const userId = user?.id;
+
   const search = searchTerm?.trim() || undefined;
 
-  const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: ["address-book", search],
-    queryFn: () => fecthAddressBookApi({ userId, search }),
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ["address-book", userId, search],
+    queryFn: () => fecthAddressBookApi(userId, search),
     placeholderData: (previousData) => {
       if (previousData && previousData.length > 0) {
         return Array.from({ length: previousData.length }, () => ({}));
       }
     },
+    enabled: !!userId,
     staleTime: 0,
     refetchOnWindowFocus: true,
   });
 
-  return { data, isLoading, isError, isFetching };
+  return { data, isLoading, isFetching };
 };
 
 export const useGetAddressBookById = (id) => {

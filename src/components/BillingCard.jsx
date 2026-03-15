@@ -88,8 +88,6 @@ const Card = styled.div`
 `;
 
 export default function BillingCard() {
-  /*  const userSubscription = useSelector((state) => state.auth?.subscription);
-  const userId = useSelector((state) => state.auth?.user.id); */
   const { data } = useUser();
 
   const isActiveSubscription = data?.isActiveSubscription;

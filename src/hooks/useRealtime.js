@@ -10,7 +10,7 @@ export const useRealtime = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const handler = (payload) => {
+    const handleOnlineUsers = (payload) => {
       const { users, count } = payload;
       const onlineIds = users.map((u) => u.id);
 
@@ -27,7 +27,7 @@ export const useRealtime = () => {
       });
     };
 
-    const newPostHandler = (payload) => {
+    const newShipHandler = (payload) => {
       let message = `New ship - ${payload.shipTitle} by ${payload.ownerName}`;
       toast.success(message);
       dispatch(
@@ -56,14 +56,16 @@ export const useRealtime = () => {
         }),
       );
     };
+    // Make sure socket is connected before subscribing
+    if (!socket.connected) socket.connect();
 
-    socket.on("online-users", handler);
-    socket.on("new-ship", newPostHandler);
+    socket.on("online-users", handleOnlineUsers);
+    socket.on("new-ship", newShipHandler);
     socket.on("ship-published", shipPublished);
 
     return () => {
-      socket.off("online-users", handler);
-      socket.off("new-post", newPostHandler);
+      socket.off("online-users", handleOnlineUsers);
+      socket.off("new-ship", newShipHandler);
       socket.off("ship-published", shipPublished);
     };
   }, [dispatch, queryClient]);

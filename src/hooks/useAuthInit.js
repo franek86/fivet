@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { logoutUser, setUser } from "../slices/authSlice.js";
+import { setUser } from "../slices/authSlice.js";
 import { useEffect } from "react";
 import { setAccessToken } from "../utils/axiosConfig.js";
 
@@ -13,14 +13,16 @@ export const useAuthInit = () => {
         setAccessToken(res.data.accessToken);
         dispatch(
           setUser({
-            user: res.data.user,
-            role: res.data.role,
-            subscription: res.data.subscription,
+            isAuthenticated: true,
           }),
         );
       } catch {
         setAccessToken(null);
-        dispatch(logoutUser());
+        dispatch(
+          setUser({
+            isAuthenticated: false,
+          }),
+        );
       }
     };
 

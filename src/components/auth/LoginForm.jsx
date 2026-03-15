@@ -57,12 +57,10 @@ function LoginForm() {
     mutationFn: ({ email, password, rememberMe }) => loginApi({ email, password, rememberMe }),
     onSuccess: (data) => {
       setAccessToken(data.accessToken);
-      (setUser({
-        user: data.user,
-        role: data.role,
-        subscription: data.subscription,
-      }),
-        toast.success("Your are loggedin"));
+      setUser({
+        isAuthenticated: true,
+      });
+      toast.success("Your are logged in");
       navigate("/dashboard");
     },
     onError: (error) => {

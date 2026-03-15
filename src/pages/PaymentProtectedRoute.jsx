@@ -2,15 +2,15 @@ import { Navigate, Outlet } from "react-router";
 import { useUser } from "../hooks/useAuth.js";
 
 function PaymentProtectedRoute() {
-  const user = useUser();
+  const { data: user } = useUser();
 
   if (!user) return <Navigate to='/' />;
 
-  if (user?.data?.role === "ADMIN") {
+  if (user?.role === "ADMIN") {
     return <Outlet />;
   }
 
-  if (!user?.data?.verifyPayment) {
+  if (!user?.verifyPayment) {
     return <Navigate to='/billing' replace />;
   }
 

@@ -9,6 +9,7 @@ import MapChart from "../components/dashboard/MapChart.jsx";
 import Earnings from "../components/dashboard/Earnings.jsx";
 
 import { useDashboardStatistic } from "../hooks/useDashboardStatistic.js";
+import { useUser } from "../hooks/useAuth.js";
 
 const TwoColumnsRole = styled.section`
   display: grid;
@@ -22,7 +23,8 @@ const TwoColumnsRole = styled.section`
 `;
 
 function Dashboard() {
-  const role = useSelector((state) => state.auth.role);
+  const { data: user } = useUser();
+
   const { data, isLoading } = useDashboardStatistic();
 
   return (
@@ -32,7 +34,7 @@ function Dashboard() {
       <>
         <StatisticBox data={data} isLoading={isLoading} />
 
-        {role === "ADMIN" && (
+        {user.role === "ADMIN" && (
           <>
             <Earnings />
 
@@ -40,9 +42,9 @@ function Dashboard() {
             <MapChart />
           </>
         )}
-        <TwoColumnsRole $role={role}>
+        <TwoColumnsRole $role={user.role}>
           <TopShips data={data} isLoading={isLoading} />
-          {role === "ADMIN" && <LastUsers data={data} isLoading={isLoading} />}
+          {user.role === "ADMIN" && <LastUsers data={data} isLoading={isLoading} />}
         </TwoColumnsRole>
       </>
     </>

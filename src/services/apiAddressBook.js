@@ -40,7 +40,8 @@ export const editAddressBookPriorityApi = async (id, newPriority) => {
 };
 
 /* Get address book list */
-export const fecthAddressBookApi = async ({ userId, search = "" }) => {
+export const fecthAddressBookApi = async (userId, search = "") => {
+  console.log(userId);
   const params = new URLSearchParams();
   if (!userId) throw new Error("User does not exists");
   if (search) params.append("search", search);

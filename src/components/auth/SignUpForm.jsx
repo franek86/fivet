@@ -12,9 +12,10 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 
 import { registerUser, verifyOtpApi } from "../../services/apiAuth.js";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "../../slices/authSlice.js";
 import { Eye, EyeClosed } from "lucide-react";
+import { useUser } from "../../hooks/useAuth.js";
 
 const FormWrapper = styled.form`
   display: flex;
@@ -63,10 +64,10 @@ const ResendOtp = styled.p`
 `;
 
 function SignUpForm() {
+  const { data: user } = useUser();
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const plan = searchParams.get("plan");
-  const subscriptionLocal = useSelector((state) => state.auth.subscription);
 
   const [showPassword, setShowPassword] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
@@ -99,7 +100,7 @@ function SignUpForm() {
         setUser({
           formData,
           subscription: plan,
-        })
+        }),
       );
       setShowOtp(true);
       setResend(false);
@@ -134,7 +135,7 @@ function SignUpForm() {
   };
 
   const onHandleVerifyOtp = () => {
-    verifyOtpMutation({ data: userData, subscription: subscriptionLocal, otp });
+    verifyOtpMutation({ data: userData, subscription: user?.subscription, otp });
   };
 
   const handleOtpChange = (index, value) => {

@@ -156,35 +156,11 @@ function UserProfileListPlaceholder() {
 }
 
 function UserProfileList() {
-  /*  const queryClient = useQueryClient(); */
-  const { data, isPending, isError, isFetching } = useGetAllUserProfile();
+  const { data, isPending, isFetching } = useGetAllUserProfile();
   const { mutate } = useDeleteUserProfile();
   const dispatch = useDispatch();
 
-  /*  useEffect(() => {
-    const handler = (payload) => {
-      const { users } = payload;
-      const onlineIds = new Set(users.map((u) => u.id));
-
-      queryClient.setQueriesData({ queryKey: ["all-profile"] }, (oldData) => {
-        if (!oldData) return oldData;
-
-        return oldData.map((user) => ({
-          ...user,
-          isActive: onlineIds.has(user.id),
-        }));
-      });
-    };
-
-    socket.on("online-users", handler);
-
-    return () => {
-      socket.off("online-users", handler);
-    };
-  }, [queryClient]); */
-
   if (isPending) return <Spinner />;
-  if (isError) return <div>Error</div>;
 
   return (
     <>

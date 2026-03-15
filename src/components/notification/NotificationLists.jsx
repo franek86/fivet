@@ -58,12 +58,6 @@ function NotificationLists() {
   const { mutate: deleteNotification } = useDeleteNotification();
 
   const selectNotifications = (state) => state.realtime.notifications;
-  /*  const selectUnreadAdminNotifications = createSelector([selectNotifications], (notifications) =>
-    notifications.filter((n) => !n.read && n.scope === "ADMIN"),
-  );
-   const selectUnreadUserNotifications = createSelector([selectNotifications], (notifications) =>
-    notifications.filter((n) => !n.read && n.scope === "USER"),
-  ); */
 
   const selectUnreadNotifications = createSelector([selectNotifications], (notifications) => notifications.filter((n) => !n.read));
 

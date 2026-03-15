@@ -10,6 +10,7 @@ import { useDeleteAddressBook, useGetAddressBook } from "../../hooks/useAddressB
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
 import { Trash2 } from "lucide-react";
 import styled from "styled-components";
+import { useUser } from "../../hooks/useAuth.js";
 
 const Header = styled.div`
   display: flex;
@@ -19,7 +20,9 @@ const Header = styled.div`
 `;
 
 function AddressBookTable() {
-  const { data, isLoading, isError, isFetching } = useGetAddressBook();
+  const { data: user } = useUser();
+
+  const { data, isLoading, isFetching } = useGetAddressBook(user?.id);
   const { mutate } = useDeleteAddressBook();
   const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(data, mutate);
 
@@ -39,7 +42,7 @@ function AddressBookTable() {
   ];
 
   if (isLoading) return <Spinner />;
-  if (isError) return <div>Error</div>;
+
   const renderRow = (item) => (
     <AddressBookColumn key={item.id} addressBook={item} selectedAddress={selected} onCheckboxChange={handleCheckboxChange} />
   );

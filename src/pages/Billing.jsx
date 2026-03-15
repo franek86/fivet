@@ -5,6 +5,7 @@ import BillingCard from "../components/BillingCard.jsx";
 
 import { useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
+import { useUser } from "../hooks/useAuth.js";
 
 const Container = styled.div`
   max-width: 720px;
@@ -44,7 +45,8 @@ const Back = styled.div`
 `;
 
 function Billing() {
-  const subscription = useSelector((state) => state.auth.subscription);
+  const { data: user } = useUser();
+
   const navigate = useNavigate();
 
   return (
@@ -52,9 +54,9 @@ function Billing() {
       <Wrapper>
         <div>
           <Title tag='h1'>Billing</Title>
-          <CurrentSubscription>{subscription}</CurrentSubscription>
+          <CurrentSubscription>{user?.subscription}</CurrentSubscription>
         </div>
-        {subscription && (
+        {user?.subscription && (
           <Back onClick={() => navigate("/dashboard")}>
             <ChevronLeft />
             Back

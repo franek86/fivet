@@ -3,8 +3,7 @@ import { deleteUserProfileApi, getAllProfileApi, updateProfileApi } from "../ser
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-export const useUpdateProfile = () => {
-  const user = useSelector((state) => state.auth.user);
+export const useUpdateProfile = (user) => {
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
     mutationFn: (updatedData) => updateProfileApi(updatedData, user.id),
@@ -24,19 +23,12 @@ export const useGetAllUserProfile = () => {
   const searchTerm = useSelector((state) => state.search.term);
   const search = searchTerm?.trim() || undefined;
 
-  const { data, isPending, isFetching, isError } = useQuery({
+  const { data, isPending, isFetching } = useQuery({
     queryKey: ["all-profile", search],
     queryFn: () => getAllProfileApi({ search }),
     keepPreviousData: true,
-    /* placeholderData: (previousData) => {
-      if (previousData && previousData.length > 0) {
-        return Array.from({ length: previousData.length }, () => ({}));
-      }
-    }, */
-
-    /* staleTime: 30 * 60 * 1000, */
   });
-  return { data, isPending, isError, isFetching };
+  return { data, isPending, isFetching };
 };
 
 export const useDeleteUserProfile = () => {

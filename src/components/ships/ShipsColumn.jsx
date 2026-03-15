@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import Button from "../ui/Button.jsx";
@@ -16,6 +16,7 @@ import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 import { formatedPrice } from "../../utils/formattedPrice.js";
 import { usePublishShip } from "../../hooks/ships/usePublishShip.js";
 import { Eye, Pencil, Trash2 } from "lucide-react";
+import { useUser } from "../../hooks/useAuth.js";
 
 const StyledImage = styled.img`
   width: 80px;
@@ -34,7 +35,7 @@ const P = styled.div`
 `;
 
 function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
-  const role = useSelector((state) => state.auth.role);
+  const { data: user } = useUser();
 
   const dispatch = useDispatch();
   const { mutate } = useDeleteShip();
@@ -63,7 +64,7 @@ function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
         onSuccess: () => {
           setIsPublish((prev) => !prev);
         },
-      }
+      },
     );
   };
 
@@ -75,13 +76,13 @@ function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
       <td className='table-td'>
         <StyledImage src={mainImage && !mainImage.error ? mainImage : "/images/no-image.webp"} alt={shipName} />
       </td>
-      {role !== "ADMIN" ? null : (
+      {user?.role !== "ADMIN" ? null : (
         <td className='table-td'>
           <ToggleSwitch checked={isPublish} onChange={() => handleToggle(shipId, userId)} />
         </td>
       )}
 
-      <td>{role !== "ADMIN" ? shipTypeName : `${fullName}`}</td>
+      <td>{user?.role !== "ADMIN" ? shipTypeName : `${fullName}`}</td>
 
       <td>{shipName}</td>
       <td>{imo}</td>

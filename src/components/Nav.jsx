@@ -4,6 +4,7 @@ import { navLinks } from "../utils/links.js";
 import styled from "styled-components";
 import { closeNav } from "../slices/uiSlice.js";
 import PremiumSticker from "./ui/PremiumSticker.jsx";
+import { useUser } from "../hooks/useAuth.js";
 
 const StyledNav = styled.nav`
   display: flex;
@@ -66,7 +67,8 @@ const NavBadge = styled.span`
 `;
 
 function Nav() {
-  const role = useSelector((state) => state.auth.role);
+  const { data: user } = useUser();
+
   const dispatch = useDispatch();
 
   const activeUserCount = useSelector((state) => state.realtime.activeUserCount);
@@ -74,7 +76,7 @@ function Nav() {
   return (
     <StyledNav>
       {navLinks
-        .filter((item) => item.allowRoles.includes(role))
+        .filter((item) => item.allowRoles.includes(user.role))
         .map((item) => (
           <NavList to={item.href} key={item.label} onClick={() => dispatch(closeNav())}>
             <item.icon size={20} />

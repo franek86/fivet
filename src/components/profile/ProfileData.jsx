@@ -29,7 +29,7 @@ const StyledInfo = styled.div`
 
 function ProfileData() {
   const { data, isLoading } = useUser();
-  const { mutate: updateProfile, isPending: loadUpdateProfile } = useUpdateProfile();
+  const { mutate: updateProfile, isPending: loadUpdateProfile } = useUpdateProfile(data);
 
   const { register, handleSubmit, setValue, watch, reset } = useForm({
     defaultValues: {

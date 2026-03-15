@@ -23,6 +23,7 @@ import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
 import { SlidersHorizontal, Trash2 } from "lucide-react";
 import { useAllShipType } from "../../hooks/useShipType.js";
 import { urlFormatDate } from "../../utils/formatDate.js";
+import { useUser } from "../../hooks/useAuth.js";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -59,7 +60,8 @@ const FilterState = styled.section`
 function ShipsTable() {
   //Dispatch and actions
   const dispatch = useDispatch();
-  const role = useSelector((state) => state.auth.role);
+  const { data: user } = useUser();
+
   const searchTerm = useSelector((state) => state.search.term);
 
   // React Hooks
@@ -109,8 +111,8 @@ function ShipsTable() {
       style: "hidden-table-sm",
     },
     { header: "Image", accessor: "image", style: "hidden-table-sm" },
-    ...(role === "ADMIN" ? [{ header: "Published", accessor: "published", style: "hidden-table-sm" }] : []),
-    { header: `${role !== "ADMIN" ? "Ship type" : "User"}`, accessor: "ship-type-user" },
+    ...(user?.role === "ADMIN" ? [{ header: "Published", accessor: "published", style: "hidden-table-sm" }] : []),
+    { header: `${user?.role !== "ADMIN" ? "Ship type" : "User"}`, accessor: "ship-type-user" },
     { header: "Ship Name", accessor: "ship name" },
     { header: "IMO no.", accessor: "imo" },
     { header: "Price", accessor: "price" },

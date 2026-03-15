@@ -1,8 +1,9 @@
-import { useSelector } from "react-redux";
 import { Outlet, Navigate } from "react-router";
+import { useUser } from "../hooks/useAuth.js";
 
 function PremiumRoute() {
-  const user = useSelector((state) => state.auth.user);
+  const { data: user } = useUser();
+
   if (!user) return <Navigate to='/' />;
 
   // Allow Admins to access everything

@@ -5,6 +5,7 @@ import Title from "../components/ui/Title.jsx";
 import Unauthorized from "./Unauthorized.jsx";
 import SearchBar from "../components/SearchBar.jsx";
 import styled from "styled-components";
+import { useUser } from "../hooks/useAuth.js";
 
 const Flex = styled.div`
   display: flex;
@@ -18,7 +19,9 @@ const Flex = styled.div`
 `;
 
 function Users() {
-  const admin = useSelector((state) => state.auth.role === "ADMIN");
+  const { data: user } = useUser();
+
+  const admin = user?.role === "ADMIN";
 
   if (!admin) return <Unauthorized />;
   return (

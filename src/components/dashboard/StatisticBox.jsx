@@ -4,7 +4,8 @@ import StatisticCard from "../ui/StatisticCard.jsx";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 import { CalendarDays, Ship, Users, CheckCheck } from "lucide-react";
-import { useSelector } from "react-redux";
+
+import { useUser } from "../../hooks/useAuth.js";
 
 const StatisticBoxWrap = styled.section`
   display: grid;
@@ -18,7 +19,7 @@ const StatisticBoxWrap = styled.section`
 `;
 
 function StatisticBox({ data, isLoading }) {
-  const userRole = useSelector((state) => state.auth.role);
+  const { data: user } = useUser();
 
   if (isLoading) {
     return <TablePlaceholder count={3} />;
@@ -34,14 +35,14 @@ function StatisticBox({ data, isLoading }) {
   };
 
   // Total Ships
-  const totalShips = getStatisticByRole(data, "totalShips", userRole);
-  const shipsTrend = userRole === "ADMIN" ? data?.shipsTrend?.trend : data?.userStats?.[0]?.trends?.ships.trend;
-  const shipChange = userRole === "ADMIN" ? data?.shipsTrend?.change : data?.userStats?.[0]?.trends?.ships.change;
+  const totalShips = getStatisticByRole(data, "totalShips", user.role);
+  const shipsTrend = user.role === "ADMIN" ? data?.shipsTrend?.trend : data?.userStats?.[0]?.trends?.ships.trend;
+  const shipChange = user.role === "ADMIN" ? data?.shipsTrend?.change : data?.userStats?.[0]?.trends?.ships.change;
 
   return (
     <StatisticBoxWrap>
       <StatisticCard iconColor='#0369a1' icon={<Ship />} text='Total ships' data={totalShips} trend={shipsTrend} trendChange={shipChange} />
-      {userRole === "ADMIN" && (
+      {user.role === "ADMIN" && (
         <StatisticCard
           iconColor='#15803d'
           icon={<Users />}
@@ -51,9 +52,9 @@ function StatisticBox({ data, isLoading }) {
           trendChange={data?.usersTrend?.change}
         />
       )}
-      {userRole === "USER" && <StatisticCard iconColor='#15803d' icon={<CheckCheck />} text='Published ships' data={data?.totalUsers} />}
+      {user.role === "USER" && <StatisticCard iconColor='#15803d' icon={<CheckCheck />} text='Published ships' data={data?.totalUsers} />}
 
-      <StatisticCard iconColor='#4338ca' icon={<CalendarDays />} text='Events' data={getStatisticByRole(data, "totalEvents", userRole)} />
+      <StatisticCard iconColor='#4338ca' icon={<CalendarDays />} text='Events' data={getStatisticByRole(data, "totalEvents", user.role)} />
     </StatisticBoxWrap>
   );
 }

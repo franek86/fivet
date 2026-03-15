@@ -12,18 +12,13 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload.user;
+      /* state.user = action.payload.user;
       state.role = action.payload?.role || "USER";
-      state.subscription = action.payload?.subscription || "STANDARD";
+      state.subscription = action.payload?.subscription || "STANDARD"; */
       state.isAuthenticated = true;
-    },
-    logoutUser: (state) => {
-      state.user = null;
-      state.role = null;
-      state.isAuthenticated = false;
     },
   },
 });
 
-export const { setUser, logoutUser } = authSlice.actions;
+export const { setUser } = authSlice.actions;
 export default authSlice.reducer;

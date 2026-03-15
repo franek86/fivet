@@ -18,10 +18,10 @@ import styled from "styled-components";
 import { useCreateShip } from "../../hooks/ships/useCreateShip.js";
 import { useEditShip } from "../../hooks/ships/useEditShip.js";
 import { useShip } from "../../hooks/ships/useShip.js";
+import { useUser } from "../../hooks/useAuth.js";
 
 import { useAllShipType } from "../../hooks/useShipType.js";
 import ToggleSwitch from "../ui/ToggleSwitch.jsx";
-import { useSelector } from "react-redux";
 
 const Form = styled.div`
   display: grid;
@@ -61,7 +61,9 @@ const ColumnPublish = styled(Row)`
 
 const ShipsForm = () => {
   const navigate = useNavigate();
-  const role = useSelector((state) => state.auth.role);
+
+  const { data: user } = useUser();
+
   const { id: shipId } = useParams();
   const isEditSession = Boolean(shipId);
 
@@ -155,7 +157,7 @@ const ShipsForm = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Form>
-        {role === "ADMIN" && (
+        {user.role === "ADMIN" && (
           <ColumnPublish>
             <Controller
               name='isPublished'

@@ -1,23 +1,25 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import socket from "../shared/socket.js";
+import { getAccessToken } from "../utils/axiosConfig.js";
 
 export function useSocketAuth() {
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
   useEffect(() => {
-    if (isAuthenticated && !socket.connected) {
-      //console.log("Connecting socket for authenticated user...");
-      socket.connect();
-    }
+    const token = getAccessToken();
 
-    // Optional: disconnect on logout
-    return () => {
-      if (!isAuthenticated && socket.connected) {
-        //console.log("Disconnecting socket for logout...");
+    if (token) {
+      socket.auth = { token }; // attach token before connecting
+      if (!socket.connected) socket.connect();
+    } else {
+      if (socket.connected) {
         socket.emit("logout");
         socket.disconnect();
       }
+    }
+
+    // Optional: cleanup on unmount
+    return () => {
+      if (socket.connected) socket.disconnect();
     };
-  }, [isAuthenticated]);
+  }, []);
 }

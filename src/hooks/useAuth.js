@@ -1,22 +1,21 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
+
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
-import { logoutUser, setUser } from "../slices/authSlice.js";
 import { getCurrentUser, logoutUserApi } from "../services/apiAuth.js";
+import { setUser } from "../slices/authSlice.js";
+import { useDispatch } from "react-redux";
 
 export const useUser = () => {
-  const dispatch = useDispatch();
   const { data, isLoading } = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
       try {
         const user = await getCurrentUser();
-        dispatch(setUser({ role: user.role, subscription: user.subscription, user }));
+
         return user;
       } catch (error) {
-        dispatch(logoutUser());
         return null;
       }
     },
@@ -27,16 +26,18 @@ export const useUser = () => {
 };
 
 export const useLogout = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: logoutUserApi,
     onSuccess: () => {
-      dispatch(logoutUser());
+      dispatch(setUser({ isAuthenticated: false, user: null }));
+
       queryClient.removeQueries({ queryKey: ["user"] });
       queryClient.clear();
+
       toast.success("Your are logged out!");
       navigate("/", { replace: true });
     },

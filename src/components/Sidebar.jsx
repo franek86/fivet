@@ -8,7 +8,6 @@ import Theme from "./Theme.jsx";
 
 const Aside = styled.aside`
   width: 100%;
-
   display: flex;
   flex-direction: column;
   background-color: var(--color-grey-50);

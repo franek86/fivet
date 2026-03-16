@@ -23,8 +23,11 @@ const StyledForm = styled.form`
 const StyledInfo = styled.div`
   display: grid;
   align-items: center;
-  width: 40rem;
+  width: 100%;
   gap: 10px;
+  @media screen and (min-width: 640px) {
+    width: 40rem;
+  }
 `;
 
 function ProfileData() {

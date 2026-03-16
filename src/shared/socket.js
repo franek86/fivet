@@ -12,11 +12,11 @@ const socket = io(BACKEND_URL, {
 });
 
 socket.on("connect", () => {
-  console.log("Socket connected:", socket.id);
+  //console.log("Socket connected:", socket.id);
 });
 
 socket.on("connect_error", (err) => {
-  console.error("Socket connect_error:", err.message);
+  //console.error("Socket connect_error:", err.message);
 });
 
 export default socket;

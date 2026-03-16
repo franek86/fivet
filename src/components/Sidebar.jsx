@@ -8,14 +8,15 @@ import Theme from "./Theme.jsx";
 
 const Aside = styled.aside`
   width: 100%;
-  position: fixed;
-  left: 0;
-  top: 0;
+
   display: flex;
   flex-direction: column;
   background-color: var(--color-grey-50);
 
   @media screen and (min-width: 640px) {
+    position: fixed;
+    left: 0;
+    top: 0;
     height: 100vh;
     width: 10rem;
   }

@@ -15,7 +15,7 @@ const Main = styled.main`
   background-color: var(--color-grey-100);
   height: 100%;
   min-height: 100vh;
-  padding: 10rem 2rem;
+  padding: 2rem;
 
   @media (min-width: 640px) {
     padding: 1.6rem 2rem;

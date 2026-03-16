@@ -9,7 +9,7 @@ import { useUser } from "../../hooks/useAuth.js";
 
 const StatisticBoxWrap = styled.section`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 2rem;
   margin-top: 2.8rem;
 

@@ -35,8 +35,13 @@ const LogoNotification = styled.div`
 
 const StyledLogo = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 0.8rem;
+
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+  }
 `;
 
 const LogoIcon = styled.div`

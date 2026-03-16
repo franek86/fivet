@@ -22,8 +22,9 @@ const Wrapper = styled.section`
 
 const Card = styled.article`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
+
   border-left: 10px solid;
   border-color: ${({ $props }) => ($props ? "#15803d" : "#b91c1c")};
   background-color: var(--color-grey-0);
@@ -31,13 +32,22 @@ const Card = styled.article`
   padding: 2rem;
   box-shadow: var(--shadow-md);
   border-radius: var(--border-radius-md);
+
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+    align-items: center;
+  }
 `;
 
 const Buttons = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   gap: 1.5rem;
+
+  @media screen and (min-width: 640px) {
+    justify-content: center;
+  }
 `;
 
 const SwitchWrapper = styled.div`

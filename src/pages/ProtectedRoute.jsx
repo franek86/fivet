@@ -19,8 +19,12 @@ function ProtectedRoute({ alowedRoles }) {
         <Spinner />
       </FullPage>
     );
-  if (!user) return <Navigate to='/' replace />;
-  if (!alowedRoles.includes(user.role)) return <Navigate to='/unauthorized' replace />;
+  if (!user) {
+    return <Navigate to='/' replace />;
+  }
+  if (!alowedRoles.includes(user.role)) {
+    return <Navigate to='/unauthorized' replace />;
+  }
 
   return <Outlet />;
 }

@@ -8,8 +8,9 @@ import styled from "styled-components";
 import MapChart from "../components/dashboard/MapChart.jsx";
 import Earnings from "../components/dashboard/Earnings.jsx";
 
-import { useDashboardStatistic } from "../hooks/useDashboardStatistic.js";
+import { useDashboardData } from "../hooks/useDashboardStatistic.js";
 import { useUser } from "../hooks/useAuth.js";
+import { useState } from "react";
 
 const TwoColumnsRole = styled.section`
   display: grid;
@@ -24,27 +25,32 @@ const TwoColumnsRole = styled.section`
 
 function Dashboard() {
   const { data: user } = useUser();
+  const [activePeriod, setActivePeriod] = useState("week");
 
-  const { data, isLoading } = useDashboardStatistic();
+  const { data, isLoading } = useDashboardData(activePeriod);
+
+  const handlePeriodTab = (currentPeriod) => {
+    setActivePeriod(currentPeriod);
+  };
 
   return (
     <>
       <Title tag='h1'>Dashboard</Title>
 
       <>
-        <StatisticBox data={data} isLoading={isLoading} />
+        <StatisticBox data={data?.statistic} isLoading={isLoading} />
 
         {user.role === "ADMIN" && (
           <>
-            <Earnings />
+            <Earnings data={data?.earnings} isLoading={isLoading} activePeriod={activePeriod} onChangePeriod={handlePeriodTab} />
 
             {/*  <SubcriptionChart data={data} isLoading={isLoading} /> */}
-            <MapChart />
+            <MapChart geoUrl={data.geoUrl} isLoading={isLoading} />
           </>
         )}
         <TwoColumnsRole $role={user.role}>
-          <TopShips data={data} isLoading={isLoading} />
-          {user.role === "ADMIN" && <LastUsers data={data} isLoading={isLoading} />}
+          <TopShips data={data?.statistic} isLoading={isLoading} />
+          {user.role === "ADMIN" && <LastUsers data={data?.statistic} isLoading={isLoading} />}
         </TwoColumnsRole>
       </>
     </>

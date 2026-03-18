@@ -1,9 +1,6 @@
-import { useState } from "react";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import { Minus, TrendingDown, TrendingUp } from "lucide-react";
-import { useDashboardEarnings } from "../../hooks/useDashboardStatistic.js";
 import styled from "styled-components";
-/* import DashboardChart from "./DashboardChart.jsx"; */
 
 const Section = styled.section`
   padding: 2rem;
@@ -34,10 +31,6 @@ const TabContent = styled.div`
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 2rem;
-
-  /* @media screen and (min-width: 1200px) {
-    grid-template-columns: repeat(1, 1fr);
-  } */
 `;
 
 const TabCard = styled.div`
@@ -96,19 +89,12 @@ const IconStyleMinus = styled(Minus)`
   color: #6b7280;
 `;
 
-function Earnings() {
+function Earnings({ data, isLoading, activePeriod, onChangePeriod }) {
   const period = ["week", "month", "year"];
-  const [activePeriod, setActivePeriod] = useState("week");
-
-  const { data, isLoading } = useDashboardEarnings(activePeriod);
 
   if (isLoading) {
     return <TablePlaceholder count={5} />;
   }
-
-  const handlePeriodTab = (currentPeriod) => {
-    setActivePeriod(currentPeriod);
-  };
 
   const trend = data?.trend;
   const isUp = trend.value > 0;
@@ -121,7 +107,7 @@ function Earnings() {
       <div>
         <Tabs>
           {period.map((p, index) => (
-            <Tab onClick={() => handlePeriodTab(p)} key={index} $active={activePeriod === p}>
+            <Tab onClick={() => onChangePeriod(p)} key={index} $active={activePeriod === p}>
               {p}
             </Tab>
           ))}

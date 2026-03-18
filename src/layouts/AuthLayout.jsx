@@ -29,24 +29,6 @@ const WakupStyle = styled.div`
 `;
 
 function AuthLayout() {
-  /*
-   ** Test on Render. Only for testing mode, Backend must be on live server in this case on Render.
-   ** Render free tier goes to sleep after inactivity, and the “cold start” can take a few minutes.
-   ** Need to "wake up server"
-   ** Remove on production or comment
-   */
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    fetch(`https://fivet.onrender.com/health`)
-      .then(() => setIsReady(true))
-      .catch(() => setIsReady(true));
-  }, []);
-
-  if (!isReady) {
-    return <WakupStyle>Waking up server... ⏳</WakupStyle>;
-  }
-
   return (
     <Wrap>
       <FormSection>

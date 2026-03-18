@@ -47,8 +47,12 @@ apiClient.interceptors.response.use(
 
       if (isRefreshing) {
         // Queue request until token refreshed
-        return new Promise((resolve) =>
+        return new Promise((resolve, reject) =>
           subscribeTokenRefresh((newToken) => {
+            if (error || !newToken) {
+              reject(error);
+              return;
+            }
             originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
             resolve(apiClient(originalRequest));
           }),
@@ -67,7 +71,10 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
       } catch (err) {
         isRefreshing = false;
-        setAccessToken(null); // logout
+        setAccessToken(null);
+        onRefreshed(err);
+
+        window.location.href = "/";
         return Promise.reject(err);
       }
     }

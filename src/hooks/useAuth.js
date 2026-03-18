@@ -8,21 +8,13 @@ import { setUser } from "../slices/authSlice.js";
 import { useDispatch } from "react-redux";
 
 export const useUser = () => {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["user"],
-    queryFn: async () => {
-      try {
-        const user = await getCurrentUser();
-
-        return user;
-      } catch (error) {
-        return null;
-      }
-    },
+    queryFn: getCurrentUser,
     retry: false,
   });
 
-  return { data, isLoading };
+  return { data, isLoading, isError };
 };
 
 export const useLogout = () => {

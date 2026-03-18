@@ -43,7 +43,7 @@ function App() {
           <Route path='/forgot-password' element={<ForgotPassword />} />
           <Route path='/unauthorized' element={<Unauthorized />} />
         </Route>
-        <Route element={<ProtectedRoute alowedRoles={["ADMIN", "USER"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["ADMIN", "USER"]} />}>
           <Route element={<MainLayout />}>
             <Route element={<PaymentProtectedRoute />}>
               <Route path='/dashboard' element={<Dashboard />} />
@@ -62,7 +62,7 @@ function App() {
           </Route>
         </Route>
 
-        <Route element={<ProtectedRoute alowedRoles={["ADMIN"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
           <Route element={<MainLayout />}>
             <Route path='/users' element={<Users />} />
             <Route path='/categories' element={<Categories />} />

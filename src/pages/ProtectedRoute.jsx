@@ -10,8 +10,15 @@ const FullPage = styled.div`
   width: 100vw;
 `;
 
-function ProtectedRoute({ alowedRoles }) {
-  const { isLoading, data: user } = useUser();
+function ProtectedRoute({ allowedRoles }) {
+  const { isLoading, data: user, isError } = useUser();
+
+  if (!isLoading && (!user || isError)) {
+    return <Navigate to='/' replace />;
+  }
+  if (user && !allowedRoles.includes(user.role)) {
+    return <Navigate to='/unauthorized' replace />;
+  }
 
   if (isLoading)
     return (
@@ -19,12 +26,6 @@ function ProtectedRoute({ alowedRoles }) {
         <Spinner />
       </FullPage>
     );
-  if (!user) {
-    return <Navigate to='/' replace />;
-  }
-  if (!alowedRoles.includes(user.role)) {
-    return <Navigate to='/unauthorized' replace />;
-  }
 
   return <Outlet />;
 }

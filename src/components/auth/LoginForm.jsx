@@ -64,7 +64,7 @@ function LoginForm() {
       navigate("/dashboard");
     },
     onError: (error) => {
-      handleApiError(error, "Login failed");
+      toast.error(error.message);
     },
   });
 

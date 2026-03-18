@@ -27,10 +27,8 @@ import Payments from "./pages/Payments.jsx";
 import Billing from "./pages/Billing.jsx";
 import PremiumRoute from "./pages/PremiumRoute.jsx";
 import PaymentProtectedRoute from "./pages/PaymentProtectedRoute.jsx";
-import { useAuthInit } from "./hooks/useAuthInit.js";
 
 function App() {
-  useAuthInit();
   return (
     <>
       <ToastContainer position='top-center' autoClose={1800} />

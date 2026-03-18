@@ -1,9 +1,6 @@
 import axios from "axios";
-import { refreshTokenApi } from "../services/apiAuth.js";
 
 let accessToken = null;
-let isRefreshing = false;
-let subscribers = [];
 
 export const setAccessToken = (token) => {
   accessToken = token;
@@ -28,54 +25,36 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Subscribe requests while refreshing
-const subscribeTokenRefresh = (callback) => subscribers.push(callback);
-const onRefreshed = (newToken) => {
-  subscribers.forEach((callback) => callback(newToken));
-  subscribers = [];
-};
-
-// Response interceptor: handle 401
+//Response interceptor (refresh logic)
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // Only handle 401 once
+    // Handle only 401 and avoid infinite loop
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      if (isRefreshing) {
-        // Queue request until token refreshed
-        return new Promise((resolve, reject) =>
-          subscribeTokenRefresh((newToken) => {
-            if (error || !newToken) {
-              reject(error);
-              return;
-            }
-            originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
-            resolve(apiClient(originalRequest));
-          }),
-        );
-      }
-
-      isRefreshing = true;
       try {
-        const data = await refreshTokenApi(); // call refresh endpoint
-        const newToken = data.accessToken;
-        setAccessToken(newToken);
-        isRefreshing = false;
-        onRefreshed(newToken);
+        // 🚀 Call refresh endpoint (cookie is sent automatically)
+        const { data } = await axios.post("/auth/refresh-token", {}, { withCredentials: true });
 
-        originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
+        const newAccessToken = data.accessToken;
+
+        // Store ONLY in memory
+        setAccessToken(newAccessToken);
+
+        // Update header for retry
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+        // Retry original request
         return apiClient(originalRequest);
-      } catch (err) {
-        isRefreshing = false;
+      } catch (refreshError) {
+        // ❌ Refresh failed → user not authenticated
         setAccessToken(null);
-        onRefreshed(err);
 
-        window.location.href = "/";
-        return Promise.reject(err);
+        // Let React handle redirect (DON'T hard redirect here ideally)
+        return Promise.reject(error); // <-- IMPORTANT (keep original error)
       }
     }
 

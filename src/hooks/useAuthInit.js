@@ -10,7 +10,7 @@ export const useAuthInit = () => {
     const initAuth = async () => {
       try {
         const res = await apiClient.post("auth/refresh-token");
-        console.log("Token ", res);
+
         setAccessToken(res.data.accessToken);
         dispatch(
           setUser({

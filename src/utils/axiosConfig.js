@@ -36,21 +36,16 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        // 🚀 Call refresh endpoint (cookie is sent automatically)
         const { data } = await axios.post("/auth/refresh-token", {}, { withCredentials: true });
 
         const newAccessToken = data.accessToken;
 
-        // Store ONLY in memory
         setAccessToken(newAccessToken);
 
-        // Update header for retry
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-        // Retry original request
         return apiClient(originalRequest);
       } catch (refreshError) {
-        // ❌ Refresh failed → user not authenticated
         setAccessToken(null);
 
         // Let React handle redirect (DON'T hard redirect here ideally)

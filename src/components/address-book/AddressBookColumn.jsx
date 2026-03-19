@@ -10,7 +10,7 @@ import Checkbox from "../ui/Checkbox.jsx";
 import SingleAddressBook from "./SingleAddressBook.jsx";
 
 import styled from "styled-components";
-import useMediaQuery from "../../hooks/useMediaQuery.js";
+
 import { useDeleteAddressBook, useEditAddressBookPriority } from "../../hooks/useAddressBook.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { ChevronDown, Eye, Pencil, Trash2 } from "lucide-react";
@@ -52,7 +52,6 @@ function AddressBookColumn({ addressBook, selectedAddress, onCheckboxChange }) {
   const { id, fullName, email, mobile_number, priority } = addressBook;
   const [changePriority, setChangePriority] = useState(priority);
 
-  const isMdScreen = useMediaQuery(640); //min width 640px
   const dispatch = useDispatch();
 
   const { mutate } = useDeleteAddressBook();
@@ -116,19 +115,11 @@ function AddressBookColumn({ addressBook, selectedAddress, onCheckboxChange }) {
         </strong>
       </td>
       <td>
-        {isMdScreen ? (
-          <Dropdown>
-            {editButton}
-            {deleteButton}
-            {viewButton}
-          </Dropdown>
-        ) : (
-          <div>
-            {editButton}
-            {deleteButton}
-            {viewButton}
-          </div>
-        )}
+        <Dropdown>
+          {editButton}
+          {deleteButton}
+          {viewButton}
+        </Dropdown>
       </td>
 
       <Modal name={`edit-${id}`} onClose={() => dispatch(closeModalByName())}>

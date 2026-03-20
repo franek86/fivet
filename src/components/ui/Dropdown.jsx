@@ -20,7 +20,6 @@ const StyledDropdown = styled.div`
   position: absolute;
   top: ${({ $position }) => $position.y}px;
   ${(props) => (props.$alignRight ? "right: 0;" : "left: 0;")}
-  //left: ${({ $position }) => $position.x}px;
   width: max-content;
   background-color: var(--color-grey-100);
   border: 1px solid var(--color-grey-200);

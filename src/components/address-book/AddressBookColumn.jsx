@@ -46,6 +46,13 @@ const P = styled.div`
   width: max-content;
 `;
 
+const ButtonInner = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
 function AddressBookColumn({ addressBook, selectedAddress, onCheckboxChange }) {
   const [visibleDropdown, setVisibleDropdown] = useState(false);
 
@@ -56,27 +63,6 @@ function AddressBookColumn({ addressBook, selectedAddress, onCheckboxChange }) {
 
   const { mutate } = useDeleteAddressBook();
   const { mutate: editPriority } = useEditAddressBookPriority();
-
-  const editButton = (
-    <Button $variation='icon' onClick={() => dispatch(openModalByName(`edit-${id}`))}>
-      <Pencil size={18} />
-      <P>Edit</P>
-    </Button>
-  );
-
-  const deleteButton = (
-    <Button $variation='icon' onClick={() => dispatch(openModalByName(id))}>
-      <Trash2 size={18} />
-      <P>Delete</P>
-    </Button>
-  );
-
-  const viewButton = (
-    <Button $variation='icon' onClick={() => dispatch(openModalByName(`view-${id}`))}>
-      <Eye size={18} />
-      <P>View</P>
-    </Button>
-  );
 
   const handleOnClick = () => {
     if (changePriority === "IMPORTANT" || changePriority === "REGULAR") {
@@ -116,9 +102,24 @@ function AddressBookColumn({ addressBook, selectedAddress, onCheckboxChange }) {
       </td>
       <td>
         <Dropdown>
-          {editButton}
-          {deleteButton}
-          {viewButton}
+          <ButtonInner>
+            <Button $variation='icon' onClick={() => dispatch(openModalByName(`view-${id}`))}>
+              <Eye size={18} />
+              <P>View</P>
+            </Button>
+          </ButtonInner>
+          <Button $variation='icon' onClick={() => dispatch(openModalByName(`edit-${id}`))}>
+            <ButtonInner>
+              <Pencil size={18} />
+              <P>Edit</P>
+            </ButtonInner>
+          </Button>
+          <Button $variation='icon' onClick={() => dispatch(openModalByName(id))}>
+            <ButtonInner>
+              <Trash2 size={18} />
+              <P>Delete</P>
+            </ButtonInner>
+          </Button>
         </Dropdown>
       </td>
 

@@ -1,6 +1,19 @@
 import axios from "axios";
 
 let accessToken = null;
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
 
 export const setAccessToken = (token) => {
   accessToken = token;
@@ -33,23 +46,38 @@ apiClient.interceptors.response.use(
 
     // Handle only 401 and avoid infinite loop
     if (error.response?.status === 401 && !originalRequest._retry) {
+      // If a refresh is already in progress, queue this request
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers["Authorization"] = `Bearer ${token}`;
+            return apiClient(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
-        const { data } = await axios.post("/auth/refresh-token", {}, { withCredentials: true });
+        const { data } = await apiClient.post("/auth/refresh-token");
 
         const newAccessToken = data.accessToken;
-
         setAccessToken(newAccessToken);
+        processQueue(null, newAccessToken);
 
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
         return apiClient(originalRequest);
       } catch (refreshError) {
+        processQueue(refreshError, null);
         setAccessToken(null);
 
-        // Let React handle redirect (DON'T hard redirect here ideally)
-        return Promise.reject(error); // <-- IMPORTANT (keep original error)
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
 

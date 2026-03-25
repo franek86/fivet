@@ -248,8 +248,8 @@ const ShipFilters = ({ data, shipTypes, onApply, onReset }) => {
       </div>
 
       <ButtonWrap>
-        <FilterButton onClick={applyFilter}>Filter now</FilterButton>
-        <ResetButton onClick={resetFilter}>Reset</ResetButton>
+        <FilterButton onClick={applyFilter}>Filter</FilterButton>
+        <ResetButton onClick={resetFilter}>Clear filters</ResetButton>
       </ButtonWrap>
     </ShipFiltersSection>
   );

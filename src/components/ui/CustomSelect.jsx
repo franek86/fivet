@@ -51,7 +51,6 @@ const Select = styled.div`
   ${(props) => variations[props.$variation || ""]};
   border-radius: var(--border-radius-sm);
   cursor: pointer;
-  color: var(--color-brand-50);
 `;
 
 const SelectDropdown = styled.div`

@@ -3,20 +3,32 @@ import styled from "styled-components";
 
 import Label from "./ui/Label.jsx";
 
-import { CircleX, ImageDown } from "lucide-react";
+import { CircleX } from "lucide-react";
 
 const ImageUploadContainer = styled.section`
-  height: 16rem;
-  width: 16rem;
+  height: ${({ $hasPreview }) => ($hasPreview ? "100%" : "140px")};
+  width: 100%;
+  margin-top: 2.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
   cursor: pointer;
   position: relative;
-  box-shadow: var(--shadow-lg);
-  border-radius: 50%;
 
-  input {
+  border: 2px dashed var(--color-grey-300);
+  transition: all 0.2s ease;
+  color: #64748b;
+  background-color: var(--color-grey-50);
+  border-radius: var(--border-radius-sm);
+
+  &:hover {
+    border-color: #6366f1;
+    background: #f0f1ff;
+    color: #4f46e5;
+  }
+
+  .image-input {
     display: none;
   }
 `;
@@ -27,18 +39,12 @@ const StyledImageUpload = styled.div`
   align-items: center;
   justify-content: center;
   padding: 1.25rem;
-
   cursor: pointer;
   transition: all 0.3s ease-in-out;
 
   &:hover {
     transform: scale(1.02);
   }
-`;
-
-const StyledIcon = styled(ImageDown)`
-  width: 3rem;
-  height: 3rem;
 `;
 
 const StyledIconClose = styled(CircleX)`
@@ -52,17 +58,17 @@ const StyledIconClose = styled(CircleX)`
 
 const StyledPreviewImageWrap = styled.div`
   display: flex;
-  height: 16rem;
-  width: 16rem;
+  height: 100%;
+  width: 100%;
   flex-direction: column;
   position: relative;
 `;
 
 const StyledPreviewImage = styled.img`
-  height: 16rem;
-  width: 16rem;
   object-fit: cover;
-  border-radius: 50%;
+  /*  height: 16rem;
+  width: 16rem;
+  border-radius: 50%; */
 `;
 
 const Row = styled.div`
@@ -74,6 +80,7 @@ const Row = styled.div`
 const Column = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 10px;
 `;
 
 const P = styled.p`
@@ -83,7 +90,7 @@ const P = styled.p`
   margin-bottom: 0.4rem;
 `;
 
-const ImageUploader = ({ name, onChange, initialImage, title }) => {
+const ImageUploader = ({ name, onChange, initialImage, title, children }) => {
   const [file, setFile] = useState(null);
   const [previewImage, setPreviewImage] = useState(initialImage || null);
 
@@ -115,13 +122,17 @@ const ImageUploader = ({ name, onChange, initialImage, title }) => {
   };
 
   return (
-    <ImageUploadContainer>
-      <input type='file' ref={fileInputRef} name={name} onChange={handleFileChange} />
+    <ImageUploadContainer $hasPreview={previewImage}>
+      <input className='image-input' type='file' ref={fileInputRef} name={name} onChange={handleFileChange} />
       {!file && !previewImage && (
         <Row>
           <StyledImageUpload onClick={handleIconClick}>
+            <svg width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1.5'>
+              <path d='M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4' />
+              <polyline points='17 8 12 3 7 8' />
+              <line x1='12' y1='3' x2='12' y2='15' />
+            </svg>
             <Label>Upload main image</Label>
-            <StyledIcon />
           </StyledImageUpload>
         </Row>
       )}
@@ -133,6 +144,7 @@ const ImageUploader = ({ name, onChange, initialImage, title }) => {
             {previewImage && <StyledPreviewImage src={previewImage} alt='' />}
             {title ? <P>Main image</P> : title}
           </Column>
+          {children}
         </StyledPreviewImageWrap>
       )}
     </ImageUploadContainer>

@@ -8,7 +8,6 @@ import Spinner from "../Spinner.jsx";
 const PageWrapper = styled.div`
   max-width: 100%;
   margin: 0 auto;
-  padding: 2rem;
 `;
 
 const Header = styled.div`
@@ -114,15 +113,16 @@ const Gallery = styled.div`
 
 const GalleryImage = styled.img`
   width: 100%;
-  height: 120px;
   border-radius: var(--border-radius-md);
   object-fit: cover;
-  flex-shrink: 0;
+  aspect-ratio: 16/9;
 `;
 
 function SingleShipData() {
   const { id } = useParams();
   const { data, isLoading, isError } = useShip(id);
+
+  console.log(data);
 
   if (isError) return <>Error</>;
   if (isLoading) return <Spinner />;
@@ -241,7 +241,7 @@ function SingleShipData() {
           <SectionTitle>Gallery</SectionTitle>
           <Gallery>
             {images.map((img, index) => (
-              <GalleryImage key={index} src={img} alt={`Ship-${index}`} />
+              <GalleryImage key={index} src={img.url} alt={img.alt} />
             ))}
           </Gallery>
         </Section>

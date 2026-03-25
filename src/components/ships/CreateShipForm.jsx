@@ -47,6 +47,12 @@ const Column = styled(Row)`
   gap: 0;
 `;
 
+const GalleryColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+`;
+
 const ColumnPublish = styled(Row)`
   grid-column: 1 / -1;
   justify-content: flex-start;
@@ -72,7 +78,7 @@ const ShipsForm = () => {
   const { mutate: submitData, isPending } = useCreateShip();
   const { mutate: editShip, isPending: editPendingShip } = useEditShip();
 
-  const [existingImages, setExistingImages] = useState(singleShipData?.imageIds || []);
+  const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [deleteImageIds, setDeleteImageIds] = useState([]);
 
@@ -87,8 +93,11 @@ const ShipsForm = () => {
     handleSubmit,
     reset,
   } = useForm({
-    defaultValues: {},
+    defaultValues: {
+      imagesMeta: [],
+    },
     resolver: zodResolver(schema),
+    shouldUnregister: false,
   });
 
   const shipNameWatch = watch("shipName", "");
@@ -105,15 +114,31 @@ const ShipsForm = () => {
   }, [shipNameWatch, setValue]);
 
   useEffect(() => {
-    if (singleShipData && isEditSession) {
-      const normalizedImages = (singleShipData.images || []).map((img) => (typeof img === "string" ? { url: img } : img));
+    if (!singleShipData || !isEditSession) return;
 
-      reset({
-        ...singleShipData,
-        images: normalizedImages,
-      });
-    }
-  }, [singleShipData, reset, isEditSession]);
+    const normalizedImages = (singleShipData.images || []).map((img) => (typeof img === "string" ? { url: img } : img));
+
+    // 1. Reset form first
+    reset({
+      ...singleShipData,
+      images: normalizedImages,
+    });
+
+    // 2. Set existing images state
+    setExistingImages(
+      normalizedImages.map((img) => ({
+        id: img.id,
+        url: img.url,
+        alt: img.alt || "",
+        publicId: img.publicId || "",
+      })),
+    );
+
+    // 3. Pre-fill alt fields AFTER reset so they aren't wiped
+    normalizedImages.forEach((img) => {
+      if (img.id) setValue(`existingImagesAlt_${img.id}`, img.alt || "");
+    });
+  }, [singleShipData, isEditSession, reset, setValue]);
 
   const onSubmit = async (data) => {
     const formData = new FormData();
@@ -128,13 +153,23 @@ const ShipsForm = () => {
       formData.append("images", img.file);
     });
 
+    const imagesMeta = [
+      // Existing images first
+      ...existingImages.map((img) => ({ alt: img.alt || "" })),
+      // Then new images
+      ...newImages.map((img) => ({ alt: img.alt || "" })),
+    ];
+
+    // Append imagesMeta as JSON
+    formData.append("imagesMeta", JSON.stringify(imagesMeta));
+
     // deleteImageIds = ["publicId1", "publicId2"]
     if (deleteImageIds && deleteImageIds.length > 0) {
       formData.append("deleteImageIds", JSON.stringify(deleteImageIds));
     }
 
     Object.entries(data).forEach(([key, value]) => {
-      if (key !== "images" && key !== "mainImage") {
+      if (key !== "mainImage" && key !== "newImages" && key !== "existingImages") {
         formData.append(key, value ?? "");
       }
     });
@@ -265,7 +300,7 @@ const ShipsForm = () => {
             directions='column'
             placeholder='e.g. 94'
             register={register}
-            {...register("length", { require: "Length is required" })}
+            {...register("length", { required: "Length is required" })}
           />
           <InputErrorMessage message={errors.length?.message} />
         </Column>
@@ -366,26 +401,32 @@ const ShipsForm = () => {
             value={watch("mainImage")}
             onChange={(file) => setValue("mainImage", file)}
             initialImage={singleShipData?.mainImage}
-          />
+          >
+            <Input
+              type='text'
+              name='mainImageAlt'
+              placeholder='Enter main image description'
+              register={register}
+              {...register("mainImageAlt")}
+            />
+          </ImageUploader>
 
           <InputErrorMessage message={errors.mainImage?.message} />
         </Column>
-
-        <Column>
-          <MultipleImagesUploader
-            name='images'
-            existingImages={existingImages}
-            setExistingImages={setExistingImages}
-            newImages={newImages}
-            deleteImageIds={deleteImageIds}
-            onNewImagesChange={setNewImages}
-            onDeleteImageIdsChange={setDeleteImageIds}
-          />
-          {/*  <MultipleImagesUploader name='images' value={watch("images")} onChange={(files) => setValue("images", files)} />
-           */}
-          <InputErrorMessage message={errors.images?.message} />
-        </Column>
       </Form>
+      <GalleryColumn>
+        <MultipleImagesUploader
+          name='imagesMets'
+          existingImages={existingImages}
+          setExistingImages={setExistingImages}
+          onNewImagesChange={setNewImages}
+          newImages={newImages}
+          deleteImageIds={deleteImageIds}
+          onDeleteImageIdsChange={setDeleteImageIds}
+        />
+
+        <InputErrorMessage message={errors.images?.message} />
+      </GalleryColumn>
 
       <Row>
         {isEditSession ? <Button>{editPendingShip ? "Editing..." : "Edit"}</Button> : <Button>{isPending ? "Loading..." : "Save"}</Button>}

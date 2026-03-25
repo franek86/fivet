@@ -23,6 +23,13 @@ const tagsPreprocess = (val) => {
   return val;
 };
 
+export const ImageSchema = z.object({
+  file: z.any().optional(),
+  url: z.string().url(),
+  alt: z.string().optional(),
+  publicId: z.string().optional(),
+});
+
 export const createShipSchema = z.object({
   shipName: z.string().min(1, "Ship name is required"),
   slug: z.string().min(1, "Slug is required"),
@@ -43,14 +50,15 @@ export const createShipSchema = z.object({
   buildCountry: z.string().optional(),
   remarks: z.string().optional(),
   description: z.string().optional(),
-  images: z
+  images: z.array(ImageSchema).optional(),
+  /*  images: z
     .array(
       z.object({
         file: z.instanceof(File),
         url: z.string().optional(),
       }),
     )
-    .optional(),
+    .optional(), */
 
   mainImage: z
     .instanceof(File, { message: "An image file is required" })
@@ -60,6 +68,11 @@ export const createShipSchema = z.object({
     .refine((file) => file.type.startsWith("image/"), {
       message: "Only image files are allowed",
     }),
+  imagesAlt: z
+    .record(z.string()) // any key like "imagesAlt_0" or "existingImagesAlt_1"
+    .optional(),
+
+  mainImageAlt: z.string().optional(),
   isPublished: z.boolean().optional(),
 });
 

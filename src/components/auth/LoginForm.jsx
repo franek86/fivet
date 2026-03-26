@@ -13,7 +13,6 @@ import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 
 import { loginSchema } from "../../utils/validationSchema.js";
 import { loginApi } from "../../services/apiAuth.js";
-import { handleApiError } from "../../utils/handleApiError.js";
 import { Eye, EyeClosed } from "lucide-react";
 import { setAccessToken } from "../../utils/axiosConfig.js";
 import { setUser } from "../../slices/authSlice.js";
@@ -60,6 +59,7 @@ function LoginForm() {
       setUser({
         isAuthenticated: true,
       });
+
       toast.success("Your are logged in");
       navigate("/dashboard");
     },

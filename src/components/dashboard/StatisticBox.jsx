@@ -25,36 +25,34 @@ function StatisticBox({ data, isLoading }) {
     return <TablePlaceholder count={3} />;
   }
 
-  const getStatisticByRole = (data, key, role) => {
-    if (role === "ADMIN") {
-      return data[key] ?? 0;
-    }
-
-    const personalStats = data.userStats?.[0];
-    return personalStats?.[key] ?? 0;
-  };
-
-  // Total Ships
-  const totalShips = getStatisticByRole(data, "totalShips", user.role);
-  const shipsTrend = user.role === "ADMIN" ? data?.shipsTrend?.trend : data?.userStats?.[0]?.trends?.ships.trend;
-  const shipChange = user.role === "ADMIN" ? data?.shipsTrend?.change : data?.userStats?.[0]?.trends?.ships.change;
-
   return (
     <StatisticBoxWrap>
-      <StatisticCard iconColor='#0369a1' icon={<Ship />} text='Total ships' data={totalShips} trend={shipsTrend} trendChange={shipChange} />
-      {user.role === "ADMIN" && (
-        <StatisticCard
-          iconColor='#15803d'
-          icon={<Users />}
-          text='Total users'
-          data={data?.totalUsers}
-          trend={data?.usersTrend?.trend}
-          trendChange={data?.usersTrend?.change}
-        />
-      )}
-      {user.role === "USER" && <StatisticCard iconColor='#15803d' icon={<CheckCheck />} text='Published ships' data={data?.totalUsers} />}
+      <StatisticCard
+        iconColor='#0369a1'
+        icon={<Ship />}
+        text='Total ships'
+        data={data.totalShips}
+        trend={data?.shipsTrend?.trend}
+        trendChange={data?.shipsTrend?.change}
+      />
 
-      <StatisticCard iconColor='#4338ca' icon={<CalendarDays />} text='Events' data={getStatisticByRole(data, "totalEvents", user.role)} />
+      <StatisticCard
+        iconColor='#15803d'
+        icon={<Users />}
+        text='Total users'
+        data={data?.totalUsers}
+        trend={data?.usersTrend?.trend}
+        trendChange={data?.usersTrend?.change}
+      />
+
+      <StatisticCard
+        iconColor='#4338ca'
+        icon={<CalendarDays />}
+        text='Events'
+        data={data?.totalEvents}
+        trend={data?.eventsTrend?.trend}
+        trendChange={data?.eventsTrend?.change}
+      />
     </StatisticBoxWrap>
   );
 }

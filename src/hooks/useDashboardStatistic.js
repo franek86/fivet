@@ -1,17 +1,17 @@
-import { useQueries } from "@tanstack/react-query";
-import { getDashboardEarnings, getDashboardStatistic } from "../services/apiDashboard.js";
+import { useQueries, useQuery } from "@tanstack/react-query";
+import { getAdminDashboardEarnings, getAdminDashboardStatistic, getUserDashboardStatistic } from "../services/apiDashboard.js";
 
-export const useDashboardData = (activePeriod) => {
+export const useAdminDashboardData = (activePeriod) => {
   const results = useQueries({
     queries: [
       {
         queryKey: ["statistic"],
-        queryFn: getDashboardStatistic,
+        queryFn: getAdminDashboardStatistic,
         staleTime: 30 * 60 * 1000,
       },
       {
         queryKey: ["earnings", activePeriod],
-        queryFn: () => getDashboardEarnings(activePeriod),
+        queryFn: () => getAdminDashboardEarnings(activePeriod),
         staleTime: 30 * 60 * 1000,
       },
       {
@@ -32,5 +32,14 @@ export const useDashboardData = (activePeriod) => {
     geoUrl: results[2].data,
   };
 
+  return { data, isLoading };
+};
+
+export const useUserDashboardData = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["user-statistic"],
+    queryFn: getUserDashboardStatistic,
+    staleTime: 30 * 60 * 1000,
+  });
   return { data, isLoading };
 };

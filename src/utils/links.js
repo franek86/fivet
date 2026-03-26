@@ -1,7 +1,8 @@
 import { BellPlus, Blocks, CalendarRange, Contact, CreditCard, LayoutDashboard, Ship, UserPen, Users } from "lucide-react";
 
 export const navLinks = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, allowRoles: ["ADMIN", "USER"] },
+  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard, allowRoles: ["ADMIN"] },
+  { href: "/user/dashboard", label: "Dashboard", icon: LayoutDashboard, allowRoles: ["USER"] },
   { href: "/ships", label: "Ships", icon: Ship, allowRoles: ["ADMIN", "USER"] },
   { href: "/categories", label: "Categories", icon: Blocks, allowRoles: ["ADMIN"] },
   { href: "/users", label: "Users", icon: Users, badgeKey: "activeUsers", allowRoles: ["ADMIN"] },

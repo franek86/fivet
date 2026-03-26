@@ -6,7 +6,7 @@ import { ToastContainer } from "react-toastify";
 import MainLayout from "./layouts/MainLayout.jsx";
 import AuthLayout from "./layouts/AuthLayout.jsx";
 
-import Dashboard from "./pages/Dashboard.jsx";
+import UserDashboard from "./pages/UserDashboard.jsx";
 import Ships from "./pages/Ships.jsx";
 import SingleShip from "./pages/SingleShip.jsx";
 import Categories from "./pages/Categories.jsx";
@@ -27,6 +27,8 @@ import Payments from "./pages/Payments.jsx";
 import Billing from "./pages/Billing.jsx";
 import PremiumRoute from "./pages/PremiumRoute.jsx";
 import PaymentProtectedRoute from "./pages/PaymentProtectedRoute.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
+import DashboardRedirect from "./pages/DashboardRedirect.jsx";
 
 function App() {
   return (
@@ -43,8 +45,9 @@ function App() {
         </Route>
         <Route element={<ProtectedRoute allowedRoles={["ADMIN", "USER"]} />}>
           <Route element={<MainLayout />}>
+            <Route path='/dashboard' element={<DashboardRedirect />} />
             <Route element={<PaymentProtectedRoute />}>
-              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/user/dashboard' element={<UserDashboard />} />
               <Route path='/ships' element={<Ships />} />
               <Route path='/ships/create' element={<CreateShip />} />
               <Route path='/ships/edit/:id' element={<EditShip />} />
@@ -62,6 +65,7 @@ function App() {
 
         <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
           <Route element={<MainLayout />}>
+            <Route path='/admin/dashboard' element={<AdminDashboard />} />
             <Route path='/users' element={<Users />} />
             <Route path='/categories' element={<Categories />} />
             <Route path='/payments' element={<Payments />} />

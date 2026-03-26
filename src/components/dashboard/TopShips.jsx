@@ -5,8 +5,6 @@ import { formatedPrice } from "../../utils/formattedPrice.js";
 import { Eye } from "lucide-react";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
-import { useUser } from "../../hooks/useAuth.js";
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -60,8 +58,6 @@ const Views = styled(Link)`
 `;
 
 function TopShips({ data, isLoading }) {
-  const { data: user } = useUser();
-
   if (isLoading) {
     return <TablePlaceholder count={6} />;
   }
@@ -74,7 +70,7 @@ function TopShips({ data, isLoading }) {
         <p>Name</p>
         <p>IMO</p>
         <p>Price</p>
-        {user.role === "ADMIN" && <p>Views</p>}
+        <p>Views</p>
       </WrapperTop>
       {data?.topShips?.map((ship) => (
         <Wrapper key={ship.id}>
@@ -82,12 +78,10 @@ function TopShips({ data, isLoading }) {
           <p>{ship.shipName}</p>
           <p>{ship.imo}</p>
           <p>{formatedPrice(ship.price)}</p>
-          {user.role === "ADMIN" && (
-            <Views to={`/ships/${ship.id}`}>
-              <Eye />
-              {ship.clicks}
-            </Views>
-          )}
+          <Views to={`/ships/${ship.id}`}>
+            <Eye />
+            {ship.clicks}
+          </Views>
         </Wrapper>
       ))}
     </Container>

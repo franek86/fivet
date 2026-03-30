@@ -105,7 +105,6 @@ export const refreshTokenApi = async () => {
 export const getCurrentUser = async () => {
   try {
     const res = await apiClient.get("/auth/me");
-
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Unauthorized";

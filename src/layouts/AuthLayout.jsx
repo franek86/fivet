@@ -1,13 +1,12 @@
 import { Outlet } from "react-router";
 import { motion } from "framer-motion";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
 
 const Wrap = styled.div`
   display: flex;
-  height: 100vh;
   max-width: 40rem;
   margin: 0 auto;
+  padding: 4rem 0;
   align-items: center;
   justify-content: center;
 `;
@@ -17,15 +16,6 @@ const FormSection = styled.section`
   align-items: center;
   text-align: center;
   width: 100%;
-`;
-
-const WakupStyle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #fff;
-  font-size: 3rem;
 `;
 
 function AuthLayout() {

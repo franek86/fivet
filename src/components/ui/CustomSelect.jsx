@@ -79,6 +79,14 @@ const SelectOption = styled.div`
   }
 `;
 
+const SearchInput = styled.input`
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-bottom: 1px solid #eee;
+  outline: none;
+`;
+
 const CustomSelect = forwardRef(({ name, control, options, label, size, directions = "column", variation, valueKey = "name" }) => {
   const { field } = useController({ name, control });
   const dispatch = useDispatch();
@@ -86,20 +94,21 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, directio
   const dropdownRef = useRef(null);
   const triggerRef = useRef(null);
   const [alignRight, setAlignRight] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const filteredOptions = search ? options?.filter((option) => option.name.toLowerCase().includes(search.toLowerCase())) : options;
 
   const selectedOption = options?.find((option) => option[valueKey] === field.value) || null;
   const openedSelect = isOpen === name;
 
   const handleSelect = (option) => {
     field.onChange(option[valueKey]);
-    //dispatch(closeDropdown());
     dispatch(toggleDropdownByName(name));
   };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target) && triggerRef.current && !triggerRef.current.contains(e.target)) {
-        //dispatch(closeDropdown());
         dispatch(toggleDropdownByName(name));
       }
     };
@@ -130,7 +139,14 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, directio
 
       {openedSelect && (
         <SelectDropdown ref={dropdownRef} $alignRight={alignRight}>
-          {options?.map((option) => (
+          <SearchInput
+            type='text'
+            placeholder='Search...'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+          />
+          {filteredOptions?.map((option) => (
             <SelectOption key={option.name} $selected={field.value === option[valueKey]} onClick={() => handleSelect(option)}>
               {option.name}
             </SelectOption>

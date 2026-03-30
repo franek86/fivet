@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useParams } from "react-router";
 
@@ -152,13 +152,6 @@ const ShipsForm = () => {
     newImages.forEach((img) => {
       formData.append("images", img.file);
     });
-
-    /*  const imagesMeta = [
-      // Existing images first
-      ...existingImages.map((img) => ({ alt: img.alt || "" })),
-      // Then new images
-      ...newImages.map((img) => ({ alt: img.alt || "" })),
-    ]; */
 
     // New image: only alt
     const newImagesMeta = newImages.map((img) => ({

@@ -5,6 +5,7 @@ const StyleLabel = styled.label`
   font-weight: 600;
   margin-right: 1rem;
   margin-bottom: 0.4rem;
+  text-align: left;
 `;
 
 function Label({ children, htmlFor }) {

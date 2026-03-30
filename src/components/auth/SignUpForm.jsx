@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 
 import Input from "../ui/Input.jsx";
@@ -15,7 +15,8 @@ import { registerUser, verifyOtpApi } from "../../services/apiAuth.js";
 import { useDispatch } from "react-redux";
 import { setUser } from "../../slices/authSlice.js";
 import { Eye, EyeClosed } from "lucide-react";
-import { useUser } from "../../hooks/useAuth.js";
+import { countriesJson } from "../../utils/countriesJson.js";
+import CustomSelect from "../ui/CustomSelect.jsx";
 
 const FormWrapper = styled.form`
   display: flex;
@@ -64,7 +65,6 @@ const ResendOtp = styled.p`
 `;
 
 function SignUpForm() {
-  const { data: user } = useUser();
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const plan = searchParams.get("plan");
@@ -125,17 +125,19 @@ function SignUpForm() {
 
   const {
     register,
+    control,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm({});
 
-  const onHandleSubmit = ({ email, password, fullName }) => {
-    signUp({ email, password, fullName });
+  const onHandleSubmit = (data) => {
+    signUp({ ...data });
   };
 
   const onHandleVerifyOtp = () => {
-    verifyOtpMutation({ data: userData, subscription: user?.subscription, otp });
+    const { repeatPassword, ...safeUserData } = userData;
+    verifyOtpMutation({ data: safeUserData, subscription: plan, otp });
   };
 
   const handleOtpChange = (index, value) => {
@@ -195,6 +197,57 @@ function SignUpForm() {
             />
             <InputErrorMessage message={errors.email?.message} />
           </Column>
+          <Column>
+            <Input
+              directions='column'
+              label='Address *'
+              placeholder='Enter address'
+              register={register}
+              {...register("address", { required: "Address required" })}
+            />
+          </Column>
+          <Column></Column>
+          <Column>
+            <Input
+              directions='column'
+              label='Zip code *'
+              placeholder='Enter zip code'
+              register={register}
+              {...register("zipCode", { required: "Zip code required" })}
+            />
+          </Column>
+          <Column>
+            <Input
+              directions='column'
+              label='City *'
+              placeholder='Enter City'
+              register={register}
+              {...register("city", { required: "City required" })}
+            />
+
+            <InputErrorMessage message={errors.city?.message} />
+          </Column>
+          <Column>
+            <Controller
+              name='country'
+              control={control}
+              render={({ field }) => (
+                <CustomSelect
+                  {...field}
+                  control={control}
+                  options={countriesJson}
+                  placeholder='Enter country'
+                  label='Country *'
+                  size='medium'
+                  variation='transparent'
+                  {...register("country", { required: "Country is required" })}
+                />
+              )}
+            />
+
+            <InputErrorMessage message={errors.country?.message} />
+          </Column>
+
           <Column>
             <PasswordWrap>
               <Input

@@ -112,7 +112,9 @@ function ShipsTable() {
     },
     { header: "Image", accessor: "image", style: "hidden-table-sm" },
     ...(user?.role === "ADMIN" ? [{ header: "Published", accessor: "published", style: "hidden-table-sm" }] : []),
-    { header: `${user?.role !== "ADMIN" ? "Ship type" : "User"}`, accessor: "ship-type-user" },
+    ...(user?.role === "USER" ? [{ header: "Status", accessor: "publish-status" }] : []),
+
+    { header: `${user?.role !== "ADMIN" ? "Ship type" : "User"}`, accessor: "ship-type-user", style: "hidden-table-sm" },
     { header: "Ship Name", accessor: "ship name" },
     { header: "IMO no.", accessor: "imo" },
     { header: "Price", accessor: "price" },

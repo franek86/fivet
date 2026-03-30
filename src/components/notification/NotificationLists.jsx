@@ -85,7 +85,7 @@ function NotificationLists() {
 
   return (
     <Wrapper>
-      {notifications.length === 0 && <p>No new notifications</p>}
+      {notifications.length === 0 && <p>We'll you keep updated on any feature notifications</p>}
 
       {notifications.map((item) => (
         <div key={item.id}>

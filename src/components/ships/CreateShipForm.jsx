@@ -153,15 +153,27 @@ const ShipsForm = () => {
       formData.append("images", img.file);
     });
 
-    const imagesMeta = [
+    /*  const imagesMeta = [
       // Existing images first
       ...existingImages.map((img) => ({ alt: img.alt || "" })),
       // Then new images
       ...newImages.map((img) => ({ alt: img.alt || "" })),
-    ];
+    ]; */
+
+    // New image: only alt
+    const newImagesMeta = newImages.map((img) => ({
+      alt: img.alt || "",
+    }));
+
+    // New images: only alt
+    const existingImagesMeta = existingImages.map((img) => ({
+      id: img.id,
+      alt: img.alt || "",
+    }));
 
     // Append imagesMeta as JSON
-    formData.append("imagesMeta", JSON.stringify(imagesMeta));
+    formData.append("existingImagesMeta", JSON.stringify(existingImagesMeta));
+    formData.append("imagesMeta", JSON.stringify(newImagesMeta));
 
     // deleteImageIds = ["publicId1", "publicId2"]
     if (deleteImageIds && deleteImageIds.length > 0) {

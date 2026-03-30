@@ -34,6 +34,20 @@ const P = styled.div`
   width: max-content;
 `;
 
+const PublishedStatus = styled.div`
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+  background-color: ${({ $props }) => ($props ? "#15803d" : "#b91c1c")};
+`;
+
+const TdCenter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+`;
+
 function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
   const { data: user } = useUser();
 
@@ -76,9 +90,19 @@ function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
       <td className='table-td'>
         <StyledImage src={mainImage && !mainImage.error ? mainImage : "/images/no-image.webp"} alt={shipName} />
       </td>
+
       {user?.role !== "ADMIN" ? null : (
         <td className='table-td'>
           <ToggleSwitch checked={isPublish} onChange={() => handleToggle(shipId, userId)} />
+        </td>
+      )}
+
+      {user?.role !== "USER" ? null : (
+        <td className='table-td'>
+          <TdCenter>
+            <PublishedStatus $props={isPublished} />
+            {isPublished ? "Live" : "Draft"}
+          </TdCenter>
         </td>
       )}
 

@@ -122,8 +122,6 @@ function SingleShipData() {
   const { id } = useParams();
   const { data, isLoading, isError } = useShip(id);
 
-  console.log(data);
-
   if (isError) return <>Error</>;
   if (isLoading) return <Spinner />;
 
@@ -173,31 +171,53 @@ function SingleShipData() {
       <Section>
         <SectionTitle>Specifications</SectionTitle>
         <InfoGrid>
-          <InfoItem>
-            <span>Main Engine:</span> {mainEngine}
-          </InfoItem>
-          <InfoItem>
-            <span>Length Overall:</span> {lengthOverall}
-          </InfoItem>
-          <InfoItem>
-            <span>Length:</span> {length}
-          </InfoItem>
-          <InfoItem>
-            <span>Beam:</span> {beam}
-          </InfoItem>
-          <InfoItem>
-            <span>Depth:</span> {depth}
-          </InfoItem>
-          <InfoItem>
-            <span>Draft:</span> {draft}
-          </InfoItem>
-          <InfoItem>
-            <span>Tonnage:</span> {tonnage}
-          </InfoItem>
+          {mainEngine && (
+            <InfoItem>
+              <span>Main Engine:</span> {mainEngine}
+            </InfoItem>
+          )}
 
-          <InfoItem>
-            <span>Cargo Capacity:</span> {cargoCapacity}
-          </InfoItem>
+          {lengthOverall > 0 && (
+            <InfoItem>
+              <span>Length Overall:</span> {lengthOverall}
+            </InfoItem>
+          )}
+
+          {length > 0 && (
+            <InfoItem>
+              <span>Length:</span> {length}
+            </InfoItem>
+          )}
+
+          {beam > 0 && (
+            <InfoItem>
+              <span>Beam:</span> {beam}
+            </InfoItem>
+          )}
+
+          {depth > 0 && (
+            <InfoItem>
+              <span>Depth:</span> {depth}
+            </InfoItem>
+          )}
+
+          {draft > 0 && (
+            <InfoItem>
+              <span>Draft:</span> {draft}
+            </InfoItem>
+          )}
+
+          {tonnage > 0 && (
+            <InfoItem>
+              <span>Tonnage:</span> {tonnage}
+            </InfoItem>
+          )}
+
+          {cargoCapacity && (
+            <InfoItem>
+              <span>Cargo Capacity:</span> {cargoCapacity}
+            </InfoItem>
+          )}
 
           {(buildYear) =>
             0(

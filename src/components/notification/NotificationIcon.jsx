@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import { toggleDropdown } from "../../slices/uiSlice.js";
-import { Bell } from "lucide-react";
+import { Bell, BellOff } from "lucide-react";
 import { markNotificationRead } from "../../slices/realtimeSlice.js";
 import { createSelector } from "@reduxjs/toolkit";
 
@@ -31,7 +31,7 @@ const Count = styled.div`
 
 const DropdownToggle = styled.div`
   position: absolute;
-  left: 0;
+  right: 0;
   top: 2.5rem;
 `;
 
@@ -54,6 +54,17 @@ const NotificationCard = styled.div`
     font-size: 1rem;
     display: block;
   }
+`;
+
+const NotificationMsg = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+  font-size: 1.3rem;
+  color: var(--color-grey-400);
 `;
 
 const DeleteCircle = styled.div`
@@ -80,19 +91,8 @@ export default function NotificationIcon() {
 
   const selectNotifications = (state) => state.realtime.notifications;
 
-  /*  const selectUnreadAdminNotifications = createSelector([selectNotifications], (notifications) =>
-    notifications.filter((n) => !n.read && n.scope === "ADMIN"),
-  );
-
-   const selectUnreadUserNotifications = createSelector([selectNotifications], (notifications) =>
-    notifications.filter((n) => !n.read && n.scope === "USER"),
-  ); */
-
   const selectUnreadNotifications = createSelector([selectNotifications], (notifications) => notifications.filter((n) => !n.read));
 
-  /*  const notifications = useSelector((state) => state.realtime.notifications);
-  const unreadCount = useSelector((state) => state.realtime.notifications.filter((n) => !n.read && n.scope === "ADMIN").length);
-  */
   const unreadNotifications = useSelector(selectUnreadNotifications);
   const unreadCount = unreadNotifications.length;
 
@@ -125,7 +125,14 @@ export default function NotificationIcon() {
 
       {isToggleDropdown && (
         <DropdownToggle>
-          {unreadNotifications.length === 0 && <NotificationCard>No new notifications</NotificationCard>}
+          {unreadNotifications.length === 0 && (
+            <NotificationCard>
+              <NotificationMsg>
+                <BellOff />
+                We'll you keep updated <br /> on any feature notifications
+              </NotificationMsg>
+            </NotificationCard>
+          )}
           {unreadNotifications.map((n) => (
             <NotificationCard key={n.id}>
               <DeleteCircle onClick={() => markAsRead(n.id)}>x</DeleteCircle>

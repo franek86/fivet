@@ -51,15 +51,6 @@ export const createShipSchema = z.object({
   remarks: z.string().optional(),
   description: z.string().optional(),
   images: z.array(ImageSchema).optional(),
-  /*  images: z
-    .array(
-      z.object({
-        file: z.instanceof(File),
-        url: z.string().optional(),
-      }),
-    )
-    .optional(), */
-
   mainImage: z
     .instanceof(File, { message: "An image file is required" })
     .refine((file) => file.size <= 5 * 1024 * 1024, {
@@ -68,9 +59,7 @@ export const createShipSchema = z.object({
     .refine((file) => file.type.startsWith("image/"), {
       message: "Only image files are allowed",
     }),
-  imagesAlt: z
-    .record(z.string()) // any key like "imagesAlt_0" or "existingImagesAlt_1"
-    .optional(),
+  imagesAlt: z.record(z.string()).optional(),
 
   mainImageAlt: z.string().optional(),
   isPublished: z.boolean().optional(),
@@ -78,7 +67,7 @@ export const createShipSchema = z.object({
 
 // edit ship form schema
 export const editShipSchema = createShipSchema.partial().extend({
-  images: z.any().optional(),
+  images: z.array(ImageSchema).optional(),
   mainImage: z.union([z.instanceof(File), z.string().url("Must be a valid image URL")]).refine((value) => {
     if (typeof value === "string") return true;
     return value instanceof File && value.type.startsWith("image/");

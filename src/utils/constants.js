@@ -18,3 +18,16 @@ export const EVENT_REMINDER = [
   { value: 60, name: "1 hour before" },
   { value: 1440, name: "1 day before" },
 ];
+
+export const BLOG_STATUS = [
+  { value: "DRAFT", name: "Draft" },
+  { value: "PUBLISHED", name: "Published" },
+  { value: "ARCHIVED", name: "Archived" },
+];
+
+export const BLOG_CATEGORIES = [
+  { value: 1, name: "Blog" },
+  { value: 2, name: "News" },
+  { value: 3, name: "Tankers" },
+  { value: 4, name: "Vessels" },
+];

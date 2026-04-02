@@ -16,7 +16,7 @@ const ImageUploadContainer = styled.section`
   cursor: pointer;
   position: relative;
 
-  border: 2px dashed var(--color-grey-300);
+  border: ${({ $hasPreview }) => ($hasPreview ? "none" : "2px dashed var(--color-grey-300) ")};
   transition: all 0.2s ease;
   color: #64748b;
   background-color: var(--color-grey-50);

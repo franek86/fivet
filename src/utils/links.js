@@ -11,4 +11,5 @@ export const navLinks = [
   { href: "/profile", label: "Profile", icon: UserPen, allowRoles: ["ADMIN", "USER"] },
   { href: "/payments", label: "Payments", icon: CreditCard, allowRoles: ["ADMIN"] },
   { href: "/notifications", label: "Notifications", icon: BellPlus, allowRoles: ["ADMIN", "USER"] },
+  { href: "/blog", label: "Blog", icon: BellPlus, allowRoles: ["ADMIN"] },
 ];

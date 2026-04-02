@@ -29,6 +29,7 @@ import PremiumRoute from "./pages/PremiumRoute.jsx";
 import PaymentProtectedRoute from "./pages/PaymentProtectedRoute.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import DashboardRedirect from "./pages/DashboardRedirect.jsx";
+import CreateBlog from "./components/blog/CreateBlog.jsx";
 
 function App() {
   return (
@@ -69,6 +70,7 @@ function App() {
             <Route path='/users' element={<Users />} />
             <Route path='/categories' element={<Categories />} />
             <Route path='/payments' element={<Payments />} />
+            <Route path='/blog/create' element={<CreateBlog />} />
           </Route>
         </Route>
         <Route path='*' element={<NotFound />} />

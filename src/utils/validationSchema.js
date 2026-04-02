@@ -5,6 +5,8 @@ const addressStatusEnum = z.enum(["REGULAR", "IMPORTANT"]);
 const statusEnum = z.enum(["PLANNED", "DONE", "CANCELLED"]);
 const priorityEnum = z.enum(["LOW", "MEDIUM", "HIGH"]);
 
+const blogStatusEnum = z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]);
+
 const datePreprocess = (arg) => {
   if (!arg) return undefined;
   if (arg instanceof Date) return arg;
@@ -23,7 +25,7 @@ const tagsPreprocess = (val) => {
   return val;
 };
 
-export const ImageSchema = z.object({
+export const ShipImageSchema = z.object({
   file: z.any().optional(),
   url: z.string().url(),
   alt: z.string().optional(),
@@ -50,7 +52,7 @@ export const createShipSchema = z.object({
   buildCountry: z.string().optional(),
   remarks: z.string().optional(),
   description: z.string().optional(),
-  images: z.array(ImageSchema).optional(),
+  images: z.array(ShipImageSchema).optional(),
   mainImage: z
     .instanceof(File, { message: "An image file is required" })
     .refine((file) => file.size <= 5 * 1024 * 1024, {
@@ -67,7 +69,7 @@ export const createShipSchema = z.object({
 
 // edit ship form schema
 export const editShipSchema = createShipSchema.partial().extend({
-  images: z.array(ImageSchema).optional(),
+  images: z.array(ShipImageSchema).optional(),
   mainImage: z.union([z.instanceof(File), z.string().url("Must be a valid image URL")]).refine((value) => {
     if (typeof value === "string") return true;
     return value instanceof File && value.type.startsWith("image/");
@@ -119,9 +121,25 @@ export const eventSchema = z
     status: statusEnum.nullable().optional(),
     priority: priorityEnum.nullable().optional(),
     tags: z.preprocess(tagsPreprocess, z.array(z.string()).optional()),
-    //userId: z.string().uuid("User ID must be valid"),
   })
   .refine((data) => data.start < data.end, {
     message: "Start datum must be before end date",
     path: ["start"],
   });
+
+//Blog schema
+export const blogSchema = z.object({
+  title: z.string().min(1, "Blog title is required"),
+  categoryId: z.coerce.number().optional(),
+  slug: z
+    .string()
+    .min(1, "Slug is required")
+    .regex(/^[a-z0-9-]+$/, "Slug must contain only lowercase letters, numbers, and hyphens"),
+  status: blogStatusEnum.nullable().optional(),
+  blocks: z.array(
+    z.object({
+      text: z.string().optional(),
+      image: z.any().optional(),
+    }),
+  ),
+});

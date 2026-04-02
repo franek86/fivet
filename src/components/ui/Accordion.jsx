@@ -11,18 +11,19 @@ const AccordionHeader = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid var(--color-brand-500);
+  background-color: var(--color-grey-100);
   border-radius: var(--border-radius-sm);
   padding: 1.2rem;
+  transition: all 0.2s ease-in-out;
   cursor: pointer;
 
   &:hover {
-    border: 1px solid var(--color-grey-500);
+    background-color: var(--color-grey-50);
   }
 
   p {
     font-size: 1.6rem;
-    color: var(--color-brand-500);
+    color: var(--color-grey-500);
   }
 
   &:hover {
@@ -36,16 +37,20 @@ const AccordionHeader = styled.header`
 const AccordionBody = styled.main`
   max-height: ${({ open }) => (open ? "500px" : "0")};
   opacity: ${({ open }) => (open ? "1" : "0")};
-  padding: ${({ open }) => (open ? "1.2rem 0" : "0")};
+  padding: ${({ open }) => (open ? "1.4rem" : "0")};
   overflow-y: auto;
-  background: var(--color-grey-0);
-  transition: max-height 0.4s ease-in-out, opacity 0.5s ease-in-out, padding 0.5s ease-in-out;
+  background: var(--color-grey-100);
+
+  transition:
+    max-height 0.4s ease-in-out,
+    opacity 0.5s ease-in-out,
+    padding 0.5s ease-in-out;
 `;
 
 const StyledChevron = styled(ChevronDown)`
   height: 2rem;
   width: 2rem;
-  color: var(--color-brand-500);
+  color: var(--color-grey-500);
   transform: ${({ open }) => (open ? "rotate(180deg)" : "rotate(0)")};
   transition: transform 0.4s ease-in-out;
 `;

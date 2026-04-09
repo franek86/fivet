@@ -1,7 +1,18 @@
+/**
+ * Third-party libraries
+ */
+
 import styled from "styled-components";
-import TextEditor from "../text-editor/index.jsx";
 import { Trash2 } from "lucide-react";
 
+/**
+ * Feature Components - TipTap rich editor
+ */
+import TextEditor from "../text-editor/index.jsx";
+
+/**
+ * Styled component
+ */
 const BlockSection = styled.div`
   margin-bottom: 2rem;
 `;

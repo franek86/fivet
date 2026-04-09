@@ -1,6 +1,20 @@
+/**
+ * Third-party libraries
+ */
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import styled from "styled-components";
 
+/**
+ * Custom Hooks
+ */
+import { useCreateAddressBook, useEditAddressBook } from "../../hooks/useAddressBook.js";
+import { addressBookSchema } from "../../utils/validationSchema.js";
+import { useUser } from "../../hooks/useAuth.js";
+
+/**
+ * UI Components
+ */
 import Button from "../ui/Button.jsx";
 import Input from "../ui/Input.jsx";
 import TextArea from "../ui/TextArea.jsx";
@@ -8,11 +22,6 @@ import CustomSelect from "../ui/CustomSelect.jsx";
 import Spinner from "../../components/Spinner.jsx";
 import CustomPhoneInput from "../ui/CustomPhoneInput.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
-
-import styled from "styled-components";
-import { useCreateAddressBook, useEditAddressBook } from "../../hooks/useAddressBook.js";
-import { addressBookSchema } from "../../utils/validationSchema.js";
-import { useUser } from "../../hooks/useAuth.js";
 
 const StyledForm = styled.form`
   display: flex;

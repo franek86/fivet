@@ -1,14 +1,25 @@
+/**
+ * Third-party libraries
+ */
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { Pencil, Trash2 } from "lucide-react";
+
+/**
+ * Features
+ */
+import { useDeleteCategory } from "../../hooks/categories/useDeleteCategory.js";
+import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
+
+/**
+ * UI Components
+ */
 import Dropdown from "../ui/Dropdown.jsx";
 import Button from "../ui/Button.jsx";
 import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 import CreateCategoryForm from "./CreateCategoryForm.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
-import { useDeleteCategory } from "../../hooks/categories/useDeleteCategory.js";
-import { useDispatch } from "react-redux";
-import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
-import { Pencil, Trash2 } from "lucide-react";
 
 const P = styled.div`
   text-align: start;

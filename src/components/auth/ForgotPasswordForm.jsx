@@ -1,18 +1,30 @@
+/**
+ * React & Hooks
+ */
 import { useRef, useState } from "react";
+
+/**
+ * Third-party libraries
+ */
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
+import styled from "styled-components";
+import { toast } from "react-toastify";
 
+/**
+ * Features - api
+ */
+import { forgetPasswordApi, verifyOtpForgetPasswordApi } from "../../services/apiAuth.js";
+
+/**
+ * UI Components
+ */
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import Title from "../ui/Title.jsx";
 import BackBtn from "../BackBtn.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import ResetPasswordForm from "./ResetPasswordForm.jsx";
-
-import { forgetPasswordApi, verifyOtpForgetPasswordApi } from "../../services/apiAuth.js";
-
-import styled from "styled-components";
-import { toast } from "react-toastify";
 
 const Form = styled.form`
   display: grid;

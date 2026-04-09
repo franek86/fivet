@@ -1,17 +1,29 @@
+/**
+ * React & Hooks
+ */
 import { useState } from "react";
+
+/**
+ * Third-party libraries
+ */
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
+import styled from "styled-components";
+import { toast } from "react-toastify";
+import { Eye, EyeClosed } from "lucide-react";
 
+/**
+ * Features - api,redux slices
+ */
+import { resetPasswordApi } from "../../services/apiAuth.js";
+
+/**
+ * UI Components
+ */
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
-
-import styled from "styled-components";
-import { resetPasswordApi } from "../../services/apiAuth.js";
-
-import { toast } from "react-toastify";
-import { Eye, EyeClosed } from "lucide-react";
 
 const Form = styled.form`
   display: flex;

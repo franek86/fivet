@@ -1,6 +1,13 @@
-import TablePlaceholder from "../ui/TablePlaceholder.jsx";
+/**
+ * Third-party libraries
+ */
 import { Minus, TrendingDown, TrendingUp } from "lucide-react";
 import styled from "styled-components";
+
+/**
+ * UI Components
+ */
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 const Section = styled.section`
   padding: 2rem;

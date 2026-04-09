@@ -1,6 +1,28 @@
+/**
+ * React & Hooks
+ */
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 
+/**
+ * Third-party libraries
+ */
+import { useDispatch } from "react-redux";
+import styled from "styled-components";
+import { ChevronDown, Eye, Pencil, Trash2 } from "lucide-react";
+
+/**
+ * Custom Hooks
+ */
+import { useDeleteAddressBook, useEditAddressBookPriority } from "../../hooks/useAddressBook.js";
+
+/**
+ *  Redux dispatch
+ */
+import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
+
+/**
+ * UI Components
+ */
 import Button from "../ui/Button.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 import Dropdown from "../ui/Dropdown.jsx";
@@ -8,12 +30,6 @@ import FormAddressBook from "./FormAddressBook.jsx";
 import Modal from "../Modal.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 import SingleAddressBook from "./SingleAddressBook.jsx";
-
-import styled from "styled-components";
-
-import { useDeleteAddressBook, useEditAddressBookPriority } from "../../hooks/useAddressBook.js";
-import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
-import { ChevronDown, Eye, Pencil, Trash2 } from "lucide-react";
 
 const StyledPriority = styled.div`
   max-width: max-content;

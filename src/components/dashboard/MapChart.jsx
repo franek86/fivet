@@ -1,10 +1,18 @@
+/**
+ * React & Hooks
+ */
 import { useState } from "react";
 
+/**
+ * Third-party libraries
+ */
 import { ComposableMap, Geographies, Geography, ZoomableGroup } from "react-simple-maps";
-
 import { scaleLinear } from "d3-scale";
-
 import styled from "styled-components";
+
+/**
+ * UI Components
+ */
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 const MapChartWrapp = styled.section`

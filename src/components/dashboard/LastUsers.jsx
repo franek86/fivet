@@ -1,7 +1,22 @@
+/**
+ * React & Hooks
+ */
 import { Link } from "react-router";
+
+/**
+ * Third-party libraries
+ */
 import styled from "styled-components";
 import { CircleUser } from "lucide-react";
+
+/**
+ * Features
+ */
 import { customFormatDate } from "../../utils/formatDate.js";
+
+/**
+ * UI Components
+ */
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 const Container = styled.div`

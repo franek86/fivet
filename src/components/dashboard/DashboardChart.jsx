@@ -1,9 +1,18 @@
+/**
+ * Third-party libraries
+ */
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import styled from "styled-components";
 
-import TablePlaceholder from "../ui/TablePlaceholder.jsx";
-
+/**
+ * Features
+ */
 import { formatMonth } from "../../utils/formatMonth.js";
+
+/**
+ * UI Components
+ */
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 const Wrapper = styled.section`
   background-color: var(--color-grey-0);

@@ -136,6 +136,7 @@ export const blogSchema = z.object({
     .min(1, "Slug is required")
     .regex(/^[a-z0-9-]+$/, "Slug must contain only lowercase letters, numbers, and hyphens"),
   status: blogStatusEnum.nullable().optional(),
+  subTitle: z.string().optional(),
   blocks: z.array(
     z.object({
       text: z.string().optional(),

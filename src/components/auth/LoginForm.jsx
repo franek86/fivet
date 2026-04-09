@@ -1,21 +1,38 @@
+/**
+ * React & Hooks
+ */
 import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+
+/**
+ * Third-party libraries
+ */
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Link, useNavigate } from "react-router";
 import styled from "styled-components";
 import { toast } from "react-toastify";
+import { Eye, EyeClosed } from "lucide-react";
 
+/**
+ * Validation - zod validation
+ */
+import { loginSchema } from "../../utils/validationSchema.js";
+
+/**
+ * Features - api,redux slices
+ */
+import { loginApi } from "../../services/apiAuth.js";
+import { setUser } from "../../slices/authSlice.js";
+import { setAccessToken } from "../../utils/axiosConfig.js";
+
+/**
+ * UI Components
+ */
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import ToggleSwitch from "../ui/ToggleSwitch.jsx";
-
-import { loginSchema } from "../../utils/validationSchema.js";
-import { loginApi } from "../../services/apiAuth.js";
-import { Eye, EyeClosed } from "lucide-react";
-import { setAccessToken } from "../../utils/axiosConfig.js";
-import { setUser } from "../../slices/authSlice.js";
 
 const Form = styled.form`
   display: grid;

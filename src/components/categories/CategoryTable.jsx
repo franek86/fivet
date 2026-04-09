@@ -1,8 +1,21 @@
+/**
+ * Third-party libraries
+ */
 import { useSearchParams } from "react-router";
 import { useSelector } from "react-redux";
-
 import styled from "styled-components";
+import { Trash2 } from "lucide-react";
 
+/**
+ * Custom Hooks
+ */
+import { useCategories } from "../../hooks/categories/useCategories.js";
+import { useDeleteCategory } from "../../hooks/categories/useDeleteCategory.js";
+import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
+
+/**
+ * UI Components
+ */
 import Pagination from "../Pagination.jsx";
 import Spinner from "../Spinner.jsx";
 import CustomTable from "../ui/CustomTable.jsx";
@@ -12,11 +25,6 @@ import CategoryColumn from "./CategoryColumn.jsx";
 import Button from "../ui/Button.jsx";
 import EmptyState from "../EmptyState.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
-
-import { useCategories } from "../../hooks/categories/useCategories.js";
-import { useDeleteCategory } from "../../hooks/categories/useDeleteCategory.js";
-import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
-import { Trash2 } from "lucide-react";
 
 const Header = styled.div`
   display: flex;

@@ -1,10 +1,19 @@
+/**
+ * Third-party libraries
+ */
 import styled from "styled-components";
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTiktok } from "react-icons/fa";
 
+/**
+ * Custom Hooks
+ */
+import { useGetAddressBookById } from "../../hooks/useAddressBook.js";
+
+/**
+ * UI Components
+ */
 import Title from "../ui/Title.jsx";
 import Spinner from "../Spinner.jsx";
-
-import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTiktok } from "react-icons/fa";
-import { useGetAddressBookById } from "../../hooks/useAddressBook.js";
 
 const FlexWrap = styled.div`
   display: flex;

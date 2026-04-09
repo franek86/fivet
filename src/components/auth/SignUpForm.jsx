@@ -1,22 +1,33 @@
+/**
+ * React & Hooks
+ */
 import { useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
+
+/**
+ * Third-party libraries
+ */
+import { useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
+import styled from "styled-components";
+import { toast } from "react-toastify";
+import { Eye, EyeClosed } from "lucide-react";
 
+/**
+ * Features
+ */
+import { registerUser, verifyOtpApi } from "../../services/apiAuth.js";
+import { setUser } from "../../slices/authSlice.js";
+import { countriesJson } from "../../utils/countriesJson.js";
+
+/**
+ * UI Components
+ */
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import Title from "../ui/Title.jsx";
-
-import styled from "styled-components";
-import { toast } from "react-toastify";
-
-import { registerUser, verifyOtpApi } from "../../services/apiAuth.js";
-import { useDispatch } from "react-redux";
-import { setUser } from "../../slices/authSlice.js";
-import { Eye, EyeClosed } from "lucide-react";
-import { countriesJson } from "../../utils/countriesJson.js";
-import CustomSelect from "../ui/CustomSelect.jsx";
 
 const FormWrapper = styled.form`
   display: flex;
@@ -232,7 +243,8 @@ function SignUpForm() {
               name='country'
               control={control}
               render={({ field }) => (
-                <CustomSelect
+                <Custom
+                  Select
                   {...field}
                   control={control}
                   options={countriesJson}

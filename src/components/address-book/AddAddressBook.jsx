@@ -1,8 +1,18 @@
+/**
+ * Third-party libraries
+ */
 import { useDispatch } from "react-redux";
+
+/**
+ * Redux Actions
+ */
+import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
+
+/**
+ * UI Components
+ */
 import Button from "../ui/Button.jsx";
 import Modal from "../Modal.jsx";
-
-import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import FormAddressBook from "./FormAddressBook.jsx";
 
 function AddAddressBook() {

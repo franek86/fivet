@@ -1,8 +1,22 @@
+/**
+ * React & Hooks
+ */
 import { Link } from "react-router";
-import styled from "styled-components";
 
-import { formatedPrice } from "../../utils/formattedPrice.js";
+/**
+ * Third-party libraries
+ */
+import styled from "styled-components";
 import { Eye } from "lucide-react";
+
+/**
+ * Features
+ */
+import { formatedPrice } from "../../utils/formattedPrice.js";
+
+/**
+ * UI Components
+ */
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 const Container = styled.div`

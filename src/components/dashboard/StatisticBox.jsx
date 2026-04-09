@@ -1,11 +1,19 @@
+/**
+ * Third-party libraries
+ */
 import styled from "styled-components";
+import { CalendarDays, Ship, Users } from "lucide-react";
 
+/**
+ * Custom hooks
+ */
+import { useUser } from "../../hooks/useAuth.js";
+
+/**
+ * UI Components
+ */
 import StatisticCard from "../ui/StatisticCard.jsx";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
-
-import { CalendarDays, Ship, Users, CheckCheck } from "lucide-react";
-
-import { useUser } from "../../hooks/useAuth.js";
 
 const StatisticBoxWrap = styled.section`
   display: grid;

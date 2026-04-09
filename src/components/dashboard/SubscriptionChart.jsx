@@ -1,7 +1,18 @@
+/**
+ * React & Hooks
+ */
+import { useMemo } from "react";
+
+/**
+ * Third-party libraries
+ */
 import { Legend, Pie, PieChart, ResponsiveContainer, Sector } from "recharts";
 import styled from "styled-components";
+
+/**
+ * UI Components
+ */
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
-import { useMemo } from "react";
 
 const Section = styled.section`
   background-color: var(--color-grey-0);

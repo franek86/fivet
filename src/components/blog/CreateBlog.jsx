@@ -1,21 +1,40 @@
+/**
+ * React & Hooks
+ */
 import { useEffect } from "react";
+
+/**
+ * Third-party libraries
+ */
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import styled from "styled-components";
 
+/**
+ * Validation Schema - Zod schema used to validate the blog form structure.
+ */
+import { blogSchema } from "../../utils/validationSchema.js";
+
+/**
+ * Constants - Static values used for blog categories and publishing status.
+ */
+import { BLOG_CATEGORIES, BLOG_STATUS } from "../../utils/constants.js";
+
+/**
+ * UI Components
+ */
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
 import Accordion from "../ui/Accordion.jsx";
 import ImageUploader from "../ImageUploader.jsx";
-
-import { blogSchema } from "../../utils/validationSchema.js";
-import { BLOG_CATEGORIES, BLOG_STATUS } from "../../utils/constants.js";
 import Tabs from "../ui/Tabs.jsx";
 import BlogBlocks from "./BlogBlocks.jsx";
 
+/**
+ * Styled component
+ */
 const FormHeader = styled.header`
   display: flex;
   justify-content: space-between;
@@ -102,12 +121,16 @@ const CreateBlog = () => {
     formData.append("slug", data.slug);
     formData.append("subTitle", data.subTitle);
     if (data.categoryId) formData.append("categoryId", String(data.categoryId));
+    if (data.status) formData.append("status", String(data.status));
 
     for (const [key, value] of formData.entries()) {
       console.log(key, value);
     }
   };
 
+  /* 
+    Automatically generate a URL-friendly slug whenever the blog title changes.
+  */
   useEffect(() => {
     const slugify = blogTitleWatch
       .toLowerCase()
@@ -121,7 +144,9 @@ const CreateBlog = () => {
 
   console.log(errors);
 
-  /* TABS CONTENT */
+  /* 
+    Tabs Content
+  */
   const tabs = [
     {
       label: "Content",
@@ -220,7 +245,7 @@ const CreateBlog = () => {
                   label='Blog status'
                   size='medium'
                   variation='transparent'
-                  valueKey='id'
+                  valueKey='value'
                   {...register("status")}
                 />
               )}
@@ -240,7 +265,7 @@ const CreateBlog = () => {
                   label='Categories'
                   size='medium'
                   variation='transparent'
-                  valueKey='id'
+                  valueKey='value'
                   {...register("categoryId")}
                 />
               )}

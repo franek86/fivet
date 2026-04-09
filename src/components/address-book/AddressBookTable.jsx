@@ -1,3 +1,19 @@
+/**
+ * Third-party libraries
+ */
+import { Trash2 } from "lucide-react";
+import styled from "styled-components";
+
+/**
+ * Custom Hooks
+ */
+import { useDeleteAddressBook, useGetAddressBook } from "../../hooks/useAddressBook.js";
+import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
+import { useUser } from "../../hooks/useAuth.js";
+
+/**
+ * UI Components
+ */
 import Spinner from "../Spinner.jsx";
 import AddressBookColumn from "./AddressBookColumn.jsx";
 import CustomTable from "../ui/CustomTable.jsx";
@@ -5,12 +21,6 @@ import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import EmptyState from "../EmptyState.jsx";
 import Button from "../ui/Button.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
-
-import { useDeleteAddressBook, useGetAddressBook } from "../../hooks/useAddressBook.js";
-import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
-import { Trash2 } from "lucide-react";
-import styled from "styled-components";
-import { useUser } from "../../hooks/useAuth.js";
 
 const Header = styled.div`
   display: flex;

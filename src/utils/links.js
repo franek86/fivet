@@ -1,4 +1,4 @@
-import { BellPlus, Blocks, CalendarRange, Contact, CreditCard, LayoutDashboard, Ship, UserPen, Users } from "lucide-react";
+import { BellPlus, Blocks, CalendarRange, Contact, CreditCard, Globe, LayoutDashboard, Ship, UserPen, Users } from "lucide-react";
 
 export const navLinks = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard, allowRoles: ["ADMIN"] },
@@ -11,5 +11,5 @@ export const navLinks = [
   { href: "/profile", label: "Profile", icon: UserPen, allowRoles: ["ADMIN", "USER"] },
   { href: "/payments", label: "Payments", icon: CreditCard, allowRoles: ["ADMIN"] },
   { href: "/notifications", label: "Notifications", icon: BellPlus, allowRoles: ["ADMIN", "USER"] },
-  { href: "/blog", label: "Blog", icon: BellPlus, allowRoles: ["ADMIN"] },
+  { href: "/blog", label: "Blog", icon: Globe, allowRoles: ["ADMIN"] },
 ];

@@ -491,6 +491,25 @@ const GlobalStyles = styled.createGlobalStyle`
     background: var(--color-grey-200);
   }
 
+  /* text editor */
+  .text-editor-custom {
+    min-height: 150px;
+    border: 1px solid var(--color-green-200);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-grey-0);
+    padding: 1rem;
+    overflow: scroll;
+
+    ul {
+      list-style: disc;
+    }
+
+    ol,
+    ul {
+      margin-left: 2rem;
+    }
+  }
+
   /* ANIMATION KEYFRAME */
   @keyframes shimmer-animation {
     0% {

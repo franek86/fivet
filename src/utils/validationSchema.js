@@ -139,7 +139,9 @@ export const blogSchema = z.object({
   blocks: z.array(
     z.object({
       text: z.string().optional(),
-      image: z.any().optional(),
+      imageUrl: z.string().url().optional(),
+      imageAlt: z.string().optional(),
+      order: z.coerce.number().optional(),
     }),
   ),
 });

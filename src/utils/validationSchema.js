@@ -1,12 +1,19 @@
 import { z } from "zod";
 import moment from "moment";
 
+/**
+ * Enums
+ */
 const addressStatusEnum = z.enum(["REGULAR", "IMPORTANT"]);
 const statusEnum = z.enum(["PLANNED", "DONE", "CANCELLED"]);
 const priorityEnum = z.enum(["LOW", "MEDIUM", "HIGH"]);
-
 const blogStatusEnum = z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]);
 
+/**
+ * Normalizes different date input types into a native JavaScript Date object.
+ * Accepts: Date instance, Moment.js object, ISO date string
+ * Returns: Date object if valid, undefined if value is empty or unsupported
+ */
 const datePreprocess = (arg) => {
   if (!arg) return undefined;
   if (arg instanceof Date) return arg;
@@ -15,6 +22,11 @@ const datePreprocess = (arg) => {
   return undefined;
 };
 
+/**
+ * Converts a comma-separated tag string into an array of trimmed tags.
+ * Example: "react, javascript, frontend" -> ["react", "javascript", "frontend"]
+ * If the value is already an array, it is returned unchanged.
+ */
 const tagsPreprocess = (val) => {
   if (typeof val === "string") {
     return val
@@ -25,6 +37,9 @@ const tagsPreprocess = (val) => {
   return val;
 };
 
+/**
+ * Ship image validation schema
+ */
 export const ShipImageSchema = z.object({
   file: z.any().optional(),
   url: z.string().url(),
@@ -32,6 +47,9 @@ export const ShipImageSchema = z.object({
   publicId: z.string().optional(),
 });
 
+/**
+ * Create ship validation schema
+ */
 export const createShipSchema = z.object({
   shipName: z.string().min(1, "Ship name is required"),
   slug: z.string().min(1, "Slug is required"),
@@ -67,7 +85,9 @@ export const createShipSchema = z.object({
   isPublished: z.boolean().optional(),
 });
 
-// edit ship form schema
+/**
+ * Edit Ship validation schema - partial
+ */
 export const editShipSchema = createShipSchema.partial().extend({
   images: z.array(ShipImageSchema).optional(),
   mainImage: z.union([z.instanceof(File), z.string().url("Must be a valid image URL")]).refine((value) => {
@@ -76,20 +96,26 @@ export const editShipSchema = createShipSchema.partial().extend({
   }, "Main image must be a valid image file or URL"),
 });
 
-// category form schema
+/**
+ * Ship type/category validation schema
+ */
 export const createCategorySchema = z.object({
   name: z.string().min(1, { message: "Category name is required" }),
   description: z.string().optional(),
 });
 
-// Log in form schema
+/**
+ * Login validation schema
+ */
 export const loginSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
   rememberMe: z.boolean().optional(),
 });
 
-// Address book schema
+/**
+ * Addressbook validation schema
+ */
 export const addressBookSchema = z.object({
   email: z.string().min(1, { message: "Email is required" }).email("Invalid email address"),
   fullName: z.string().min(1, "Name is required"),
@@ -109,7 +135,9 @@ export const addressBookSchema = z.object({
   userId: z.string().uuid(),
 });
 
-//Event schema
+/**
+ * Event validation schema
+ */
 export const eventSchema = z
   .object({
     title: z.string().min(1, "Title is required"),
@@ -127,7 +155,9 @@ export const eventSchema = z
     path: ["start"],
   });
 
-//Blog schema
+/**
+ * Blog validation schema
+ */
 export const blogSchema = z.object({
   title: z.string().min(1, "Blog title is required"),
   categoryId: z.coerce.number().optional(),

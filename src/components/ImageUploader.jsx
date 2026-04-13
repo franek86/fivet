@@ -27,10 +27,6 @@ const ImageUploadContainer = styled.section`
     background: #f0f1ff;
     color: #4f46e5;
   }
-
-  .image-input {
-    display: none;
-  }
 `;
 
 const StyledImageUpload = styled.div`

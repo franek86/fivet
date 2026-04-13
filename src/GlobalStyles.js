@@ -205,6 +205,9 @@ const GlobalStyles = styled.createGlobalStyle`
     overflow-wrap: break-word;
     hyphens: auto;
   }
+  .image-input {
+    display: none;
+  }
 
   img {
     max-width: 100%;

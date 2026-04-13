@@ -1,7 +1,7 @@
 /**
  * React & Hooks
  */
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Third-party libraries
@@ -31,6 +31,7 @@ import Accordion from "../ui/Accordion.jsx";
 import ImageUploader from "../ImageUploader.jsx";
 import Tabs from "../ui/Tabs.jsx";
 import BlogBlocks from "./BlogBlocks.jsx";
+import AddBlockDropdown from "./AddBlockDropdown.jsx";
 
 /**
  * Styled component
@@ -39,21 +40,6 @@ const FormHeader = styled.header`
   display: flex;
   justify-content: space-between;
   gap: 4rem;
-  margin-bottom: 4rem;
-`;
-
-const FormWrapper = styled.main`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 4rem;
-  margin-bottom: 2rem;
-
-  @media screen and (min-width: 768px) {
-    grid-template-columns: 1fr 30rem;
-  }
-`;
-
-const BannerImageWrapper = styled.div`
   margin-bottom: 4rem;
 `;
 
@@ -84,26 +70,37 @@ const ButtonGroup = styled.div`
   gap: 1rem;
 `;
 
-const AddBlockBtn = styled.div`
-  background: var(--bg-linear-gradient);
-  color: var(--color-grey-0);
-  width: max-content;
-  padding: 0.85rem 1.2rem;
-  font-size: 1.2rem;
-  cursor: pointer;
+const FixedButton = styled(Button)`
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
 `;
 
 const CreateBlog = () => {
+  const dropdownRef = useRef(null);
+  const blockRefs = useRef([]);
+  const btnRef = useRef(null);
+  const [isFixed, setIsFixed] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsFixed(!entry.isIntersecting);
+    });
+
+    if (btnRef.current) observer.observe(btnRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const {
     register,
     handleSubmit,
     control,
     setValue,
     watch,
-    reset,
     formState: { errors },
   } = useForm({
-    defaultValues: { blocks: [] },
+    defaultValues: { blocks: [{ text: "", imageUrl: null, imageAlt: "" }] },
     resolver: zodResolver(blogSchema),
   });
 
@@ -115,11 +112,29 @@ const CreateBlog = () => {
   });
 
   const handleOnSubmit = (data) => {
+    console.log(data);
     const formData = new FormData();
 
     formData.append("title", data.title);
     formData.append("slug", data.slug);
     formData.append("subTitle", data.subTitle);
+    formData.append("bannerImage", data.bannerImage);
+    formData.append("bannerImageAlt", data.bannerImageAlt);
+
+    data.blocks.forEach((block, i) => {
+      /*  formData.append(`blocks[${i}][type]`, block.type); */
+      /*  if (block.type === "text") formData.append(`blocks[${i}][text]`, block.text);
+      if (block.type === "image") {
+        formData.append(`blocks[${i}][imageAlt]`, block.imageAlt || "");
+        if (block.imageUrl) formData.append(`blocks[${i}][imageUrl]`, block.imageUrl);
+      } */
+      formData.append(`blocks[${i}][text]`, block.text);
+      formData.append(`blocks[${i}][imageAlt]`, block.imageAlt || "");
+      if (block.imageUrl) {
+        formData.append(`blocks[${i}][imageUrl]`, block.imageUrl);
+      }
+    });
+
     if (data.categoryId) formData.append("categoryId", String(data.categoryId));
     if (data.status) formData.append("status", String(data.status));
 
@@ -144,6 +159,18 @@ const CreateBlog = () => {
 
   console.log(errors);
 
+  const handleAddBlock = (data) => {
+    append(data);
+    setTimeout(() => {
+      const newBlock = blockRefs.current[fields.length - 1];
+      console.log(newBlock);
+      if (newBlock) {
+        newBlock.scrollIntoView({ behavior: "smooth", block: "start" });
+        newBlock.scrollTop = newBlock.offsetTop;
+      }
+    }, 450);
+  };
+
   /* 
     Tabs Content
   */
@@ -151,30 +178,15 @@ const CreateBlog = () => {
     {
       label: "Content",
       content: (
-        <div>
-          <Accordion title='Banner image'>
-            <Column>
-              <BannerImageWrapper>
-                <ImageUploader name='bannerImage' value={watch("bannerImage")} onChange={(file) => setValue("bannerImage", file)}>
-                  <Input
-                    type='text'
-                    name='bannerImageAlt'
-                    placeholder='Enter banner image description'
-                    register={register}
-                    {...register("bannerImageAlt")}
-                  />
-                </ImageUploader>
-              </BannerImageWrapper>
-            </Column>
-          </Accordion>
-
+        <div ref={dropdownRef}>
           <Accordion title='Section'>
             <Column>
-              <BlogBlocks register={register} remove={remove} />
               {fields.map((field, index) => (
-                <BlogBlocks key={field.id} index={index} register={register} remove={remove} />
+                <div className={`test-${index}`} key={field.id} ref={(el) => (blockRefs.current[index] = el)}>
+                  <BlogBlocks type={field.type} index={index} register={register} control={control} remove={remove} />
+                </div>
               ))}
-              <AddBlockBtn onClick={() => append({ text: "" })}>Add block</AddBlockBtn>
+              <AddBlockDropdown append={handleAddBlock} dropdownRef={dropdownRef} />
             </Column>
           </Accordion>
         </div>
@@ -200,12 +212,20 @@ const CreateBlog = () => {
           </Column>
         </FullInput>
 
-        <ButtonGroup>
+        <ButtonGroup ref={btnRef}>
           <Button $variation='third'>Preview</Button>
           <Button>Save</Button>
         </ButtonGroup>
+
+        {isFixed && (
+          <FixedButton>
+            <Button $variation='third'>Preview</Button>
+            <Button>Save</Button>
+          </FixedButton>
+        )}
       </FormHeader>
 
+      {/* SLUG - SUBTITLE */}
       <Row>
         <Column>
           <Field>
@@ -226,11 +246,20 @@ const CreateBlog = () => {
         </Column>
       </Row>
 
-      <FormWrapper>
-        {/* CONTENT */}
-        <Tabs tabs={tabs} />
+      {/* BANNER IMAGE - SLUG - CATEGORIES */}
+      <Row>
+        <Column>
+          <ImageUploader name='bannerImage' value={watch("bannerImage")} onChange={(file) => setValue("bannerImage", file)}>
+            <Input
+              type='text'
+              name='bannerImageAlt'
+              placeholder='Enter banner image description'
+              register={register}
+              {...register("bannerImageAlt")}
+            />
+          </ImageUploader>
+        </Column>
 
-        {/* SIDEBAR */}
         <Column>
           <Field>
             <Controller
@@ -272,7 +301,10 @@ const CreateBlog = () => {
             />
           </Field>
         </Column>
-      </FormWrapper>
+      </Row>
+
+      {/* CONTENT */}
+      <Tabs tabs={tabs} />
     </form>
   );
 };

@@ -35,10 +35,9 @@ const AccordionHeader = styled.header`
 `;
 
 const AccordionBody = styled.main`
-  max-height: ${({ open }) => (open ? "500px" : "0")};
+  max-height: ${({ open }) => (open ? "auto" : "0")};
   opacity: ${({ open }) => (open ? "1" : "0")};
-  padding: ${({ open }) => (open ? "1.4rem" : "0")};
-  overflow-y: auto;
+  padding: ${({ open }) => (open ? "0 1.2rem 1.2rem 1.2rem" : "0")};
   background: var(--color-grey-100);
 
   transition:

@@ -28,6 +28,7 @@ import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import Title from "../ui/Title.jsx";
+import CustomSelect from "../ui/CustomSelect.jsx";
 
 const FormWrapper = styled.form`
   display: flex;
@@ -217,7 +218,7 @@ function SignUpForm() {
               {...register("address", { required: "Address required" })}
             />
           </Column>
-          <Column></Column>
+
           <Column>
             <Input
               directions='column'
@@ -243,8 +244,7 @@ function SignUpForm() {
               name='country'
               control={control}
               render={({ field }) => (
-                <Custom
-                  Select
+                <CustomSelect
                   {...field}
                   control={control}
                   options={countriesJson}

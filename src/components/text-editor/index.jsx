@@ -33,7 +33,7 @@ const TextEditor = ({ content, onChange, editable }) => {
     },
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
-      console.log(html);
+      if (onChange) onChange(html);
     },
     immediatelyRender: false,
   });

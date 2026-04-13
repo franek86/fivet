@@ -167,12 +167,27 @@ export const blogSchema = z.object({
     .regex(/^[a-z0-9-]+$/, "Slug must contain only lowercase letters, numbers, and hyphens"),
   status: blogStatusEnum.nullable().optional(),
   subTitle: z.string().optional(),
+  bannerImage: z
+    .any()
+    .optional()
+    .refine((file) => !file || file instanceof File, "Invalid file")
+    .refine((file) => !file || file.size <= 5_000_000, "Max file size is 5MB")
+    .refine((file) => !file || ["image/jpeg", "image/png", "image/webp"].includes(file.type), "Only JPEG, PNG or WEBP images are allowed"),
+  bannerImageAlt: z.string().optional(),
   blocks: z.array(
     z.object({
       text: z.string().optional(),
-      imageUrl: z.string().url().optional(),
+      imageUrl: z
+        .any()
+        .optional()
+        .refine((file) => !file || file instanceof File, "Invalid file")
+        .refine((file) => !file || file.size <= 5_000_000, "Max file size is 5MB")
+        .refine(
+          (file) => !file || ["image/jpeg", "image/png", "image/webp"].includes(file.type),
+          "Only JPEG, PNG or WEBP images are allowed",
+        ),
+
       imageAlt: z.string().optional(),
-      order: z.coerce.number().optional(),
     }),
   ),
 });

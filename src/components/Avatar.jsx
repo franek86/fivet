@@ -1,13 +1,16 @@
 import styled from "styled-components";
+import { CircleUserRound } from "lucide-react";
 
 import { useUser } from "../hooks/useAuth.js";
+
 import Spinner from "./Spinner.jsx";
-import { CircleUserRound } from "lucide-react";
 
 const StyledAvatar = styled.div`
   display: flex;
   align-items: center;
+  gap: 0.8rem;
   flex-direction: column;
+  cursor: pointer;
 
   @media screen and (min-width: 1024px) {
     flex-direction: row;
@@ -18,8 +21,8 @@ const StyledNoAvatar = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 6rem;
-  width: 6rem;
+  height: 4rem;
+  width: 4rem;
   border-radius: 50%;
   background-color: var(--color-grey-300);
   margin-right: 1rem;
@@ -31,8 +34,8 @@ const StyledName = styled.p`
 `;
 
 const StyledImageAvatar = styled.img`
-  height: 5rem;
-  width: 5rem;
+  height: 4rem;
+  width: 4rem;
   border-radius: 50%;
   margin-right: 1rem;
 `;
@@ -46,6 +49,7 @@ function Avatar() {
 
   return (
     <StyledAvatar>
+      <StyledName>Welcome {fullName ? fullName : <p>User</p>}</StyledName>
       {avatar ? (
         <StyledImageAvatar src={avatar} />
       ) : (
@@ -53,7 +57,6 @@ function Avatar() {
           <CircleUserRound size={50} />
         </StyledNoAvatar>
       )}
-      <StyledName>Welcome {fullName ? fullName : <p>User</p>}</StyledName>
     </StyledAvatar>
   );
 }

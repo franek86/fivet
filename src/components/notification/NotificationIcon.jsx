@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { createSelector } from "@reduxjs/toolkit";
 
 import styled from "styled-components";
-
-import { toggleDropdown } from "../../slices/uiSlice.js";
 import { Bell, BellOff } from "lucide-react";
+
 import { markNotificationRead } from "../../slices/realtimeSlice.js";
-import { createSelector } from "@reduxjs/toolkit";
+import { toggleDropdown } from "../../slices/uiSlice.js";
 
 const Wrapper = styled.div`
   position: relative;
@@ -31,7 +31,7 @@ const Count = styled.div`
 
 const DropdownToggle = styled.div`
   position: absolute;
-  right: 0;
+  left: 0;
   top: 2.5rem;
 `;
 

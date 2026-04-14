@@ -9,8 +9,11 @@ const Section = styled.div`
 const ThemeBox = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.8rem;
   cursor: pointer;
+  p {
+    font-size: 1.4rem;
+  }
 `;
 
 const Theme = () => {
@@ -19,13 +22,13 @@ const Theme = () => {
     <Section>
       {theme !== "light" ? (
         <ThemeBox onClick={() => setTheme("light")}>
-          <Sun />
+          <Sun size={18} />
           <p>Light theme</p>
         </ThemeBox>
       ) : (
         <ThemeBox onClick={() => setTheme("dark")}>
-          <Moon />
-          <span>Dark theme</span>
+          <Moon size={18} />
+          <p>Dark theme</p>
         </ThemeBox>
       )}
     </Section>

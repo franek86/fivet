@@ -2,9 +2,6 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Nav from "./Nav.jsx";
 import Logo from "./Logo.jsx";
-import Avatar from "./Avatar.jsx";
-import Logout from "./Logout.jsx";
-import Theme from "./Theme.jsx";
 
 const Aside = styled.aside`
   width: 100%;
@@ -56,11 +53,7 @@ function Sidebar() {
 
       <AsideWrapperBottom $props={toggleNav}>
         <Nav />
-        <AsideFooter>
-          <Theme />
-          <Avatar />
-          <Logout />
-        </AsideFooter>
+        <AsideFooter></AsideFooter>
       </AsideWrapperBottom>
     </Aside>
   );

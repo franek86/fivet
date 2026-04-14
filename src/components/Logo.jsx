@@ -1,11 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-import styled from "styled-components";
 
-import NotificationIcon from "./notification/NotificationIcon.jsx";
+import styled from "styled-components";
+import { Menu, ShipWheelIcon, X } from "lucide-react";
 
 import { toggleNav } from "../slices/uiSlice.js";
-import { Menu, ShipWheelIcon, X } from "lucide-react";
 
 const LogoWrapper = styled.div`
   display: flex;
@@ -86,7 +85,6 @@ function Logo() {
           </LogoIcon>
           <LogoText>Fivet</LogoText>
         </StyledLogo>
-        <NotificationIcon />
       </LogoNotification>
       <StyledBar onClick={() => dispatch(toggleNav())}>{isToggle ? <X size={25} /> : <Menu size={25} />}</StyledBar>
     </LogoWrapper>

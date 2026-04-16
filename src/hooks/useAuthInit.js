@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { setUser } from "../slices/authSlice.js";
 import { useEffect } from "react";
-import { setAccessToken } from "../utils/axiosConfig.js";
+import { setAccessToken } from "../services/axiosConfig.js";
 
 export const useAuthInit = () => {
   const dispatch = useDispatch();

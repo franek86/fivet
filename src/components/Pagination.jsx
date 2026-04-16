@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router";
 import styled from "styled-components";
-import { MAX_PAGE_BUTTONS, PAGE_SIZE } from "../utils/constants.js";
+import { MAX_PAGE_BUTTONS, PAGE_SIZE } from "../constants/index.js";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const SytledSection = styled.section`

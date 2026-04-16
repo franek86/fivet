@@ -11,5 +11,13 @@ export const navLinks = [
   { href: "/profile", label: "Profile", icon: UserPen, allowRoles: ["ADMIN", "USER"] },
   { href: "/payments", label: "Payments", icon: CreditCard, allowRoles: ["ADMIN"] },
   { href: "/notifications", label: "Notifications", icon: BellPlus, allowRoles: ["ADMIN", "USER"] },
-  { href: "/blog", label: "Blog", icon: Globe, allowRoles: ["ADMIN"] },
+  {
+    label: "Blog",
+    icon: Globe,
+    allowRoles: ["ADMIN"],
+    children: [
+      { id: "add", label: "Add Blog", href: "blog/create" },
+      { id: "blogs", label: "All Blogs", href: "blog/list" },
+    ],
+  },
 ];

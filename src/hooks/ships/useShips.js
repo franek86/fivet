@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getShips } from "../../services/apiShips.js";
-import { PAGE_SIZE } from "../../utils/constants.js";
+import { PAGE_SIZE } from "../../constants/index.js";
 
 export const useShips = ({ page = 1, limit = PAGE_SIZE, sortBy = "createdAt-desc", filters = {} }) => {
   const [field, direction] = sortBy.split("-");

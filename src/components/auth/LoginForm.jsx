@@ -24,7 +24,7 @@ import { loginSchema } from "../../utils/validationSchema.js";
  */
 import { loginApi } from "../../services/apiAuth.js";
 import { setUser } from "../../slices/authSlice.js";
-import { setAccessToken } from "../../utils/axiosConfig.js";
+import { setAccessToken } from "../../services/axiosConfig.js";
 
 /**
  * UI Components

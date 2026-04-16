@@ -14,7 +14,7 @@ import Button from "../ui/Button.jsx";
 
 import styled from "styled-components";
 import { useEditEvent, useGetSingleEvent } from "../../hooks/useEvents.js";
-import { EVENT_PRIORITY, EVENT_REMINDER, EVENT_STATUS } from "../../utils/constants.js";
+import { EVENT_PRIORITY, EVENT_REMINDER, EVENT_STATUS } from "../../constants/index.js";
 import { eventSchema } from "../../utils/validationSchema.js";
 import { useSelector } from "react-redux";
 

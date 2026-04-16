@@ -1,4 +1,4 @@
-import apiClient from "../utils/axiosConfig.js";
+import apiClient from "./axiosConfig.js";
 
 /* Create contact in address boook */
 export const createAddressBoookContactApi = async (newData) => {

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+
 import socket from "../shared/socket.js";
-import { getAccessToken } from "../utils/axiosConfig.js";
+import { getAccessToken } from "../services/axiosConfig.js";
 
 export function useSocketAuth() {
   useEffect(() => {

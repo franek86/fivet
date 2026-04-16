@@ -1,4 +1,4 @@
-import apiClient, { setAccessToken } from "../utils/axiosConfig.js";
+import apiClient, { setAccessToken } from "./axiosConfig.js";
 
 /* Register user */
 export const registerUser = async ({ email, password, fullName }) => {

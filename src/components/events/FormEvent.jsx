@@ -10,7 +10,7 @@ import Button from "../ui/Button.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
 import Label from "../ui/Label.jsx";
 
-import { EVENT_PRIORITY, EVENT_REMINDER, EVENT_STATUS } from "../../utils/constants.js";
+import { EVENT_PRIORITY, EVENT_REMINDER, EVENT_STATUS } from "../../constants/index.js";
 import { eventSchema } from "../../utils/validationSchema.js";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, isSameDay, setHours, setMinutes } from "date-fns";

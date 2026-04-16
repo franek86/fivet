@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCategories } from "../../services/apiCategories.js";
-import { PAGE_SIZE } from "../../utils/constants.js";
+import { PAGE_SIZE } from "../../constants/index.js";
 
 export const useCategories = ({ page = 1, limit = PAGE_SIZE, sortBy = "createdAt-desc", search }) => {
   const [field, direction] = sortBy.split("-");

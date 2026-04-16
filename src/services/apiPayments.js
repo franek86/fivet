@@ -1,4 +1,4 @@
-import apiClient from "../utils/axiosConfig.js";
+import apiClient from "./axiosConfig.js";
 
 /* Get app payments with pagination,sort and filter */
 export const getPayments = async (params = {}) => {

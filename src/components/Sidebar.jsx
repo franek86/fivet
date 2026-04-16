@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import Nav from "./Nav.jsx";
+
+import Nav from "../components/nav/Nav.jsx";
 import Logo from "./Logo.jsx";
 
 const Aside = styled.aside`

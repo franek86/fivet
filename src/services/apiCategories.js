@@ -1,4 +1,4 @@
-import apiClient from "../utils/axiosConfig.js";
+import apiClient from "./axiosConfig.js";
 
 /* GET ALL SHIP TYPES */
 export const getAllShipTypes = async () => {

@@ -18,7 +18,7 @@ import { blogSchema } from "../../utils/validationSchema.js";
 /**
  * Constants - Static values used for blog categories and publishing status.
  */
-import { BLOG_CATEGORIES, BLOG_STATUS } from "../../utils/constants.js";
+import { BLOG_CATEGORIES, BLOG_STATUS } from "../../constants/index.js";
 
 /**
  * UI Components

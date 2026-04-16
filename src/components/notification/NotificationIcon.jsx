@@ -9,6 +9,7 @@ import { markNotificationRead } from "../../slices/realtimeSlice.js";
 import { toggleDropdown } from "../../slices/uiSlice.js";
 
 const Wrapper = styled.div`
+  display: flex;
   position: relative;
   cursor: pointer;
 `;
@@ -120,7 +121,7 @@ export default function NotificationIcon() {
 
   return (
     <Wrapper ref={dropdownRef}>
-      <Bell size={22} onClick={() => dispatch(toggleDropdown())} />
+      <Bell size={20} onClick={() => dispatch(toggleDropdown())} />
       {unreadCount > 0 && <Count>{unreadCount}</Count>}
 
       {isToggleDropdown && (

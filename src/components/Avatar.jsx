@@ -7,13 +7,12 @@ import Spinner from "./Spinner.jsx";
 
 const StyledAvatar = styled.div`
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: 0.8rem;
-  flex-direction: column;
   cursor: pointer;
 
   @media screen and (min-width: 1024px) {
-    flex-direction: row;
   }
 `;
 
@@ -37,7 +36,6 @@ const StyledImageAvatar = styled.img`
   height: 4rem;
   width: 4rem;
   border-radius: 50%;
-  margin-right: 1rem;
 `;
 
 function Avatar() {

@@ -10,7 +10,16 @@ export const navLinks = [
   { href: "/address-book", label: "Address book", icon: Contact, allowRoles: ["ADMIN", "USER"], plan: "PREMIUM" },
   { href: "/profile", label: "Profile", icon: UserPen, allowRoles: ["ADMIN", "USER"] },
   { href: "/payments", label: "Payments", icon: CreditCard, allowRoles: ["ADMIN"] },
-  { href: "/notifications", label: "Notifications", icon: BellPlus, allowRoles: ["ADMIN", "USER"] },
+  {
+    href: "/notifications",
+    label: "Notifications",
+    icon: BellPlus,
+    allowRoles: ["ADMIN", "USER"],
+    children: [
+      { id: "add", label: "Add Blog", href: "blog/create" },
+      { id: "blogs", label: "All Blogs", href: "blog/list" },
+    ],
+  },
   {
     label: "Blog",
     icon: Globe,

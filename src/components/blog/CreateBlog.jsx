@@ -38,9 +38,15 @@ import AddBlockDropdown from "./AddBlockDropdown.jsx";
  */
 const FormHeader = styled.header`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  gap: 4rem;
+  gap: 2rem;
   margin-bottom: 4rem;
+
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+    gap: 4rem;
+  }
 `;
 
 const Row = styled.div`
@@ -57,6 +63,13 @@ const Column = styled.div`
   flex: 1;
 `;
 
+const ImageBannerRow = styled(Row)`
+  flex-direction: column;
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+  }
+`;
+
 const Field = styled.div`
   margin-bottom: 2rem;
 `;
@@ -64,10 +77,22 @@ const Field = styled.div`
 const FullInput = styled.div`
   flex: 1;
 `;
+const HeaderInput = styled(FullInput)`
+  order: 2;
+  @media screen and (min-width: 640px) {
+    order: 1;
+  }
+`;
 
 const ButtonGroup = styled.div`
   display: flex;
+  justify-content: space-between;
   gap: 1rem;
+  order: 1;
+
+  @media screen and (min-width: 640px) {
+    order: 2;
+  }
 `;
 
 const FixedButton = styled(Button)`
@@ -200,7 +225,7 @@ const CreateBlog = () => {
     <form onSubmit={handleSubmit(handleOnSubmit)}>
       {/* HEADER */}
       <FormHeader>
-        <FullInput>
+        <HeaderInput>
           <Column>
             <Input
               directions='column'
@@ -210,7 +235,7 @@ const CreateBlog = () => {
             />
             <InputErrorMessage message={errors.title?.message} />
           </Column>
-        </FullInput>
+        </HeaderInput>
 
         <ButtonGroup ref={btnRef}>
           <Button $variation='third'>Preview</Button>
@@ -247,17 +272,19 @@ const CreateBlog = () => {
       </Row>
 
       {/* BANNER IMAGE - SLUG - CATEGORIES */}
-      <Row>
+      <ImageBannerRow>
         <Column>
-          <ImageUploader name='bannerImage' value={watch("bannerImage")} onChange={(file) => setValue("bannerImage", file)}>
-            <Input
-              type='text'
-              name='bannerImageAlt'
-              placeholder='Enter banner image description'
-              register={register}
-              {...register("bannerImageAlt")}
-            />
-          </ImageUploader>
+          <Field>
+            <ImageUploader name='bannerImage' value={watch("bannerImage")} onChange={(file) => setValue("bannerImage", file)}>
+              <Input
+                type='text'
+                name='bannerImageAlt'
+                placeholder='Enter banner image description'
+                register={register}
+                {...register("bannerImageAlt")}
+              />
+            </ImageUploader>
+          </Field>
         </Column>
 
         <Column>
@@ -301,7 +328,7 @@ const CreateBlog = () => {
             />
           </Field>
         </Column>
-      </Row>
+      </ImageBannerRow>
 
       {/* CONTENT */}
       <Tabs tabs={tabs} />

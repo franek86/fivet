@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { NavLink } from "react-router";
 
 import { useDispatch } from "react-redux";
@@ -78,17 +78,35 @@ const NavDropdownInner = styled.div`
 `;
 
 const NavDropdownContent = styled.div`
-  position: absolute;
-  top: 0;
-  left: 100%;
-  min-width: 180px;
-
   background: var(--color-grey-0);
   box-shadow: var(--shadow-md);
 
   display: flex;
   flex-direction: column;
   z-index: 1000;
+
+  @media screen and (min-width: 640px) {
+    position: absolute;
+    top: ${({ top }) => top}px;
+    left: 100%;
+    min-width: 180px;
+  }
+`;
+
+const NavDropdownContentItem = styled(NavContent)`
+  @media screen and (min-width: 640px) {
+    display: block;
+  }
+`;
+
+const NavDropdownIcon = styled.div`
+  display: block;
+  @media screen and (min-width: 640px) {
+    display: none;
+  }
+  @media screen and (min-width: 1024px) {
+    display: block;
+  }
 `;
 
 const NavBadge = styled.span`
@@ -107,36 +125,53 @@ const NavBadge = styled.span`
 `;
 
 const NavItem = ({ item, badgeMap }) => {
+  const [menuPos, setMenuPos] = useState({ top: 0 });
   const [open, setOpen] = useState(false);
+  const menuRef = useRef(null);
 
   const dispatch = useDispatch();
 
   const hasChildren = !!item.children;
 
+  const handleOpenDropdownFloat = () => {
+    const rect = menuRef.current.getBoundingClientRect();
+    setMenuPos({
+      top: rect.bottom - 50,
+    });
+    setOpen((prev) => !prev);
+  };
+
   if (hasChildren) {
     return (
       <>
-        <NavDropdown onClick={() => setOpen((prev) => !prev)}>
+        <NavDropdown ref={menuRef} onClick={() => handleOpenDropdownFloat()}>
           <NavDropdownInner>
             <item.icon size={20} />
             <NavContent>{item.label}</NavContent>
           </NavDropdownInner>
 
-          {open ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
-
-          {open && (
-            <NavDropdownContent>
-              {item.children.map((child) => (
-                <NavList key={child.label} to={child.href} onClick={() => dispatch(closeNav())}>
-                  <NavContent>
-                    {child.label}
-                    {child.requiredPlan === "PREMIUM" && <PremiumSticker />}
-                  </NavContent>
-                </NavList>
-              ))}
-            </NavDropdownContent>
+          {open ? (
+            <NavDropdownIcon>
+              <ChevronRight size={16} />
+            </NavDropdownIcon>
+          ) : (
+            <NavDropdownIcon>
+              <ChevronDown size={16} />
+            </NavDropdownIcon>
           )}
         </NavDropdown>
+        {open && (
+          <NavDropdownContent top={menuPos.top}>
+            {item.children.map((child) => (
+              <NavList key={child.label} to={child.href} onClick={() => dispatch(closeNav())}>
+                <NavDropdownContentItem>
+                  {child.label}
+                  {child.requiredPlan === "PREMIUM" && <PremiumSticker />}
+                </NavDropdownContentItem>
+              </NavList>
+            ))}
+          </NavDropdownContent>
+        )}
       </>
     );
   }

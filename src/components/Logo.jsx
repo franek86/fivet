@@ -12,35 +12,20 @@ const LogoWrapper = styled.div`
   justify-content: space-between;
   padding: 2rem;
   @media screen and (min-width: 640px) {
-    padding: 3rem 2rem;
+    padding: 2rem 1.2rem;
+    justify-content: center;
   }
-`;
 
-const LogoNotification = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  cursor: pointer;
-
-  @media screen and (min-width: 640px) {
-    flex-direction: column;
-    gap: 2rem;
-  }
   @media screen and (min-width: 1024px) {
-    flex-direction: row;
+    justify-content: space-between;
   }
 `;
 
 const StyledLogo = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   gap: 0.8rem;
-
-  @media screen and (min-width: 640px) {
-    flex-direction: row;
-  }
 `;
 
 const LogoIcon = styled.div`
@@ -58,6 +43,14 @@ const LogoText = styled.div`
   -webkit-text-fill-color: transparent;
   @media screen and (min-width: 640px) {
     font-size: 3rem;
+  }
+
+  @media screen and (min-width: 640px) {
+    display: none;
+  }
+
+  @media screen and (min-width: 1024px) {
+    display: block;
   }
 `;
 
@@ -78,14 +71,13 @@ function Logo() {
 
   return (
     <LogoWrapper>
-      <LogoNotification>
-        <StyledLogo onClick={() => navigate("/dashboard")}>
-          <LogoIcon>
-            <ShipWheelIcon size={24} color='#ffffff' />
-          </LogoIcon>
-          <LogoText>Fivet</LogoText>
-        </StyledLogo>
-      </LogoNotification>
+      <StyledLogo onClick={() => navigate("/dashboard")}>
+        <LogoIcon>
+          <ShipWheelIcon size={24} color='#ffffff' />
+        </LogoIcon>
+        <LogoText>Fivet</LogoText>
+      </StyledLogo>
+
       <StyledBar onClick={() => dispatch(toggleNav())}>{isToggle ? <X size={25} /> : <Menu size={25} />}</StyledBar>
     </LogoWrapper>
   );

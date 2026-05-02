@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NavLink } from "react-router";
 
 import { useDispatch } from "react-redux";
@@ -100,12 +100,12 @@ const NavDropdownContentItem = styled(NavContent)`
 `;
 
 const NavDropdownIcon = styled.div`
-  display: block;
+  display: flex;
   @media screen and (min-width: 640px) {
     display: none;
   }
   @media screen and (min-width: 1024px) {
-    display: block;
+    display: flex;
   }
 `;
 
@@ -128,6 +128,7 @@ const NavItem = ({ item, badgeMap }) => {
   const [menuPos, setMenuPos] = useState({ top: 0 });
   const [open, setOpen] = useState(false);
   const menuRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const dispatch = useDispatch();
 
@@ -140,6 +141,17 @@ const NavItem = ({ item, badgeMap }) => {
     });
     setOpen((prev) => !prev);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target) && dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   if (hasChildren) {
     return (
@@ -161,7 +173,7 @@ const NavItem = ({ item, badgeMap }) => {
           )}
         </NavDropdown>
         {open && (
-          <NavDropdownContent top={menuPos.top}>
+          <NavDropdownContent top={menuPos.top} ref={dropdownRef}>
             {item.children.map((child) => (
               <NavList key={child.label} to={child.href} onClick={() => dispatch(closeNav())}>
                 <NavDropdownContentItem>

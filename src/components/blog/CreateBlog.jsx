@@ -20,6 +20,8 @@ import { blogSchema } from "../../utils/validationSchema.js";
  */
 import { BLOG_CATEGORIES, BLOG_STATUS } from "../../constants/index.js";
 
+import { useCreateBlog } from "../../hooks/useBlog.js";
+
 /**
  * UI Components
  */
@@ -107,6 +109,7 @@ const CreateBlog = () => {
   const blockRefs = useRef([]);
   const btnRef = useRef(null);
   const [isFixed, setIsFixed] = useState(false);
+  const { mutate } = useCreateBlog();
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
@@ -125,7 +128,7 @@ const CreateBlog = () => {
     watch,
     formState: { errors },
   } = useForm({
-    defaultValues: { blocks: [{ text: "", imageUrl: null, imageAlt: "" }] },
+    defaultValues: {},
     resolver: zodResolver(blogSchema),
   });
 
@@ -137,7 +140,6 @@ const CreateBlog = () => {
   });
 
   const handleOnSubmit = (data) => {
-    console.log(data);
     const formData = new FormData();
 
     formData.append("title", data.title);
@@ -147,25 +149,18 @@ const CreateBlog = () => {
     formData.append("bannerImageAlt", data.bannerImageAlt);
 
     data.blocks.forEach((block, i) => {
-      /*  formData.append(`blocks[${i}][type]`, block.type); */
-      /*  if (block.type === "text") formData.append(`blocks[${i}][text]`, block.text);
-      if (block.type === "image") {
-        formData.append(`blocks[${i}][imageAlt]`, block.imageAlt || "");
-        if (block.imageUrl) formData.append(`blocks[${i}][imageUrl]`, block.imageUrl);
-      } */
       formData.append(`blocks[${i}][text]`, block.text);
       formData.append(`blocks[${i}][imageAlt]`, block.imageAlt || "");
       if (block.imageUrl) {
-        formData.append(`blocks[${i}][imageUrl]`, block.imageUrl);
+        //formData.append(`blocks[${i}][blockImages]`, block.imageUrl);
+        formData.append("blockImages", block.imageUrl);
       }
     });
 
     if (data.categoryId) formData.append("categoryId", String(data.categoryId));
     if (data.status) formData.append("status", String(data.status));
 
-    for (const [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
+    mutate(formData);
   };
 
   /* 
@@ -182,13 +177,11 @@ const CreateBlog = () => {
     setValue("slug", slugify);
   }, [blogTitleWatch]);
 
-  console.log(errors);
-
   const handleAddBlock = (data) => {
     append(data);
     setTimeout(() => {
       const newBlock = blockRefs.current[fields.length - 1];
-      console.log(newBlock);
+
       if (newBlock) {
         newBlock.scrollIntoView({ behavior: "smooth", block: "start" });
         newBlock.scrollTop = newBlock.offsetTop;
@@ -277,7 +270,6 @@ const CreateBlog = () => {
           <Field>
             <ImageUploader name='bannerImage' value={watch("bannerImage")} onChange={(file) => setValue("bannerImage", file)}>
               <Input
-                type='text'
                 name='bannerImageAlt'
                 placeholder='Enter banner image description'
                 register={register}

@@ -30,6 +30,7 @@ import PaymentProtectedRoute from "./pages/PaymentProtectedRoute.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
 import DashboardRedirect from "./pages/DashboardRedirect.jsx";
 import CreateBlog from "./components/blog/CreateBlog.jsx";
+import Blogs from "./pages/Blogs.jsx";
 
 function App() {
   return (
@@ -71,6 +72,7 @@ function App() {
             <Route path='/categories' element={<Categories />} />
             <Route path='/payments' element={<Payments />} />
             <Route path='/blog/create' element={<CreateBlog />} />
+            <Route path='/blog/list' element={<Blogs />} />
           </Route>
         </Route>
         <Route path='*' element={<NotFound />} />

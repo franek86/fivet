@@ -1,7 +1,7 @@
 /**
  * React & Hooks
  */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Third-party libraries
@@ -31,13 +31,14 @@ const DropdownButton = styled.div`
 `;
 
 const DropdownContent = styled.div`
-  display: ${({ open }) => (open ? "block" : "none")};
-  position: absolute;
+  //display: ${({ open }) => (open ? "block" : "none")};
+  position: fixed;
+  top: ${({ top }) => top}px;
+  left: ${({ left }) => left}px;
   background-color: white;
   min-width: 140px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 1;
-  overflow: hidden;
 `;
 
 const DropdownItem = styled.div`
@@ -55,6 +56,8 @@ const DropdownItem = styled.div`
 `;
 
 const AddBlockDropdown = ({ append, dropdownRef }) => {
+  const menuRef = useRef(null);
+  const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -68,29 +71,40 @@ const AddBlockDropdown = ({ append, dropdownRef }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const handleClick = () => {
+    const rect = menuRef.current.getBoundingClientRect();
+    setMenuPos({
+      top: rect.top,
+      left: rect.right,
+    });
+    setOpen((prev) => !prev);
+  };
+
   return (
     <Dropdown>
-      <DropdownButton onClick={() => setOpen(!open)}>
+      <DropdownButton ref={menuRef} onClick={() => handleClick()}>
         <CirclePlus size={14} /> Add Block
       </DropdownButton>
-      <DropdownContent open={open}>
-        <DropdownItem
-          onClick={() => {
-            append({ type: "text", text: "" });
-            setOpen(false);
-          }}
-        >
-          Text Block
-        </DropdownItem>
-        <DropdownItem
-          onClick={() => {
-            append({ type: "image", imageUrl: null, imageAlt: "" });
-            setOpen(false);
-          }}
-        >
-          Image Block
-        </DropdownItem>
-      </DropdownContent>
+      {open && (
+        <DropdownContent top={menuPos.top} left={menuPos.left}>
+          <DropdownItem
+            onClick={() => {
+              append({ type: "text", text: "" });
+              setOpen(false);
+            }}
+          >
+            Text Block
+          </DropdownItem>
+          <DropdownItem
+            onClick={() => {
+              append({ type: "image", imageUrl: null, imageAlt: "" });
+              setOpen(false);
+            }}
+          >
+            Image Block
+          </DropdownItem>
+        </DropdownContent>
+      )}
     </Dropdown>
   );
 };

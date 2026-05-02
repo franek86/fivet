@@ -9,6 +9,7 @@ const Aside = styled.aside`
   display: flex;
   flex-direction: column;
   background-color: var(--color-grey-50);
+  z-index: 1;
 
   @media screen and (min-width: 640px) {
     position: fixed;

@@ -6,6 +6,8 @@ import Theme from "../Theme.jsx";
 import Avatar from "../Avatar.jsx";
 import Logout from "../Logout.jsx";
 import NotificationIcon from "../notification/NotificationIcon.jsx";
+import { Link } from "react-router";
+import { UserPen } from "lucide-react";
 
 const HeaderWrap = styled.header`
   display: flex;
@@ -19,15 +21,16 @@ const HeaderWrap = styled.header`
 const HeaderRight = styled.div`
   display: flex;
   position: relative;
+  z-index: 1;
 `;
 
 const DropDownBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
+  gap: 1rem;
   width: 200px;
   transform: translateY(0);
-  padding: 0.8rem 1.2rem;
+  padding: 1rem 1.2rem;
   position: absolute;
   right: 0;
   ${({ fromTop }) =>
@@ -48,6 +51,16 @@ const DropDownBox = styled.div`
   transition: all 0.3s ease;
 `;
 
+const HeaderLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+`;
+
+const P = styled.p`
+  font-size: 1.4rem;
+`;
+
 const Header = () => {
   const [toggle, setToggle] = useState(false);
 
@@ -62,6 +75,10 @@ const Header = () => {
         <Avatar />
         <DropDownBox fromTop={toggle}>
           <Theme />
+          <HeaderLink to='/profile'>
+            <UserPen size={18} />
+            <P>Profile</P>
+          </HeaderLink>
           <Logout />
         </DropDownBox>
       </HeaderRight>

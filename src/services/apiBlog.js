@@ -13,11 +13,20 @@ export const createBlogApi = async (data) => {
 };
 
 export const getBlogApi = async (params) => {
-  console.log(params);
   try {
     const res = await apiClient.get("/posts", { params });
 
     return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
+export const deleteBlogApi = async (id) => {
+  try {
+    const res = await apiClient.delete(`/posts/${id}`);
+    return res;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);

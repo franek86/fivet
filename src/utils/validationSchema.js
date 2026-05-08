@@ -191,3 +191,10 @@ export const blogSchema = z.object({
     }),
   ),
 });
+
+/**
+ * Ship type/category validation schema
+ */
+export const createBlogCategorySchema = z.object({
+  title: z.string().min(1, { message: "Category name is required" }).max(50, { message: "Max 50 characters" }),
+});

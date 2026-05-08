@@ -17,6 +17,7 @@ export const navLinks = [
     children: [
       { id: "add", label: "Add Blog", href: "blog/create" },
       { id: "blogs", label: "All Blogs", href: "blog/list" },
+      { id: "blogs-category", label: "Blog category", href: "blog/category" },
     ],
   },
 ];

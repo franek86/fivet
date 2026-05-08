@@ -31,6 +31,7 @@ import AdminDashboard from "./pages/AdminDashboard.jsx";
 import DashboardRedirect from "./pages/DashboardRedirect.jsx";
 import CreateBlog from "./components/blog/CreateBlog.jsx";
 import Blogs from "./pages/Blogs.jsx";
+import BlogCategory from "./pages/BlogCategory.jsx";
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
             <Route path='/payments' element={<Payments />} />
             <Route path='/blog/create' element={<CreateBlog />} />
             <Route path='/blog/list' element={<Blogs />} />
+            <Route path='/blog/category' element={<BlogCategory />} />
           </Route>
         </Route>
         <Route path='*' element={<NotFound />} />

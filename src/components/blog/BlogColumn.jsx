@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 
@@ -7,7 +8,9 @@ import Dropdown from "../ui/Dropdown.jsx";
 import Button from "../ui/Button.jsx";
 import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
-import { useDispatch } from "react-redux";
+
+import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
+import { useDeleteBlog } from "../../hooks/useBlog.js";
 
 const StyledImage = styled.img`
   width: 80px;
@@ -26,8 +29,9 @@ const P = styled.div`
 `;
 
 const BlogColumn = ({ data, selectedBlog, onCheckboxChange }) => {
-  const { id, bannerImage, bannerImageAlt, title, description, status, views } = data;
+  const { id, bannerImage, bannerImageAlt, title, shortDescription, status, views } = data;
   const dispatch = useDispatch();
+  const { mutate } = useDeleteBlog();
   return (
     <tr>
       <td className='table-td'>
@@ -38,7 +42,7 @@ const BlogColumn = ({ data, selectedBlog, onCheckboxChange }) => {
       </td>
 
       <td>{title}</td>
-      <td>{description}</td>
+      <td>{shortDescription}</td>
 
       <td>{status}</td>
       <td>{views}</td>
@@ -69,7 +73,7 @@ const BlogColumn = ({ data, selectedBlog, onCheckboxChange }) => {
         </Dropdown>
       </td>
 
-      <Modal name={id} onClose={() => dispatch(closeModalByName())}>
+      <Modal name={id} onClose={() => dispatch(closeModalByName(id))}>
         <ConfirmDialog itemName={title} onConfirm={() => mutate(id)} onCloseModal={() => dispatch(closeModalByName(id))} />
       </Modal>
     </tr>

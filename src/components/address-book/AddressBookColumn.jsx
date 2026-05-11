@@ -34,8 +34,8 @@ import SingleAddressBook from "./SingleAddressBook.jsx";
 const StyledPriority = styled.div`
   max-width: max-content;
   margin: auto;
-  background-color: ${({ $props }) => ($props === "REGULAR" ? "var(--color-blue-100)" : "var(--color-green-200)")};
-
+  background-color: ${({ $props }) => ($props === "REGULAR" ? "var(--color-accent-600)" : "var(--color-success)")};
+  color: ${({ $props }) => ($props === "REGULAR" ? "var(--color-text)" : "var(--color-white)")};
   padding: 0.5rem 0.85rem;
   font-size: 1.2rem;
   border-radius: var(--border-radius-lg);
@@ -48,8 +48,12 @@ const StyledDropdown = styled.form`
   left: 0;
   right: 0;
   margin-top: 0.5rem;
-  padding: 0.75rem;
-  background-color: var(--color-grey-200);
+  padding: 0.5rem 0.85rem;
+  font-size: 1.2rem;
+  border-radius: var(--border-radius-lg);
+
+  background-color: ${({ $props }) => ($props !== "REGULAR" ? "var(--color-accent-600)" : "var(--color-success)")};
+  color: ${({ $props }) => ($props !== "REGULAR" ? "var(--color-text)" : "var(--color-white)")};
   text-align: center;
 `;
 
@@ -101,7 +105,9 @@ function AddressBookColumn({ addressBook, selectedAddress, onCheckboxChange }) {
             {changePriority} <ChevronDown size={18} />
           </Flex>
           {visibleDropdown && (
-            <StyledDropdown onClick={handleOnClick}>{changePriority === "REGULAR" ? "Important" : "Regular"}</StyledDropdown>
+            <StyledDropdown $props={changePriority} onClick={handleOnClick}>
+              {changePriority === "REGULAR" ? "Important" : "Regular"}
+            </StyledDropdown>
           )}
         </StyledPriority>
       </td>

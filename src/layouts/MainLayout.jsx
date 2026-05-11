@@ -23,7 +23,7 @@ const LayoutGrid = styled.div`
 `;
 
 const MainWrap = styled.div`
-  background-color: var(--color-grey-100);
+  background-color: var(--color-grey-200);
   height: 100%;
   min-height: 100vh;
 `;

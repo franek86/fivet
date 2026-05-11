@@ -6,8 +6,8 @@ const UpgradeSticker = styled.span`
   position: absolute;
   top: -1rem;
   right: -5rem;
-  background-color: var(--color-red-700);
-  color: var(--color-grey-0);
+  background-color: var(--color-danger);
+  color: var(--color-white);
   padding: 0.5rem 1rem;
   border-radius: var(--border-radius-lg);
   text-transform: uppercase;

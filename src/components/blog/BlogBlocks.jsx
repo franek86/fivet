@@ -38,7 +38,7 @@ const ImageSection = styled.div`
 const BlockHeader = styled.header`
   width: max-content;
   margin-bottom: 0.8rem;
-  background-color: var(--color-grey-0);
+  background-color: var(--color-white);
 `;
 
 const Btn = styled.div`
@@ -46,7 +46,7 @@ const Btn = styled.div`
   padding: 0.8rem;
   cursor: pointer;
   &:hover {
-    background: var(--bg-linear-gradient-soft);
+    background: var(--color-accent);
   }
 `;
 

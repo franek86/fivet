@@ -14,18 +14,18 @@ const FormWrap = styled.div`
   box-shadow: var(--shadow-lg);
   width: 100%;
   text-align: center;
-  background-color: var(--color-grey-50);
+  background-color: var(--color-white);
   border-radius: var(--border-radius-md);
 `;
 
 const ButtonTest = styled.div`
-  background: var(--bg-linear-gradient);
+  background: var(--color-accent-600);
   padding: 1rem;
-  color: var(--color-grey-0);
+  color: var(--color-white);
   cursor: pointer;
 
   &:hover {
-    background: var(--bg-linear-gradient-soft);
+    background: var(--color-accent);
   }
 `;
 

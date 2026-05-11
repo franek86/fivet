@@ -17,12 +17,14 @@ import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 const StatisticBoxWrap = styled.section`
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 2rem;
-  margin-top: 2.8rem;
+  gap: 20px;
+  grid-template-columns: 1fr;
 
   @media screen and (min-width: 640px) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
   }
 `;
 
@@ -36,7 +38,6 @@ function StatisticBox({ data, isLoading }) {
   return (
     <StatisticBoxWrap>
       <StatisticCard
-        iconColor='#0369a1'
         icon={<Ship />}
         text='Total ships'
         data={data.totalShips}
@@ -45,7 +46,6 @@ function StatisticBox({ data, isLoading }) {
       />
 
       <StatisticCard
-        iconColor='#15803d'
         icon={<Users />}
         text='Total users'
         data={data?.totalUsers}
@@ -54,7 +54,6 @@ function StatisticBox({ data, isLoading }) {
       />
 
       <StatisticCard
-        iconColor='#4338ca'
         icon={<CalendarDays />}
         text='Events'
         data={data?.totalEvents}

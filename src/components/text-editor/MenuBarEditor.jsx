@@ -23,7 +23,7 @@ const MenuEditorWrapper = styled.div`
   border-radius: var(--border-radius-sm);
   padding: 1rem;
   margin-bottom: 1rem;
-  background-color: var(--color-grey-0);
+  background-color: var(--color-white);
   z-index: 50;
   cursor: pointer;
 `;

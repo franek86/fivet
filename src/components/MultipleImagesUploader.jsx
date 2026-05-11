@@ -27,32 +27,11 @@ const PreviewImage = styled.div`
   position: relative;
   border-radius: 12px;
   overflow: hidden;
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
   animation: ${fadeIn} 0.25s ease both;
   display: flex;
   flex-direction: column;
-
-  /*   img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
-
-  button {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    background: rgba(0, 0, 0, 0.6);
-    border: none;
-    color: white;
-    font-size: 12px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    cursor: pointer;
-  } */
 `;
 
 const ImageThumb = styled.div`
@@ -78,7 +57,7 @@ const RemoveButton = styled.button`
   border-radius: 50%;
   border: none;
   background: rgba(15, 23, 42, 0.7);
-  color: #fff;
+  color: var(--color-white);
   font-size: 13px;
   line-height: 1;
   cursor: pointer;
@@ -89,24 +68,24 @@ const RemoveButton = styled.button`
   transition: background 0.15s;
 
   &:hover {
-    background: #ef4444;
+    background: var(--color-danger);
   }
 `;
 
 const UploadZone = styled.div`
-  border: 2px dashed var(--color-grey-300);
+  border: 2px dashed var(--color-border);
   border-radius: 14px;
   padding: 32px 24px;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: var(--color-grey-50);
-  color: #64748b;
+  background-color: var(--color-white);
+  color: var(--color-text);
 
   &:hover {
-    border-color: #6366f1;
-    background: #f0f1ff;
-    color: #4f46e5;
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: var(--color-text);
   }
 
   svg {

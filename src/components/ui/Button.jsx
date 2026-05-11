@@ -2,57 +2,55 @@ import styled, { css } from "styled-components";
 
 const sizes = {
   small: css`
-    font-size: 1.2rem;
-    padding: 0.4rem 0.8rem;
+    font-size: 14px;
+    padding: 12px 14px;
     text-transform: uppercase;
     text-align: center;
   `,
   medium: css`
-    font-size: 1.4rem;
-    padding: 1rem 1.4rem;
+    padding: 10px 12px;
   `,
 };
 
 const variations = {
   primary: css`
-    color: var(--color-brand-50);
-    background: var(--bg-linear-gradient);
+    color: var(--color-text);
+    background-color: var(--color-accent);
     font-weight: 600;
     box-shadow: var(--shadow-md);
     transition: all 0.3s ease-in-out;
     &:hover {
-      background: var(--bg-linear-gradient-soft);
-      color: var(--color-grey-700);
+      background: var(--color-accent-600);
+      color: var(--color-white);
     }
   `,
   secondary: css`
-    color: var(--color-grey-600);
+    color: var(--color-text);
     background: var(--color-grey-200);
-    border: 1px solid var(--color-grey-200);
+    border: 1px solid var(--color-border);
 
     &:hover {
-      background-color: var(--color-grey-50);
+      background-color: var(--color-white);
     }
   `,
   third: css`
-    color: var(--color-grey-0);
-    background: var(--color-grey-600);
-    border: 1px solid var(--color-grey-600);
+    color: var(--color-white);
+    background: var(--color-text);
+    border: 1px solid var(--color-text);
 
     &:hover {
-      color: var(--color-grey-600);
-      background-color: var(--color-grey-50);
+      color: var(--color-text);
+      background-color: var(--color-white);
     }
   `,
   danger: css`
-    color: var(--color-red-100);
-    background: var(--color-red-700);
+    color: var(--color-white);
+    background-color: var(--color-danger);
     gap: 4px;
     font-size: 1.2rem;
 
     &:hover {
-      color: var(--color-red-700);
-      background-color: var(--color-red-100);
+      opacity: 0.7;
     }
   `,
   icon: css`
@@ -63,14 +61,14 @@ const variations = {
     justify-content: space-between;
 
     &:hover {
-      background: var(--bg-linear-gradient-soft);
+      background: var(--color-accent);
     }
   `,
 };
 
 const Button = styled.button`
   border: none;
-  border-radius: var(--border-radius-sm);
+  border-radius: var(--border-radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;

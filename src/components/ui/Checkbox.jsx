@@ -18,8 +18,9 @@ const StyleHiddenCheckbox = styled.input`
 const StyledCheckmark = styled.div`
   width: 2rem;
   height: 2rem;
-  border: 1px solid var(--color-grey-500);
-  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-accent-600);
+  border-radius: var(--border-radius-lg);
+  background-color: ${(props) => (props.$checked ? "var(--color-accent-600)" : "transparent")};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,6 +29,7 @@ const StyledCheckmark = styled.div`
 
 const StyledIconCheckmark = styled(Check)`
   display: ${(props) => (props.$checked ? "block" : "none")};
+  color: var(--color-white);
 `;
 
 const StyledCheckboxLabel = styled.label`
@@ -43,7 +45,7 @@ function Checkbox({ checked, onChange, label, position }) {
   return (
     <StyledCheckbox onClick={handleClick} $position={position}>
       <StyleHiddenCheckbox type='checkbox' $checked={checked} readOnly />
-      <StyledCheckmark>
+      <StyledCheckmark $checked={checked}>
         <StyledIconCheckmark $checked={checked} size={14} />
         {label && <StyledCheckboxLabel>{label}</StyledCheckboxLabel>}
       </StyledCheckmark>

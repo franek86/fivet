@@ -16,16 +16,16 @@ const ImageUploadContainer = styled.section`
   cursor: pointer;
   position: relative;
 
-  border: ${({ $hasPreview }) => ($hasPreview ? "none" : "2px dashed var(--color-grey-300) ")};
+  border: ${({ $hasPreview }) => ($hasPreview ? "none" : "2px dashed var(--color-border) ")};
   transition: all 0.2s ease;
-  color: #64748b;
-  background-color: var(--color-grey-50);
+  color: var(--color-text-muted);
+  background-color: var(--color-white);
   border-radius: var(--border-radius-sm);
 
   &:hover {
-    border-color: #6366f1;
-    background: #f0f1ff;
-    color: #4f46e5;
+    border-color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: var(--color-text);
   }
 `;
 
@@ -47,7 +47,7 @@ const StyledIconClose = styled(CircleX)`
   position: absolute;
   top: -20px;
   right: -20px;
-  color: var(--color-grey-500);
+  color: var(--color-grey-200);
   height: 2rem;
   width: 2rem;
 `;

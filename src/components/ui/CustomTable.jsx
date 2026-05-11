@@ -8,10 +8,10 @@ const StyledTable = styled.table`
 `;
 
 const TableHeader = styled.th`
-  background-color: var(--color-grey-50);
+  background-color: var(--color-white);
   letter-spacing: 0.4px;
   font-weight: 400;
-  color: var(--color-grey-500);
+  color: var(--color-text);
   padding: 1.35rem 0.5rem;
 `;
 
@@ -19,7 +19,7 @@ const TableBody = styled.tbody`
   td {
     text-align: center;
     letter-spacing: 0.4px;
-    color: var(--color-grey-700);
+    color: var(--color-text);
     padding: 1.35rem 0.5rem;
   }
 `;

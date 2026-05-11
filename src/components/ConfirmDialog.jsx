@@ -9,7 +9,7 @@ const StyledConfirmDialog = styled.div`
   gap: 1.2rem;
 
   & p {
-    color: var(--color-grey-500);
+    color: var(--color-text);
     margin-bottom: 1.2rem;
   }
 

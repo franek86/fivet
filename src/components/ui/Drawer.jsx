@@ -29,7 +29,7 @@ const Wrapper = styled.aside`
   top: 0;
   bottom: 0;
   min-width: 260px;
-  background-color: var(--color-grey-0);
+  background-color: var(--color-white);
   box-shadow: var(--shadow-lg);
   padding: 2rem;
   z-index: 10;
@@ -70,7 +70,7 @@ function Drawer({ position = "right", children }) {
         <Content>{children}</Content>
       </Wrapper>
     </>,
-    document.body
+    document.body,
   );
 }
 

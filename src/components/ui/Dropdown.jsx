@@ -10,7 +10,7 @@ const WrapDropdown = styled.div`
   position: relative;
   ${({ label }) => label && `background-color: var(--color-grey-200)`};
   padding: 0.6rem;
-  border-radius: var(--border-radius-md);
+  border-radius: var(--border-radius-lg);
   cursor: pointer;
   max-width: max-content;
   margin: auto;
@@ -21,9 +21,9 @@ const StyledDropdown = styled.div`
   top: ${({ $position }) => $position.y}px;
   ${(props) => (props.$alignRight ? "right: 0;" : "left: 0;")}
   width: max-content;
-  background-color: var(--color-grey-100);
+  background-color: var(--color-white);
   border: 1px solid var(--color-grey-200);
-  border-radius: var(--border-radius-sm);
+  border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
   z-index: 1;
 `;

@@ -125,8 +125,8 @@ const NavBadge = styled.span`
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: var(--color-green-200);
-  color: var(--color-grey-800);
+  background-color: var(--color-success);
+  color: var(--color-text);
 `;
 
 const NavItem = ({ item, badgeMap }) => {

@@ -22,8 +22,8 @@ const SpinnerWrap = styled.div`
 const SytledSpinner = styled.div`
   width: 40px;
   height: 40px;
-  border: 4px solid var(--color-grey-300);
-  border-top: 4px solid var(--color-brand-500);
+  border: 4px solid var(--color-border);
+  border-top: 4px solid var(--color-accent);
   border-radius: 50%;
   animation: ${spin} 1s linear infinite;
 `;

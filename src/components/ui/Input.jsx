@@ -9,14 +9,14 @@ const Wrap = styled.div`
 `;
 
 const StyledInput = styled.input`
-  background-color: var(--color-grey-50);
+  background-color: var(--color-white);
   padding: 1.25rem 0.9rem;
-  border: 1px solid var(--color-grey-500);
+  border: 1px solid var(--color-border);
   border-radius: var(--border-radius-sm);
   min-width: 100%;
 
   &::placeholder {
-    color: var(--color-grey-500);
+    color: var(--color-text);
   }
 `;
 

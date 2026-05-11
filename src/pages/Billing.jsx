@@ -20,8 +20,8 @@ const Wrapper = styled.div`
 `;
 
 const CurrentSubscription = styled.div`
-  background-color: var(--color-green-700);
-  color: var(--color-grey-0);
+  background-color: var(--color-success);
+  color: var(--color-white);
   max-width: max-content;
   height: max-content;
   padding: 0.8rem 1.8rem;
@@ -34,7 +34,7 @@ const Back = styled.div`
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: var(--color-brand-500);
+  color: var(--color-accent-600);
   font-size: 1.6rem;
   font-weight: 600;
   transform: all 0.3s ease-in-out;

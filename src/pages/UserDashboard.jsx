@@ -42,7 +42,6 @@ function UserDashboard() {
 
       <StatisticBoxWrap>
         <StatisticCard
-          iconColor='#0369a1'
           icon={<Ship />}
           text='Total ships'
           data={data?.totalShips}
@@ -50,7 +49,6 @@ function UserDashboard() {
           trendChange={data?.userShipsTrend?.change}
         />
         <StatisticCard
-          iconColor='#15803d'
           icon={<CheckCheck />}
           text='Published ships'
           data={data?.totalPublishedShips}
@@ -58,7 +56,6 @@ function UserDashboard() {
           trendChange={data?.userPublishedTrend?.change}
         />
         <StatisticCard
-          iconColor='#4338ca'
           icon={<CalendarDays />}
           text='Events'
           data={data?.totalEvents}

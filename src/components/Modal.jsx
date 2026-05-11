@@ -9,7 +9,7 @@ const StyledModal = styled.div`
   top: 0;
   left: 0;
   bottom: 0;
-  background-color: var(--color-grey-0);
+  background-color: var(--color-white);
   box-shadow: var(--shadow-lg);
   padding: 1.5rem;
   transition: all 0.4s ease-in-out;
@@ -48,13 +48,13 @@ const Button = styled.button`
   }
 
   &:hover svg {
-    color: var(--color-grey-900);
+    color: var(--color-text);
   }
 
   & svg {
     width: 2rem;
     height: 2rem;
-    color: var(--color-grey-500);
+    color: var(--color-text-muted);
   }
 `;
 
@@ -72,7 +72,7 @@ function Modal({ children, onClose, name }) {
         {children}
       </StyledModal>
     </div>,
-    document.body
+    document.body,
   );
 }
 

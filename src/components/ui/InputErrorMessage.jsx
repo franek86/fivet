@@ -7,7 +7,7 @@ const DIV = styled.div`
   gap: 3px;
   font-size: 1.2rem;
   padding: 0.25rem 0;
-  color: var(--color-red-700);
+  color: var(--color-danger);
   margin-top: 0.5rem;
   text-align: left;
 `;

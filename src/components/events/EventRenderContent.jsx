@@ -16,7 +16,7 @@ const Wrapper = styled.div`
 const Status = styled.div`
   max-width: max-content;
   font-size: 1rem;
-  color: var(--color-grey-0);
+  color: var(--color-white);
   padding: 0.65rem;
   margin-bottom: 0.8rem;
   text-transform: uppercase;

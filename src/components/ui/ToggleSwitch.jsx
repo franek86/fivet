@@ -24,7 +24,7 @@ const Checkbox = styled.input`
   height: 0;
 
   &:checked + span {
-    background-color: var(--color-green-700);
+    background-color: var(--color-success);
   }
 
   &:checked + span:before {
@@ -39,7 +39,7 @@ const Slider = styled.span`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--color-red-700);
+  background-color: var(--color-danger);
   transition: 0.4s;
   border-radius: 28px;
 

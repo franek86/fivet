@@ -1,37 +1,31 @@
-import { TrendingDown, TrendingUp } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import styled from "styled-components";
 
 const Box = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 14px;
   box-shadow: var(--shadow-md);
-  padding: 1.8rem;
-  border: 1px solid var(--color-grey-200);
-  background-color: var(--color-grey-50);
-  border-radius: var(--border-radius-md);
-  color: var(--color-grey-600);
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-lg);
 `;
 
-const BoxIcon = styled.div`
-  color: ${(props) => (props.$iconColor ? props.$iconColor : "#4b5563")};
-  border-radius: 50%;
-  background-color: var(--color-grey-200);
-  width: 4.5rem;
-  height: 4.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  svg {
-    width: 2.8rem;
-    height: 2.8rem;
-  }
+const BoxIcon = styled.span`
+  display: grid;
+  place-items: center;
+  color: var(--color-text);
+  border-radius: 12px;
+  background-color: var(--color-accent);
+  width: 44px;
+  height: 44px;
 `;
 
 const BoxContent = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 1rem;
 
   p {
@@ -43,50 +37,59 @@ const BoxNumber = styled.div`
   align-items: center;
   gap: 1.5rem;
 
-  p {
-    font-size: 1.2rem;
+  .label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  .value {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 `;
 
-const IconStyle = styled.div`
-  display: flex;
+const IconStyle = styled.span`
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: var(--color-grey-200);
 `;
 
 const P = styled.div`
-  font-size: 1.6rem;
+  font-size: 12px;
   font-weight: 600;
-  color: ${(props) => (props.trend === "up" ? "#15803d" : props.trend === "down" ? "#991b1b" : "#6b7280")};
+  color: ${(props) => (props.trend === "up" ? "#16a34a" : props.trend === "down" ? "#dc2626" : "#6b7280")};
 `;
 
-const IconStyleUp = styled(TrendingUp)`
-  color: var(--color-green-700);
+const IconStyleUp = styled(ArrowUpRight)`
+  color: var(--color-success);
 `;
 
-const IconStyleDown = styled(TrendingDown)`
-  color: var(--color-red-800);
+const IconStyleDown = styled(ArrowDownRight)`
+  color: var(--color-danger);
 `;
 
-function StatisticCard({ text, icon, iconColor, data, trend, trendChange }) {
+function StatisticCard({ text, icon, data, trend, trendChange }) {
   return (
     <Box>
       <BoxContent>
-        <div>
-          <p> {text && text}</p>
-          <h2> {data && data}</h2>
-        </div>
-
-        <BoxIcon $iconColor={iconColor}>{icon && icon}</BoxIcon>
-      </BoxContent>
-      <BoxNumber>
+        <BoxIcon>{icon && icon}</BoxIcon>
         <IconStyle>
-          {trend === "up" ? <IconStyleUp size={25} /> : <IconStyleDown size={25} />}
+          {trend === "up" ? <IconStyleUp size={12} /> : <IconStyleDown size={12} />}
           <P trend={trend}>{trendChange}</P>
         </IconStyle>
-
-        <p> Last 30 days</p>
+      </BoxContent>
+      <BoxNumber>
+        <div>
+          <p className='label'> {text && text}</p>
+          <div className='value'> {data && data}</div>
+        </div>
       </BoxNumber>
     </Box>
   );

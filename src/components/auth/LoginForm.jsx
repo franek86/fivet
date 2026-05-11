@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import styled from "styled-components";
 import { toast } from "react-toastify";
-import { Eye, EyeClosed } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 /**
  * Validation - zod validation
@@ -56,11 +56,11 @@ const RemberMeWrap = styled.div`
 `;
 
 const ForgotPassword = styled(Link)`
-  font-size: 1.5rem;
-  color: var(--color-brand-500);
+  font-size: 14px;
+  color: var(--color-text-muted);
 
   &:hover {
-    color: var(--color-brand-800);
+    color: var(--color-text);
   }
 `;
 
@@ -123,7 +123,7 @@ function LoginForm() {
             autoComplete='password'
           />
           <PasswordIcon onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? <EyeClosed className='input-icon' size={20} /> : <Eye className='input-icon' size={20} />}
+            {showPassword ? <EyeOff className='input-icon' size={18} /> : <Eye className='input-icon' size={18} />}
           </PasswordIcon>
         </PasswordWrap>
 

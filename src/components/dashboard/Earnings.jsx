@@ -9,28 +9,22 @@ import styled from "styled-components";
  */
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
-const Section = styled.section`
-  padding: 2rem;
-  margin: 2rem 0;
-  background-color: var(--color-grey-0);
-  box-shadow: var(--shadow-md);
-  border-radius: var(--border-radius-md);
-`;
-
 const Tabs = styled.div`
   display: flex;
-  margin-top: 1rem;
-  gap: 0.1rem;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+  background-color: var(--color-grey-200);
 `;
 
 const Tab = styled.div`
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
   text-transform: uppercase;
-  background: ${({ $active }) => ($active ? "linear-gradient(to right, oklch(54.6% 0.245 262.881), oklch(62.7% 0.265 303.9))" : "#9ca3af")};
+  background-color: ${({ $active }) => ($active ? "#fff" : "transparent")};
   border-radius: var(--border-radius-md);
-  color: var(--color-grey-50);
-  margin-bottom: 1rem;
+  color: var(--color-text-muted);
   cursor: pointer;
 `;
 
@@ -46,14 +40,14 @@ const TabCard = styled.div`
   width: 100%;
   padding: 1.8rem;
   border: 1px solid var(--color-grey-200);
-  background-color: var(--color-grey-50);
+  background-color: var(--color-white);
   border-radius: var(--border-radius-md);
 `;
 
 const TabCardValue = styled.div`
   font-size: 3rem;
   font-weight: 600;
-  color: var(--color-grey-600);
+  color: var(--color-text-muted);
 
   span {
     font-weight: normal;
@@ -85,11 +79,11 @@ const IconStyle = styled.div`
 `;
 
 const IconStyleUp = styled(TrendingUp)`
-  color: var(--color-green-700);
+  color: var(--color-success);
 `;
 
 const IconStyleDown = styled(TrendingDown)`
-  color: var(--color-red-800);
+  color: var(--color-danger);
 `;
 
 const IconStyleMinus = styled(Minus)`
@@ -107,11 +101,11 @@ function Earnings({ data, isLoading, activePeriod, onChangePeriod }) {
   const isUp = trend.value > 0;
   const isDown = trend.value < 0;
   const isSame = trend.value === 0;
-
+  console.log(data);
   return (
-    <Section>
-      <h3>Earnings</h3>
-      <div>
+    <section className='card-container'>
+      <div className='card-header'>
+        <h3>Earnings</h3>
         <Tabs>
           {period.map((p, index) => (
             <Tab onClick={() => onChangePeriod(p)} key={index} $active={activePeriod === p}>
@@ -119,7 +113,8 @@ function Earnings({ data, isLoading, activePeriod, onChangePeriod }) {
             </Tab>
           ))}
         </Tabs>
-
+      </div>
+      <div>
         <TabContent>
           {data?.period === activePeriod &&
             data?.data.map((d) =>
@@ -146,7 +141,7 @@ function Earnings({ data, isLoading, activePeriod, onChangePeriod }) {
         </TabContent>
       </div>
       <div>{/*  <DashboardChart data={data} isLoading={isLoading} /> */}</div>
-    </Section>
+    </section>
   );
 }
 

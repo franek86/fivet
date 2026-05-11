@@ -24,13 +24,13 @@ const sizes = {
 
 const variations = {
   primary: css`
-    border: 1px solid var(--color-brand-500);
-    background: var(--bg-linear-gradient);
-    color: var(--color-grey-0);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-accent);
+    color: var(--color-text);
   `,
   transparent: css`
-    border: 1px solid var(--color-grey-500);
-    background-color: var(--color-grey-50);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-white);
   `,
 };
 
@@ -49,7 +49,7 @@ const Select = styled.div`
 
   ${(props) => sizes[props.$size || ""]};
   ${(props) => variations[props.$variation || ""]};
-  border-radius: var(--border-radius-sm);
+  border-radius: var(--border-radius-lg);
   cursor: pointer;
 `;
 
@@ -58,24 +58,24 @@ const SelectDropdown = styled.div`
   ${(props) => (props.$alignRight ? "right: 0;" : "left: 0;")}
   top: 100%;
   width: max-content;
-  background-color: var(--color-grey-100);
-  border: 1px solid var(--color-grey-200);
+  background-color: var(--color-grey-200);
+  border: 1px solid var(--color-border);
   padding: 1.25rem 0;
-  border-radius: var(--border-radius-sm);
+  border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
   z-index: 2;
 `;
 
 const SelectOption = styled.div`
   padding: 1.2rem;
-  border-radius: var(--border-radius-sm);
-  background: ${(props) => (props.$selected ? "var(--bg-linear-gradient)" : "var(--color-grey-100)")};
-  color: ${(props) => (props.$selected ? "var(--color-grey-50)" : "var(--color-grey-700)")};
+  border-radius: var(--border-radius-lg);
+  background-color: ${(props) => (props.$selected ? "var(--color-accent)" : "var(--color-grey-100)")};
+  color: ${(props) => (props.$selected ? "var(--color-text)" : "var(--color-grey-700)")};
 
   cursor: pointer;
 
   &:hover {
-    background: var(--bg-linear-gradient-soft);
+    background-color: var(--color-accent);
   }
 `;
 

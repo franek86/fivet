@@ -18,15 +18,15 @@ const DropdownButton = styled.div`
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  background: var(--bg-linear-gradient);
-  color: var(--color-grey-0);
+  background: var(--color-accent-600);
+  color: var(--color-white);
   padding: 0.85rem 1.2rem;
   font-size: 1.2rem;
   cursor: pointer;
   width: max-content;
 
   &:hover {
-    background: var(--bg-linear-gradient-soft);
+    background: var(--color-accent);
   }
 `;
 
@@ -51,7 +51,7 @@ const DropdownItem = styled.div`
   font-size: 14px;
 
   &:hover {
-    background-color: var(--color-grey-100);
+    background-color: var(--color-white);
   }
 `;
 

@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from "react-router";
 import { Search } from "lucide-react";
 
 const SearchWrap = styled.div`
-  background-color: var(--color-grey-50);
+  background-color: var(--color-white);
   border: 1px solid var(--color-grey-200);
   width: 23rem;
   position: relative;
@@ -24,16 +24,16 @@ const SearchIcon = styled(Search)`
   right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 3rem;
-  background: var(--color-brand-500);
+  font-size: 4rem;
+  background: var(--color-accent);
   border-radius: 50%;
   padding: 0.5rem;
-  color: var(--color-grey-50);
+  color: var(--color-text);
 `;
 
 const SearchInput = styled.input`
-  font-size: 1.25rem;
-  padding: 0.85rem 1.2rem;
+  font-size: 14px;
+  padding: 10px 12px;
   border: none;
   width: 100%;
   border-radius: 20px;

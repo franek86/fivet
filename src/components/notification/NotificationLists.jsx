@@ -27,7 +27,7 @@ const Card = styled.article`
 
   border-left: 10px solid;
   border-color: ${({ $props }) => ($props ? "#15803d" : "#b91c1c")};
-  background-color: var(--color-grey-0);
+  background-color: var(--color-white);
   letter-spacing: 0.5px;
   padding: 2rem;
   box-shadow: var(--shadow-md);

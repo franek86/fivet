@@ -15,7 +15,7 @@ import { formatMonth } from "../../utils/formatMonth.js";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 const Wrapper = styled.section`
-  background-color: var(--color-grey-0);
+  background-color: var(--color-white);
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-md);
 `;

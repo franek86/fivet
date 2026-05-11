@@ -9,13 +9,13 @@ const Wrap = styled.div`
 `;
 
 const StyledTextArea = styled.textarea`
-  background-color: var(--color-grey-50);
+  background-color: var(--color-white);
   padding: 1.25rem 0.9rem;
-  border: 1px solid var(--color-grey-500);
-  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
 
   &::placeholder {
-    color: var(--color-grey-500);
+    color: var(--color-text);
     font-size: 1.3rem;
     font-style: italic;
   }

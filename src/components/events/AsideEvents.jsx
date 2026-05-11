@@ -11,7 +11,7 @@ import { customFormatDate } from "../../utils/formatDate.js";
 const Aside = styled.aside`
   margin-top: 4rem;
   height: auto;
-  background: var(--color-grey-0);
+  background: var(--color-white);
   border-radius: 12px;
   padding: 1rem;
 `;

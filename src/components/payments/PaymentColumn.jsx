@@ -28,7 +28,7 @@ const Status = styled.span`
         return "#fff";
     }
   }};
-  color: var(--color-grey-0);
+  color: var(--color-white);
   border-radius: var(--border-radius-md);
   display: inline-block;
   padding: 0.5rem;

@@ -40,8 +40,8 @@ const CardHeader = styled.header`
   width: 100%;
   position: relative;
   padding: 3rem 2.2rem;
-  background-color: ${({ $disabled }) => ($disabled ? "var(--color-grey-200)" : "var(--color-brand-500)")};
-  color: var(--color-grey-0);
+  background-color: ${({ $disabled }) => ($disabled ? "var(--color-grey-200)" : "var(--color-accent-600)")};
+  color: var(--color-white);
   border-top-left-radius: var(--border-radius-md);
   border-top-right-radius: var(--border-radius-md);
 `;
@@ -51,14 +51,14 @@ const CurrentSticker = styled.span`
   position: absolute;
   top: -1rem;
   right: 0;
-  background-color: var(--color-grey-700);
+  background-color: var(--color-accent-600);
   padding: 0.5rem 1rem;
   border-radius: var(--border-radius-lg);
   text-transform: uppercase;
 `;
 
 const CardTitle = styled.h2`
-  color: var(--color-brand-100);
+  color: var(--color-text);
   margin-bottom: 1.2rem;
 `;
 
@@ -75,7 +75,7 @@ const CardContent = styled.div`
 const Card = styled.div`
   opacity: ${({ $disabled }) => ($disabled ? "0.6" : "1")};
   pointer-events: ${({ $disabled }) => ($disabled ? "none" : "auto")};
-  background-color: var(--color-grey-0);
+  background-color: var(--color-white);
   border-end-start-radius: var(--border-radius-md);
   border-end-end-radius: var(--border-radius-md);
   display: flex;

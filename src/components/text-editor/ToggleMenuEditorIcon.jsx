@@ -19,8 +19,8 @@ const StyledToggle = styled.div`
   }
 
   &.is-active {
-    color: var(--color-grey-0);
-    background-color: var(--color-brand-500);
+    color: var(--color-white);
+    background-color: var(--color-accent-600);
   }
 `;
 

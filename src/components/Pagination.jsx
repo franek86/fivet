@@ -6,7 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const SytledSection = styled.section`
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 10px;
   padding: 1rem;
 `;
 
@@ -15,31 +15,31 @@ const SytledButton = styled.button`
   align-items: center;
   justify-content: center;
   border: none;
-  background: var(--bg-linear-gradient);
-  font-size: 1.25rem;
+  background-color: var(--color-accent-600);
+  font-size: 12px;
   font-weight: 600;
-  padding: 0.6rem 0.8rem;
-  color: var(--color-grey-50);
-  border-radius: var(--border-radius-sm);
+  padding: 10px 12px;
+  color: var(--color-white);
+  border-radius: var(--border-radius-lg);
 
   &:hover {
-    background: var(--bg-linear-gradient-soft);
-    color: var(--color-grey-700);
+    background-color: var(--color-accent);
+    color: var(--color-text);
   }
 
   &:disabled {
-    background: var(--color-grey-300);
-    color: var(--color-grey-400);
+    background: var(--color-grey-200);
+    color: var(--color-text-muted);
   }
 `;
 
 const StyledNumber = styled.button`
-  background-color: ${($active) => ($active ? "#c7d2fe" : "#4f46e5")};
+  background-color: ${($active) => ($active ? "var(--color-accent)" : "var(--color-accent-600)")};
   font-size: 1.25rem;
   line-height: 1.2;
-  color: ${($active) => ($active ? "#4f46e5" : "#c7d2fe")};
-  padding: 0.6rem 0.8rem;
-  border-radius: var(--border-radius-sm);
+  color: ${($active) => ($active ? "var(--color-text)" : "var(--color-text)")};
+  padding: 10px 12px;
+  border-radius: var(--border-radius-lg);
   border: none;
 `;
 

@@ -25,7 +25,7 @@ const CardWrap = styled.div`
 const Card = styled.article`
   display: flex;
   justify-content: space-between;
-  background-color: var(--color-grey-0);
+  background-color: var(--color-white);
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-md);
 `;
@@ -49,8 +49,8 @@ const CardBottom = styled.div`
 `;
 
 const CardButton = styled.div`
-  background-color: var(--color-red-300);
-  color: var(--color-grey-0);
+  background-color: var(--color-danger);
+  color: var(--color-white);
   padding: 0.5rem;
   font-size: 1.25rem;
   cursor: pointer;
@@ -61,7 +61,7 @@ const CardButton = styled.div`
 
 const CardButtonDelete = styled(CardButton)`
   &:hover {
-    background-color: var(--color-red-700);
+    background-color: var(--color-danger);
   }
 `;
 
@@ -78,17 +78,17 @@ const CardContent = styled.div`
 `;
 
 const Link = styled.a`
-  color: var(--color-blue-500);
+  color: var(--color-accent-600);
   font-size: 1.3rem;
   &:hover {
-    color: var(--color-blue-700);
+    color: var(--color-accent-600);
   }
 `;
 
 const DateWrapp = styled.p`
   font-size: 1.25rem;
   padding-top: 0.8rem;
-  color: var(--color-grey-500);
+  color: var(--color-text-muted);
   font-style: italic;
 `;
 

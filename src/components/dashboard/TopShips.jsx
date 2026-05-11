@@ -7,7 +7,7 @@ import { Link } from "react-router";
  * Third-party libraries
  */
 import styled from "styled-components";
-import { Eye } from "lucide-react";
+import { Eye, Ship } from "lucide-react";
 
 /**
  * Features
@@ -22,53 +22,72 @@ import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 2rem;
-  background-color: var(--color-grey-0);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-md);
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-lg);
 `;
 
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+const ListRow = styled.div`
+  display: flex;
   align-items: center;
-  padding: 1rem;
-  gap: 2rem;
-  font-size: 1.5rem;
-
-  @media screen and (min-width: 640px) {
-    grid-template-columns: repeat(5, 1fr);
+  justify-content: space-between;
+  padding: 12px 0;
+  gap: 12px;
+  border-bottom: 1px solid var(--color-border);
+  &:last-child {
+    border-bottom: 0;
   }
 
-  &:nth-child(odd) {
-    background-color: var(--color-brand-100);
+  .thumb {
+    display: none;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--border-radius-lg);
+
+    @media screen and (min-width: 640px) {
+      display: block;
+    }
   }
-  &:nth-child(even) {
-    background-color: var(--color-grey-100);
+
+  .body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .name {
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .imo {
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+
+  .right {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    font-size: 13px;
   }
 `;
 
-const WrapperTop = styled(Wrapper)`
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--color-grey-500);
-`;
-
-const Image = styled.img`
-  display: none;
-  width: 4rem;
-  height: 4rem;
-
-  @media screen and (min-width: 640px) {
-    display: block;
-  }
+const ImagePlaceholder = styled.div`
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--border-radius-lg);
+  background-color: var(--color-accent);
 `;
 
 const Views = styled(Link)`
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 4px;
 `;
 
 function TopShips({ data, isLoading }) {
@@ -77,26 +96,33 @@ function TopShips({ data, isLoading }) {
   }
 
   return (
-    <Container>
-      <h3>Popular ships</h3>
-      <WrapperTop>
-        <p className='hidden-table-sm'>Image</p>
-        <p>Name</p>
-        <p>IMO</p>
-        <p>Price</p>
-        <p>Views</p>
-      </WrapperTop>
+    <Container className='card-container'>
+      <div className='card-header'>
+        <h3>Popular ships</h3>
+      </div>
+
       {data?.topShips?.map((ship) => (
-        <Wrapper key={ship.id}>
-          <Image src={ship.mainImage} alt={ship.shipName} />
-          <p>{ship.shipName}</p>
-          <p>{ship.imo}</p>
-          <p>{formatedPrice(ship.price)}</p>
-          <Views to={`/ships/${ship.id}`}>
-            <Eye />
-            {ship.clicks}
-          </Views>
-        </Wrapper>
+        <ListRow key={ship.id}>
+          {ship.mainImage ? (
+            <img className='thumb' src={ship.mainImage} alt={ship.shipName} />
+          ) : (
+            <ImagePlaceholder>
+              <Ship />
+            </ImagePlaceholder>
+          )}
+          <div className='body'>
+            <div className='name'>{ship.shipName}</div>
+            <div className='price'>{formatedPrice(ship.price)}</div>
+          </div>
+
+          <div className='right'>
+            <div className='imo'>IMO: {ship.imo}</div>
+            <Views to={`/ships/${ship.id}`}>
+              <Eye size={16} />
+              {ship.clicks}
+            </Views>
+          </div>
+        </ListRow>
       ))}
     </Container>
   );

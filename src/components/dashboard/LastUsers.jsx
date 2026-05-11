@@ -7,7 +7,7 @@ import { Link } from "react-router";
  * Third-party libraries
  */
 import styled from "styled-components";
-import { CircleUser } from "lucide-react";
+import { CircleUser, UserRound } from "lucide-react";
 
 /**
  * Features
@@ -19,48 +19,46 @@ import { customFormatDate } from "../../utils/formatDate.js";
  */
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 2rem;
-  background-color: var(--color-grey-0);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-md);
-`;
-
 const Box = styled.div`
   display: flex;
-  padding: 1rem;
-  gap: 2rem;
-  &:nth-child(odd) {
-    background-color: var(--color-brand-100);
-  }
-  &:nth-child(even) {
-    background-color: var(--color-grey-100);
+  padding: 12px 0;
+  gap: 12px;
+  border-bottom: 1px solid var(--color-border);
+  &:last-child {
+    border-bottom: 0;
   }
 `;
 
 const Image = styled.img`
-  width: 6rem;
-  height: 6rem;
-  border-radius: 50%;
-  background-color: var(--color-grey-200);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--border-radius-lg);
 `;
 const BoxContent = styled.div`
+  flex: 1;
+  min-width: 0;
   a {
     display: block;
-    color: var(--color-blue-500);
+    color: var(--color-text);
     &:hover {
-      color: var(--color-blue-700);
+      color: var(--color-text-muted);
     }
   }
 `;
 
 const Date = styled.p`
-  font-size: 1.25rem;
-  color: var(--color-grey-500);
-  font-style: italic;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-style: 600;
+`;
+
+const ImagePlaceholder = styled.div`
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--border-radius-lg);
+  background-color: var(--color-accent);
 `;
 
 function LastUsers({ data, isLoading }) {
@@ -69,19 +67,27 @@ function LastUsers({ data, isLoading }) {
   }
 
   return (
-    <Container>
-      <h3>Recent users</h3>
+    <section className='card-container'>
+      <div className='card-header'>
+        <h3>Recent users</h3>
+      </div>
       {data?.lastFiveUsers?.map((user) => (
         <Box key={user.id}>
-          {user.profile.avatar ? <Image src={user.profile.avatar} alt={user.fullName} /> : <CircleUser size={60} color='#d1d5db' />}
+          {user?.profile?.avatar ? (
+            <Image src={user.profile.avatar} alt={user.fullName} />
+          ) : (
+            <ImagePlaceholder>
+              <UserRound />
+            </ImagePlaceholder>
+          )}
           <BoxContent>
             <strong>{user.fullName}</strong>
             <Link href={`mailto:${user.email}`}>{user.email}</Link>
-            <Date>Created at: {customFormatDate(user.createdAt)}</Date>
           </BoxContent>
+          <Date>Created at: {customFormatDate(user.createdAt)}</Date>
         </Box>
       ))}
-    </Container>
+    </section>
   );
 }
 

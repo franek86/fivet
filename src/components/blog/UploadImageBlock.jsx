@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const ImageField = styled.div`
   width: 100%;
-  border: 2px dashed var(--color-grey-300);
+  border: 2px dashedvar(--color-grey-200);
   border-radius: var(--border-radius-sm);
   margin-bottom: 1.5rem;
 `;

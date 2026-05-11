@@ -69,16 +69,16 @@ const ButtonStyle = styled.div`
 `;
 
 const FilterButton = styled(ButtonStyle)`
-  background: var(--bg-linear-gradient);
-  color: var(--color-grey-50);
+  background: var(--color-accent-600);
+  color: var(--color-white);
   &:hover {
-    background: var(--bg-linear-gradient-soft);
-    color: var(--color-grey-700);
+    background: var(--color-accent);
+    color: var(--color-text);
   }
 `;
 
 const ResetButton = styled(ButtonStyle)`
-  background-color: var(--color-grey-300);
+  background-color: var(--color-grey-200);
   &:hover {
     opacity: 0.7;
   }

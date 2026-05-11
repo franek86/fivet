@@ -13,11 +13,11 @@ import { useAdminDashboardData } from "../hooks/useDashboardStatistic.js";
 const TwoColumnsRole = styled.section`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
-  margin: 2rem 0;
+  gap: 20px;
+  margin: 20px 0;
 
   @media screen and (min-width: 1200px) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
   }
 `;
 
@@ -32,19 +32,22 @@ function AdminDashboard() {
 
   return (
     <>
-      <Title tag='h1'>Dashboard</Title>
+      <div className='search-container'>
+        <Title tag='h1'>Dashboard</Title>
+      </div>
 
       <>
         <StatisticBox data={data?.statistic} isLoading={isLoading} />
-        <Earnings data={data?.earnings} isLoading={isLoading} activePeriod={activePeriod} onChangePeriod={handlePeriodTab} />
-
-        {/*  <SubcriptionChart data={data} isLoading={isLoading} /> */}
-        <MapChart geoUrl={data.geoUrl} isLoading={isLoading} />
+        <TwoColumnsRole>
+          <Earnings data={data?.earnings} isLoading={isLoading} activePeriod={activePeriod} onChangePeriod={handlePeriodTab} />
+          <TopShips data={data?.statistic} isLoading={isLoading} />
+        </TwoColumnsRole>
 
         <TwoColumnsRole>
-          <TopShips data={data?.statistic} isLoading={isLoading} />
           <LastUsers data={data?.statistic} isLoading={isLoading} />
         </TwoColumnsRole>
+        {/*  <SubcriptionChart data={data} isLoading={isLoading} /> */}
+        <MapChart geoUrl={data.geoUrl} isLoading={isLoading} />
       </>
     </>
   );

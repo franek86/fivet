@@ -10,7 +10,7 @@ const StyledWrap = styled.div`
 
 const P = styled.p`
   font-size: 2rem;
-  color: var(--color-grey-500);
+  color: var(--color-text);
 `;
 
 function EmptyState({ message = "No data available", icon = null }) {

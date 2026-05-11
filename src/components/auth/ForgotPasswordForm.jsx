@@ -43,17 +43,17 @@ const OtpInput = styled.input`
   width: 4.5rem;
   height: 4.5rem;
   border-radius: var(--border-radius-sm);
-  border: 1px solid var(--color-grey-500);
+  border: 1px solidvar(--color-text-muted);
   text-align: center;
   font-size: 2rem;
 `;
 
 const ResendOtp = styled.p`
   font-weight: 600;
-  color: var(--color-brand-600);
+  color: var(--color-accent-600);
   cursor: pointer;
   &:hover {
-    color: var(--color-brand-300);
+    color: var(--color-accent);
   }
 `;
 

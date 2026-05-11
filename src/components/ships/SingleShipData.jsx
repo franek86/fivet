@@ -14,7 +14,7 @@ const Header = styled.div`
   display: flex;
   flex-direction: column;
   gap: 3rem;
-  background: var(--color-grey-0);
+  background: var(--color-white);
   padding: 2rem;
   border-radius: var(--border-radius-md);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
@@ -50,18 +50,18 @@ const TitleRow = styled.div`
 
 const SubTitle = styled.p`
   font-size: 1.4rem;
-  color: var(--color-grey-900);
+  color: var(--color-text);
 `;
 
 const Price = styled.div`
   margin-top: 1.2rem;
   font-size: 1.8rem;
   font-weight: bold;
-  color: var(--color-green-700);
+  color: var(--color-success);
 `;
 
 const Section = styled.div`
-  background: var(--color-grey-0);
+  background: var(--color-white);
   padding: 2rem;
   border-radius: var(--border-radius-md);
   margin-top: 2rem;
@@ -73,7 +73,7 @@ const Status = styled.span`
   border-radius: var(--border-radius-md);
   font-size: 1.35rem;
   font-weight: bold;
-  color: var(--color-grey-0);
+  color: var(--color-white);
   background: ${(props) => (props.published ? "#15803d" : "#b91c1c")};
 `;
 
@@ -90,17 +90,17 @@ const InfoGrid = styled.div`
 
 const InfoItem = styled.div`
   font-size: 1.35rem;
-  color: var(--color-grey-900);
+  color: var(--color-text);
 
   span {
     font-weight: bold;
-    color: var(--color-grey-900);
+    color: var(--color-text);
   }
 `;
 
 const Description = styled.p`
   font-size: 1.35rem;
-  color: var(--color-grey-900);
+  color: var(--color-text);
   line-height: 1.5;
 `;
 

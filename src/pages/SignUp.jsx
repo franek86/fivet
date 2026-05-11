@@ -8,7 +8,7 @@ const FormWrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: var(--color-grey-50);
+  background-color: var(--color-white);
   gap: 2.4rem;
   padding: 4rem 2.8rem;
   box-shadow: var(--shadow-lg);
@@ -23,10 +23,10 @@ const TextWrap = styled.p`
 `;
 
 const LinkText = styled(Link)`
-  color: var(--color-brand-600);
+  color: var(--color-text);
 
   &:hover {
-    color: var(--color-brand-400);
+    color: var(--color-accent-600);
   }
 `;
 

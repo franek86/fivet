@@ -38,8 +38,8 @@ const ShipFilterWrap = styled.div`
   align-items: center;
   gap: 1rem;
   cursor: pointer;
-  background: var(--bg-linear-gradient);
-  color: var(--color-grey-0);
+  background: var(--color-accent-600);
+  color: var(--color-white);
   border-radius: var(--border-radius-sm);
   padding: 0.5rem 0.75rem;
   font-size: 1.25rem;

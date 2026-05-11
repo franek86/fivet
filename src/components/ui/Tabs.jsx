@@ -2,25 +2,30 @@ import { useState } from "react";
 import styled from "styled-components";
 
 const Tab = styled.div`
-  background-color: var(--color-grey-0);
+  background-color: var(--color-white);
 `;
 
 const TabHeader = styled.header`
   display: flex;
+  width: max-content;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+  background-color: var(--color-grey-200);
 `;
 
 const TabLabel = styled.div`
-  font-size: 1.4rem;
-  background-color: ${({ $isActive }) => ($isActive ? "var(--color-brand-200)" : "var(--color-grey-50)")};
-  padding: 1.2rem;
-  font-weight: bold;
-  border-right: 1px solid var(--color-grey-200);
-  border-bottom: 1px solid var(--color-grey-200);
-  box-shadow: var(--box-shadow-md);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  background-color: ${({ $active }) => ($active ? "#fff" : "transparent")};
+  border-radius: var(--border-radius-md);
+  color: var(--color-text-muted);
   cursor: pointer;
 
   &:hover {
-    background-color: var(--color-brand-200);
+    background-color: var(--color-accent);
   }
 `;
 const TabContent = styled.main`

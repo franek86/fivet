@@ -18,7 +18,7 @@ import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 const MapChartWrapp = styled.section`
   position: relative;
   padding: 2rem;
-  background-color: var(--color-grey-0);
+  background-color: var(--color-white);
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-md);
 `;
@@ -27,9 +27,9 @@ const ZoomBtn = styled.div`
   display: flex;
   gap: 0.7rem;
   button {
-    background: var(--bg-linear-gradient);
+    background: var(--color-accent-600);
     border: none;
-    color: var(--color-grey-0);
+    color: var(--color-white);
     padding: 1rem 1.6rem;
     font-size: 1.5rem;
   }

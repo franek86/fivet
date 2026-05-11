@@ -50,15 +50,15 @@ const StyledItem = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  background-color: var(--color-grey-0);
+  background-color: var(--color-white);
   border-radius: var(--border-radius-md);
   p {
-    color: var(--color-grey-500);
+    color: var(--color-text-muted);
   }
   a {
-    color: var(--color-brand-500);
+    color: var(--color-accent-600);
     &:hover {
-      color: var(--color-blue-500);
+      color: var(--color-accent-600);
     }
   }
 `;
@@ -66,7 +66,7 @@ const StyledItem = styled.div`
 const StyledIcons = styled.div`
   display: flex;
   gap: 1rem;
-  background: var(--color-grey-100);
+  background: var(--color-white);
   border-radius: var(--border-radius-md);
   box-sizing: border-box;
   padding: 0.8rem 1.25rem;
@@ -85,7 +85,7 @@ const StyledIconLink = styled.a`
 const StyledBox = styled.div`
   display: flex;
   flex-direction: column;
-  background-color: var(--color-grey-0);
+  background-color: var(--color-white);
   border-radius: var(--border-radius-md);
   box-shadow: var(--box-shadow-md);
 `;

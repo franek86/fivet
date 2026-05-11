@@ -9,9 +9,14 @@ import { markNotificationRead } from "../../slices/realtimeSlice.js";
 import { toggleDropdown } from "../../slices/uiSlice.js";
 
 const Wrapper = styled.div`
-  display: flex;
+  display: grid;
+  place-items: center;
   position: relative;
   cursor: pointer;
+  background-color: var(--color-white);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
 `;
 
 const Count = styled.div`
@@ -25,8 +30,8 @@ const Count = styled.div`
   right: -10px;
   font-size: 1rem;
   font-weight: bold;
-  background-color: var(--color-red-700);
-  color: white;
+  background-color: var(--color-danger);
+  color: var(--color-white);
   border-radius: 50%;
 `;
 
@@ -39,8 +44,8 @@ const DropdownToggle = styled.div`
 const NotificationCard = styled.div`
   position: relative;
   padding: 1rem 2rem;
-  background-color: var(--color-grey-0);
-  color: var(--color-brand-900);
+  background-color: var(--color-white);
+  color: var(--color-accent-600);
   box-shadow: var(--shadow-lg);
   border-radius: var(--border-radius-md);
   width: max-content;
@@ -65,7 +70,7 @@ const NotificationMsg = styled.div`
   text-align: center;
   gap: 1rem;
   font-size: 1.3rem;
-  color: var(--color-grey-400);
+  color: var(--color-text-muted);
 `;
 
 const DeleteCircle = styled.div`
@@ -79,7 +84,7 @@ const DeleteCircle = styled.div`
   right: 0px;
   font-size: 1.2rem;
   font-weight: bold;
-  background-color: var(--color-red-700);
+  background-color: var(--color-danger);
   color: white;
   border-radius: 50%;
   z-index: 9;

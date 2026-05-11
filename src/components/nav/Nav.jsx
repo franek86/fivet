@@ -10,6 +10,7 @@ import NavItem from "./NavItem.jsx";
 const StyledNav = styled.nav`
   display: flex;
   flex-direction: column;
+  gap: 4px;
 `;
 
 function Nav() {

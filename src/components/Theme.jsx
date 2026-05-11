@@ -11,8 +11,9 @@ const ThemeBox = styled.div`
   align-items: center;
   gap: 0.8rem;
   cursor: pointer;
+  color: var(--color-text-muted);
   p {
-    font-size: 1.4rem;
+    font-size: 14px;
   }
 `;
 

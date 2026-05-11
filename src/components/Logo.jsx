@@ -10,9 +10,9 @@ const LogoWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2rem;
+  margin-bottom: 20px;
+
   @media screen and (min-width: 640px) {
-    padding: 2rem 1.2rem;
     justify-content: center;
   }
 
@@ -25,25 +25,20 @@ const StyledLogo = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 0.8rem;
+  gap: 10px;
 `;
 
 const LogoIcon = styled.div`
-  background: var(--bg-linear-gradient);
+  background-color: var(--color-accent);
   display: flex;
   padding: 1rem;
-  border-radius: 50%;
+  border-radius: 12px;
 `;
 
 const LogoText = styled.div`
-  font-size: 2.5rem;
-  font-weight: 600;
-  background: var(--bg-linear-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  @media screen and (min-width: 640px) {
-    font-size: 3rem;
-  }
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--color-text);
 
   @media screen and (min-width: 640px) {
     display: none;
@@ -73,7 +68,7 @@ function Logo() {
     <LogoWrapper>
       <StyledLogo onClick={() => navigate("/dashboard")}>
         <LogoIcon>
-          <ShipWheelIcon size={24} color='#ffffff' />
+          <ShipWheelIcon size={20} />
         </LogoIcon>
         <LogoText>Fivet</LogoText>
       </StyledLogo>

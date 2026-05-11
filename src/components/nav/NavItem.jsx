@@ -25,10 +25,12 @@ const NavList = styled(NavLink)`
   display: flex;
   align-items: center;
   justify-content: start;
-
-  gap: 10px;
-  padding: 1.2rem 2rem;
-  font-size: 1.85rem;
+  gap: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--border-radius-lg);
+  color: var(--color-text-muted);
 
   @media screen and (min-width: 640px) {
     justify-content: center;
@@ -37,15 +39,16 @@ const NavList = styled(NavLink)`
     justify-content: start;
   }
   &:hover {
-    color: var(--color-grey-700);
-    background: var(--bg-linear-gradient-soft);
+    color: var(--color-text);
+    background: var(--color-grey-200);
+    font-weight: 600;
   }
   &:active,
   &.active:link,
   &.active:visited {
-    color: var(--color-grey-50);
-    background: var(--bg-linear-gradient);
-    box-shadow: var(--shadow-md);
+    color: var(--color-text);
+    background: var(--color-accent);
+    font-weight: 600;
   }
 `;
 
@@ -54,15 +57,17 @@ const NavDropdown = styled.div`
   align-items: center;
   justify-content: space-between;
   position: relative;
-
-  gap: 10px;
-  padding: 1.2rem 2rem;
-  font-size: 1.85rem;
+  gap: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
   cursor: pointer;
+  border-radius: var(--border-radius-lg);
+  color: var(--color-text-muted);
 
   &:hover {
-    color: var(--color-grey-700);
-    background: var(--bg-linear-gradient-soft);
+    color: var(--color-text);
+    background: var(--color-grey-200);
+    color: var(--color-text);
   }
 
   @media screen and (min-width: 640px) {
@@ -78,9 +83,9 @@ const NavDropdownInner = styled.div`
 `;
 
 const NavDropdownContent = styled.div`
-  background: var(--color-grey-0);
+  background: var(--color-white);
   box-shadow: var(--shadow-md);
-
+  border-radius: var(--border-radius-lg);
   display: flex;
   flex-direction: column;
   z-index: 1000;

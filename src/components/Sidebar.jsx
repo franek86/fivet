@@ -6,21 +6,23 @@ import Logo from "./Logo.jsx";
 
 const Aside = styled.aside`
   width: 100%;
+  padding: 24px 18px;
   display: flex;
   flex-direction: column;
-  background-color: var(--color-grey-50);
+  background-color: var(--color-white);
+  border-right: 1px solid var(--color-border);
   z-index: 1;
 
   @media screen and (min-width: 640px) {
-    position: fixed;
+    position: sticky;
     left: 0;
     top: 0;
     height: 100vh;
-    width: 10rem;
+    width: 100px;
   }
 
   @media screen and (min-width: 1024px) {
-    width: 20rem;
+    width: 240px;
   }
 `;
 

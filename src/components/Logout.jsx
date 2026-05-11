@@ -6,14 +6,16 @@ const Btn = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 0.35rem 1rem;
-  font-size: 1.4rem;
-  background: var(--bg-linear-gradient);
-  color: var(--color-grey-0);
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--color-text);
+  background: var(--color-accent);
+  font-weight: 600;
   cursor: pointer;
+  border-radius: var(--border-radius-lg);
 
   &:hover {
-    background: var(--bg-linear-gradient-soft);
+    background: var(--color-accent);
   }
 `;
 

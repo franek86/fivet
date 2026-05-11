@@ -11,19 +11,16 @@ const StyledAvatar = styled.div`
   align-items: center;
   gap: 0.8rem;
   cursor: pointer;
-
-  @media screen and (min-width: 1024px) {
-  }
 `;
 
 const StyledNoAvatar = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 4rem;
-  width: 4rem;
-  border-radius: 50%;
-  background-color: var(--color-grey-300);
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background-color: var(--color-grey-200);
   margin-right: 1rem;
 `;
 
@@ -33,9 +30,9 @@ const StyledName = styled.p`
 `;
 
 const StyledImageAvatar = styled.img`
-  height: 4rem;
-  width: 4rem;
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
 `;
 
 function Avatar() {

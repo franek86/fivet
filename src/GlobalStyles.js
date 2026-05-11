@@ -7,11 +7,21 @@ const styled = { createGlobalStyle };
 const GlobalStyles = styled.createGlobalStyle`
   :root {
     /* LIGHT MODE (default) */
-    /* Grey */
+    --color-white: #fff;
+    --color-grey-200: #f4f5f7;
+    --color-accent: oklch(93.2% 0.032 255.585);
+    --color-accent-600: oklch(78% 0.06 255.585);
+    --color-border: oklch(90% 0.015 255.585);
+    --color-text: #1a2238;
+    --color-text-muted: #6b7280;
+    --color-success: #16a34a;
+    --color-danger: #dc2626;
+    --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.04), 0 1px 2px rgba(16, 24, 40, 0.03);
+
     --color-grey-0: #fff;
     --color-grey-50: #f9fafb;
     --color-grey-100: #f3f4f6;
-    --color-grey-200: #e5e7eb;
+    /* --color-grey-200: #e5e7eb; */
     --color-grey-300: #d1d5db;
     --color-grey-400: #9ca3af;
     --color-grey-500: #6b7280;
@@ -63,7 +73,7 @@ const GlobalStyles = styled.createGlobalStyle`
     --border-radius-md: 7px;
     --border-radius-lg: 9px;
 
-    --toastify-font-family: "Urbanist", serif;
+    --toastify-font-family: "Inter", serif;
 
     --device-sm: 640px; /* 640px */
     --device-md: 48rem; /* 768px */
@@ -128,16 +138,15 @@ const GlobalStyles = styled.createGlobalStyle`
   }
 
   body {
-    font-family: "Urbanist", serif;
-    color: var(--color-grey-700);
-    background-color: var(--color-grey-200);
+    font-family: "Inter", serif;
+    color: var(--color-grey-00);
+    background-color: var(--color-text);
 
     transition:
       color 0.3s,
       background-color 0.3s;
     min-height: 100vh;
     line-height: 1.5;
-    font-size: 1.6rem;
   }
 
   input,

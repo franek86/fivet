@@ -13,9 +13,9 @@ const HeaderWrap = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--color-grey-0);
-  box-shadow: var(--shadow-md);
-  padding: 1.6rem 2rem;
+  background: transparent;
+  gap: 16px;
+  margin-bottom: 24px;
 `;
 
 const HeaderRight = styled.div`
@@ -27,7 +27,7 @@ const HeaderRight = styled.div`
 const DropDownBox = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 10px;
   width: 200px;
   transform: translateY(0);
   padding: 1rem 1.2rem;
@@ -45,8 +45,8 @@ const DropDownBox = styled.div`
           opacity: 0;
           visibility: hidden;
         `}
-  background-color: var(--color-grey-0);
-  border-radius: var(--border-radius-md);
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
   transition: all 0.3s ease;
 `;
@@ -54,11 +54,12 @@ const DropDownBox = styled.div`
 const HeaderLink = styled(Link)`
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 4px;
+  color: var(--color-text-muted);
 `;
 
 const P = styled.p`
-  font-size: 1.4rem;
+  font-size: 14px;
 `;
 
 const Header = () => {

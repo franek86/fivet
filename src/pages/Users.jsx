@@ -26,10 +26,12 @@ function Users() {
   if (!admin) return <Unauthorized />;
   return (
     <>
-      <Flex>
+      <div className='search-container'>
         <Title tag='h1'>Users</Title>
-        <SearchBar />
-      </Flex>
+        <div className='search-container-right'>
+          <SearchBar />
+        </div>
+      </div>
       <UserProfileList />
     </>
   );

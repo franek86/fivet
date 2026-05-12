@@ -22,13 +22,9 @@ const TwoColumnsRole = styled.section`
 `;
 
 function AdminDashboard() {
-  const [activePeriod, setActivePeriod] = useState("week");
+  const { data, isLoading } = useAdminDashboardData();
 
-  const { data, isLoading } = useAdminDashboardData(activePeriod);
-
-  const handlePeriodTab = (currentPeriod) => {
-    setActivePeriod(currentPeriod);
-  };
+  console.log(data);
 
   return (
     <>
@@ -39,7 +35,7 @@ function AdminDashboard() {
       <>
         <StatisticBox data={data?.statistic} isLoading={isLoading} />
         <TwoColumnsRole>
-          <Earnings data={data?.earnings} isLoading={isLoading} activePeriod={activePeriod} onChangePeriod={handlePeriodTab} />
+          <Earnings data={data?.earnings} isLoading={isLoading} />
           <TopShips data={data?.statistic} isLoading={isLoading} />
         </TwoColumnsRole>
 
@@ -47,7 +43,7 @@ function AdminDashboard() {
           <LastUsers data={data?.statistic} isLoading={isLoading} />
         </TwoColumnsRole>
         {/*  <SubcriptionChart data={data} isLoading={isLoading} /> */}
-        <MapChart geoUrl={data.geoUrl} isLoading={isLoading} />
+        <MapChart geoUrl={data?.geoUrl} isLoading={isLoading} />
       </>
     </>
   );

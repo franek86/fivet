@@ -4,12 +4,13 @@ import { useDispatch } from "react-redux";
 import Spinner from "../Spinner.jsx";
 import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 import { customFormatDate } from "../../utils/formatDate.js";
 
 import { useDeleteUserProfile, useGetAllUserProfile } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
-import { CircleUser } from "lucide-react";
+import { CircleUser, UserRound } from "lucide-react";
 
 /* import socket from "../../shared/socket.js";
 import { useEffect } from "react";
@@ -17,46 +18,61 @@ import { useRealtime } from "../../hooks/useRealtime.js"; */
 
 const CardWrap = styled.div`
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 2rem;
-  margin-top: 4rem;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 20px;
+
+  @media screen and (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media screen and (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 `;
 
 const Card = styled.article`
-  display: flex;
-  justify-content: space-between;
   background-color: var(--color-white);
-  border-radius: var(--border-radius-md);
+  border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
-`;
+  border: 1px solid var(--color-border);
+  padding: 20px;
 
-const CardTop = styled.div`
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.2rem;
-`;
+  .card-body {
+    display: flex;
+    gap: 10px;
+    padding: 10px 0;
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--border-radius-lg);
+      background-color: var(--color-accent);
+    }
 
-const CardBottom = styled.div`
-  display: grid;
-  gap: 1.8rem;
-  margin-right: 1.8rem;
-  grid-template-columns: 1fr;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+    .card-content {
+      .name {
+        font-weight: 600;
+      }
+    }
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 `;
 
 const CardButton = styled.div`
   background-color: var(--color-danger);
   color: var(--color-white);
-  padding: 0.5rem;
-  font-size: 1.25rem;
+  padding: 1rem;
+  font-size: 12px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   box-shadow: var(--shadow-md);
-  border-radius: var(--border-radius-sm);
+  border-radius: var(--border-radius-lg);
+
+  &:hover {
+  }
 `;
 
 const CardButtonDelete = styled(CardButton)`
@@ -65,21 +81,9 @@ const CardButtonDelete = styled(CardButton)`
   }
 `;
 
-const CardImage = styled.img`
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-  background-color: var(--color-grey-200);
-`;
-
-const CardContent = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 const Link = styled.a`
-  color: var(--color-accent-600);
-  font-size: 1.3rem;
+  color: var(--color-text);
+  font-size: 14px;
   &:hover {
     color: var(--color-accent-600);
   }
@@ -92,29 +96,13 @@ const DateWrapp = styled.p`
   font-style: italic;
 `;
 
-const CardBoxPlaceholder = styled.div`
-  background: var(--linear-gradient);
-  background-size: 200% 100%;
-  min-width: 100%;
-  width: 100px;
-  height: 20px;
-`;
-
-const CardImagePlaceholder = styled(CardImage)`
-  background: var(--linear-gradient);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite ease-in-out;
-`;
-
-const CardContentPlaceholder = styled(CardContent)`
-  gap: 1rem;
-  animation: shimmer 1.5s infinite linear;
-`;
-
-const CardNameWrapp = styled("div")`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+const CardImagePlaceholder = styled.div`
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: var(--color-accent);
+  border-radius: var(--border-radius-lg);
 `;
 
 const ActiveUser = styled("div")`
@@ -123,37 +111,17 @@ const ActiveUser = styled("div")`
   font-size: 1.25rem;
   font-weight: bold;
   text-transform: uppercase;
-  color: ${({ $props }) => ($props ? "#15803d" : "#b91c1c")};
+  color: ${({ $props }) => ($props ? "var(--color-success)" : "var(--color-danger)")};
 
   span {
     width: 1.25rem;
     height: 1.25rem;
     margin-right: 0.5rem;
     display: flex;
-    background-color: ${({ $props }) => ($props ? "#15803d" : "#b91c1c")};
+    background-color: ${({ $props }) => ($props ? "var(--color-success)" : "var(--color-danger)")};
     border-radius: 50%;
   }
 `;
-
-// Placeholder component
-function UserProfileListPlaceholder() {
-  return (
-    <Card>
-      <CardTop>
-        <CardContentPlaceholder>
-          <CardBoxPlaceholder></CardBoxPlaceholder>
-          <CardBoxPlaceholder></CardBoxPlaceholder>
-          <CardBoxPlaceholder></CardBoxPlaceholder>
-        </CardContentPlaceholder>
-        <CardImagePlaceholder></CardImagePlaceholder>
-      </CardTop>
-      <CardBottom>
-        <CardBoxPlaceholder></CardBoxPlaceholder>
-        <CardBoxPlaceholder></CardBoxPlaceholder>
-      </CardBottom>
-    </Card>
-  );
-}
 
 function UserProfileList() {
   const { data, isPending, isFetching } = useGetAllUserProfile();
@@ -166,28 +134,34 @@ function UserProfileList() {
     <>
       <CardWrap>
         {isFetching
-          ? data.map((_, index) => <UserProfileListPlaceholder key={index} />)
+          ? data.map((_, index) => <TablePlaceholder count={index} />)
           : data.map((item) => (
               <Card key={item.id}>
-                <CardTop>
-                  {item.profile.avatar ? <CardImage src={item.profile.avatar} alt={item.fullName} /> : <CircleUser size={40} />}
-                  <CardContent>
-                    <CardNameWrapp>
-                      <strong>{item.fullName}</strong>
-                    </CardNameWrapp>
-                    <Link href={`mailto:${item.email}`}>{item.email}</Link>
-                    <DateWrapp>Created at {customFormatDate(item.createdAt)}</DateWrapp>
-                  </CardContent>
-                </CardTop>
-                <CardBottom>
+                <div className='header'>
                   <ActiveUser $props={item.isActive}>
                     <span></span>
                     {item.isActive ? "Online" : "Offline"}
                   </ActiveUser>
+                </div>
 
+                <div className='card-body'>
+                  {item.profile.avatar ? (
+                    <img src={item.profile.avatar} alt={item.fullName} />
+                  ) : (
+                    <CardImagePlaceholder>
+                      <UserRound />
+                    </CardImagePlaceholder>
+                  )}
+                  <div className='card-content'>
+                    <div className='name'>{item.fullName}</div>
+                    <Link href={`mailto:${item.email}`}>{item.email}</Link>
+                  </div>
+                </div>
+                <div className='footer'>
+                  <DateWrapp>Created at {customFormatDate(item.createdAt)}</DateWrapp>
                   {/*  <CardButtonEdit>Edit</CardButtonEdit> */}
                   <CardButtonDelete onClick={() => dispatch(openModalByName(item.id))}>Delete</CardButtonDelete>
-                </CardBottom>
+                </div>
                 <Modal name={item.id} onClose={() => dispatch(closeModalByName())}>
                   <ConfirmDialog
                     itemName={item.fullName}

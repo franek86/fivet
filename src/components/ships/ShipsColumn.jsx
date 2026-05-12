@@ -15,11 +15,21 @@ import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
 import { formatedPrice } from "../../utils/formattedPrice.js";
 import { usePublishShip } from "../../hooks/ships/usePublishShip.js";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, Ship, Trash2 } from "lucide-react";
 import { useUser } from "../../hooks/useAuth.js";
 
 const StyledImage = styled.img`
   width: 80px;
+  border-radius: var(--border-radius-lg);
+`;
+
+const NoImage = styled.div`
+  display: grid;
+  place-items: center;
+  width: 85px;
+  height: 45px;
+  border-radius: var(--border-radius-lg);
+  background-color: var(--color-accent);
 `;
 
 const ButtonInner = styled.div`
@@ -38,7 +48,7 @@ const PublishedStatus = styled.div`
   height: 1rem;
   width: 1rem;
   border-radius: 50%;
-  background-color: ${({ $props }) => ($props ? "#15803d" : "#b91c1c")};
+  background-color: ${({ $props }) => ($props ? "var(--color-success)" : "var(--color-danger)")};
 `;
 
 const TdCenter = styled.div`
@@ -88,7 +98,13 @@ function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
         <Checkbox checked={selectedShip.includes(shipId)} onChange={() => onCheckboxChange(shipId)} />
       </td>
       <td className='table-td'>
-        <StyledImage src={mainImage && !mainImage.error ? mainImage : "/images/no-image.webp"} alt={shipName} />
+        {mainImage && !mainImage.error ? (
+          <StyledImage src={mainImage} alt={shipName} />
+        ) : (
+          <NoImage>
+            <Ship />
+          </NoImage>
+        )}
       </td>
 
       {user?.role !== "ADMIN" ? null : (

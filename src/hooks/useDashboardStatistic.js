@@ -1,7 +1,7 @@
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { getAdminDashboardEarnings, getAdminDashboardStatistic, getUserDashboardStatistic } from "../services/apiDashboard.js";
+import { getAdminDashboardEarnings, getAdminDashboardStatistic, getGeoWorld, getUserDashboardStatistic } from "../services/apiDashboard.js";
 
-export const useAdminDashboardData = (activePeriod) => {
+export const useAdminDashboardData = () => {
   const results = useQueries({
     queries: [
       {
@@ -10,29 +10,30 @@ export const useAdminDashboardData = (activePeriod) => {
         staleTime: 30 * 60 * 1000,
       },
       {
-        queryKey: ["earnings", activePeriod],
-        queryFn: () => getAdminDashboardEarnings(activePeriod),
+        queryKey: ["earnings"],
+        queryFn: getAdminDashboardEarnings,
         staleTime: 30 * 60 * 1000,
       },
       {
         queryKey: ["geoUrl"],
-        queryFn: async () => {
-          const response = await fetch("https://unpkg.com/world-atlas@2/countries-110m.json");
-          return response.json();
-        },
-        staleTime: 30 * 60 * 1000,
+        queryFn: getGeoWorld,
+        staleTime: 1000 * 60 * 60 * 24 * 7,
       },
     ],
   });
 
-  const isLoading = results.some((r) => r.isLoading);
-  const data = {
-    statistic: results[0].data,
-    earnings: results[1].data,
-    geoUrl: results[2].data,
-  };
+  const [statistic, earnings, geoUrl] = results;
 
-  return { data, isLoading };
+  const isLoading = results.some((q) => q.isLoading || q.isFetching);
+
+  return {
+    data: {
+      statistic: statistic.data,
+      earnings: earnings.data,
+      geoUrl: geoUrl.data,
+    },
+    isLoading,
+  };
 };
 
 export const useUserDashboardData = () => {

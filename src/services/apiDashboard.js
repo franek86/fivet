@@ -17,9 +17,22 @@ export const getAdminDashboardStatistic = async () => {
 Get dashboard earnings
 */
 
-export const getAdminDashboardEarnings = async (period = "week") => {
+export const getAdminDashboardEarnings = async () => {
   try {
-    const res = await apiClient.get(`/dashboard/admin-earnings?period=${period}`);
+    const res = await apiClient.get("/dashboard/admin-earnings");
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
+/* 
+Get geo world countires
+*/
+export const getGeoWorld = async () => {
+  try {
+    const res = await apiClient.get("/dashboard/geo/world");
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

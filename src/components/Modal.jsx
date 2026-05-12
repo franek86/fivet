@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { CircleX, X } from "lucide-react";
 import { createPortal } from "react-dom";
 
 import { useSelector } from "react-redux";
@@ -11,10 +11,17 @@ const StyledModal = styled.div`
   bottom: 0;
   background-color: var(--color-white);
   box-shadow: var(--shadow-lg);
-  padding: 1.5rem;
+  border-radius: var(--border-radius-md);
+  padding: 2.5rem;
   transition: all 0.4s ease-in-out;
   z-index: 10;
   overflow-x: scroll;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+  }
 
   @media screen and (min-width: 640px) {
     top: 50%;
@@ -38,10 +45,7 @@ const StyledOverlay = styled.div`
 const Button = styled.button`
   background: none;
   border: none;
-  padding: 0%.4rem;
-  position: absolute;
-  top: 1.2rem;
-  right: 1.2rem;
+  padding: 0.4rem;
 
   &:focus {
     outline: none;
@@ -49,12 +53,6 @@ const Button = styled.button`
 
   &:hover svg {
     color: var(--color-text);
-  }
-
-  & svg {
-    width: 2rem;
-    height: 2rem;
-    color: var(--color-text-muted);
   }
 `;
 
@@ -66,9 +64,11 @@ function Modal({ children, onClose, name }) {
     <div>
       <StyledOverlay onClick={onClose}></StyledOverlay>
       <StyledModal>
-        <Button onClick={onClose}>
-          <X />
-        </Button>
+        <div className='header'>
+          <Button onClick={onClose}>
+            <CircleX size={20} />
+          </Button>
+        </div>
         {children}
       </StyledModal>
     </div>,

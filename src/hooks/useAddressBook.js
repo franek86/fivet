@@ -29,22 +29,16 @@ export const useCreateAddressBook = () => {
   return { mutate, isPending, isSuccess };
 };
 
-export const useGetAddressBook = (userId) => {
+export const useGetAddressBook = () => {
   const searchTerm = useSelector((state) => state.search.term);
 
   const search = searchTerm?.trim() || undefined;
 
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["address-book", userId, search],
-    queryFn: () => fecthAddressBookApi(userId, search),
-    placeholderData: (previousData) => {
-      if (previousData && previousData.length > 0) {
-        return Array.from({ length: previousData.length }, () => ({}));
-      }
-    },
-    enabled: !!userId,
-    staleTime: 0,
-    refetchOnWindowFocus: true,
+    queryKey: ["address-book", search],
+    queryFn: () => fecthAddressBookApi(search),
+    keepPreviousData: true,
+    staleTime: 30 * 60 * 1000,
   });
 
   return { data, isLoading, isFetching };

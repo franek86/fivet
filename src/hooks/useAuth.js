@@ -12,6 +12,8 @@ export const useUser = () => {
     queryKey: ["user"],
     queryFn: getCurrentUser,
     retry: false,
+    staleTime: Infinity,
+    gcTime: Infinity,
   });
 
   return { data, isLoading, isError };

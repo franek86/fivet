@@ -132,7 +132,6 @@ export const addressBookSchema = z.object({
   company: z.string().optional().nullable(),
   address: z.string().optional().nullable(),
   note: z.string().optional().nullable(),
-  userId: z.string().uuid(),
 });
 
 /**

@@ -9,7 +9,6 @@ import styled from "styled-components";
  */
 import { useDeleteAddressBook, useGetAddressBook } from "../../hooks/useAddressBook.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
-import { useUser } from "../../hooks/useAuth.js";
 
 /**
  * UI Components
@@ -30,9 +29,7 @@ const Header = styled.div`
 `;
 
 function AddressBookTable() {
-  const { data: user } = useUser();
-
-  const { data, isLoading, isFetching } = useGetAddressBook(user?.id);
+  const { data, isLoading, isFetching } = useGetAddressBook();
   const { mutate } = useDeleteAddressBook();
   const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(data, mutate);
 

@@ -10,7 +10,6 @@ import styled from "styled-components";
  */
 import { useCreateAddressBook, useEditAddressBook } from "../../hooks/useAddressBook.js";
 import { addressBookSchema } from "../../utils/validationSchema.js";
-import { useUser } from "../../hooks/useAuth.js";
 
 /**
  * UI Components
@@ -54,7 +53,6 @@ const Column = styled(Row)`
 `;
 
 function FormAddressBook({ addressBookToEdit = {} }) {
-  const { data: user } = useUser();
   const { mutate: create, isPending, isSuccess } = useCreateAddressBook();
   const { mutate: edit, isPending: editIsPending, isSuccess: editIsSuccess } = useEditAddressBook();
 
@@ -86,9 +84,10 @@ function FormAddressBook({ addressBookToEdit = {} }) {
     { name: "Regular", value: "REGULAR" },
   ];
 
+  console.log(errors);
+
   return (
     <StyledForm onSubmit={handleSubmit(onHandleSubmit)}>
-      <input type='hidden' {...register("userId")} value={user.id} />
       <Grid>
         <Controller
           name='priority'

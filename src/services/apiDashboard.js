@@ -33,7 +33,7 @@ Get geo world countires
 */
 export const getGeoWorld = async () => {
   try {
-    const res = await apiClient.get("/dashboard/geo/world");
+    const res = await apiClient.get("/geo/world.json");
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

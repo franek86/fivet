@@ -8,32 +8,37 @@ export const useAdminDashboardData = () => {
         queryKey: ["statistic"],
         queryFn: getAdminDashboardStatistic,
         staleTime: 30 * 60 * 1000,
+        gcTime: 5 * 60 * 1000,
       },
       {
         queryKey: ["earnings"],
         queryFn: getAdminDashboardEarnings,
         staleTime: 30 * 60 * 1000,
-      },
-      {
-        queryKey: ["geoUrl"],
-        queryFn: getGeoWorld,
-        staleTime: 1000 * 60 * 60 * 24 * 7,
+        gcTime: 5 * 60 * 1000,
       },
     ],
   });
 
-  const [statistic, earnings, geoUrl] = results;
-
-  const isLoading = results.some((q) => q.isLoading || q.isFetching);
+  const [statistic, earnings] = results;
 
   return {
     data: {
       statistic: statistic.data,
       earnings: earnings.data,
-      geoUrl: geoUrl.data,
     },
-    isLoading,
+    isStatisticLoading: statistic.isLoading,
+    isEarningsLoading: earnings.isLoading,
   };
+};
+
+export const useGeoWorldData = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["geoUrl"],
+    queryFn: getGeoWorld,
+    staleTime: 1000 * 60 * 60 * 24 * 7,
+    gcTime: 1000 * 60 * 60 * 24 * 7,
+  });
+  return { data, isLoading };
 };
 
 export const useUserDashboardData = () => {

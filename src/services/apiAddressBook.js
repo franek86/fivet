@@ -13,6 +13,17 @@ export const createAddressBoookContactApi = async (newData) => {
   }
 };
 
+/* Get country phone code */
+export const getCountryPhoneCodeApi = async () => {
+  try {
+    const res = await apiClient.get("/address-book/country-code");
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
 /* Edit contact by id in address boook */
 export const editAddressBoookContactApi = async (newData, id) => {
   if (!id) throw new Error("Address book id does not exists");

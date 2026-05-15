@@ -20,6 +20,7 @@ Get dashboard earnings
 export const getAdminDashboardEarnings = async () => {
   try {
     const res = await apiClient.get("/dashboard/admin-earnings");
+
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

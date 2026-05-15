@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deleteUserProfileApi, getAllProfileApi, updateProfileApi } from "../services/apiProfile.js";
+import { deleteUserProfileApi, getAllProfileApi, getUserProfileApi, updateProfileApi } from "../services/apiProfile.js";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
@@ -17,6 +17,15 @@ export const useUpdateProfile = (user) => {
   });
 
   return { mutate, isPending };
+};
+
+export const useGetUserProfile = () => {
+  const { data, isPending } = useQuery({
+    queryKey: ["profile"],
+    queryFn: getUserProfileApi,
+    keepPreviousData: true,
+  });
+  return { data, isPending };
 };
 
 export const useGetAllUserProfile = () => {

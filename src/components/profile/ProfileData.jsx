@@ -4,50 +4,73 @@ import { useForm } from "react-hook-form";
 
 import Button from "../ui/Button.jsx";
 import Input from "../ui/Input.jsx";
-import ImageUploader from "../ImageUploader.jsx";
 import Spinner from "../Spinner.jsx";
+import ProfileImageUploader from "./ProfileImageUploader.jsx";
 
 import styled from "styled-components";
 
-import { useUser } from "../../hooks/useAuth.js";
-import { useUpdateProfile } from "../../hooks/useProfile.js";
+import { useGetUserProfile, useUpdateProfile } from "../../hooks/useProfile.js";
 
 const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 3rem;
-`;
+  .profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 3rem 0;
+    gap: 10px;
 
-const StyledInfo = styled.div`
-  display: grid;
-  align-items: center;
-  width: 100%;
-  gap: 10px;
-  @media screen and (min-width: 640px) {
-    width: 40rem;
+    .profile-header-left {
+      display: flex;
+      gap: 20px;
+      .profile-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        .email {
+          font-size: 13px;
+          color: var(--color-text-muted);
+        }
+      }
+    }
+  }
+
+  .profile-grid {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 20px;
+
+    @media screen and (min-width: 640px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 `;
 
 function ProfileData() {
-  const { data, isLoading } = useUser();
+  const { data, isLoading } = useGetUserProfile();
   const { mutate: updateProfile, isPending: loadUpdateProfile } = useUpdateProfile(data);
 
   const { register, handleSubmit, setValue, watch, reset } = useForm({
     defaultValues: {
       fullName: "",
       email: "",
-      avatar: data?.profile.avatar || null,
+      country: "",
+      city: "",
+      zidCode: "",
+      address: "",
+      avatar: data?.avatar || null,
     },
   });
 
   useEffect(() => {
     if (data) {
       reset({
-        fullName: data.profile.fullName || "",
-        email: data.profile.email || "",
-        avatar: data.profile.avatar || null,
+        fullName: data?.fullName || "",
+        email: data?.user?.email || "",
+        country: data?.user?.country || "",
+        city: data?.user?.city || "",
+        zidCode: data?.user?.zidCode || "",
+        address: data?.user?.address || "",
+        avatar: data?.avatar || null,
       });
     }
   }, [data, reset]);
@@ -70,12 +93,28 @@ function ProfileData() {
 
   return (
     <StyledForm onSubmit={handleSubmit(handleOnSubmit)}>
-      <StyledInfo>
-        <ImageUploader name='avatar' value={watch("avatar")} initialImage={data.profile.avatar} onChange={handleAvatarChange} />
-        <Input register={register} {...register("fullName")} />
-        <Input type='email' register={register} {...register("email")} />
-        <Button>{loadUpdateProfile ? "Updating..." : "Edit"}</Button>
-      </StyledInfo>
+      <div className='profile-header'>
+        <div className='profile-header-left'>
+          <ProfileImageUploader name='avatar' value={watch("avatar")} initialImage={data?.avatar} onChange={handleAvatarChange} />
+          <div className='profile-info'>
+            <h2 className='name'>{data?.fullName}</h2>
+            <div className='email'>{data?.user.email}</div>
+          </div>
+        </div>
+        <Button>{loadUpdateProfile ? "Editing..." : "Edit"}</Button>
+      </div>
+      <div className='profile-grid'>
+        <Input register={register} {...register("fullName")} label='Full name' directions='column' />
+        <Input type='email' register={register} {...register("email")} label='Email' directions='column' />
+      </div>
+      <div className='profile-grid'>
+        <Input register={register} {...register("country")} label='Country' directions='column' />
+        <Input register={register} {...register("city")} label='City' directions='column' />
+      </div>
+      <div className='profile-grid'>
+        <Input register={register} {...register("zipCode")} label='Zip code' directions='column' />
+        <Input register={register} {...register("address")} label='Address' directions='column' />
+      </div>
     </StyledForm>
   );
 }

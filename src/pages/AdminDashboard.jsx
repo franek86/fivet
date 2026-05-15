@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { lazy, Suspense } from "react";
 
 import LastUsers from "../components/dashboard/LastUsers.jsx";
 import StatisticBox from "../components/dashboard/StatisticBox.jsx";
 import TopShips from "../components/dashboard/TopShips.jsx";
 import Title from "../components/ui/Title.jsx";
 import styled from "styled-components";
-import MapChart from "../components/dashboard/MapChart.jsx";
+
 import Earnings from "../components/dashboard/Earnings.jsx";
 
-import { useAdminDashboardData } from "../hooks/useDashboardStatistic.js";
+const MapChart = lazy(() => import("../components/dashboard/MapChart.jsx"));
+
+import { useAdminDashboardData, useGeoWorldData } from "../hooks/useDashboardStatistic.js";
 
 const TwoColumnsRole = styled.section`
   display: grid;
@@ -22,9 +24,8 @@ const TwoColumnsRole = styled.section`
 `;
 
 function AdminDashboard() {
-  const { data, isLoading } = useAdminDashboardData();
-
-  console.log(data);
+  const { data, isStatisticLoading, isEarningsLoading } = useAdminDashboardData();
+  const { data: geoData, isLoading: isGeoLoading } = useGeoWorldData();
 
   return (
     <>
@@ -33,17 +34,19 @@ function AdminDashboard() {
       </div>
 
       <>
-        <StatisticBox data={data?.statistic} isLoading={isLoading} />
+        <StatisticBox data={data?.statistic} isLoading={isStatisticLoading} />
         <TwoColumnsRole>
-          <Earnings data={data?.earnings} isLoading={isLoading} />
-          <TopShips data={data?.statistic} isLoading={isLoading} />
+          <Earnings data={data?.earnings} isLoading={isEarningsLoading} />
+          <TopShips data={data?.statistic} isLoading={isStatisticLoading} />
         </TwoColumnsRole>
 
         <TwoColumnsRole>
-          <LastUsers data={data?.statistic} isLoading={isLoading} />
+          <LastUsers data={data?.statistic} isLoading={isStatisticLoading} />
         </TwoColumnsRole>
         {/*  <SubcriptionChart data={data} isLoading={isLoading} /> */}
-        <MapChart geoUrl={data?.geoUrl} isLoading={isLoading} />
+        <Suspense fallback={<div></div>}>
+          <MapChart geoUrl={geoData} isLoading={isGeoLoading} />
+        </Suspense>
       </>
     </>
   );

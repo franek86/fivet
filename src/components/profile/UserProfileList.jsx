@@ -10,11 +10,7 @@ import { customFormatDate } from "../../utils/formatDate.js";
 
 import { useDeleteUserProfile, useGetAllUserProfile } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
-import { CircleUser, UserRound } from "lucide-react";
-
-/* import socket from "../../shared/socket.js";
-import { useEffect } from "react";
-import { useRealtime } from "../../hooks/useRealtime.js"; */
+import { UserRound } from "lucide-react";
 
 const CardWrap = styled.div`
   display: grid;
@@ -24,7 +20,7 @@ const CardWrap = styled.div`
   @media screen and (min-width: 640px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  @media screen and (min-width: 1024px) {
+  @media screen and (min-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
   }
 `;

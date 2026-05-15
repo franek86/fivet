@@ -1,10 +1,20 @@
+import { useQuery } from "@tanstack/react-query";
 import { forwardRef, useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 
 import PhoneInput from "react-phone-input-2";
+import { getCountryPhoneCodeApi } from "../../services/apiAddressBook.js";
 
 const CustomPhoneInput = forwardRef(({ control, name, label, defaultValue }, ref) => {
   const [countryCode, setCountryCode] = useState("");
+
+  const { data } = useQuery({
+    queryKey: ["country-code"],
+    queryFn: getCountryPhoneCodeApi,
+    staleTime: 1000 * 60 * 60 * 24 * 7,
+  });
+
+  console.log(data);
 
   useEffect(() => {
     fetch("http://ip-api.com/json")

@@ -32,6 +32,7 @@ import DashboardRedirect from "./pages/DashboardRedirect.jsx";
 import CreateBlog from "./components/blog/CreateBlog.jsx";
 import Blogs from "./pages/Blogs.jsx";
 import BlogCategory from "./pages/BlogCategory.jsx";
+import TestCalendar from "./pages/TestCalendar.jsx";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
               <Route path='/ships/edit/:id' element={<EditShip />} />
               <Route path='/ships/:id' element={<SingleShip />} />
               <Route path='/events' element={<Events />} />
+              <Route path='/test' element={<TestCalendar />} />
               <Route element={<PremiumRoute />}>
                 <Route path='/address-book' element={<AddressBook />} />
               </Route>

@@ -14,10 +14,21 @@ export const getAllProfileApi = async ({ search = "" }) => {
   }
 };
 
+/* Get user profile */
+export const getUserProfileApi = async () => {
+  try {
+    const res = await apiClient.get("/profile/single");
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
 /* Get last five created users */
 export const getLastFiveUsersApi = async () => {
   try {
-    const res = await apiClient.get("profile/last-users");
+    const res = await apiClient.get("/profile/last-users");
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

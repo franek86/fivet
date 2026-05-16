@@ -14,3 +14,16 @@ export const createBlogCategoryApi = async (data, id) => {
     throw new Error(message);
   }
 };
+
+/* 
+    Get all categories with pagination
+*/
+export const getBlogCategoriesApi = async () => {
+  try {
+    const res = await apiClient.get("/posts-category");
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};

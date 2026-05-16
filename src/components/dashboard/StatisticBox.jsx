@@ -2,12 +2,7 @@
  * Third-party libraries
  */
 import styled from "styled-components";
-import { CalendarDays, Ship, Users } from "lucide-react";
-
-/**
- * Custom hooks
- */
-import { useUser } from "../../hooks/useAuth.js";
+import { BookOpenCheck, CalendarDays, Ship, Users } from "lucide-react";
 
 /**
  * UI Components
@@ -29,8 +24,7 @@ const StatisticBoxWrap = styled.section`
 `;
 
 function StatisticBox({ data, isLoading }) {
-  const { data: user } = useUser();
-
+  console.log(data);
   if (isLoading) {
     return <TablePlaceholder count={3} />;
   }
@@ -40,7 +34,7 @@ function StatisticBox({ data, isLoading }) {
       <StatisticCard
         icon={<Ship />}
         text='Total ships'
-        data={data.totalShips}
+        data={data?.totalShips}
         trend={data?.shipsTrend?.trend}
         trendChange={data?.shipsTrend?.change}
       />
@@ -59,6 +53,14 @@ function StatisticBox({ data, isLoading }) {
         data={data?.totalEvents}
         trend={data?.eventsTrend?.trend}
         trendChange={data?.eventsTrend?.change}
+      />
+
+      <StatisticCard
+        icon={<BookOpenCheck />}
+        text='Blogs'
+        data={data?.totalBlogs}
+        trend={data?.blogsTrend?.trend}
+        trendChange={data?.blogsTrend?.change}
       />
     </StatisticBoxWrap>
   );

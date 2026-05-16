@@ -7,8 +7,8 @@ export const useAdminDashboardData = () => {
       {
         queryKey: ["statistic"],
         queryFn: getAdminDashboardStatistic,
-        staleTime: 30 * 60 * 1000,
-        gcTime: 5 * 60 * 1000,
+        /* staleTime: 30 * 60 * 1000,
+        gcTime: 5 * 60 * 1000, */
       },
       {
         queryKey: ["earnings"],
@@ -18,7 +18,6 @@ export const useAdminDashboardData = () => {
       },
     ],
   });
-
   const [statistic, earnings] = results;
 
   return {

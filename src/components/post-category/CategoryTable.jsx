@@ -1,8 +1,7 @@
 /**
  * Third-party libraries
  */
-import { useSearchParams } from "react-router";
-import { useSelector } from "react-redux";
+
 import styled from "styled-components";
 import { Trash2 } from "lucide-react";
 
@@ -25,6 +24,7 @@ import CategoryColumn from "./CategoryColumn.jsx";
 import Button from "../ui/Button.jsx";
 import EmptyState from "../EmptyState.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
+import { useGetBlogCategories } from "../../hooks/useBlogCategory.js";
 
 const Header = styled.div`
   display: flex;
@@ -34,27 +34,11 @@ const Header = styled.div`
 `;
 
 function CategoryTable() {
-  const searchTerm = useSelector((state) => state.search.term);
-
-  // React Hooks
-  const [searchParams] = useSearchParams();
-
-  // Read params from URL
-  const page = Number(searchParams.get("pageNumber") ?? 1);
-  const sortBy = searchParams.get("sortBy") ?? "createdAt-desc";
-
   // Fetch  data using custom hook
-  const { categories, count, isLoading, error, isFetching } = useCategories({
-    page,
-    sortBy,
-    search: searchTerm?.trim() || undefined,
-  });
+  const { data, isLoading, error, isFetching } = useGetBlogCategories();
 
   // Custom hook for selection and deletion
-  const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(
-    categories,
-    useDeleteCategory().mutate,
-  );
+  const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(data, useDeleteCategory().mutate);
 
   // Sort options
   const items = [
@@ -68,10 +52,7 @@ function CategoryTable() {
   const tableColumns = [
     {
       header: (
-        <Checkbox
-          checked={selected?.length > 0 && selected?.length === categories?.length}
-          onChange={(checked) => handleSelectAll(checked)}
-        />
+        <Checkbox checked={selected?.length > 0 && selected?.length === data?.length} onChange={(checked) => handleSelectAll(checked)} />
       ),
       accessor: "delete row",
       style: "hidden-table-sm",
@@ -82,7 +63,7 @@ function CategoryTable() {
 
   if (isLoading) return <Spinner />;
   if (error) return <div>Error something went wrong</div>;
-  if (categories.length < 1) return <EmptyState message='No categories for now. Please create category' />;
+  if (data.length < 1) return <EmptyState message='No categories for now. Please create category' />;
 
   const renderRow = (item) => (
     <CategoryColumn key={item.id} category={item} selectedCat={selected} onCheckboxChange={handleCheckboxChange} />
@@ -105,13 +86,12 @@ function CategoryTable() {
         )}
       </Header>
       {isFetching ? (
-        <TablePlaceholder count={categories.length} />
+        <TablePlaceholder count={data.length} />
       ) : (
         <>
-          <CustomTable columns={tableColumns} renderRow={renderRow} data={categories} />
+          <CustomTable columns={tableColumns} renderRow={renderRow} data={data} />
         </>
       )}
-      <Pagination count={count} />
     </>
   );
 }

@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createBlogCategoryApi } from "../services/apiBlogCategory.js";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createBlogCategoryApi, getBlogCategoriesApi } from "../services/apiBlogCategory.js";
 import { toast } from "react-toastify";
 
 export const useCreateBlogCategory = () => {
@@ -16,4 +16,14 @@ export const useCreateBlogCategory = () => {
   });
 
   return { mutate, isPending, isSuccess };
+};
+
+export const useGetBlogCategories = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["blog-categories"],
+    queryFn: getBlogCategoriesApi,
+    staleTime: 30 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+  });
+  return { data, isLoading };
 };

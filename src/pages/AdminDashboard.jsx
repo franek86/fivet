@@ -11,6 +11,7 @@ import Earnings from "../components/dashboard/Earnings.jsx";
 const MapChart = lazy(() => import("../components/dashboard/MapChart.jsx"));
 
 import { useAdminDashboardData, useGeoWorldData } from "../hooks/useDashboardStatistic.js";
+import LastBlogs from "../components/dashboard/LastBlogs.jsx";
 
 const TwoColumnsRole = styled.section`
   display: grid;
@@ -42,6 +43,7 @@ function AdminDashboard() {
 
         <TwoColumnsRole>
           <LastUsers data={data?.statistic} isLoading={isStatisticLoading} />
+          <LastBlogs data={data?.statistic} isLoading={isStatisticLoading} />
         </TwoColumnsRole>
         {/*  <SubcriptionChart data={data} isLoading={isLoading} /> */}
         <Suspense fallback={<div></div>}>

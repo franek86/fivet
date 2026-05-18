@@ -149,7 +149,7 @@ const NavItem = ({ item, badgeMap }) => {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target) && dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+      if (!menuRef.current.contains(e.target) && !dropdownRef.current.contains(e.target)) {
         setOpen(false);
       }
     };
@@ -180,7 +180,14 @@ const NavItem = ({ item, badgeMap }) => {
         {open && (
           <NavDropdownContent top={menuPos.top} ref={dropdownRef}>
             {item.children.map((child) => (
-              <NavList key={child.label} to={child.href} onClick={() => dispatch(closeNav())}>
+              <NavList
+                key={child.label}
+                to={child.href}
+                onClick={() => {
+                  setOpen(false);
+                  dispatch(closeNav());
+                }}
+              >
                 <NavDropdownContentItem>
                   {child.label}
                   {child.requiredPlan === "PREMIUM" && <PremiumSticker />}

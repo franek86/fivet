@@ -18,7 +18,7 @@ const FormWrap = styled.div`
 `;
 
 const TextWrap = styled.p`
-  font-size: 1.5rem;
+  font-size: 13px;
   font-weight: 600;
 `;
 

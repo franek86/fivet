@@ -4,7 +4,7 @@ const StyledTitle = styled.div`
   font-size: ${(props) => {
     switch (props.as) {
       case "h1":
-        return "calc(3.2rem + 0.7vw)";
+        return "calc(3rem + 0.7vw)";
       case "h2":
         return "calc(2.8rem + 0.5vw)";
       case "h3":

@@ -12,7 +12,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import styled from "styled-components";
 import { toast } from "react-toastify";
-import { Eye, EyeClosed } from "lucide-react";
+import { Eye, EyeClosed, EyeOff } from "lucide-react";
 
 /**
  * Features
@@ -31,8 +31,23 @@ import Title from "../ui/Title.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
 
 const FormWrapper = styled.form`
+  display: grid;
+  p {
+    font-size: 12px;
+    color: var(--color-text);
+    margin: 10px 0;
+  }
+`;
+
+const FormContainer = styled.div`
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
+
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+    gap: 20px;
+  }
 `;
 
 const Column = styled.div`
@@ -40,6 +55,9 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+const Row = styled.div``;
+
 const PasswordWrap = styled.div`
   position: relative;
 `;
@@ -180,122 +198,128 @@ function SignUpForm() {
     <>
       {!showOtp ? (
         <FormWrapper onSubmit={handleSubmit(onHandleSubmit)}>
-          <Column>
-            <Input
-              directions='column'
-              label='Name *'
-              placeholder='Enter your name'
-              register={register}
-              {...register("fullName", { required: "Full name is required" })}
-              autoComplete='fullName'
-            />
-
-            <InputErrorMessage message={errors.fullName?.message} />
-          </Column>
-          <Column>
-            <Input
-              directions='column'
-              label='Email *'
-              placeholder='Enter your email'
-              register={register}
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                  message: "Invalid email address",
-                },
-              })}
-              autoComplete='email'
-            />
-            <InputErrorMessage message={errors.email?.message} />
-          </Column>
-          <Column>
-            <Input
-              directions='column'
-              label='Address *'
-              placeholder='Enter address'
-              register={register}
-              {...register("address", { required: "Address required" })}
-            />
-          </Column>
-
-          <Column>
-            <Input
-              directions='column'
-              label='Zip code *'
-              placeholder='Enter zip code'
-              register={register}
-              {...register("zipCode", { required: "Zip code required" })}
-            />
-          </Column>
-          <Column>
-            <Input
-              directions='column'
-              label='City *'
-              placeholder='Enter City'
-              register={register}
-              {...register("city", { required: "City required" })}
-            />
-
-            <InputErrorMessage message={errors.city?.message} />
-          </Column>
-          <Column>
-            <Controller
-              name='country'
-              control={control}
-              render={({ field }) => (
-                <CustomSelect
-                  {...field}
-                  control={control}
-                  options={countriesJson}
-                  placeholder='Enter country'
-                  label='Country *'
-                  size='medium'
-                  variation='transparent'
-                  {...register("country", { required: "Country is required" })}
+          <FormContainer>
+            <Row>
+              <Column>
+                <Input
+                  directions='column'
+                  label='Name *'
+                  placeholder='Enter your name'
+                  register={register}
+                  {...register("fullName", { required: "Full name is required" })}
+                  autoComplete='fullName'
                 />
-              )}
-            />
 
-            <InputErrorMessage message={errors.country?.message} />
-          </Column>
+                <InputErrorMessage message={errors.fullName?.message} />
+              </Column>
+              <Column>
+                <Input
+                  directions='column'
+                  label='Email *'
+                  placeholder='Enter your email'
+                  register={register}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                      message: "Invalid email address",
+                    },
+                  })}
+                  autoComplete='email'
+                />
+                <InputErrorMessage message={errors.email?.message} />
+              </Column>
+              <Column>
+                <Input
+                  directions='column'
+                  label='Address *'
+                  placeholder='Enter address'
+                  register={register}
+                  {...register("address", { required: "Address required" })}
+                />
+              </Column>
 
-          <Column>
-            <PasswordWrap>
-              <Input
-                directions='column'
-                label='Password *'
-                placeholder='Enter your password'
-                type={showPassword ? "text" : "password"}
-                register={register}
-                {...register("password", {
-                  required: "Password is requierd",
-                  minLength: { value: 8, message: "Minimun 8 characters" },
-                })}
-                autoComplete='password'
-              />
+              <Column>
+                <Input
+                  directions='column'
+                  label='Zip code *'
+                  placeholder='Enter zip code'
+                  register={register}
+                  {...register("zipCode", { required: "Zip code required" })}
+                />
+              </Column>
+            </Row>
+            <Row>
+              <Column>
+                <Input
+                  directions='column'
+                  label='City *'
+                  placeholder='Enter City'
+                  register={register}
+                  {...register("city", { required: "City required" })}
+                />
 
-              <PasswordIcon onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? <EyeClosed className='input-icon' size={20} /> : <Eye className='input-icon' size={20} />}
-              </PasswordIcon>
-            </PasswordWrap>
-            <InputErrorMessage message={errors.password?.message} />
-          </Column>
-          <Column>
-            <Input
-              directions='column'
-              type='password'
-              label='Repeat password *'
-              placeholder='Repeat your password'
-              register={register}
-              {...register("repeatPassword", {
-                required: "Please repeat password",
-                validate: (value) => value === watch("password") || "Passowords does not match",
-              })}
-              autoComplete='repeatPassword'
-            />
-            <InputErrorMessage message={errors.repeatPassword?.message} />
-          </Column>
+                <InputErrorMessage message={errors.city?.message} />
+              </Column>
+              <Column>
+                <Controller
+                  name='country'
+                  control={control}
+                  render={({ field }) => (
+                    <CustomSelect
+                      {...field}
+                      control={control}
+                      options={countriesJson}
+                      placeholder='Enter country'
+                      label='Country *'
+                      size='medium'
+                      variation='transparent'
+                      {...register("country", { required: "Country is required" })}
+                    />
+                  )}
+                />
+
+                <InputErrorMessage message={errors.country?.message} />
+              </Column>
+              <Column>
+                <PasswordWrap>
+                  <Input
+                    directions='column'
+                    label='Password *'
+                    placeholder='Enter your password'
+                    type={showPassword ? "text" : "password"}
+                    register={register}
+                    {...register("password", {
+                      required: "Password is requierd",
+                      minLength: { value: 8, message: "Minimun 8 characters" },
+                    })}
+                    autoComplete='password'
+                  />
+
+                  <PasswordIcon onClick={() => setShowPassword(!showPassword)}>
+                    {showPassword ? <EyeOff className='input-icon' size={18} /> : <Eye className='input-icon' size={18} />}
+                  </PasswordIcon>
+                </PasswordWrap>
+                <InputErrorMessage message={errors.password?.message} />
+              </Column>
+              <Column>
+                <Input
+                  directions='column'
+                  type='password'
+                  label='Repeat password *'
+                  placeholder='Repeat your password'
+                  register={register}
+                  {...register("repeatPassword", {
+                    required: "Please repeat password",
+                    validate: (value) => value === watch("password") || "Passowords does not match",
+                  })}
+                  autoComplete='repeatPassword'
+                />
+                <InputErrorMessage message={errors.repeatPassword?.message} />
+              </Column>
+            </Row>
+          </FormContainer>
+          <p>Siging up I accept Fivet Terms and Conditions and I read Fivet Privacy Policy</p>
           <Button disabled={isPending}>{isPending ? "Signing up ..." : "Sign up"}</Button>
         </FormWrapper>
       ) : (

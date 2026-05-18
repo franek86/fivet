@@ -57,6 +57,12 @@ const ResendOtp = styled.p`
   }
 `;
 
+const Message = styled.p`
+  font-size: 13px;
+  color: var(--color-text);
+  margin: 8px 0;
+`;
+
 const ButtonWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -152,8 +158,8 @@ function ForgotPasswordForm() {
     <>
       {step === "emailStep" && (
         <>
-          <Title>Forgot password</Title>
-
+          <Title>Forgot your password</Title>
+          <Message>Use the email address you signed up with to reset your password.</Message>
           <Form onSubmit={handleSubmit(onSubmitEmail)}>
             <Input
               directions='column'
@@ -172,7 +178,7 @@ function ForgotPasswordForm() {
             />
             <InputErrorMessage message={errors.email?.message} />
 
-            <Button $size='medium'>{isPending ? "Submitting..." : "Submit"}</Button>
+            <Button $size='medium'>{isPending ? "Loading..." : "Reset password"}</Button>
           </Form>
           <BackBtn />
         </>

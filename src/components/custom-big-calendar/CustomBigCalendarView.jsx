@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Button from "../ui/Button.jsx";
 import { format, parseISO } from "date-fns";
+import { useDeleteEvent } from "../../hooks/useEvents.js";
 
 const Overlay = styled.div`
   position: fixed;
@@ -96,7 +97,9 @@ const Priority = styled.div`
   }};
 `;
 
-const CustomBigCalendarView = ({ viewEvent, setViewEvent, deleteEvent, openEdit }) => {
+const CustomBigCalendarView = ({ viewEvent, setViewEvent, openEdit }) => {
+  const { mutate } = useDeleteEvent();
+
   const fmtDate = (dateString) => {
     return format(parseISO(dateString), "MMMM d, yyyy HH:mm");
   };
@@ -105,6 +108,10 @@ const CustomBigCalendarView = ({ viewEvent, setViewEvent, deleteEvent, openEdit 
     return e.start === e.end ? fmtDate(e.start) : `${fmtDate(e.start)} — ${fmtDate(e.end)}`;
   };
 
+  const deleteEvent = (id) => {
+    mutate(id);
+    setViewEvent(null);
+  };
   return (
     <Overlay onClick={() => setViewEvent(null)}>
       <CalendarModal onClick={(e) => e.stopPropagation()}>

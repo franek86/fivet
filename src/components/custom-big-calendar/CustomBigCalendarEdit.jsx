@@ -175,8 +175,6 @@ const CustomBigCalendarEdit = ({ formState, setFormState }) => {
     register,
     control,
     setValue,
-    reset,
-    watch,
     formState: { errors },
     handleSubmit,
   } = useForm({
@@ -193,12 +191,12 @@ const CustomBigCalendarEdit = ({ formState, setFormState }) => {
   const end = formState?.event.end;
 
   const onSubmitForm = (data) => {
-    console.log(data);
     mutate(data);
   };
 
   const saveEvent = () => {
     handleSubmit(onSubmitForm)();
+    setFormState(null);
   };
   return (
     <Overlay onClick={() => setFormState(null)}>

@@ -268,6 +268,102 @@ const GlobalStyles = styled.createGlobalStyle`
     box-shadow: var(--shadow-lg);
   }
 
+  .week-calendar {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-white);
+
+    .header {
+      display: grid;
+      grid-template-columns: 80px repeat(7, 1fr);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-right: 1px solid var(--color-border);
+      padding: 2.5rem 0;
+
+      &.today {
+        background-color: var(--color-accent);
+      }
+
+      .date {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .day {
+        font-size: 13px;
+        color: var(--color-text-muted);
+      }
+    }
+
+    .body {
+      position: relative;
+      display: grid;
+      grid-template-columns: 80px repeat(7, 1fr);
+      height: 2400px;
+
+      &.time {
+        grid-template-columns: 80px repeat(1, 1fr);
+      }
+    }
+
+    .time-column {
+      position: relative;
+    }
+
+    .time-slot {
+      text-align: center;
+      height: 100px;
+      font-size: 13px;
+      color: var(--color-text-muted);
+      padding: 4px;
+    }
+
+    .day-column {
+      position: relative;
+      border-left: 1px solid var(--color-border);
+    }
+
+    .hour-line {
+      height: 100px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .event {
+      position: absolute;
+      border-radius: 10px;
+      padding: 6px 8px;
+      font-size: 12px;
+      overflow: hidden;
+      z-index: 10;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .event-title {
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .event-time {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 11px;
+      color: var(--colot-text-muted);
+    }
+  }
+
   .react-datepicker-popper[data-placement^="bottom"] .react-datepicker__triangle {
     fill: var(--color-accent);
     color: var(--color-accent-600);

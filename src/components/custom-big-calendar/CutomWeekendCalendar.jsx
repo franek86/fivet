@@ -1,125 +1,22 @@
-import { eachDayOfInterval, endOfDay, format, isSameDay, isToday, setHours, startOfDay } from "date-fns";
-import styled from "styled-components";
-import { EVENT_COLORS } from "../../constants/index.js";
+import { format, isSameDay, isToday, setHours } from "date-fns";
+
+import { EVENT_COLORS, HOURS } from "../../constants/index.js";
 import { groupOverlappingEvents } from "../../helpers/overLapCalendarEvents.js";
 import { ClockIcon } from "lucide-react";
+import { getEventPosition } from "../../helpers/getPositionEventCalendar.js";
 
-const WeekCalendar = styled.div`
-  position: relative;
-  overflow: hidden;
-  background: var(--color-white);
-
-  .header {
-    display: grid;
-    grid-template-columns: 80px repeat(7, 1fr);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .header-cell {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-right: 1px solid var(--color-border);
-    padding: 2.5rem 0;
-
-    .date {
-      font-size: 16px;
-      font-weight: 600;
-    }
-    .day {
-      font-size: 13px;
-      color: var(--color-text-muted);
-    }
-  }
-
-  .body {
-    position: relative;
-    display: grid;
-    grid-template-columns: 80px repeat(7, 1fr);
-    height: 2400px;
-  }
-
-  .time-column {
-    position: relative;
-  }
-
-  .time-slot {
-    text-align: center;
-    height: 100px;
-    font-size: 13px;
-    color: var(--color-text-muted);
-    padding: 4px;
-  }
-
-  .day-column {
-    position: relative;
-    border-left: 1px solid var(--color-border);
-  }
-
-  .hour-line {
-    height: 100px;
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .event {
-    position: absolute;
-    border-radius: 10px;
-    padding: 6px 8px;
-    font-size: 12px;
-    overflow: hidden;
-    z-index: 10;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .event-title {
-    font-size: 14px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .event-time {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    font-size: 11px;
-    color: var(--colot-text-muted);
-  }
-`;
-
-const MINUTE_HEIGHT = 100 / 60;
-const HOURS = Array.from({ length: 24 }, (_, i) => i);
-
-const getEventPosition = (start, end) => {
-  const startMinutes = start.getHours() * 60 + start.getMinutes();
-  const endMinutes = end.getHours() * 60 + end.getMinutes();
-
-  // endOfDay gives 23:59:59 — treat that as midnight (1440 min)
-  const clampedEnd = endMinutes === 0 && end.getSeconds() === 59 ? 1440 : endMinutes;
-
-  return {
-    top: startMinutes * MINUTE_HEIGHT,
-    height: Math.max((clampedEnd - startMinutes) * MINUTE_HEIGHT, 20),
-  };
-};
-
-const CutomWeekendCalendar = ({ weekDays, events, openAdd }) => {
+const CutomWeekendCalendar = ({ weekDays, events, openAdd, openView }) => {
   const positionedEvents = groupOverlappingEvents(events);
   const allSegments = positionedEvents;
 
   return (
-    <WeekCalendar>
+    <div className='week-calendar'>
       <div className='header'>
         <div className='header-cell' />
         {weekDays.map((day) => (
           <div key={day.toString()} className={`header-cell ${isToday(day) ? "today" : ""}`}>
+            <div className='day'>{format(day, "EEE")}</div>
             <div className='date'>{format(day, "d")}</div>
-            <div className='day'>{format(day, "EEEE")}</div>
           </div>
         ))}
       </div>
@@ -156,12 +53,18 @@ const CutomWeekendCalendar = ({ weekDays, events, openAdd }) => {
                   <div
                     key={`${seg.id}-${format(day, "yyyy-MM-dd")}`}
                     className='event'
+                    onClick={(e) => openView(seg, e)}
                     style={{
                       top,
                       height,
                       left: `calc(${col * width}% + 2px)`,
                       width: `calc(${width}% - 4px)`,
                       background: EVENT_COLORS[seg.priority]?.bg ?? "#4a7fb5",
+                      color: EVENT_COLORS[seg.priority]?.text ?? "#000",
+                      borderTopLeftRadius: seg.isFirst ? 10 : 0,
+                      borderTopRightRadius: seg.isFirst ? 10 : 0,
+                      borderBottomLeftRadius: seg.isLast ? 10 : 0,
+                      borderBottomRightRadius: seg.isLast ? 10 : 0,
                     }}
                   >
                     <span className='event-title'>{seg.title}</span>
@@ -178,7 +81,7 @@ const CutomWeekendCalendar = ({ weekDays, events, openAdd }) => {
           );
         })}
       </div>
-    </WeekCalendar>
+    </div>
   );
 };
 

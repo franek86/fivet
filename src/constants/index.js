@@ -45,3 +45,6 @@ export const EVENT_COLORS = {
     bg: "#ffb29f",
   },
 };
+
+export const MINUTE_HEIGHT = 100 / 60;
+export const HOURS = Array.from({ length: 24 }, (_, i) => i);

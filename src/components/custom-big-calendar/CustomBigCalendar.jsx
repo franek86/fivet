@@ -27,6 +27,7 @@ import { useGetAllEvents } from "../../hooks/useEvents.js";
 
 import { EVENT_COLORS } from "../../constants/index.js";
 import CutomWeekendCalendar from "./CutomWeekendCalendar.jsx";
+import CustomBigCalendarHours from "./CustomBigCalendarHours.jsx";
 
 const Header = styled.div`
   display: flex;
@@ -291,7 +292,11 @@ const CustomBigCalendar = () => {
             </>
           )}
 
-          {view === TABS.DAY && <div></div>}
+          {view === TABS.DAY && (
+            <>
+              <CustomBigCalendarHours day={currentDate} events={events} openView={openView} openAdd={openAdd} />
+            </>
+          )}
         </div>
       </StyledLayout>
 

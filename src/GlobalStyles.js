@@ -242,6 +242,24 @@ const GlobalStyles = styled.createGlobalStyle`
     z-index: 10;
   }
 
+  /* big calendar */
+  .event-bar {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 7px;
+    border-radius: 4px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--color-text);
+    transition:
+      filter 0.15s,
+      transform 0.12s;
+    user-select: none;
+  }
+
   .custom-calendar {
     /* min-width: 350px !important; */
     font-size: 1.4rem;

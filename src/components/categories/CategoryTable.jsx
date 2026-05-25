@@ -85,9 +85,7 @@ function CategoryTable() {
   if (error) return <div>Error something went wrong</div>;
   if (categories.length < 1) return <EmptyState message='No categories for now. Please create category' />;
 
-  const renderRow = (item) => (
-    <CategoryColumn key={item.id} category={item} selectedCat={selected} onCheckboxChange={handleCheckboxChange} />
-  );
+  const renderRow = (item) => <CategoryColumn category={item} selectedCat={selected} onCheckboxChange={handleCheckboxChange} />;
 
   return (
     <>

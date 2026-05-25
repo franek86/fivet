@@ -32,7 +32,7 @@ function CategoryColumn({ category, selectedCat, onCheckboxChange }) {
   const dispatch = useDispatch();
 
   return (
-    <tr>
+    <tr key={categoryId}>
       <td className='table-td'>
         <Checkbox checked={selectedCat.includes(categoryId)} onChange={() => onCheckboxChange(categoryId)} />
       </td>

@@ -1,22 +1,32 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   addDays,
   addMonths,
   addWeeks,
   eachDayOfInterval,
+  endOfDay,
   endOfMonth,
   endOfWeek,
   format,
   isSameDay,
   isSameMonth,
   isToday,
+  isWithinInterval,
   parseISO,
+  startOfDay,
   startOfMonth,
   startOfWeek,
 } from "date-fns";
 import styled from "styled-components";
-import { useGetAllEvents } from "../../hooks/useEvents.js";
+
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
+import CustomBigCalendarView from "./CustomBigCalendarView.jsx";
+import CustomBigCalendarEdit from "./CustomBigCalendarEdit.jsx";
+
+import { useGetAllEvents } from "../../hooks/useEvents.js";
+
+import { EVENT_COLORS } from "../../constants/index.js";
+import CutomWeekendCalendar from "./CutomWeekendCalendar.jsx";
 
 const Header = styled.div`
   display: flex;
@@ -70,24 +80,25 @@ const StyledLayout = styled.div`
     .grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
-
-      &.week {
-        grid-template-columns: 90px repeat(7, 1fr);
-      }
 
       .cell {
         text-align: center;
         color: var(--color-text);
         background: var(--color-white);
-        border: 1px solid var(--color-border);
-        border-radius: var(--border-radius-lg);
-        min-height: 90px;
-        padding: 6px;
+        border-bottom: 1px solid var(--color-border);
+        border-right: 1px solid var(--color-border);
+
+        min-height: 110px;
+        padding: 8px 6px 6px;
         cursor: pointer;
 
         .date {
-          font-weight: 600;
+          font-size: 16px;
+          //font-weight: 600;
+        }
+        .day {
+          font-size: 13px;
+          color: var(--color-text-muted);
         }
       }
 
@@ -98,36 +109,6 @@ const StyledLayout = styled.div`
 
       .muted {
         background-color: var(--color-grey-200);
-      }
-    }
-  }
-`;
-
-const HoursSection = styled.div`
-  display: flex;
-  gap: 20px;
-  margin-bottom: 0.3rem;
-  background-color: var(--color-grey-200);
-  .time-col {
-    width: 90px;
-    font-weight: 600;
-    padding: 0.5rem;
-    text-align: center;
-  }
-
-  .hours-col {
-    display: grid;
-    gap: 10px;
-    flex: 1;
-    grid-template-columns: repeat(7, 1fr);
-
-    &.today-col {
-      background: var(--color-accent);
-    }
-    .hours-cell {
-      border: 1px solid var(--color-border);
-      &.today {
-        background: var(--color-accent);
       }
     }
   }
@@ -145,99 +126,121 @@ const tabs = [
   { key: TABS.DAY, label: "Day" },
 ];
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i);
+const getSpanClass = (day, start, end) => {
+  if (isSameDay(day, start) && isSameDay(day, end)) {
+    return "span-single";
+  }
+
+  if (isSameDay(day, start)) {
+    return "span-start";
+  }
+
+  if (isSameDay(day, end)) {
+    return "span-end";
+  }
+
+  return "span-mid";
+};
 
 const CustomBigCalendar = () => {
   const { data, isLoading } = useGetAllEvents();
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState(TABS.WEEK);
+  const [viewEvent, setViewEvent] = useState(null);
+  const [formState, setFormState] = useState(null);
 
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [rangeStart, setRangeStart] = useState(null);
-  const [rangeEnd, setRangeEnd] = useState(null);
+  const events = useMemo(() => {
+    return (data?.events ?? []).map((event) => ({
+      ...event,
+      startDate: parseISO(event.start),
+      endDate: parseISO(event.end),
+    }));
+  }, [data]);
 
-  const handlePrev = () => {
-    if (view === TABS.MONTH) setCurrentDate((d) => addMonths(d, -1));
-    if (view === TABS.WEEK) setCurrentDate((d) => addWeeks(d, -1));
-    if (view === TABS.DAY) setCurrentDate((d) => addDays(d, -1));
+  const navigateDate = (direction) => {
+    const map = {
+      [TABS.MONTH]: addMonths,
+      [TABS.WEEK]: addWeeks,
+      [TABS.DAY]: addDays,
+    };
+
+    setCurrentDate((prev) => map[view](prev, direction));
   };
 
-  const handleNext = () => {
-    if (view === TABS.MONTH) setCurrentDate((d) => addMonths(d, 1));
-    if (view === TABS.WEEK) setCurrentDate((d) => addWeeks(d, 1));
-    if (view === TABS.DAY) setCurrentDate((d) => addDays(d, 1));
-  };
+  const handlePrev = () => navigateDate(-1);
 
-  const handleToday = () => {
-    if (view === TABS.MONTH) setCurrentDate(new Date());
-    if (view === TABS.WEEK) setCurrentDate(new Date());
-    if (view === TABS.DAY) setCurrentDate(new Date());
+  const handleNext = () => navigateDate(1);
+
+  const handleToday = () => setCurrentDate(new Date());
+
+  const openAdd = (dk) =>
+    setFormState({ mode: "add", event: { title: "", start: dk, end: dk, priority: "", description: "", location: "", status: "" } });
+  const openEdit = (e, ev) => {
+    ev.stopPropagation();
+    setFormState({ mode: "edit", event: { ...e } });
+    setViewEvent(null);
+  };
+  const openView = (e, ev) => {
+    ev.stopPropagation();
+    setViewEvent(e);
   };
 
   const monthDays = useMemo(() => {
-    const start = startOfWeek(startOfMonth(currentDate));
-    const end = endOfWeek(endOfMonth(currentDate));
-    return eachDayOfInterval({ start, end });
+    return eachDayOfInterval({
+      start: startOfWeek(startOfMonth(currentDate, { weekStartsOn: 1 })),
+      end: endOfWeek(endOfMonth(currentDate, { weekStartsOn: 1 })),
+    });
   }, [currentDate]);
 
   const weekDays = useMemo(() => {
-    const start = startOfWeek(currentDate);
-    const end = endOfWeek(currentDate);
-    return eachDayOfInterval({ start, end });
+    return eachDayOfInterval({
+      start: startOfWeek(currentDate, { weekStartsOn: 1 }),
+      end: endOfWeek(currentDate, { weekStartsOn: 1 }),
+    });
   }, [currentDate]);
 
-  const getEventsForDay = (day) => {
-    return (data?.events || []).filter((e) => isSameDay(parseISO(e.start), day));
-  };
+  const getEventsForDay = useCallback(
+    (day) => {
+      return events.filter((event) =>
+        isWithinInterval(day, {
+          start: startOfDay(event.startDate),
+          end: endOfDay(event.endDate),
+        }),
+      );
+    },
+    [events],
+  );
 
-  const hasEventInDay = (day) => {
-    const startOfDay = new Date(day);
-    startOfDay.setHours(0, 0, 0, 0);
+  const renderBars = (day) => {
+    const events = getEventsForDay(day);
+    const visibleEvents = events.slice(0, 3);
+    const hiddenCount = events.length - visibleEvents.length;
 
-    const endOfDay = new Date(day);
-    endOfDay.setHours(23, 59, 59, 999);
+    return (
+      <>
+        {visibleEvents.map((event) => {
+          const start = parseISO(event.start);
+          const end = parseISO(event.end);
 
-    return (data?.events ?? []).some((e) => {
-      const start = parseISO(e.start);
-      const end = parseISO(e.end);
+          const spanClass = getSpanClass(day, start, end);
+          const showTitle = spanClass === "span-single" || spanClass === "span-start";
 
-      return start <= endOfDay && end >= startOfDay;
-    });
-  };
-
-  const getEventsForHoursCell = (day, hour) => {
-    return (data?.events || []).filter((e) => isSameDay(parseISO(e.start), day) && parseISO(e.start).getHours() === hour);
-  };
-
-  const HoursCell = ({ isWeek }) => {
-    return HOURS.map((hour) => (
-      <HoursSection key={hour}>
-        <div className='time-col'>{hour}:00</div>
-
-        <div className={`hours-col ${!isWeek ? "today-col" : ""} `}>
-          {isWeek ? (
-            weekDays.map((day) => (
-              <div key={day.toString() + hour} className={`hours-cell ${isToday(day) ? "today" : ""}`} onClick={() => addEvent(day, hour)}>
-                {getEventsForHoursCell(day, hour).map((ev) => (
-                  <div key={ev.id} className='event'>
-                    {ev.title}
-                  </div>
-                ))}
-              </div>
-            ))
-          ) : (
-            <div className='today' onClick={() => addEvent(hour)}>
-              {getEventsForHoursCell(currentDate, hour).map((ev) => (
-                <div key={ev.id} className='event'>
-                  {ev.title}
-                </div>
-              ))}
+          return (
+            <div
+              key={event.id}
+              className={`event-bar ${spanClass}`}
+              style={{ background: EVENT_COLORS[event.priority]?.bg ?? "#4a7fb5" }}
+              onClick={(e) => openView(event, e)}
+            >
+              {showTitle ? event.title : "\u00a0"}
             </div>
-          )}
-        </div>
-      </HoursSection>
-    ));
+          );
+        })}
+
+        {hiddenCount > 0 && <div className='more-dot'>+{hiddenCount} more</div>}
+      </>
+    );
   };
 
   if (isLoading) return <TablePlaceholder count={6} />;
@@ -272,51 +275,28 @@ const CustomBigCalendar = () => {
                 <div
                   key={day.toString()}
                   className={`cell ${!isSameMonth(day, currentDate) ? "muted" : ""} ${isToday(day) ? "today" : ""}`}
+                  onClick={() => openAdd(day)}
                 >
-                  <div className='date'>{format(day, "EE")}</div>
-                  <div className='day-number'>{format(day, "MMMM d")}</div>
+                  <div className='date'>{format(day, "d")}</div>
 
-                  {getEventsForDay(day).map((ev) => (
-                    <div key={ev.id} className='event'>
-                      {ev.title} <button onClick={() => deleteEvent(ev.id)}>x</button>{" "}
-                    </div>
-                  ))}
+                  {renderBars(day)}
                 </div>
               ))}
             </div>
           )}
 
           {view === TABS.WEEK && (
-            <div className='week-wrapper'>
-              <div className='grid week'>
-                <div></div>
-                {weekDays.map((day) => (
-                  <div key={day.toString()} className={`cell ${isToday(day) ? "today" : ""}`}>
-                    <div className='date'>{format(day, "EEEE")}</div>
-                    <div className='day-number'>{format(day, "MMMM d")}</div>
-
-                    {getEventsForDay(day).map((ev) => (
-                      <div key={ev.id} className='event'>
-                        {ev.title} <button onClick={() => deleteEvent(ev.id)}>x</button>{" "}
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-
-              <div className='hours-wrapper'>
-                <HoursCell isWeek />
-              </div>
-            </div>
+            <>
+              <CutomWeekendCalendar weekDays={weekDays} events={events} openView={openView} openAdd={openAdd} openEdit={openEdit} />
+            </>
           )}
 
-          {view === TABS.DAY && (
-            <div>
-              <HoursCell isWeek={false} />
-            </div>
-          )}
+          {view === TABS.DAY && <div></div>}
         </div>
       </StyledLayout>
+
+      {viewEvent && <CustomBigCalendarView viewEvent={viewEvent} setViewEvent={setViewEvent} openEdit={openEdit} />}
+      {formState && <CustomBigCalendarEdit formState={formState} setFormState={setFormState} />}
     </>
   );
 };

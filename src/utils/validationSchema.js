@@ -145,8 +145,8 @@ export const eventSchema = z
     end: z.preprocess(datePreprocess, z.date({ required_error: "End date are required" })),
     location: z.string().optional(),
     reminder: z.number().nullable().optional(),
-    status: statusEnum.nullable().optional(),
-    priority: priorityEnum.nullable().optional(),
+    status: statusEnum.nullable().optional().default("PLANNED"),
+    priority: priorityEnum.nullable().optional().default("MEDIUM"),
     tags: z.preprocess(tagsPreprocess, z.array(z.string()).optional()),
   })
   .refine((data) => data.start < data.end, {

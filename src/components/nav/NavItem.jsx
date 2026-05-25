@@ -149,7 +149,7 @@ const NavItem = ({ item, badgeMap }) => {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (!menuRef.current.contains(e.target) && !dropdownRef.current.contains(e.target)) {
+      if (!menuRef.current?.contains(e.target) && !dropdownRef.current?.contains(e.target)) {
         setOpen(false);
       }
     };

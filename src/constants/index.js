@@ -31,3 +31,17 @@ export const BLOG_CATEGORIES = [
   { value: 3, name: "Tankers" },
   { value: 4, name: "Vessels" },
 ];
+
+export const EVENT_COLORS = {
+  LOW: {
+    bg: "#51cab2",
+  },
+
+  MEDIUM: {
+    bg: "#facc15",
+  },
+
+  HIGH: {
+    bg: "#ffb29f",
+  },
+};

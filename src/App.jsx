@@ -33,6 +33,7 @@ import CreateBlog from "./components/blog/CreateBlog.jsx";
 import Blogs from "./pages/Blogs.jsx";
 import BlogCategory from "./pages/BlogCategory.jsx";
 import TestCalendar from "./pages/TestCalendar.jsx";
+import BlogEditorDnd from "./components/blog/blog-dnd/BlogEditorDnd.jsx";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
               <Route path='/ships/:id' element={<SingleShip />} />
               <Route path='/events' element={<Events />} />
               <Route path='/test' element={<TestCalendar />} />
+              <Route path='/dnd-test' element={<BlogEditorDnd />} />
               <Route element={<PremiumRoute />}>
                 <Route path='/address-book' element={<AddressBook />} />
               </Route>

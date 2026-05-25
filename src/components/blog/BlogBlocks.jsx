@@ -50,7 +50,7 @@ const Btn = styled.div`
   }
 `;
 
-const BlogBlocks = ({ index, type, control, register, remove }) => {
+const BlogBlocks = ({ index, type, control, remove }) => {
   return (
     <>
       {type === "text" && (

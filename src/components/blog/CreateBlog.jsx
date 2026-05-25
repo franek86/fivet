@@ -34,6 +34,8 @@ import ImageUploader from "../ImageUploader.jsx";
 import Tabs from "../ui/Tabs.jsx";
 import BlogBlocks from "./BlogBlocks.jsx";
 import AddBlockDropdown from "./AddBlockDropdown.jsx";
+import BlogSeoBlock from "./BlogSeoBlock.jsx";
+import MultipleImagesUploader from "../MultipleImagesUploader.jsx";
 
 /**
  * Styled component
@@ -111,6 +113,10 @@ const CreateBlog = () => {
   const [isFixed, setIsFixed] = useState(false);
   const { mutate } = useCreateBlog();
 
+  const [existingImages, setExistingImages] = useState([]);
+  const [newImages, setNewImages] = useState([]);
+  const [deleteImageIds, setDeleteImageIds] = useState([]);
+
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       setIsFixed(!entry.isIntersecting);
@@ -146,7 +152,14 @@ const CreateBlog = () => {
     formData.append("slug", data.slug);
     formData.append("subTitle", data.subTitle);
     formData.append("bannerImage", data.bannerImage);
-    formData.append("bannerImageAlt", data.bannerImageAlt);
+    formData.append("metaDescription", data.metaDescription);
+    formData.append("metaTitle", data.metaTitle);
+    formData.append("metaKeywords", data.metaKeywords);
+
+    newImages.forEach((img) => {
+      console.log(img.file);
+      //formData.append("gallery", img.file);
+    });
 
     data.blocks.forEach((block, i) => {
       formData.append(`blocks[${i}][text]`, block.text);
@@ -160,7 +173,7 @@ const CreateBlog = () => {
     if (data.categoryId) formData.append("categoryId", String(data.categoryId));
     if (data.status) formData.append("status", String(data.status));
 
-    mutate(formData);
+    //mutate(formData);
   };
 
   /* 
@@ -201,7 +214,7 @@ const CreateBlog = () => {
             <Column>
               {fields.map((field, index) => (
                 <div className={`test-${index}`} key={field.id} ref={(el) => (blockRefs.current[index] = el)}>
-                  <BlogBlocks type={field.type} index={index} register={register} control={control} remove={remove} />
+                  <BlogBlocks type={field.type} index={index} control={control} remove={remove} />
                 </div>
               ))}
               <AddBlockDropdown append={handleAddBlock} dropdownRef={dropdownRef} />
@@ -210,8 +223,21 @@ const CreateBlog = () => {
         </div>
       ),
     },
-    { label: "Gallery", content: <p>Gellery</p> },
-    { label: "SEO", content: <p>SEO</p> },
+    {
+      label: "Gallery",
+      content: (
+        <MultipleImagesUploader
+          name='gallery'
+          existingImages={existingImages}
+          setExistingImages={setExistingImages}
+          onNewImagesChange={setNewImages}
+          newImages={newImages}
+          deleteImageIds={deleteImageIds}
+          onDeleteImageIdsChange={setDeleteImageIds}
+        />
+      ),
+    },
+    { label: "SEO", content: <BlogSeoBlock register={register} /> },
   ];
 
   return (

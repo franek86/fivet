@@ -421,7 +421,7 @@ const ShipsForm = () => {
       </Form>
       <GalleryColumn>
         <MultipleImagesUploader
-          name='imagesMets'
+          name='imagesMeta'
           existingImages={existingImages}
           setExistingImages={setExistingImages}
           onNewImagesChange={setNewImages}

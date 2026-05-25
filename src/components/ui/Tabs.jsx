@@ -19,7 +19,7 @@ const TabLabel = styled.div`
   font-size: 12px;
   font-weight: 500;
   text-transform: uppercase;
-  background-color: ${({ $active }) => ($active ? "#fff" : "transparent")};
+  background-color: ${({ $isActive }) => ($isActive ? "var(--color-accent)" : "var(--color-white)")};
   border-radius: var(--border-radius-md);
   color: var(--color-text-muted);
   cursor: pointer;

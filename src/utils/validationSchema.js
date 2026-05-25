@@ -157,6 +157,13 @@ export const eventSchema = z
 /**
  * Blog validation schema
  */
+export const blogGallerySchema = z.object({
+  file: z.any().optional(),
+  url: z.string().url(),
+  alt: z.string().optional(),
+  publicId: z.string().optional(),
+});
+
 export const blogSchema = z.object({
   title: z.string().min(1, "Blog title is required"),
   categoryId: z.coerce.number().optional(),
@@ -189,6 +196,10 @@ export const blogSchema = z.object({
       imageAlt: z.string().optional(),
     }),
   ),
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+  metaKeywords: z.string().optional(),
+  gallery: z.array(blogGallerySchema).optional(),
 });
 
 /**

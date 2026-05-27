@@ -36,6 +36,8 @@ import BlogBlocks from "./BlogBlocks.jsx";
 import AddBlockDropdown from "./AddBlockDropdown.jsx";
 import BlogSeoBlock from "./BlogSeoBlock.jsx";
 import MultipleImagesUploader from "../MultipleImagesUploader.jsx";
+import { isPending } from "@reduxjs/toolkit";
+import Spinner from "../Spinner.jsx";
 
 /**
  * Styled component
@@ -111,7 +113,7 @@ const CreateBlog = () => {
   const blockRefs = useRef([]);
   const btnRef = useRef(null);
   const [isFixed, setIsFixed] = useState(false);
-  const { mutate } = useCreateBlog();
+  const { mutate, isPending } = useCreateBlog();
 
   const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
@@ -134,13 +136,13 @@ const CreateBlog = () => {
     watch,
     formState: { errors },
   } = useForm({
-    defaultValues: {},
+    defaultValues: { gallery: [] },
     resolver: zodResolver(blogSchema),
   });
 
   const blogTitleWatch = watch("title", "");
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control,
     name: "blocks",
   });
@@ -152,14 +154,20 @@ const CreateBlog = () => {
     formData.append("slug", data.slug);
     formData.append("subTitle", data.subTitle);
     formData.append("bannerImage", data.bannerImage);
+    formData.append("bannerImageAlt", data.bannerImageAlt);
     formData.append("metaDescription", data.metaDescription);
     formData.append("metaTitle", data.metaTitle);
     formData.append("metaKeywords", data.metaKeywords);
 
     newImages.forEach((img) => {
-      console.log(img.file);
-      //formData.append("gallery", img.file);
+      formData.append("gallery", img.file);
     });
+
+    const newGalleryMeta = newImages.map((img) => ({
+      alt: img.alt,
+    }));
+
+    formData.append("galleryMeta", JSON.stringify(newGalleryMeta));
 
     data.blocks.forEach((block, i) => {
       formData.append(`blocks[${i}][text]`, block.text);
@@ -173,7 +181,7 @@ const CreateBlog = () => {
     if (data.categoryId) formData.append("categoryId", String(data.categoryId));
     if (data.status) formData.append("status", String(data.status));
 
-    //mutate(formData);
+    mutate(formData);
   };
 
   /* 
@@ -239,6 +247,8 @@ const CreateBlog = () => {
     },
     { label: "SEO", content: <BlogSeoBlock register={register} /> },
   ];
+
+  if (isPending) return <Spinner />;
 
   return (
     <form onSubmit={handleSubmit(handleOnSubmit)}>

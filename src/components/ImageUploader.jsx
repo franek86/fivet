@@ -8,7 +8,7 @@ import { CircleX } from "lucide-react";
 const ImageUploadContainer = styled.section`
   height: ${({ $hasPreview }) => ($hasPreview ? "100%" : "140px")};
   width: 100%;
-  margin-top: 2.5rem;
+  //margin-top: 2.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -47,7 +47,7 @@ const StyledIconClose = styled(CircleX)`
   position: absolute;
   top: -20px;
   right: -20px;
-  color: var(--color-grey-200);
+  color: var(--color-danger);
   height: 2rem;
   width: 2rem;
 `;

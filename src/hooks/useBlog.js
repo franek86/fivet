@@ -34,7 +34,7 @@ export const useGetBlogs = (params) => {
 
 export const useDeleteBlog = () => {
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: deleteBlogApi,
     onSuccess: () => {
       queryClient.invalidateQueries(["blogs"]);
@@ -45,5 +45,5 @@ export const useDeleteBlog = () => {
     },
   });
 
-  return { mutate };
+  return { mutate, isPending };
 };

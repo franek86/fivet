@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { Controller } from "react-hook-form";
 import ImageUploader from "../../ImageUploader.jsx";
 import { Trash2 } from "lucide-react";
+import { COL_BLOCK_TYPES } from "../../../constants/index.js";
+import TextEditor from "../../text-editor/index.jsx";
 
 /* ─────────────────────────────────────────────
    Shared styled components
@@ -37,45 +39,6 @@ const RemoveBtn = styled.button`
   color: var(--color-text);
   &:hover {
     color: var(--color-danger);
-  }
-`;
-
-const TitleInput = styled.input`
-  width: 100%;
-  padding: 1.25rem 0.9rem;
-  font-size: 14px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-sm);
-  background: var(--color-white);
-  color: var(--color-text);
-  outline: none;
-  transition: border-color 0.15s;
-  &:focus {
-    border-color: var(--color-accent);
-  }
-  &::placeholder {
-    color: var(--color-text);
-    font-weight: 400;
-  }
-`;
-
-const Textarea = styled.textarea`
-  width: 100%;
-  min-height: 100px;
-  padding: 1.25rem 0.9rem;
-  font-size: 14px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-sm);
-  resize: vertical;
-  background: var(--color-white);
-  color: var(--color-text);
-  outline: none;
-  transition: border-color 0.15s;
-  &:focus {
-    border-color: var(--color-accent);
-  }
-  &::placeholder {
-    color: var(--color-text-muted);
   }
 `;
 
@@ -185,33 +148,10 @@ const ColAddBtn = styled.button`
   }
 `;
 
-const COL_BLOCK_TYPES = [
-  { type: "text", label: "Text", icon: "T" },
-  { type: "image", label: "Image", icon: "🖼" },
-];
-
-/* ─────────────────────────────────────────────
-   Title block
-───────────────────────────────────────────── */
-function TitleBlock({ index, register, remove }) {
-  return (
-    <BlockWrapper>
-      <BlockHeader>
-        <BlockLabel>Title</BlockLabel>
-        <RemoveBtn type='button' onClick={() => remove(index)} aria-label='remove block'>
-          <Trash2 size={16} />
-        </RemoveBtn>
-      </BlockHeader>
-
-      <TitleInput type='text' placeholder='Enter section title...' {...register(`blocks.${index}.text`)} />
-    </BlockWrapper>
-  );
-}
-
 /* ─────────────────────────────────────────────
    Text block
 ───────────────────────────────────────────── */
-function TextBlock({ index, register, remove }) {
+function TextBlock({ index, control, remove }) {
   return (
     <BlockWrapper>
       <BlockHeader>
@@ -220,7 +160,11 @@ function TextBlock({ index, register, remove }) {
           <Trash2 size={16} />
         </RemoveBtn>
       </BlockHeader>
-      <Textarea placeholder='Enter text content...' {...register(`blocks.${index}.text`)} />
+      <Controller
+        control={control}
+        name={`blocks.${index}.text`}
+        render={({ field }) => <TextEditor content={field.value} onChange={field.onChange} />}
+      />
     </BlockWrapper>
   );
 }
@@ -303,16 +247,19 @@ function ColumnsBlock({ index, control, remove }) {
                     </ColItem>
                   ))}
                   <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: "auto" }}>
-                    {COL_BLOCK_TYPES.map(({ type, label, icon }) => (
-                      <ColAddBtn
-                        key={type}
-                        type='button'
-                        onClick={() => addToCol(colIdx, type)}
-                        aria-label={`add ${label} to column ${colIdx + 1}`}
-                      >
-                        {icon} {label}
-                      </ColAddBtn>
-                    ))}
+                    {COL_BLOCK_TYPES.map(({ type, label, icon }) => {
+                      const Icon = icon;
+                      return (
+                        <ColAddBtn
+                          key={type}
+                          type='button'
+                          onClick={() => addToCol(colIdx, type)}
+                          aria-label={`add ${label} to column ${colIdx + 1}`}
+                        >
+                          <Icon size={14} /> {label}
+                        </ColAddBtn>
+                      );
+                    })}
                   </div>
                 </ColCell>
               ))}
@@ -328,8 +275,7 @@ function ColumnsBlock({ index, control, remove }) {
    Main switch
 ───────────────────────────────────────────── */
 const BlogBlocks = ({ type, index, register, control, remove }) => {
-  if (type === "title") return <TitleBlock index={index} register={register} remove={remove} />;
-  if (type === "text") return <TextBlock index={index} register={register} remove={remove} />;
+  if (type === "text") return <TextBlock index={index} register={register} remove={remove} control={control} />;
   if (type === "image") return <ImageBlock index={index} register={register} control={control} remove={remove} />;
   if (type === "columns") return <ColumnsBlock index={index} control={control} remove={remove} />;
   return null;

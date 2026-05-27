@@ -5,17 +5,17 @@ import styled from "styled-components";
 
 const AccordionItem = styled.section`
   margin: 2rem 0;
+  cursor: pointer;
 `;
 
 const AccordionHeader = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--color-grey-200);
-  border-radius: var(--border-radius-lg);
+  background-color: ${({ open }) => (open ? "var(--color-accent)" : "var(--color-grey-200)")};
+
   padding: 10px 12px;
   transition: all 0.2s ease-in-out;
-  cursor: pointer;
 
   &:hover {
     background-color: var(--color-accent);
@@ -37,13 +37,14 @@ const AccordionHeader = styled.header`
 const AccordionBody = styled.main`
   max-height: ${({ open }) => (open ? "auto" : "0")};
   opacity: ${({ open }) => (open ? "1" : "0")};
-  padding: ${({ open }) => (open ? "0 1.2rem 1.2rem 1.2rem" : "0")};
+  padding: ${({ open }) => (open ? "1.2rem" : "0")};
+  content-visibility: ${({ open }) => (open ? "visible" : "hidden")};
   background: var(--color-grey-200);
 
-  transition:
+  /* transition:
     max-height 0.4s ease-in-out,
     opacity 0.5s ease-in-out,
-    padding 0.5s ease-in-out;
+    padding 0.5s ease-in-out; */
 `;
 
 const StyledChevron = styled(ChevronDown)`
@@ -54,12 +55,12 @@ const StyledChevron = styled(ChevronDown)`
   transition: transform 0.4s ease-in-out;
 `;
 
-function Accordion({ children, title }) {
-  const [isOpen, setIsOpen] = useState(false);
+function Accordion({ children, title, defaultOpen = false }) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <AccordionItem>
-      <AccordionHeader onClick={() => setIsOpen((prev) => !prev)}>
+    <AccordionItem onClick={() => setIsOpen((prev) => !prev)}>
+      <AccordionHeader open={isOpen}>
         <p>{title}</p>
         <StyledChevron open={isOpen} />
       </AccordionHeader>

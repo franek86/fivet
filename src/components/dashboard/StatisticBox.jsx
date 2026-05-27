@@ -24,7 +24,6 @@ const StatisticBoxWrap = styled.section`
 `;
 
 function StatisticBox({ data, isLoading }) {
-  console.log(data);
   if (isLoading) {
     return <TablePlaceholder count={3} />;
   }

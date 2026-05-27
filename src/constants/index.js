@@ -1,3 +1,5 @@
+import { Grid2X2, Image, Pilcrow } from "lucide-react";
+
 export const PAGE_SIZE = 10;
 export const MAX_PAGE_BUTTONS = 2;
 export const EVENT_STATUS = [
@@ -48,3 +50,29 @@ export const EVENT_COLORS = {
 
 export const MINUTE_HEIGHT = 100 / 60;
 export const HOURS = Array.from({ length: 24 }, (_, i) => i);
+
+/* dnd blog blocks */
+export const DEFAULT_BLOCK = {
+  text: { type: "text", text: "" },
+  image: { type: "image", imageUrl: null, imageAlt: "" },
+  columns: { type: "columns", cols: 2, columns: [[], [], [], []] },
+};
+
+export const BLOCK_OPTIONS = [
+  { type: "text", label: "Text", icon: Pilcrow },
+  { type: "image", label: "Image", icon: Image },
+  { type: "columns", label: "Columns", icon: Grid2X2 },
+];
+
+export const PALETTE_BLOCKS = [
+  { type: "text", label: "Text", icon: Pilcrow },
+  { type: "image", label: "Image", icon: Image },
+  { type: "columns", label: "Columns", icon: Grid2X2 },
+];
+
+export const BLOCK_ICON = { text: Pilcrow, image: Image, columns: Grid2X2 };
+
+export const COL_BLOCK_TYPES = [
+  { type: "text", label: "Text", icon: Pilcrow },
+  { type: "image", label: "Image", icon: Grid2X2 },
+];

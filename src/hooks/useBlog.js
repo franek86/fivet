@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import { createBlogApi, getBlogApi, deleteBlogApi } from "../services/apiBlog.js";
+import { createBlogApi, getBlogsApi, deleteBlogApi, getBlogApi } from "../services/apiBlog.js";
 
 export const useCreateBlog = () => {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export const useCreateBlog = () => {
     onSuccess: () => {
       toast.success("Blog successfully created");
       queryClient.invalidateQueries(["blogs"]);
-      navigate("/blog/list");
+      navigate("/blogs");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -24,12 +24,20 @@ export const useCreateBlog = () => {
 export const useGetBlogs = (params) => {
   const { data, isFetching, isLoading } = useQuery({
     queryKey: ["blogs", params],
-    queryFn: () => getBlogApi(params),
+    queryFn: () => getBlogsApi(params),
     keepPreviousData: true,
     staleTime: 5 * 60 * 1000,
   });
 
   return { data, isLoading, isFetching };
+};
+
+export const useGetBlog = (slug) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["blog", slug],
+    queryFn: () => getBlogApi(slug),
+  });
+  return { data, isLoading };
 };
 
 export const useDeleteBlog = () => {

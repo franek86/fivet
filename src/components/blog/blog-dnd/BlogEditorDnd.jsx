@@ -240,6 +240,7 @@ function ColumnsBlock({ index, control, remove }) {
                   {(block.columns[colIdx] || []).map((item, itemIdx) => (
                     <ColItem key={item.id || itemIdx}>
                       <span style={{ opacity: 0.5 }}>{item.type === "image" ? "🖼" : "T"}</span>
+                      {/* TO DO: Add text input and image */}
                       {item.type}
                       <ColItemRemove type='button' onClick={() => removeFromCol(colIdx, itemIdx)} aria-label='remove item'>
                         <Trash2 size={14} />

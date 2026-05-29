@@ -33,6 +33,8 @@ import CreateBlog from "./components/blog/CreateBlog.jsx";
 import Blogs from "./pages/Blogs.jsx";
 import BlogCategory from "./pages/BlogCategory.jsx";
 import BlogEditorDnd from "./components/blog/blog-dnd/BlogEditorDnd.jsx";
+import Blog from "./pages/Blog.jsx";
+import EditBlog from "./pages/EditBlog.jsx";
 
 function App() {
   return (
@@ -74,9 +76,13 @@ function App() {
             <Route path='/users' element={<Users />} />
             <Route path='/categories' element={<Categories />} />
             <Route path='/payments' element={<Payments />} />
-            <Route path='/blog/create' element={<CreateBlog />} />
-            <Route path='/blog/list' element={<Blogs />} />
-            <Route path='/blog/category' element={<BlogCategory />} />
+            <Route path='/blogs'>
+              <Route index element={<Blogs />} />
+              <Route path=':slug' element={<Blog />} />
+              <Route path='create' element={<CreateBlog />} />
+              <Route path='edit/:slug' element={<EditBlog />} />
+              <Route path='category' element={<BlogCategory />} />
+            </Route>
           </Route>
         </Route>
         <Route path='*' element={<NotFound />} />

@@ -29,7 +29,7 @@ const P = styled.div`
 `;
 
 const BlogColumn = ({ data, selectedBlog, onCheckboxChange }) => {
-  const { id, bannerImage, bannerImageAlt, title, shortDescription, status, views } = data;
+  const { id, bannerImage, slug, bannerImageAlt, title, shortDescription, status, views } = data;
   const dispatch = useDispatch();
   const { mutate } = useDeleteBlog();
   return (
@@ -49,7 +49,7 @@ const BlogColumn = ({ data, selectedBlog, onCheckboxChange }) => {
       <td>
         <Dropdown>
           <Button $variation='icon'>
-            <Link to={`${id}`}>
+            <Link to={`${slug}`}>
               <ButtonInner>
                 <Eye size={16} />
                 <P>View</P>
@@ -57,7 +57,7 @@ const BlogColumn = ({ data, selectedBlog, onCheckboxChange }) => {
             </Link>
           </Button>
           <Button $variation='icon'>
-            <Link to={`edit/${id}`}>
+            <Link to={`edit/${slug}`}>
               <ButtonInner>
                 <Pencil size={16} />
                 <P>Edit</P>

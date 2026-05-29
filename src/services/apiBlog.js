@@ -12,9 +12,20 @@ export const createBlogApi = async (data) => {
   }
 };
 
-export const getBlogApi = async (params) => {
+export const getBlogsApi = async (params) => {
   try {
     const res = await apiClient.get("/posts", { params });
+
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
+export const getBlogApi = async (slug) => {
+  try {
+    const res = await apiClient.get(`/posts/admin/${slug}`);
 
     return res.data;
   } catch (error) {

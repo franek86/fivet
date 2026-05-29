@@ -59,8 +59,8 @@ function Accordion({ children, title, defaultOpen = false }) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <AccordionItem onClick={() => setIsOpen((prev) => !prev)}>
-      <AccordionHeader open={isOpen}>
+    <AccordionItem>
+      <AccordionHeader open={isOpen} onClick={() => setIsOpen((prev) => !prev)}>
         <p>{title}</p>
         <StyledChevron open={isOpen} />
       </AccordionHeader>

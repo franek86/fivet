@@ -111,6 +111,10 @@ const SortableRow = styled.div`
 `;
 
 const DragHandle = styled.div`
+  position: absolute;
+  top: 50%;
+  left: -26px;
+  transform: translateY(-50%);
   width: 20px;
   height: 20px;
   display: flex;
@@ -178,7 +182,7 @@ const SortableBlocks = ({ fields, register, control, remove, move, append }) => 
   const [activePalette, setActivePalette] = useState(null);
   const [canvasOver, setCanvasOver] = useState(false);
 
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
 
   const activeField = fields.find((f) => f.id === activeId);
 
@@ -264,7 +268,10 @@ const SortableBlocks = ({ fields, register, control, remove, move, append }) => 
           <DragOverlay>
             {activeField ? (
               <OverlayCard>
-                <span style={{ fontSize: 18, opacity: 0.6 }}>{BLOCK_ICON[activeField.type] || "□"}</span>
+                {(() => {
+                  const Icon = BLOCK_ICON[activeField.type];
+                  return Icon ? <Icon size={18} style={{ opacity: 0.6 }} /> : <span>□</span>;
+                })()}
                 <span style={{ fontWeight: 500, textTransform: "capitalize" }}>{activeField.type} block</span>
               </OverlayCard>
             ) : null}

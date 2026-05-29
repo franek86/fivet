@@ -15,9 +15,9 @@ export const navLinks = [
     icon: Globe,
     allowRoles: ["ADMIN"],
     children: [
-      { id: "add", label: "Add Blog", href: "blog/create" },
-      { id: "blogs", label: "All Blogs", href: "blog/list" },
-      { id: "blogs-category", label: "Blog category", href: "blog/category" },
+      { id: "add", label: "Add Blog", href: "blogs/create" },
+      { id: "blogs", label: "All Blogs", href: "blogs" },
+      { id: "blogs-category", label: "Blog category", href: "blogs/category" },
     ],
   },
 ];

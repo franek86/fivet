@@ -35,6 +35,7 @@ import BlogSeoBlock from "./BlogSeoBlock.jsx";
 import MultipleImagesUploader from "../MultipleImagesUploader.jsx";
 import Spinner from "../Spinner.jsx";
 import SortableBlocks from "./blog-dnd/SortableBlocks.jsx";
+import AddBlockDropdown from "./blog-dnd/AddBlockDropdown.jsx";
 
 /**
  * Styled component
@@ -172,14 +173,19 @@ const CreateBlog = () => {
     data.blocks.forEach((block, i) => {
       formData.append(`blocks[${i}][text]`, block.text);
       formData.append(`blocks[${i}][imageAlt]`, block.imageAlt || "");
+      formData.append(`blocks[${i}][order]`, i);
       if (block.imageUrl) {
         formData.append("blockImages", block.imageUrl);
       }
+      /* if (block.type === "columns") {
+        formData.append(`blocks[${i}][columns]`, JSON.stringify(block.columns));
+      } */
     });
 
     if (data.categoryId) formData.append("categoryId", String(data.categoryId));
     if (data.status) formData.append("status", String(data.status));
 
+    console.log([...formData.entries()]);
     mutate(formData);
   };
 
@@ -322,13 +328,10 @@ const CreateBlog = () => {
           </ImageBannerRow>
         </Accordion>
 
-        <Accordion title='SEO'>
-          <BlogSeoBlock register={register} />
-        </Accordion>
-
         <Accordion title='Section'>
           <Column>
             <SortableBlocks fields={fields} register={register} control={control} remove={remove} move={move} append={append} />
+            <AddBlockDropdown append={append} />
           </Column>
         </Accordion>
 
@@ -342,6 +345,10 @@ const CreateBlog = () => {
             deleteImageIds={deleteImageIds}
             onDeleteImageIdsChange={setDeleteImageIds}
           />
+        </Accordion>
+
+        <Accordion title='SEO'>
+          <BlogSeoBlock register={register} />
         </Accordion>
       </AccordioWrapper>
     </form>

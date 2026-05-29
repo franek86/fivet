@@ -11,7 +11,7 @@ const Blogs = () => {
         <Title tag='h1'>Blogs</Title>
         <div className='search-container-right'>
           <SearchBar />
-          <Link to='/blog/create'>
+          <Link to='/blogs/create'>
             <Button>Create</Button>
           </Link>
         </div>

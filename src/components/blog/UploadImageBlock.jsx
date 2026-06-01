@@ -1,5 +1,5 @@
 import { Image } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 const ImageField = styled.div`
@@ -24,14 +24,20 @@ const EmptyUploadDiv = styled.div`
 `;
 
 const PreviewImg = styled.img`
-  height: 150px;
+  //height: 150px;
   object-fit: contain;
   aspect-ratio: 16 / 9;
 `;
 
-const UploadImageBlock = ({ onChange }) => {
+const UploadImageBlock = ({ onChange, initialPreview = null }) => {
   const fileInputRef = useRef(null);
   const [preview, setPreview] = useState(false);
+
+  useEffect(() => {
+    if (initialPreview && !preview) {
+      setPreview(initialPreview);
+    }
+  }, [initialPreview]);
 
   const handleBoxClick = () => {
     fileInputRef.current.click();

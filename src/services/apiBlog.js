@@ -26,7 +26,18 @@ export const getBlogsApi = async (params) => {
 export const getBlogApi = async (slug) => {
   try {
     const res = await apiClient.get(`/posts/admin/${slug}`);
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
 
+export const updateBlogApi = async (id, form) => {
+  console.log(id);
+  console.log(form);
+  try {
+    const res = await apiClient.patch(`/post/${id}`, { ...form });
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

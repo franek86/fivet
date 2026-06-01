@@ -30,6 +30,7 @@ const P = styled.div`
 
 const BlogColumn = ({ data, selectedBlog, onCheckboxChange }) => {
   const { id, bannerImage, slug, bannerImageAlt, title, shortDescription, status, views } = data;
+
   const dispatch = useDispatch();
   const { mutate } = useDeleteBlog();
   return (
@@ -42,7 +43,7 @@ const BlogColumn = ({ data, selectedBlog, onCheckboxChange }) => {
       </td>
 
       <td>{title}</td>
-      <td>{shortDescription}</td>
+      <td>{shortDescription.slice(0, 40)}</td>
 
       <td>{status}</td>
       <td>{views}</td>

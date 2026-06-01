@@ -1,9 +1,11 @@
 import React from "react";
 import { useParams } from "react-router";
+import DOMPurify from "dompurify";
 import styled from "styled-components";
 
 import { useGetBlog } from "../../hooks/useBlog.js";
 import Spinner from "../Spinner.jsx";
+import BackBtn from "../BackBtn.jsx";
 
 import { customFormatDate } from "../../utils/formatDate.js";
 
@@ -145,6 +147,7 @@ const SingleBlog = () => {
   return (
     <Container>
       <Header>
+        <BackBtn />
         <Title>{data.title}</Title>
         <Description>{data.shortDescription}</Description>
 
@@ -157,7 +160,17 @@ const SingleBlog = () => {
 
       <HeroImage src={data.bannerImage} alt={data.bannerImageAlt} />
 
-      <Content dangerouslySetInnerHTML={{ __html: data.content }} />
+      {data?.blocks.map((block) => {
+        const sanitizedData = () => ({
+          __html: DOMPurify.sanitize(block.text),
+        });
+        return (
+          <Content>
+            {(block?.text || block?.text != undefined) && <div key={block.id} dangerouslySetInnerHTML={sanitizedData()} />}
+            {block?.imageUrl && <img src={block.imageUrl} alt={block.imageAlt} />}
+          </Content>
+        );
+      })}
 
       {data.gallery?.length > 0 && (
         <Gallery>

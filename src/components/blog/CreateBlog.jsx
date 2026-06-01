@@ -154,6 +154,7 @@ const CreateBlog = () => {
     formData.append("title", data.title);
     formData.append("slug", data.slug);
     formData.append("subTitle", data.subTitle);
+    formData.append("shortDescription", data.shortDescription);
     formData.append("bannerImage", data.bannerImage);
     formData.append("bannerImageAlt", data.bannerImageAlt);
     formData.append("metaDescription", data.metaDescription);
@@ -203,13 +204,7 @@ const CreateBlog = () => {
     setValue("slug", slugify);
   }, [blogTitleWatch]);
 
-  if (isPending)
-    return (
-      <Row>
-        <p>Creating new blog ...</p>
-        <Spinner />
-      </Row>
-    );
+  if (isPending) return <Spinner />;
 
   return (
     <form onSubmit={handleSubmit(handleOnSubmit)}>
@@ -240,8 +235,8 @@ const CreateBlog = () => {
         )}
       </FormHeader>
 
-      {/* SLUG - SUBTITLE */}
       <AccordioWrapper>
+        {/* SLUG - SUBTITLE */}
         <Accordion title='Main' defaultOpen>
           <Row>
             <Column>
@@ -256,6 +251,7 @@ const CreateBlog = () => {
                 <InputErrorMessage message={errors.slug?.message} />
               </Field>
             </Column>
+
             <Column>
               <Field>
                 <Input
@@ -268,6 +264,18 @@ const CreateBlog = () => {
               </Field>
             </Column>
           </Row>
+
+          <Column>
+            <Field>
+              <Input
+                directions='column'
+                label='Short description'
+                placeholder='Enter short description'
+                register={register}
+                {...register("shortDescription")}
+              />
+            </Field>
+          </Column>
 
           {/* BANNER IMAGE - SLUG - CATEGORIES */}
           <ImageBannerRow>
@@ -328,6 +336,7 @@ const CreateBlog = () => {
           </ImageBannerRow>
         </Accordion>
 
+        {/* DRAG - DROP SECTION */}
         <Accordion title='Section'>
           <Column>
             <SortableBlocks fields={fields} register={register} control={control} remove={remove} move={move} append={append} />

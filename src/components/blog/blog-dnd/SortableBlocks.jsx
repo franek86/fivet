@@ -153,7 +153,7 @@ const OverlayCard = styled.div`
 /* ─────────────────────────────────────────────
    Single sortable canvas block
 ───────────────────────────────────────────── */
-function SortableItem({ field, index, register, control, remove }) {
+function SortableItem({ isSeeded, field, index, register, control, remove }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: field.id });
 
   const style = {
@@ -168,7 +168,7 @@ function SortableItem({ field, index, register, control, remove }) {
         <DragHandle className='drag-handle' {...listeners} {...attributes} title='Drag to reorder'>
           <GripVertical size={16} />
         </DragHandle>
-        <BlogBlocks type={field.type} index={index} register={register} control={control} remove={remove} />
+        <BlogBlocks isSeeded={isSeeded} type={field.type} index={index} register={register} control={control} remove={remove} />
       </SortableRow>
     </div>
   );
@@ -177,7 +177,7 @@ function SortableItem({ field, index, register, control, remove }) {
 /* ─────────────────────────────────────────────
    Main SortableBlocks
 ───────────────────────────────────────────── */
-const SortableBlocks = ({ fields, register, control, remove, move, append }) => {
+const SortableBlocks = ({ isSeeded, fields, register, control, remove, move, append }) => {
   const [activeId, setActiveId] = useState(null);
   const [activePalette, setActivePalette] = useState(null);
   const [canvasOver, setCanvasOver] = useState(false);
@@ -252,7 +252,15 @@ const SortableBlocks = ({ fields, register, control, remove, move, append }) => 
             ) : (
               <>
                 {fields.map((field, index) => (
-                  <SortableItem key={field.id} field={field} index={index} register={register} control={control} remove={remove} />
+                  <SortableItem
+                    isSeeded={isSeeded}
+                    key={field.id}
+                    field={field}
+                    index={index}
+                    register={register}
+                    control={control}
+                    remove={remove}
+                  />
                 ))}
                 {/* drop zone at bottom when canvas already has blocks */}
                 {activePalette && (

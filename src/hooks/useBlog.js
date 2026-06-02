@@ -41,18 +41,20 @@ export const useGetBlog = (slug) => {
 };
 
 export const useUpdateBlog = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: ({ id, form }) => updateBlogApi(id, form),
     onSuccess: () => {
-      queryClient.invalidateQueries(["blog", id]);
+      queryClient.invalidateQueries(["blog", "blogs"]);
       toast.success("Blog successfully updated");
+      navigate("/blogs");
     },
     onError: (error) => {
       toast.error(error);
     },
   });
-  return { mutate, isLoading };
+  return { mutate, isPending };
 };
 
 export const useDeleteBlog = () => {

@@ -166,6 +166,7 @@ export const blogGallerySchema = z.object({
 
 export const blogSchema = z.object({
   title: z.string().min(1, "Blog title is required"),
+  shortDescription: z.string().optional(),
   categoryId: z.coerce.number().optional(),
   slug: z
     .string()
@@ -173,6 +174,7 @@ export const blogSchema = z.object({
     .regex(/^[a-z0-9-]+$/, "Slug must contain only lowercase letters, numbers, and hyphens"),
   status: blogStatusEnum.nullable().optional(),
   subTitle: z.string().optional(),
+  tags: z.string().default([]),
   bannerImage: z
     .any()
     .optional()
@@ -193,13 +195,17 @@ export const blogSchema = z.object({
           "Only JPEG, PNG or WEBP images are allowed",
         ),
 
-      imageAlt: z.string().optional(),
+      imageAlt: z.string().nullable().optional(),
     }),
   ),
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   metaKeywords: z.string().optional(),
   gallery: z.array(blogGallerySchema).optional(),
+});
+
+export const editBlogSchema = blogSchema.partial().extend({
+  bannerImage: z.any().optional(),
 });
 
 /**

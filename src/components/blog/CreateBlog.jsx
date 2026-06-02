@@ -186,7 +186,6 @@ const CreateBlog = () => {
     if (data.categoryId) formData.append("categoryId", String(data.categoryId));
     if (data.status) formData.append("status", String(data.status));
 
-    console.log([...formData.entries()]);
     mutate(formData);
   };
 

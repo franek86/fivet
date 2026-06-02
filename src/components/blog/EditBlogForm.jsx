@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import styled, { createGlobalStyle, keyframes } from "styled-components";
 
 import { useGetBlog, useUpdateBlog } from "../../hooks/useBlog.js";
@@ -10,6 +11,7 @@ import BackBtn from "../BackBtn.jsx";
 import UploadImageBlock from "./UploadImageBlock.jsx";
 import SortableBlocks from "./blog-dnd/SortableBlocks.jsx";
 import AddBlockDropdown from "./blog-dnd/AddBlockDropdown.jsx";
+import { editBlogSchema } from "../../utils/validationSchema.js";
 
 const pulse = keyframes`
   0%, 100% { opacity: 1; }
@@ -192,6 +194,7 @@ const DescInput = styled.textarea`
   font-size: 18px;
   color: var(--color-text);
   line-height: 1.6;
+  margin-bottom: 32px;
   field-sizing: content;
   &::placeholder {
     color: var(--color-text);
@@ -206,7 +209,7 @@ const EditBlogForm = () => {
   const navigate = useNavigate();
   const { data, isLoading } = useGetBlog(slug);
   const blogId = data?.id;
-  const { mutate: updateBlog, isLoading: isSaving } = useUpdateBlog();
+  const { mutate: updateBlog, isPending: isSaving } = useUpdateBlog();
 
   const {
     register,
@@ -215,7 +218,7 @@ const EditBlogForm = () => {
     reset,
     watch,
     setValue,
-    formState: { isDirty },
+    formState: { isDirty, errors },
   } = useForm({
     defaultValues: {
       title: "",
@@ -227,6 +230,7 @@ const EditBlogForm = () => {
       bannerImageAlt: "",
       blocks: [],
     },
+    resolver: zodResolver(editBlogSchema),
   });
 
   const { fields, append, remove, move } = useFieldArray({ control, name: "blocks" });
@@ -236,8 +240,9 @@ const EditBlogForm = () => {
 
   /* seed form once data arrives */
   useEffect(() => {
-    if (!data) return;
+    if (!data || isSeeded) return;
     const sorted = [...(data.blocks || [])].sort((a, b) => a.order - b.order);
+    console.log("seeding blocks:", sorted);
     reset({
       title: data.title ?? "",
       slug: data.slug ?? "",
@@ -249,7 +254,7 @@ const EditBlogForm = () => {
       blocks: sorted,
     });
     setIsSeeded(true);
-  }, [data, reset]);
+  }, [data, reset, isSeeded]);
 
   /* save */
   const onSubmit = async (values) => {
@@ -257,34 +262,45 @@ const EditBlogForm = () => {
     form.append("title", values.title);
     form.append("shortDescription", values.shortDescription);
     form.append("author", values.author);
-    form.append("tags", values.tags);
+
     form.append("bannerImageAlt", values.bannerImageAlt);
+
+    //tags
+    const tagsArray = values.tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+    tagsArray.forEach((tag) => form.append("tags", tag));
 
     // bannerImage is a File when the user picked a new one, or a URL string when unchanged
     if (values.bannerImage instanceof File) {
       form.append("bannerImage", values.bannerImage);
     }
 
-    // blocks: strip File objects out, send them separately
-    const blocksPayload = values?.blocks?.map(({ _file, ...rest }, i) => ({
-      ...rest,
+    const blocksPayload = values.blocks.map((block, i) => ({
+      text: block.text,
+      imageAlt: block.imageAlt,
       order: i,
     }));
+
     form.append("blocks", JSON.stringify(blocksPayload));
 
-    values?.blocks?.forEach((b) => {
-      if (b._file instanceof File) {
-        form.append(`block_image_${b.id}`, b._file);
+    values.blocks.forEach((block) => {
+      if (block.imageUrl instanceof File) {
+        form.append("blockImages", block.imageUrl);
       }
     });
 
+    for (const [key, value] of form.entries()) {
+      console.log(key, value);
+    }
     await updateBlog({ id: blogId, form });
   };
 
   const title = watch("title");
   const bannerImageValue = watch("bannerImage");
 
-  if (isLoading) return <Spinner />;
+  if (isSaving) return <Spinner />;
 
   return (
     <EditorShell>
@@ -293,7 +309,7 @@ const EditBlogForm = () => {
         <BackBtn />
         <TopBarTitle>{title || "Untitled post"} — Edit</TopBarTitle>
         <StatusDot $dirty={isDirty} $saving={isSaving} title={isSaving ? "Saving…" : isDirty ? "Unsaved changes" : "Saved"} />
-        <SaveBtn onClick={onSubmit} disabled={isSaving || !isDirty}>
+        <SaveBtn onClick={handleSubmit(onSubmit)} disabled={isSaving || !isDirty}>
           {isSaving ? "Saving…" : "Save"}
         </SaveBtn>
       </TopBar>
@@ -303,7 +319,7 @@ const EditBlogForm = () => {
         {/* Title */}
         <TitleInput placeholder='Post title…' rows={1} {...register("title")} />
         {/* Short description */}
-        <DescInput placeholder='Short description…' rows={2} style={{ marginBottom: 32 }} {...register("shortDescription")} />
+        <DescInput placeholder='Short description…' {...register("shortDescription")} />
         {/* Banner */}
         <UploadImageBlock
           initialPreview={
@@ -315,7 +331,15 @@ const EditBlogForm = () => {
         <Column>
           {isSeeded ? (
             <>
-              <SortableBlocks fields={fields} register={register} control={control} remove={remove} move={move} append={append} />
+              <SortableBlocks
+                isSeeded={isSeeded}
+                fields={fields}
+                register={register}
+                control={control}
+                remove={remove}
+                move={move}
+                append={append}
+              />
               <AddBlockDropdown append={append} />
             </>
           ) : (
@@ -341,21 +365,21 @@ const EditBlogForm = () => {
         <SideSection>
           <SideLabel htmlFor='edit-tags'>Tags</SideLabel>
           <SideInput id='edit-tags' placeholder='react, typescript, …' {...register("tags")} />
-          <span style={{ fontFamily: "system-ui", fontSize: 11, color: "#aaa" }}>Comma-separated</span>
+          <span style={{ fontSize: 11, color: "#aaa" }}>Comma-separated</span>
         </SideSection>
 
         <Divider />
 
         <SideSection>
           <SideLabel htmlFor='edit-banner-alt'>Banner alt text</SideLabel>
-          <SideInput id='edit-banner-alt' placeholder='Describe the banner image' {...register("bannerImageAlt")} />
+          <SideInput placeholder='Describe the banner image' {...register("bannerImageAlt")} />
         </SideSection>
 
         <Divider />
 
         <SideSection>
           <SideLabel>Blocks</SideLabel>
-          <span style={{ fontFamily: "system-ui", fontSize: 12, color: "#666" }}>
+          <span style={{ fontSize: 12, color: "#666" }}>
             {fields.length} block{fields.length !== 1 ? "s" : ""} total
           </span>
           {fields.map((f, i) => (

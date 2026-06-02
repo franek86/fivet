@@ -151,7 +151,7 @@ const ColAddBtn = styled.button`
 /* ─────────────────────────────────────────────
    Text block
 ───────────────────────────────────────────── */
-function TextBlock({ index, control, remove }) {
+function TextBlock({ isSeeded, index, control, remove }) {
   return (
     <BlockWrapper>
       <BlockHeader>
@@ -163,7 +163,7 @@ function TextBlock({ index, control, remove }) {
       <Controller
         control={control}
         name={`blocks.${index}.text`}
-        render={({ field }) => <TextEditor content={field.value} onChange={field.onChange} />}
+        render={({ field }) => <TextEditor key={isSeeded ? "seeded" : "empty"} content={field.value} onChange={field.onChange} />}
       />
     </BlockWrapper>
   );
@@ -275,8 +275,12 @@ function ColumnsBlock({ index, control, remove }) {
 /* ─────────────────────────────────────────────
    Main switch
 ───────────────────────────────────────────── */
-const BlogBlocks = ({ type, index, register, control, remove }) => {
-  if (type === "text") return <TextBlock index={index} register={register} remove={remove} control={control} />;
+const BlogBlocks = ({ isSeeded, type, index, register, control, remove }) => {
+  console.log(isSeeded);
+  if (isSeeded) {
+    return <TextBlock isSeeded={isSeeded} index={index} register={register} remove={remove} control={control} />;
+  }
+  if (type === "text") return <TextBlock isSeeded={isSeeded} index={index} register={register} remove={remove} control={control} />;
   if (type === "image") return <ImageBlock index={index} register={register} control={control} remove={remove} />;
   if (type === "columns") return <ColumnsBlock index={index} control={control} remove={remove} />;
   return null;

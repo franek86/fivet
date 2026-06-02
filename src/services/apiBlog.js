@@ -34,10 +34,9 @@ export const getBlogApi = async (slug) => {
 };
 
 export const updateBlogApi = async (id, form) => {
-  console.log(id);
-  console.log(form);
   try {
-    const res = await apiClient.patch(`/post/${id}`, { ...form });
+    const res = await apiClient.patch(`/posts/${id}`, form, { headers: { "Content-Type": "multipart/form-data" } });
+    console.log(res.data);
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

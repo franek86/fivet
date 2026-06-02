@@ -25,7 +25,7 @@ const TextEditor = ({ content, onChange, editable }) => {
       }),
     ],
 
-    content: content,
+    content: "",
     editorProps: {
       attributes: {
         class: isEditable ? "text-editor-custom" : undefined,
@@ -40,11 +40,12 @@ const TextEditor = ({ content, onChange, editable }) => {
 
   // Update editor when content prop changes
   useEffect(() => {
-    if (!editor) return;
-
-    if (content !== editor.getHTML()) {
+    if (!editor || editor.isDestroyed) return;
+    if (editor.getHTML() === content) return;
+    editor.commands.setContent(content || "", false);
+    /* if (content !== editor.getHTML()) {
       editor.commands.setContent(content);
-    }
+    } */
   }, [content, editor]);
 
   return (

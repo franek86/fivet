@@ -29,6 +29,11 @@ const Header = styled.header`
   .header-top {
     display: flex;
     justify-content: space-between;
+
+    .header-top-left {
+      display: flex;
+      gap: 10px;
+    }
   }
 `;
 
@@ -56,6 +61,18 @@ const Meta = styled.div`
 const Author = styled.span``;
 
 const Date = styled.span``;
+
+const Tags = styled.div`
+  display: flex;
+  gap: 0.8rem;
+  margin-bottom: 30px;
+
+  .tag {
+    background-color: var(--color-accent);
+    padding: 0.3rem 1.4rem;
+    border-radius: var(--border-radius-md);
+  }
+`;
 
 const Dot = styled.span`
   width: 4px;
@@ -118,7 +135,7 @@ const ShareSection = styled.div`
   border-top: 1px solid var(--color-border);
 `;
 
-const ShareTitle = styled.h3`
+const SectionTitle = styled.h3`
   font-size: 16px;
   margin-bottom: 10px;
 `;
@@ -141,6 +158,32 @@ const Button = styled.button`
   }
 `;
 
+const Status = styled(Button)`
+  background-color: ${({ $status }) => {
+    switch ($status) {
+      case "DRAFT":
+        return "var(--color-danger)";
+      case "PUBLISHED":
+        return "var(--color-success)";
+      case "ARCHIVED":
+        return "var(--color-text-muted)";
+      default:
+        return "var(--color-text-muted)";
+    }
+  }};
+  color: var(--color-white);
+`;
+
+const Category = styled.div`
+  width: max-content;
+  font-size: 16px;
+  font-weight: 600;
+  background-color: var(--color-text-muted);
+  color: var(--color-white);
+  padding: 0.6rem 1.8rem;
+  border-radius: var(--border-radius-lg);
+`;
+
 const SingleBlog = () => {
   const { slug } = useParams();
 
@@ -154,21 +197,33 @@ const SingleBlog = () => {
       <Header>
         <div className='header-top'>
           <BackBtn />
-          <Link to={`/blogs/edit/${data.slug}`}>
-            <Button>Edit</Button>
-          </Link>
+          <div className='header-top-left'>
+            <Status $status={data.status}>{data.status}</Status>
+            <Link to={`/blogs/edit/${data.slug}`}>
+              <Button>Edit</Button>
+            </Link>
+          </div>
         </div>
         <Title>{data.title}</Title>
         <Description>{data.shortDescription}</Description>
 
         <Meta>
-          <Author>By {data.author}</Author>
-          <Dot />
+          {/* <Author>By {data.author}</Author>
+          <Dot /> */}
           <Date>{customFormatDate(data.createdAt)}</Date>
         </Meta>
       </Header>
 
+      <Category>Blog</Category>
       <HeroImage src={data.bannerImage} alt={data.bannerImageAlt} />
+
+      {data.tags.length && (
+        <Tags>
+          {data.tags.map((tag) => (
+            <div className='tag'>{tag}</div>
+          ))}
+        </Tags>
+      )}
 
       {data?.blocks.map((block) => {
         const sanitizedData = () => ({
@@ -184,14 +239,14 @@ const SingleBlog = () => {
 
       {data.gallery?.length > 0 && (
         <Gallery>
-          {post.gallery.map((img, i) => (
-            <GalleryImage key={i} src={img} />
+          {data.gallery.map((img, i) => (
+            <GalleryImage key={i} src={img.url} alt={img.alt} />
           ))}
         </Gallery>
       )}
 
       <ShareSection>
-        <ShareTitle>Share this article</ShareTitle>
+        <SectionTitle>Share this article</SectionTitle>
         <ShareButtons>
           <Button onClick={() => share("twitter", data)}>Twitter</Button>
           <Button onClick={() => share("facebook", data)}>Facebook</Button>

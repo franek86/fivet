@@ -38,6 +38,7 @@ import SortableBlocks from "./blog-dnd/SortableBlocks.jsx";
 import AddBlockDropdown from "./blog-dnd/AddBlockDropdown.jsx";
 import TextArea from "../ui/TextArea.jsx";
 import Label from "../ui/Label.jsx";
+import { Grid2X2, Image, Pilcrow } from "lucide-react";
 
 /**
  * Styled component
@@ -127,6 +128,31 @@ const Sidebar = styled.aside`
   display: flex;
   flex-direction: column;
   gap: 18px;
+`;
+
+const BlockFiled = styled.div`
+  .blocks {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border: 1px solid var(--color-border);
+    font-size: 12px;
+    color: var(--colot-text);
+    margin-top: 8px;
+
+    .blocks-icon {
+      display: flex;
+      align-items: center;
+    }
+
+    .blocks-text {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
 `;
 
 const CreateBlog = () => {
@@ -378,6 +404,23 @@ const CreateBlog = () => {
             <span style={{ fontSize: 11, color: "#aaa" }}>Comma-separated</span>
             <InputErrorMessage message={errors.slug?.message} />
           </Field>
+
+          <BlockFiled>
+            <Label>{fields.length} blocks</Label>
+            {fields.map((f, i) => (
+              <div className='blocks' key={f.id}>
+                <div className='blocks-icon'>
+                  {f.type === "text" && <Pilcrow size={12} />}
+                  {f.type === "image" && <Image size={12} />}
+                  {f.type === "columns" && <Grid2X2 size={12} />}
+                </div>
+                <div className='blocks-text'>
+                  {f.type === "text" ? f.text?.replace(/<[^>]+>/g, "").slice(0, 30) || "Empty text block" : f.imageAlt || "Image block"}
+                </div>
+                <div className='blocks-count'>#{i + 1}</div>
+              </div>
+            ))}
+          </BlockFiled>
         </Sidebar>
       </Container>
     </form>

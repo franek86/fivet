@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import DOMPurify from "dompurify";
 import styled from "styled-components";
 
@@ -25,6 +25,11 @@ const Container = styled.article`
 
 const Header = styled.header`
   margin-bottom: 24px;
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+  }
 `;
 
 const Title = styled.h1`
@@ -147,7 +152,12 @@ const SingleBlog = () => {
   return (
     <Container>
       <Header>
-        <BackBtn />
+        <div className='header-top'>
+          <BackBtn />
+          <Link to={`/blogs/edit/${data.slug}`}>
+            <Button>Edit</Button>
+          </Link>
+        </div>
         <Title>{data.title}</Title>
         <Description>{data.shortDescription}</Description>
 

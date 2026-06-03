@@ -242,7 +242,7 @@ const EditBlogForm = () => {
   useEffect(() => {
     if (!data || isSeeded) return;
     const sorted = [...(data.blocks || [])].sort((a, b) => a.order - b.order);
-    console.log("seeding blocks:", sorted);
+
     reset({
       title: data.title ?? "",
       slug: data.slug ?? "",

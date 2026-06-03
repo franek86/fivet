@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Controller } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import ImageUploader from "../../ImageUploader.jsx";
 import { Trash2 } from "lucide-react";
 import { COL_BLOCK_TYPES } from "../../../constants/index.js";
@@ -275,14 +275,37 @@ function ColumnsBlock({ index, control, remove }) {
 /* ─────────────────────────────────────────────
    Main switch
 ───────────────────────────────────────────── */
-const BlogBlocks = ({ isSeeded, type, index, register, control, remove }) => {
-  console.log(isSeeded);
-  if (isSeeded) {
-    return <TextBlock isSeeded={isSeeded} index={index} register={register} remove={remove} control={control} />;
-  }
+/* const BlogBlocks = ({ isSeeded, type, index, register, control, remove }) => {
+  const blockText = useWatch({ control, name: `blocks.${index}.text` });
+  console.log(blockText);
   if (type === "text") return <TextBlock isSeeded={isSeeded} index={index} register={register} remove={remove} control={control} />;
   if (type === "image") return <ImageBlock index={index} register={register} control={control} remove={remove} />;
   if (type === "columns") return <ColumnsBlock index={index} control={control} remove={remove} />;
+  return (
+    <>
+      <TextBlock isSeeded={isSeeded} index={index} register={register} remove={remove} control={control} />;
+    </>
+  );
+}; */
+
+const BlogBlocks = ({ isSeeded, type, index, register, control, remove }) => {
+  const blockText = useWatch({ control, name: `blocks.${index}.text` });
+  const blockImageUrl = useWatch({ control, name: `blocks.${index}.imageUrl` });
+  const blockType = useWatch({ control, name: `blocks.${index}.type` });
+
+  const resolvedType = type || blockType;
+
+  // on edit: block has content but no type saved in DB yet
+  if (!resolvedType) {
+    if (blockText) return <TextBlock isSeeded={isSeeded} index={index} register={register} remove={remove} control={control} />;
+    if (blockImageUrl) return <ImageBlock index={index} register={register} control={control} remove={remove} />;
+    return null; // empty block with no type — don't render
+  }
+
+  if (resolvedType === "text") return <TextBlock isSeeded={isSeeded} index={index} register={register} remove={remove} control={control} />;
+  if (resolvedType === "image") return <ImageBlock index={index} register={register} control={control} remove={remove} />;
+  if (resolvedType === "columns") return <ColumnsBlock index={index} control={control} remove={remove} />;
+
   return null;
 };
 

@@ -36,10 +36,17 @@ import MultipleImagesUploader from "../MultipleImagesUploader.jsx";
 import Spinner from "../Spinner.jsx";
 import SortableBlocks from "./blog-dnd/SortableBlocks.jsx";
 import AddBlockDropdown from "./blog-dnd/AddBlockDropdown.jsx";
+import TextArea from "../ui/TextArea.jsx";
+import Label from "../ui/Label.jsx";
 
 /**
  * Styled component
  */
+const Container = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 2rem;
+`;
 const FormHeader = styled.header`
   display: flex;
   flex-direction: column;
@@ -109,6 +116,17 @@ const FixedButton = styled(Button)`
 const AccordioWrapper = styled.div`
   background-color: var(--color-white);
   padding: 2rem;
+`;
+
+/* ── Sidebar ── */
+const Sidebar = styled.aside`
+  border-left: 1px solid var(--color-border);
+  background: var(--color-white);
+  overflow-y: auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 `;
 
 const CreateBlog = () => {
@@ -207,158 +225,161 @@ const CreateBlog = () => {
 
   return (
     <form onSubmit={handleSubmit(handleOnSubmit)}>
-      {/* HEADER */}
-      <FormHeader>
-        <HeaderInput>
-          <Column>
+      <Container>
+        <div>
+          {/* HEADER */}
+          <FormHeader>
+            <HeaderInput>
+              <Column>
+                <Input
+                  directions='column'
+                  placeholder='Enter title *'
+                  register={register}
+                  {...register("title", { required: "Blog title is required" })}
+                />
+                <InputErrorMessage message={errors.title?.message} />
+              </Column>
+            </HeaderInput>
+
+            <ButtonGroup ref={btnRef}>
+              <Button $variation='third'>Preview</Button>
+              <Button>Save</Button>
+            </ButtonGroup>
+
+            {isFixed && (
+              <FixedButton>
+                <Button $variation='third'>Preview</Button>
+                <Button>Save</Button>
+              </FixedButton>
+            )}
+          </FormHeader>
+
+          <AccordioWrapper>
+            {/* SLUG - SUBTITLE */}
+            <Accordion title='Main' defaultOpen>
+              <Column>
+                <Field>
+                  <Input
+                    directions='column'
+                    placeholder='Enter subtitle'
+                    label='Blog subtitle'
+                    register={register}
+                    {...register("subTitle")}
+                  />
+                </Field>
+              </Column>
+
+              <Column>
+                <Field>
+                  <TextArea
+                    directions='column'
+                    label='Short description'
+                    placeholder='Enter short description'
+                    register={register}
+                    {...register("shortDescription")}
+                  />
+                </Field>
+              </Column>
+            </Accordion>
+
+            {/* DRAG - DROP SECTION */}
+            <Accordion title='Section'>
+              <Column>
+                <SortableBlocks fields={fields} register={register} control={control} remove={remove} move={move} append={append} />
+                <AddBlockDropdown append={append} />
+              </Column>
+            </Accordion>
+
+            <Accordion title='Gallery'>
+              <MultipleImagesUploader
+                name='gallery'
+                existingImages={existingImages}
+                setExistingImages={setExistingImages}
+                onNewImagesChange={setNewImages}
+                newImages={newImages}
+                deleteImageIds={deleteImageIds}
+                onDeleteImageIdsChange={setDeleteImageIds}
+              />
+            </Accordion>
+
+            <Accordion title='SEO'>
+              <BlogSeoBlock register={register} />
+            </Accordion>
+          </AccordioWrapper>
+        </div>
+
+        <Sidebar>
+          <Field>
+            <Controller
+              name='status'
+              control={control}
+              render={({ field }) => (
+                <CustomSelect
+                  {...field}
+                  control={control}
+                  options={BLOG_STATUS}
+                  placeholder='Select blog status'
+                  label='Blog status'
+                  size='medium'
+                  variation='transparent'
+                  valueKey='value'
+                  {...register("status")}
+                />
+              )}
+            />
+          </Field>
+          <Field>
             <Input
               directions='column'
-              placeholder='Enter title *'
+              label='Blog slug *'
+              placeholder='Enter slug'
               register={register}
-              {...register("title", { required: "Blog title is required" })}
+              {...register("slug", { required: "Blog slug is required" })}
             />
-            <InputErrorMessage message={errors.title?.message} />
-          </Column>
-        </HeaderInput>
-
-        <ButtonGroup ref={btnRef}>
-          <Button $variation='third'>Preview</Button>
-          <Button>Save</Button>
-        </ButtonGroup>
-
-        {isFixed && (
-          <FixedButton>
-            <Button $variation='third'>Preview</Button>
-            <Button>Save</Button>
-          </FixedButton>
-        )}
-      </FormHeader>
-
-      <AccordioWrapper>
-        {/* SLUG - SUBTITLE */}
-        <Accordion title='Main' defaultOpen>
-          <Row>
-            <Column>
-              <Field>
-                <Input
-                  directions='column'
-                  label='Blog slug *'
-                  placeholder='Enter slug'
-                  register={register}
-                  {...register("slug", { required: "Blog slug is required" })}
-                />
-                <InputErrorMessage message={errors.slug?.message} />
-              </Field>
-            </Column>
-
-            <Column>
-              <Field>
-                <Input
-                  directions='column'
-                  placeholder='Enter subtitle'
-                  label='Blog subtitle'
-                  register={register}
-                  {...register("subTitle")}
-                />
-              </Field>
-            </Column>
-          </Row>
-
-          <Column>
-            <Field>
-              <Input
-                directions='column'
-                label='Short description'
-                placeholder='Enter short description'
-                register={register}
-                {...register("shortDescription")}
-              />
-            </Field>
-          </Column>
+            <InputErrorMessage message={errors.slug?.message} />
+          </Field>
 
           {/* BANNER IMAGE - SLUG - CATEGORIES */}
-          <ImageBannerRow>
-            <Column>
-              <Field>
-                <ImageUploader name='bannerImage' value={watch("bannerImage")} onChange={(file) => setValue("bannerImage", file)}>
-                  <Input
-                    name='bannerImageAlt'
-                    placeholder='Enter banner image description'
-                    register={register}
-                    {...register("bannerImageAlt")}
-                  />
-                </ImageUploader>
-              </Field>
-            </Column>
 
-            <Column>
-              <Field>
-                <Controller
-                  name='status'
+          <Field>
+            <Label>Banner image</Label>
+            <ImageUploader name='bannerImage' value={watch("bannerImage")} onChange={(file) => setValue("bannerImage", file)}>
+              <Input
+                name='bannerImageAlt'
+                placeholder='Enter banner image description'
+                register={register}
+                {...register("bannerImageAlt")}
+              />
+            </ImageUploader>
+          </Field>
+
+          <Field>
+            <Controller
+              name='categoryId'
+              control={control}
+              render={({ field }) => (
+                <CustomSelect
+                  {...field}
                   control={control}
-                  render={({ field }) => (
-                    <CustomSelect
-                      {...field}
-                      control={control}
-                      options={BLOG_STATUS}
-                      placeholder='Select blog status'
-                      label='Blog status'
-                      size='medium'
-                      variation='transparent'
-                      valueKey='value'
-                      {...register("status")}
-                    />
-                  )}
+                  options={BLOG_CATEGORIES}
+                  placeholder='Select categories'
+                  label='Categories'
+                  size='medium'
+                  variation='transparent'
+                  valueKey='value'
+                  {...register("categoryId")}
                 />
-              </Field>
+              )}
+            />
+          </Field>
 
-              <Field>
-                <Controller
-                  name='categoryId'
-                  control={control}
-                  render={({ field }) => (
-                    <CustomSelect
-                      {...field}
-                      control={control}
-                      options={BLOG_CATEGORIES}
-                      placeholder='Select categories'
-                      label='Categories'
-                      size='medium'
-                      variation='transparent'
-                      valueKey='value'
-                      {...register("categoryId")}
-                    />
-                  )}
-                />
-              </Field>
-            </Column>
-          </ImageBannerRow>
-        </Accordion>
-
-        {/* DRAG - DROP SECTION */}
-        <Accordion title='Section'>
-          <Column>
-            <SortableBlocks fields={fields} register={register} control={control} remove={remove} move={move} append={append} />
-            <AddBlockDropdown append={append} />
-          </Column>
-        </Accordion>
-
-        <Accordion title='Gallery'>
-          <MultipleImagesUploader
-            name='gallery'
-            existingImages={existingImages}
-            setExistingImages={setExistingImages}
-            onNewImagesChange={setNewImages}
-            newImages={newImages}
-            deleteImageIds={deleteImageIds}
-            onDeleteImageIdsChange={setDeleteImageIds}
-          />
-        </Accordion>
-
-        <Accordion title='SEO'>
-          <BlogSeoBlock register={register} />
-        </Accordion>
-      </AccordioWrapper>
+          <Field>
+            <Input directions='column' label='Tags' placeholder='Vessel, tanker' register={register} {...register("tags")} />
+            <span style={{ fontSize: 11, color: "#aaa" }}>Comma-separated</span>
+            <InputErrorMessage message={errors.slug?.message} />
+          </Field>
+        </Sidebar>
+      </Container>
     </form>
   );
 };

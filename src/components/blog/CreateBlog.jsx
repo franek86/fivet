@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import styled from "styled-components";
+import { Grid2X2, Image, Pilcrow } from "lucide-react";
 
 /**
  * Validation Schema - Zod schema used to validate the blog form structure.
@@ -18,9 +19,9 @@ import { blogSchema } from "../../utils/validationSchema.js";
 /**
  * Constants - Static values used for blog categories and publishing status.
  */
-import { BLOG_CATEGORIES, BLOG_STATUS } from "../../constants/index.js";
-
+import { BLOG_STATUS } from "../../constants/index.js";
 import { useCreateBlog } from "../../hooks/useBlog.js";
+import { useGetBlogCategories } from "../../hooks/useBlogCategory.js";
 
 /**
  * UI Components
@@ -38,7 +39,6 @@ import SortableBlocks from "./blog-dnd/SortableBlocks.jsx";
 import AddBlockDropdown from "./blog-dnd/AddBlockDropdown.jsx";
 import TextArea from "../ui/TextArea.jsx";
 import Label from "../ui/Label.jsx";
-import { Grid2X2, Image, Pilcrow } from "lucide-react";
 
 /**
  * Styled component
@@ -159,11 +159,13 @@ const CreateBlog = () => {
   const btnRef = useRef(null);
   const [isFixed, setIsFixed] = useState(false);
   const { mutate, isPending } = useCreateBlog();
+  const { data: categories, isLoading, error, isFetching } = useGetBlogCategories();
 
   const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [deleteImageIds, setDeleteImageIds] = useState([]);
 
+  /* Move button edit to bottom on scroll */
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       setIsFixed(!entry.isIntersecting);
@@ -173,6 +175,15 @@ const CreateBlog = () => {
     return () => observer.disconnect();
   }, []);
 
+  /* blog categorry data  */
+  const blogCategoryData = categories?.map((cat) => {
+    return {
+      value: cat.id,
+      name: cat.title,
+    };
+  });
+
+  /* RFH */
   const {
     register,
     handleSubmit,
@@ -187,11 +198,13 @@ const CreateBlog = () => {
 
   const blogTitleWatch = watch("title", "");
 
+  /* blocks array */
   const { fields, append, remove, move } = useFieldArray({
     control,
     name: "blocks",
   });
 
+  /* Handle submit form */
   const handleOnSubmit = (data) => {
     const formData = new FormData();
 
@@ -387,7 +400,7 @@ const CreateBlog = () => {
                 <CustomSelect
                   {...field}
                   control={control}
-                  options={BLOG_CATEGORIES}
+                  options={blogCategoryData}
                   placeholder='Select categories'
                   label='Categories'
                   size='medium'

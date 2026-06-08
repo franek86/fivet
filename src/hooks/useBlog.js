@@ -36,6 +36,7 @@ export const useGetBlog = (slug) => {
   const { data, isLoading } = useQuery({
     queryKey: ["blog", slug],
     queryFn: () => getBlogApi(slug),
+    staleTime: 5 * 60 * 1000,
   });
   return { data, isLoading };
 };
@@ -43,7 +44,7 @@ export const useGetBlog = (slug) => {
 export const useUpdateBlog = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { mutate, isPending } = useMutation({
+  const { mutate, isFetching } = useMutation({
     mutationFn: ({ id, form }) => updateBlogApi(id, form),
     onSuccess: () => {
       queryClient.invalidateQueries(["blog", "blogs"]);
@@ -54,7 +55,7 @@ export const useUpdateBlog = () => {
       toast.error(error);
     },
   });
-  return { mutate, isPending };
+  return { mutate, isFetching };
 };
 
 export const useDeleteBlog = () => {

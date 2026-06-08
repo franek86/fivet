@@ -6,12 +6,16 @@ import styled, { createGlobalStyle, keyframes } from "styled-components";
 
 import { useGetBlog, useUpdateBlog } from "../../hooks/useBlog.js";
 
+import CustomSelect from "../ui/CustomSelect.jsx";
 import Spinner from "../Spinner.jsx";
 import BackBtn from "../BackBtn.jsx";
 import UploadImageBlock from "./UploadImageBlock.jsx";
 import SortableBlocks from "./blog-dnd/SortableBlocks.jsx";
 import AddBlockDropdown from "./blog-dnd/AddBlockDropdown.jsx";
 import { editBlogSchema } from "../../utils/validationSchema.js";
+import { useGetBlogCategories } from "../../hooks/useBlogCategory.js";
+import Accordion from "../ui/Accordion.jsx";
+import BlogSeoBlock from "./BlogSeoBlock.jsx";
 
 const pulse = keyframes`
   0%, 100% { opacity: 1; }
@@ -208,8 +212,9 @@ const EditBlogForm = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { data, isLoading } = useGetBlog(slug);
+  const { data: categories } = useGetBlogCategories();
   const blogId = data?.id;
-  const { mutate: updateBlog, isPending: isSaving } = useUpdateBlog();
+  const { mutate: updateBlog, isFetching: isSaving } = useUpdateBlog();
 
   const {
     register,
@@ -226,11 +231,23 @@ const EditBlogForm = () => {
       slug: "",
       author: "",
       tags: "",
+      categoryId: "",
       bannerImage: null,
       bannerImageAlt: "",
+      metaTitle: "",
+      metaKeywords: "",
+      metaDescription: "",
       blocks: [],
     },
     resolver: zodResolver(editBlogSchema),
+  });
+
+  /* Get blog categores and map it  */
+  const blogCategories = categories?.map((cat) => {
+    return {
+      value: cat.id,
+      name: cat.title,
+    };
   });
 
   const { fields, append, remove, move } = useFieldArray({ control, name: "blocks" });
@@ -248,9 +265,13 @@ const EditBlogForm = () => {
       slug: data.slug ?? "",
       shortDescription: data.shortDescription ?? "",
       author: data.author ?? "",
+      categoryId: data.categoryId ?? "",
       tags: (data.tags || []).join(", "),
-      bannerImage: data.bannerImage ?? null, // existing URL string
+      bannerImage: data.bannerImage ?? null,
       bannerImageAlt: data.bannerImageAlt ?? "",
+      metaTitle: data.metaTitle ?? "",
+      metaKeywords: data.metaKeywords ?? "",
+      metaDescription: data.metaDescription ?? "",
       blocks: sorted,
     });
     setIsSeeded(true);
@@ -262,6 +283,10 @@ const EditBlogForm = () => {
     form.append("title", values.title);
     form.append("shortDescription", values.shortDescription);
     form.append("author", values.author);
+    form.append("categoryId", values.categoryId);
+    form.append("metaTitle", values.metaTitle);
+    form.append("metaDescroption", values.metaDescroption);
+    form.append("metaKeywords", values.metaKeywords);
 
     form.append("bannerImageAlt", values.bannerImageAlt);
 
@@ -291,9 +316,6 @@ const EditBlogForm = () => {
       }
     });
 
-    for (const [key, value] of form.entries()) {
-      console.log(key, value);
-    }
     await updateBlog({ id: blogId, form });
   };
 
@@ -346,6 +368,10 @@ const EditBlogForm = () => {
             <Spinner />
           )}
         </Column>
+
+        <Accordion title='SEO section'>
+          <BlogSeoBlock register={register} />
+        </Accordion>
       </Canvas>
 
       {/* ── Sidebar ── */}
@@ -354,10 +380,34 @@ const EditBlogForm = () => {
           <SideLabel htmlFor='edit-author'>Slug</SideLabel>
           <SideInput id='edit-author' placeholder='Slug' {...register("slug")} />
         </SideSection>
+
         <Divider />
+
         <SideSection>
           <SideLabel htmlFor='edit-author'>Author</SideLabel>
           <SideInput id='edit-author' placeholder='Author name' {...register("author")} />
+        </SideSection>
+
+        <Divider />
+
+        <SideSection>
+          <Controller
+            name='categoryId'
+            control={control}
+            render={({ fields }) => (
+              <CustomSelect
+                {...fields}
+                control={control}
+                options={blogCategories}
+                placeholder='Select categories'
+                label='Categories'
+                size='medium'
+                variation='transparent'
+                valueKey='value'
+                {...register("categoryId")}
+              />
+            )}
+          />
         </SideSection>
 
         <Divider />

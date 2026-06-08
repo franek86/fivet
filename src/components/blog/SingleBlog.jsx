@@ -129,20 +129,9 @@ const GalleryImage = styled.img`
   border-radius: 12px;
 `;
 
-const ShareSection = styled.div`
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid var(--color-border);
-`;
-
 const SectionTitle = styled.h3`
   font-size: 16px;
   margin-bottom: 10px;
-`;
-
-const ShareButtons = styled.div`
-  display: flex;
-  gap: 10px;
 `;
 
 const Button = styled.button`
@@ -189,6 +178,9 @@ const SingleBlog = () => {
 
   const { data, isLoading } = useGetBlog(slug);
 
+  /* get blog category by title */
+  const blogCategory = data?.category?.title;
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -214,7 +206,7 @@ const SingleBlog = () => {
         </Meta>
       </Header>
 
-      <Category>Blog</Category>
+      <Category>{blogCategory}</Category>
       <HeroImage src={data.bannerImage} alt={data.bannerImageAlt} />
 
       {data.tags.length && (
@@ -244,15 +236,6 @@ const SingleBlog = () => {
           ))}
         </Gallery>
       )}
-
-      <ShareSection>
-        <SectionTitle>Share this article</SectionTitle>
-        <ShareButtons>
-          <Button onClick={() => share("twitter", data)}>Twitter</Button>
-          <Button onClick={() => share("facebook", data)}>Facebook</Button>
-          <Button onClick={() => copyLink()}>Copy Link</Button>
-        </ShareButtons>
-      </ShareSection>
     </Container>
   );
 };

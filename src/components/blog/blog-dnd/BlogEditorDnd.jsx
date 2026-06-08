@@ -297,12 +297,12 @@ const BlogBlocks = ({ isSeeded, type, index, register, control, remove }) => {
 
   // on edit: block has content but no type saved in DB yet
   if (!resolvedType) {
-    if (blockText) return <TextBlock isSeeded={isSeeded} index={index} register={register} remove={remove} control={control} />;
+    if (blockText) return <TextBlock index={index} register={register} remove={remove} control={control} />;
     if (blockImageUrl) return <ImageBlock index={index} register={register} control={control} remove={remove} />;
     return null; // empty block with no type — don't render
   }
 
-  if (resolvedType === "text") return <TextBlock isSeeded={isSeeded} index={index} register={register} remove={remove} control={control} />;
+  if (resolvedType === "text") return <TextBlock index={index} register={register} remove={remove} control={control} />;
   if (resolvedType === "image") return <ImageBlock index={index} register={register} control={control} remove={remove} />;
   if (resolvedType === "columns") return <ColumnsBlock index={index} control={control} remove={remove} />;
 

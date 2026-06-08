@@ -26,7 +26,6 @@ export const getBlogsApi = async (params) => {
 export const getBlogApi = async (slug) => {
   try {
     const res = await apiClient.get(`/posts/admin/${slug}`);
-    console.log(res.data);
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";
@@ -37,7 +36,6 @@ export const getBlogApi = async (slug) => {
 export const updateBlogApi = async (id, form) => {
   try {
     const res = await apiClient.patch(`/posts/${id}`, form, { headers: { "Content-Type": "multipart/form-data" } });
-    console.log(res.data);
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

@@ -8,13 +8,13 @@ export const useCreateShip = () => {
   const clientQuery = useQueryClient();
   const { mutate, isPending, isSuccess } = useMutation({
     mutationFn: createEditShip,
-    onSuccess: () => {
-      toast.success("New ship added");
+    onSuccess: (data) => {
+      toast.success(data.message);
       clientQuery.invalidateQueries(["ships", "statistic"]);
       navigate("/ships");
     },
     onError: (error) => {
-      toast.error(error);
+      toast.error(error.message);
     },
   });
 

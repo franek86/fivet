@@ -16,6 +16,7 @@ import { editBlogSchema } from "../../utils/validationSchema.js";
 import { useGetBlogCategories } from "../../hooks/useBlogCategory.js";
 import Accordion from "../ui/Accordion.jsx";
 import BlogSeoBlock from "./BlogSeoBlock.jsx";
+import MultipleImagesUploader from "../MultipleImagesUploader.jsx";
 
 const pulse = keyframes`
   0%, 100% { opacity: 1; }
@@ -216,6 +217,10 @@ const EditBlogForm = () => {
   const blogId = data?.id;
   const { mutate: updateBlog, isFetching: isSaving } = useUpdateBlog();
 
+  const [existingImages, setExistingImages] = useState(data?.gallery);
+  const [newImages, setNewImages] = useState([]);
+  const [deleteImageIds, setDeleteImageIds] = useState([]);
+
   const {
     register,
     control,
@@ -238,9 +243,12 @@ const EditBlogForm = () => {
       metaKeywords: "",
       metaDescription: "",
       blocks: [],
+      gallery: [],
     },
     resolver: zodResolver(editBlogSchema),
   });
+
+  console.log(isDirty);
 
   /* Get blog categores and map it  */
   const blogCategories = categories?.map((cat) => {
@@ -273,6 +281,7 @@ const EditBlogForm = () => {
       metaKeywords: data.metaKeywords ?? "",
       metaDescription: data.metaDescription ?? "",
       blocks: sorted,
+      gallery: data.gallery ?? [],
     });
     setIsSeeded(true);
   }, [data, reset, isSeeded]);
@@ -302,6 +311,7 @@ const EditBlogForm = () => {
       form.append("bannerImage", values.bannerImage);
     }
 
+    // blocks
     const blocksPayload = values.blocks.map((block, i) => ({
       text: block.text,
       imageAlt: block.imageAlt,
@@ -315,6 +325,37 @@ const EditBlogForm = () => {
         form.append("blockImages", block.imageUrl);
       }
     });
+
+    /*---------- Blog Gallery -----------*/
+
+    /* New images in gallery */
+    newImages.forEach((img) => {
+      form.append("gallery", img.file);
+    });
+
+    /* New image alt text */
+    const newImagesMeta = newImages.map((img) => ({
+      alt: img.alt || "",
+    }));
+
+    /* Append new image meta text*/
+    form.append("imagesMeta", JSON.stringify(newImagesMeta));
+
+    /* handle existing images in gallery */
+
+    /* Existing image alt text in gallery */
+    const existingImagesMeta = existingImages?.map((img) => ({
+      id: img.id,
+      alt: img.alt || "",
+    }));
+
+    /* Append existing image in gallery meta text*/
+    form.append("existingImagesMeta", JSON.stringify(existingImagesMeta));
+
+    // deleteImageIds = ["publicId1", "publicId2"]
+    if (deleteImageIds && deleteImageIds.length > 0) {
+      form.append("deleteImageIds", JSON.stringify(deleteImageIds));
+    }
 
     await updateBlog({ id: blogId, form });
   };
@@ -331,7 +372,7 @@ const EditBlogForm = () => {
         <BackBtn />
         <TopBarTitle>{title || "Untitled post"} — Edit</TopBarTitle>
         <StatusDot $dirty={isDirty} $saving={isSaving} title={isSaving ? "Saving…" : isDirty ? "Unsaved changes" : "Saved"} />
-        <SaveBtn onClick={handleSubmit(onSubmit)} disabled={isSaving || !isDirty}>
+        <SaveBtn onClick={handleSubmit(onSubmit)} disabled={isSaving}>
           {isSaving ? "Saving…" : "Save"}
         </SaveBtn>
       </TopBar>
@@ -368,6 +409,18 @@ const EditBlogForm = () => {
             <Spinner />
           )}
         </Column>
+
+        <Accordion title='Gallery section'>
+          <MultipleImagesUploader
+            name='gallery'
+            existingImages={existingImages}
+            setExistingImages={setExistingImages}
+            onNewImagesChange={setNewImages}
+            newImages={newImages}
+            deleteImageIds={deleteImageIds}
+            onDeleteImageIdsChange={setDeleteImageIds}
+          />
+        </Accordion>
 
         <Accordion title='SEO section'>
           <BlogSeoBlock register={register} />

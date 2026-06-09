@@ -32,7 +32,7 @@ const BlogColumn = ({ data, selectedBlog, onCheckboxChange }) => {
   const { id, bannerImage, slug, bannerImageAlt, title, shortDescription, status, views } = data;
 
   const dispatch = useDispatch();
-  const { mutate } = useDeleteBlog();
+  const { mutate, isPending } = useDeleteBlog();
   return (
     <tr>
       <td className='table-td'>
@@ -75,7 +75,12 @@ const BlogColumn = ({ data, selectedBlog, onCheckboxChange }) => {
       </td>
 
       <Modal name={id} onClose={() => dispatch(closeModalByName(id))}>
-        <ConfirmDialog itemName={title} onConfirm={() => mutate(id)} onCloseModal={() => dispatch(closeModalByName(id))} />
+        <ConfirmDialog
+          itemName={title}
+          onConfirm={() => mutate(id)}
+          onCloseModal={() => dispatch(closeModalByName(id))}
+          isDeleting={isPending}
+        />
       </Modal>
     </tr>
   );

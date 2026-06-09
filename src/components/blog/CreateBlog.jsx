@@ -218,6 +218,13 @@ const CreateBlog = () => {
     formData.append("metaTitle", data.metaTitle);
     formData.append("metaKeywords", data.metaKeywords);
 
+    //tags
+    const tagsArray = data.tags
+      .split(",")
+      .map((t) => t.trim())
+      .filter(Boolean);
+    tagsArray.forEach((tag) => formData.append("tags", tag));
+
     newImages.forEach((img) => {
       formData.append("gallery", img.file);
     });

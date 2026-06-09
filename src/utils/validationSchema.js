@@ -208,7 +208,7 @@ export const editBlogSchema = blogSchema.partial().extend({
   bannerImage: z.any().optional(),
   blocks: z.array(
     z.object({
-      text: z.string().optional(),
+      text: z.string().nullable().optional(),
       imageUrl: z.any().optional(),
       imageAlt: z.string().nullable().optional(),
     }),

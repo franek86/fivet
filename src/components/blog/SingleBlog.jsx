@@ -209,7 +209,7 @@ const SingleBlog = () => {
       <Category>{blogCategory}</Category>
       <HeroImage src={data.bannerImage} alt={data.bannerImageAlt} />
 
-      {data.tags.length && (
+      {data.tags.length > 0 && (
         <Tags>
           {data.tags.map((tag) => (
             <div className='tag'>{tag}</div>
@@ -223,7 +223,9 @@ const SingleBlog = () => {
         });
         return (
           <Content>
-            {(block?.text || block?.text != undefined) && <div key={block.id} dangerouslySetInnerHTML={sanitizedData()} />}
+            {(block?.text || block?.text !== undefined) && (
+              <div className='text-test-frane' key={block.id} dangerouslySetInnerHTML={sanitizedData()} />
+            )}
             {block?.imageUrl && <img src={block.imageUrl} alt={block.imageAlt} />}
           </Content>
         );

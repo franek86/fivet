@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Title from "./ui/Title.jsx";
 import Button from "./ui/Button.jsx";
+import Spinner from "./Spinner.jsx";
 
 const StyledConfirmDialog = styled.div`
   width: 40rem;
@@ -20,7 +21,7 @@ const StyledConfirmDialog = styled.div`
   }
 `;
 
-function ConfirmDialog({ itemName, onConfirm, onCloseModal }) {
+function ConfirmDialog({ itemName, onConfirm, onCloseModal, isDeleting }) {
   return (
     <StyledConfirmDialog>
       <Title tag='h3'>Delete {itemName}</Title>
@@ -31,7 +32,7 @@ function ConfirmDialog({ itemName, onConfirm, onCloseModal }) {
           Cancel
         </Button>
         <Button $variation='danger' onClick={onConfirm}>
-          Delete
+          {isDeleting ? "Deleting ..." : "Delete"}
         </Button>
       </div>
     </StyledConfirmDialog>

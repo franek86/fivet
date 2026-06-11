@@ -31,9 +31,16 @@ import CustomBigCalendarHours from "./CustomBigCalendarHours.jsx";
 
 const Header = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 2rem;
   justify-content: space-between;
   align-items: center;
   margin-top: 4rem;
+
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+    gap: 0;
+  }
 
   .info {
     font-size: 18px;
@@ -70,8 +77,11 @@ const StyledLayout = styled.div`
   .calendar-body {
     margin: 3rem 0;
     background-color: var(--color-white);
-    padding: 3rem;
     border-radius: var(--border-radius-lg);
+
+    @media screen and (min-width: 640px) {
+      padding: 3rem;
+    }
 
     .week-wrapper {
       .hours-wrapper {

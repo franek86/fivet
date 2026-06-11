@@ -45,8 +45,11 @@ import Label from "../ui/Label.jsx";
  */
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 360px;
-  gap: 2rem;
+  gap: 1rem;
+
+  @media screen and (min-width: 640px) {
+    grid-template-columns: 1fr 360px;
+  }
 `;
 const FormHeader = styled.header`
   display: flex;

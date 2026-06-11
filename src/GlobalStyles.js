@@ -192,9 +192,14 @@ const GlobalStyles = styled.createGlobalStyle`
   }
   .search-container-right {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    gap: 3rem;
+    gap: 2rem;
+
+    @media screen and (min-width: 640px) {
+      flex-direction: row;
+    }
   }
 
   /* card */
@@ -206,9 +211,14 @@ const GlobalStyles = styled.createGlobalStyle`
   }
   .card-header {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 16px;
+
+    @media screen and (min-width: 640px) {
+      flex-direction: row;
+    }
   }
 
   /* Simmer animation */

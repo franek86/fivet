@@ -28,10 +28,13 @@ const pulse = keyframes`
 ───────────────────────────────────────────── */
 const EditorShell = styled.div`
   display: grid;
-  grid-template-columns: 1fr 260px;
-  grid-template-rows: 56px 1fr;
   background: var(--color-white);
   color: var(--color-text);
+
+  @media screen and (min-width: 640px) {
+    grid-template-columns: 1fr 260px;
+    grid-template-rows: 56px 1fr;
+  }
 `;
 
 const Column = styled.div`
@@ -178,7 +181,7 @@ const TitleInput = styled.textarea`
   outline: none;
   resize: none;
   background: transparent;
-  font-size: 38px;
+  font-size: 30px;
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.2;

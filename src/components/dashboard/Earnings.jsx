@@ -17,6 +17,7 @@ const Tabs = styled.div`
   padding: 4px;
   gap: 4px;
   background-color: var(--color-grey-200);
+  margin-top: 10px;
 `;
 
 const Tab = styled.div`

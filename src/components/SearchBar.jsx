@@ -10,12 +10,12 @@ import { Search } from "lucide-react";
 const SearchWrap = styled.div`
   background-color: var(--color-white);
   border: 1px solid var(--color-grey-200);
-  width: 23rem;
+  width: 100%;
   position: relative;
   border-radius: 20px;
 
   @media screen and (min-width: 640px) {
-    width: ${({ width }) => width || "30rem"};
+    width: 23rem;
   }
 `;
 
@@ -40,7 +40,7 @@ const SearchInput = styled.input`
   background-color: transparent;
 `;
 
-function SearchBar({ paramKey = "search", width = "27rem" }) {
+function SearchBar({ paramKey = "search" }) {
   const lastKey = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -92,7 +92,7 @@ function SearchBar({ paramKey = "search", width = "27rem" }) {
   };
 
   return (
-    <SearchWrap width={width}>
+    <SearchWrap>
       <SearchInput
         type='text'
         name='search'

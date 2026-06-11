@@ -14,13 +14,12 @@ import { customFormatDate } from "../../utils/formatDate.js";
 const Container = styled.article`
   max-width: 780px;
   margin: 0 auto;
-  padding: 0 40px 20px;
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
   color: var(--color-text);
   line-height: 1.7;
+
+  @media screen and (min-width: 640px) {
+    padding: 0 40px 20px;
+  }
 `;
 
 const Header = styled.header`
@@ -29,6 +28,7 @@ const Header = styled.header`
   .header-top {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 6rem;
 
     .header-top-left {
       display: flex;
@@ -40,6 +40,7 @@ const Header = styled.header`
 const Title = styled.h1`
   font-size: 40px;
   font-weight: 800;
+  line-height: normal;
   letter-spacing: -0.02em;
   margin-bottom: 10px;
 `;

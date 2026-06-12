@@ -3,10 +3,12 @@ import { Outlet } from "react-router";
 import styled from "styled-components";
 
 import Sidebar from "../components/Sidebar.jsx";
+import Header from "../components/header/Header.jsx";
 
 import { useSocketAuth } from "../hooks/useSocketAuth.js";
-import { useRealtime } from "../hooks/useRealtime.js";
-import Header from "../components/header/Header.jsx";
+
+import { useUser } from "../hooks/useAuth.js";
+import { useUserSocket } from "../hooks/useUserSocket.js";
 
 const LayoutGrid = styled.div`
   min-height: 100vh;
@@ -36,8 +38,13 @@ const Main = styled.main`
 `;
 
 function MainLayout() {
+  const { data: user } = useUser();
+
+  if (user?.role === "USER") {
+    useUserSocket(user?.id ?? "");
+  }
+
   useSocketAuth();
-  useRealtime();
 
   return (
     <LayoutGrid>

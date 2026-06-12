@@ -1,11 +1,24 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import socket from "../shared/socket.js";
+import { toast } from "react-toastify";
 
 export function useAdminSocket() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    const handleCreateShipNotify = (payload) => {
+      toast.success(`New ship created by ${payload.shipName}`);
+      // Refresh blogs list so the "New" label appears
+      queryClient.invalidateQueries({ queryKey: ["ships"] });
+    };
+
+    const handlePublishedShipNotify = (payload) => {
+      toast.success(`You ship ${payload.shipName} has been published by admin`);
+      // Refresh blogs list so the "New" label appears
+      queryClient.invalidateQueries({ queryKey: ["ships"] });
+    };
+
     const updateUserStatus = (userId, online) => {
       queryClient.setQueriesData({ queryKey: ["all-profile"] }, (old) => {
         if (!old) return old;
@@ -27,11 +40,15 @@ export function useAdminSocket() {
       updateUserStatus(payload.userId, false);
     };
 
+    socket.on("ship:created", handleCreateShipNotify);
+    socket.on("ship:published", handlePublishedShipNotify);
     socket.on("user:online", handleUserOnline);
     socket.on("user:offline", handleUserOffline);
     socket.on("user:count", handleUserOffline);
 
     return () => {
+      socket.off("ship:created", handleCreateShipNotify);
+      socket.off("ship:published", handlePublishedShipNotify);
       socket.off("user:online", handleUserOnline);
       socket.off("user:offline", handleUserOffline);
       socket.off("user:count", handleUserOffline);

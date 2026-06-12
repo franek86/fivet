@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { getCurrentUser, logoutUserApi } from "../services/apiAuth.js";
 import { setUser } from "../slices/authSlice.js";
 import { useDispatch } from "react-redux";
+import { disconnectSocket } from "../shared/socket.js";
 
 export const useUser = () => {
   const { data, isLoading, isError } = useQuery({
@@ -28,12 +29,12 @@ export const useLogout = () => {
     mutationFn: logoutUserApi,
     onSuccess: () => {
       dispatch(setUser({ isAuthenticated: false, user: null }));
-
       queryClient.removeQueries({ queryKey: ["user"] });
       queryClient.clear();
 
       toast.success("Your are logged out!");
       navigate("/", { replace: true });
+      disconnectSocket();
     },
     onError: (error) => {
       console.error("Logout error:", error.message);

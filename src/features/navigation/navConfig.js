@@ -5,7 +5,7 @@ export const navLinks = [
   { href: "/user/dashboard", label: "Dashboard", icon: TrendingUp, allowRoles: ["USER"] },
   { href: "/ships", label: "Ships", icon: Ship, allowRoles: ["ADMIN", "USER"] },
   { href: "/categories", label: "Categories", icon: Blocks, allowRoles: ["ADMIN"] },
-  { href: "/users", label: "Users", icon: Users, badgeKey: "activeUsers", allowRoles: ["ADMIN"] },
+  { href: "/users", label: "Users", icon: Users, badge: "onlineCount", allowRoles: ["ADMIN"] },
   { href: "/events", label: "Events", icon: CalendarRange, allowRoles: ["ADMIN", "USER"] },
   { href: "/address-book", label: "Address book", icon: Contact, allowRoles: ["ADMIN", "USER"], plan: "PREMIUM" },
   { href: "/payments", label: "Payments", icon: CreditCard, allowRoles: ["ADMIN"] },

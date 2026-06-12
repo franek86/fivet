@@ -6,6 +6,8 @@ import { useUser } from "../../hooks/useAuth.js";
 import { navLinks } from "../../features/navigation/navConfig.js";
 
 import NavItem from "./NavItem.jsx";
+import { useAdminSocket } from "../../hooks/useAdminSocket.js";
+import { useGetAllUserProfile } from "../../hooks/useProfile.js";
 
 const StyledNav = styled.nav`
   display: flex;
@@ -15,15 +17,18 @@ const StyledNav = styled.nav`
 
 function Nav() {
   const { data: user } = useUser();
+  const { data: users } = useGetAllUserProfile();
 
-  const activeUserCount = useSelector((state) => state.realtime.activeUserCount);
-  const badgeMap = { activeUsers: activeUserCount };
+  useAdminSocket();
+
+  const onlineCount = users?.filter((u) => u.online).length;
+
   return (
     <StyledNav>
       {navLinks
         .filter((item) => item.allowRoles.includes(user.role))
         .map((item) => (
-          <NavItem key={item.label} item={item} badgeMap={badgeMap} />
+          <NavItem key={item.label} item={item} badgeMap={onlineCount} />
         ))}
     </StyledNav>
   );

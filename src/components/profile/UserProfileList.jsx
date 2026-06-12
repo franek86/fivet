@@ -11,6 +11,7 @@ import { customFormatDate } from "../../utils/formatDate.js";
 import { useDeleteUserProfile, useGetAllUserProfile } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { UserRound } from "lucide-react";
+import { useAdminSocket } from "../../hooks/useAdminSocket.js";
 
 const CardWrap = styled.div`
   display: grid;
@@ -124,19 +125,25 @@ function UserProfileList() {
   const { mutate } = useDeleteUserProfile();
   const dispatch = useDispatch();
 
+  useAdminSocket();
+
   if (isPending) return <Spinner />;
 
   return (
     <>
       <CardWrap>
         {isFetching
-          ? data.map((_, index) => <TablePlaceholder count={index} />)
+          ? data.map((_, index) => (
+              <div key={index}>
+                <TablePlaceholder count={index} />
+              </div>
+            ))
           : data.map((item) => (
               <Card key={item.id}>
                 <div className='header'>
-                  <ActiveUser $props={item.isActive}>
+                  <ActiveUser $props={item.online}>
                     <span></span>
-                    {item.isActive ? "Online" : "Offline"}
+                    {item.online ? "Online" : "Offline"}
                   </ActiveUser>
                 </div>
 

@@ -7,19 +7,19 @@ export function useSocketAuth() {
   useEffect(() => {
     const token = getAccessToken();
 
-    if (token) {
-      socket.auth = { token }; // attach token before connecting
-      if (!socket.connected) socket.connect();
-    } else {
-      if (socket.connected) {
-        socket.emit("logout");
-        socket.disconnect();
-      }
+    if (!token) {
+      socket.disconnect();
+      return;
     }
 
-    // Optional: cleanup on unmount
+    socket.auth = { token };
+
+    if (!socket.connected) {
+      socket.connect();
+    }
+
     return () => {
-      if (socket.connected) socket.disconnect();
+      socket.disconnect();
     };
   }, []);
 }

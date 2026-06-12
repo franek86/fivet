@@ -120,13 +120,13 @@ const NavBadge = styled.span`
   right: -2rem;
   width: 2rem;
   height: 2rem;
-  font-size: 1.2rem;
+  font-size: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background-color: var(--color-success);
-  color: var(--color-text);
+  color: var(--color-white);
 `;
 
 const NavItem = ({ item, badgeMap }) => {
@@ -205,7 +205,7 @@ const NavItem = ({ item, badgeMap }) => {
       <NavContent>
         {item.label}
         {item.requiredPlan === "PREMIUM" && <PremiumSticker />}
-        {item.badge && badgeMap[item.badge] > 0 && <NavBadge>{badgeMap[item.badge]}</NavBadge>}
+        {item.badge && badgeMap > 0 && <NavBadge>{badgeMap}</NavBadge>}
       </NavContent>
     </NavList>
   );

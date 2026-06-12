@@ -68,22 +68,24 @@ function LastBlogs({ data, isLoading }) {
         <h3>Recent blogs</h3>
       </div>
       {data?.lastFiveBlogs?.map((blog) => (
-        <Link to={`/blogs/${blog.slug}`}>
-          <Box key={blog.id}>
-            {blog?.bannerImage ? (
-              <Image src={blog.bannerImage} alt={blog.bannerImageAlt} />
-            ) : (
-              <ImagePlaceholder>
-                <UserRound />
-              </ImagePlaceholder>
-            )}
-            <BoxContent>
-              <strong>{blog.title}</strong>
-              <p>{blog.status}</p>
-            </BoxContent>
-            <Date> {customFormatDate(blog.createdAt)}</Date>
-          </Box>
-        </Link>
+        <div key={blog.id}>
+          <Link to={`/blogs/${blog.slug}`}>
+            <Box>
+              {blog?.bannerImage ? (
+                <Image src={blog.bannerImage} alt={blog.bannerImageAlt} />
+              ) : (
+                <ImagePlaceholder>
+                  <UserRound />
+                </ImagePlaceholder>
+              )}
+              <BoxContent>
+                <strong>{blog.title}</strong>
+                <p>{blog.status}</p>
+              </BoxContent>
+              <Date> {customFormatDate(blog.createdAt)}</Date>
+            </Box>
+          </Link>
+        </div>
       ))}
     </section>
   );

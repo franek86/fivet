@@ -1,12 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 
 import styled from "styled-components";
-import { Bell, BellOff } from "lucide-react";
+import { Bell, BellOff, X } from "lucide-react";
 
 import { markNotificationRead } from "../../slices/realtimeSlice.js";
 import { toggleDropdown } from "../../slices/uiSlice.js";
+import { useAllUnreadNotification, useNotificationCount, useUpdateReadNotification } from "../../hooks/useNotification.js";
+import { customFormatDate } from "../../utils/formatDate.js";
+import Spinner from "../Spinner.jsx";
 
 const Wrapper = styled.div`
   display: grid;
@@ -36,29 +39,38 @@ const Count = styled.div`
 `;
 
 const DropdownToggle = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 1rem;
   position: absolute;
   left: 0;
-  top: 2.5rem;
+  top: 3.5rem;
+  background-color: var(--color-white);
+  box-shadow: var(--box-shadow-lg);
+  z-index: 2;
 `;
 
 const NotificationCard = styled.div`
   position: relative;
-  padding: 1rem 2rem;
-  background-color: var(--color-white);
-  color: var(--color-accent-600);
-  box-shadow: var(--shadow-lg);
+  color: var(--color-text);
   border-radius: var(--border-radius-md);
-  width: max-content;
+  width: 300px;
   max-height: 300px;
   overflow-y: auto;
   z-index: 100;
-  p {
-    font-size: 1.35rem;
-    font-weight: 600;
-  }
-  span {
-    font-size: 1rem;
-    display: block;
+
+  .content {
+    padding: 1rem 2rem;
+    background-color: var(--color-white);
+    p {
+      font-size: 1.35rem;
+      font-weight: 600;
+    }
+    span {
+      font-size: 1rem;
+      display: block;
+    }
   }
 `;
 
@@ -82,8 +94,7 @@ const DeleteCircle = styled.div`
   position: absolute;
   top: 0px;
   right: 0px;
-  font-size: 1.2rem;
-  font-weight: bold;
+  padding: 0.2rem;
   background-color: var(--color-danger);
   color: white;
   border-radius: 50%;
@@ -92,46 +103,41 @@ const DeleteCircle = styled.div`
 `;
 
 export default function NotificationIcon() {
-  const dispatch = useDispatch();
   const dropdownRef = useRef(null);
+  const [open, setOpen] = useState(false);
+  const { data: unreadData, isLoading } = useAllUnreadNotification();
+  //const { data: count } = useNotificationCount();
+  const { mutate: markAsRead, isPending } = useUpdateReadNotification();
 
-  const selectNotifications = (state) => state.realtime.notifications;
-
-  const selectUnreadNotifications = createSelector([selectNotifications], (notifications) => notifications.filter((n) => !n.read));
-
-  const unreadNotifications = useSelector(selectUnreadNotifications);
-  const unreadCount = unreadNotifications.length;
-
-  const isToggleDropdown = useSelector((state) => state.ui.isDropdownOpen);
+  const notifications = unreadData?.notifications ?? [];
+  const count = unreadData?.unreadCount;
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        dispatch(toggleDropdown(false));
+        setOpen(false);
       }
     }
 
-    if (isToggleDropdown) {
+    if (open) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isToggleDropdown, dispatch]);
+  }, [open]);
 
-  const markAsRead = (id) => {
-    dispatch(markNotificationRead(id));
-  };
+  if (isLoading) return <Spinner />;
 
   return (
     <Wrapper ref={dropdownRef}>
-      <Bell size={20} onClick={() => dispatch(toggleDropdown())} />
-      {unreadCount > 0 && <Count>{unreadCount}</Count>}
+      <Bell size={20} onClick={() => setOpen((prev) => !prev)} />
+      {count > 0 && <Count>{count}</Count>}
 
-      {isToggleDropdown && (
+      {open && (
         <DropdownToggle>
-          {unreadNotifications.length === 0 && (
+          {notifications.length === 0 && (
             <NotificationCard>
               <NotificationMsg>
                 <BellOff />
@@ -139,11 +145,15 @@ export default function NotificationIcon() {
               </NotificationMsg>
             </NotificationCard>
           )}
-          {unreadNotifications.map((n) => (
+          {notifications.map((n) => (
             <NotificationCard key={n.id}>
-              <DeleteCircle onClick={() => markAsRead(n.id)}>x</DeleteCircle>
-              <p>{n.message}</p>
-              <span>{n.createdAt}</span>
+              <DeleteCircle onClick={() => markAsRead({ id: n.id, data: true })}>
+                <X />
+              </DeleteCircle>
+              <div className='content'>
+                <p>{n.message}</p>
+                <span>{customFormatDate(n.createdAt)}</span>
+              </div>
             </NotificationCard>
           ))}
         </DropdownToggle>

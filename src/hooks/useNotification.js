@@ -12,12 +12,21 @@ export const useNotificationList = () => {
 };
 
 export const useAllUnreadNotification = () => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["unread-notification"],
     queryFn: getAllUnreadNotifications,
   });
 
-  return { data };
+  return { data, isLoading };
+};
+
+export const useNotificationCount = () => {
+  return useQuery({
+    queryKey: ["notification-count"],
+    initialData: 0,
+    staleTime: Infinity,
+    enabled: false, // socket controls this value
+  });
 };
 
 export const useUpdateReadNotification = () => {
@@ -26,7 +35,13 @@ export const useUpdateReadNotification = () => {
     mutationFn: ({ id, data }) => updateReadNotification({ id, data }),
     onSuccess: () => {
       toast.success("Notification successfully edited.");
-      queryClient.invalidateQueries(["unread-notification,notifications"]);
+      queryClient.invalidateQueries({
+        queryKey: ["unread-notification"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
     },
     onError: (error) => {
       toast.error(error.message);
@@ -41,7 +56,7 @@ export const useDeleteNotification = () => {
     mutationFn: (id) => deleteNotificationApi(id),
     onSuccess: () => {
       toast.success("Notification successfully deleted.");
-      queryClient.invalidateQueries(["unread-notification,notifications"]);
+      queryClient.invalidateQueries(["unread-notification", "notifications"]);
     },
     onError: (error) => {
       toast.error(error.message);

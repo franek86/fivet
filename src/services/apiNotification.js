@@ -13,6 +13,7 @@ export const getNotifications = async () => {
 export const getAllUnreadNotifications = async () => {
   try {
     const res = await apiClient.get("/notification/unread");
+
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";
@@ -22,7 +23,7 @@ export const getAllUnreadNotifications = async () => {
 
 export const updateReadNotification = async ({ id, data }) => {
   try {
-    const response = await apiClient.put(`/notification/${id}/read`, { ...data, isRead: data });
+    const response = await apiClient.put(`/notification/${id}/read`, { isRead: data });
     return response;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

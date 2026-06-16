@@ -6,8 +6,9 @@ export const usePublishShip = () => {
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
     mutationFn: ({ id, isPublished, userId }) => publishShipApi(id, isPublished, userId),
-    onSuccess: () => {
-      toast.success("Ship successfully published");
+    onSuccess: (data) => {
+      const togglePublish = data.data.isPublished;
+      toast.success(`Ship successfully ${togglePublish ? "published" : "unpublish"}`);
       queryClient.invalidateQueries(["ships"]);
     },
     onError: (error) => {

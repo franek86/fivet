@@ -8,7 +8,12 @@ import ConfirmDialog from "../ConfirmDialog.jsx";
 import Modal from "../Modal.jsx";
 
 import { customFormatDate } from "../../utils/formatDate.js";
-import { useDeleteNotification, useNotificationList, useUpdateReadNotification } from "../../hooks/useNotification.js";
+import {
+  useAllUnreadNotification,
+  useDeleteNotification,
+  useNotificationList,
+  useUpdateReadNotification,
+} from "../../hooks/useNotification.js";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { createSelector } from "@reduxjs/toolkit";
@@ -63,16 +68,10 @@ const SwitchWrapper = styled.div`
 function NotificationLists() {
   const dispatch = useDispatch();
 
-  const { data, isLoading, isError } = useNotificationList();
+  const { data: notifications, isLoading, isError } = useNotificationList();
   const { mutate: updateRead } = useUpdateReadNotification();
   const { mutate: deleteNotification } = useDeleteNotification();
 
-  const selectNotifications = (state) => state.realtime.notifications;
-
-  const selectUnreadNotifications = createSelector([selectNotifications], (notifications) => notifications.filter((n) => !n.read));
-
-  const realtimeNotifications = useSelector(selectUnreadNotifications);
-  const notifications = [...realtimeNotifications, ...(data || [])];
   if (isLoading) return <Spinner />;
   if (notifications.length < 1) return <EmptyState message='No notifications for now.' />;
   if (isError) return <div>Error</div>;

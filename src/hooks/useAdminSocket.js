@@ -13,18 +13,11 @@ export function useAdminSocket() {
       queryClient.invalidateQueries({ queryKey: ["ships"] });
     };
 
-    const handlePublishedShipNotify = (payload) => {
-      toast.success(`You ship ${payload.shipName} has been published by admin`);
-      // Refresh blogs list so the "New" label appears
-      queryClient.invalidateQueries({ queryKey: ["ships"] });
-    };
-
     const updateUserStatus = (userId, online) => {
       queryClient.setQueriesData({ queryKey: ["all-profile"] }, (old) => {
         if (!old) return old;
 
         if (Array.isArray(old)) {
-          console.log(old);
           return old.map((u) => (u.id === userId ? { ...u, online } : u));
         }
 
@@ -40,18 +33,34 @@ export function useAdminSocket() {
       updateUserStatus(payload.userId, false);
     };
 
+    const handleNotificationNew = (payload) => {
+      queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["unread-notification"],
+      });
+      queryClient.setQueryData(["notification-count"], count);
+    };
+
+    const handleNotificationCount = ({ count }) => {
+      queryClient.setQueryData(["notification-count"], count);
+    };
+
     socket.on("ship:created", handleCreateShipNotify);
-    socket.on("ship:published", handlePublishedShipNotify);
     socket.on("user:online", handleUserOnline);
     socket.on("user:offline", handleUserOffline);
     socket.on("user:count", handleUserOffline);
+    socket.on("admin:notification:new", handleNotificationNew);
+    socket.on("admin:notification:count", handleNotificationCount);
 
     return () => {
       socket.off("ship:created", handleCreateShipNotify);
-      socket.off("ship:published", handlePublishedShipNotify);
       socket.off("user:online", handleUserOnline);
       socket.off("user:offline", handleUserOffline);
       socket.off("user:count", handleUserOffline);
+      socket.off("admin:notification:new", handleNotificationNew);
+      socket.off("admin:notification:count", handleNotificationCount);
     };
   }, [queryClient]);
 }

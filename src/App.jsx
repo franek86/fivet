@@ -37,6 +37,7 @@ import Blog from "./pages/Blog.jsx";
 import EditBlog from "./pages/EditBlog.jsx";
 import PaymentSuccess from "./pages/PaymentSuccess.jsx";
 import PaymentError from "./pages/PaymentError.jsx";
+import Settings from "./pages/Settings.jsx";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
               <Route path='/ships/edit/:id' element={<EditShip />} />
               <Route path='/ships/:id' element={<SingleShip />} />
               <Route path='/events' element={<Events />} />
+              <Route path='/settings' element={<Settings />} />
               <Route path='/dnd-test' element={<BlogEditorDnd />} />
               <Route element={<PremiumRoute />}>
                 <Route path='/address-book' element={<AddressBook />} />

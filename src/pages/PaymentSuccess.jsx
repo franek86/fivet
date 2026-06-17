@@ -1,8 +1,10 @@
 import React from "react";
-
+import { useQuery } from "@tanstack/react-query";
+import { Link, useSearchParams } from "react-router";
 import styled, { keyframes } from "styled-components";
+
 import Button from "../components/ui/Button.jsx";
-import { Link } from "react-router";
+import { getPaymentSession } from "../services/apiPayments.js";
 
 /* Animations */
 
@@ -128,6 +130,16 @@ const ButtonGroup = styled.div`
 `;
 
 const PaymentSuccess = () => {
+  const [searchParams] = useSearchParams();
+  const sessionId = searchParams.get("session_id");
+  /*  const { data, isLoading } = useGetPaymentSession(sessionId); */
+  const { data, isLoading } = useQuery({
+    queryKey: ["payment-session", sessionId],
+    queryFn: () => getPaymentSession(sessionId),
+    enabled: !!sessionId,
+  });
+
+  const { amount_total, currency, invoice, status, presentment_details } = data;
   return (
     <Container>
       <BackgroundGlow />
@@ -143,18 +155,20 @@ const PaymentSuccess = () => {
 
         <OrderInfo>
           <InfoRow>
-            <Label>Transaction ID</Label>
-            <Value>#TRX-82734921</Value>
+            <Label>Invoice ID</Label>
+            <Value>{invoice}</Value>
           </InfoRow>
 
           <InfoRow>
             <Label>Amount Paid</Label>
-            <Value>$99.00</Value>
+            <Value>
+              {amount_total} {currency}
+            </Value>
           </InfoRow>
 
           <InfoRow>
             <Label>Status</Label>
-            <Status>Completed</Status>
+            <Status>{status}</Status>
           </InfoRow>
         </OrderInfo>
 

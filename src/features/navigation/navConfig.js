@@ -1,4 +1,4 @@
-import { BellPlus, Blocks, CalendarRange, Contact, CreditCard, Globe, TrendingUp, Ship, Users } from "lucide-react";
+import { BellPlus, Blocks, CalendarRange, Contact, CreditCard, Globe, TrendingUp, Ship, Users, Settings } from "lucide-react";
 
 export const navLinks = [
   { href: "/admin/dashboard", label: "Dashboard", icon: TrendingUp, allowRoles: ["ADMIN"] },
@@ -20,4 +20,5 @@ export const navLinks = [
       { id: "blogs-category", label: "Blog category", href: "blogs/category" },
     ],
   },
+  { href: "/settings", label: "Settings", icon: Settings, allowRoles: ["ADMIN", "USER"] },
 ];

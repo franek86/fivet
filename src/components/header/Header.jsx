@@ -8,6 +8,8 @@ import Logout from "../Logout.jsx";
 import NotificationIcon from "../notification/NotificationIcon.jsx";
 import { Link } from "react-router";
 import { UserPen } from "lucide-react";
+import SubscriptionStatus from "../SubscriptionStatus.jsx";
+import { useUser } from "../../hooks/useAuth.js";
 
 const HeaderWrap = styled.header`
   display: flex;
@@ -16,6 +18,12 @@ const HeaderWrap = styled.header`
   background: transparent;
   gap: 16px;
   margin-bottom: 24px;
+`;
+
+const HeaderLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 `;
 
 const HeaderRight = styled.div`
@@ -64,6 +72,7 @@ const P = styled.p`
 
 const Header = () => {
   const [toggle, setToggle] = useState(false);
+  const { data } = useUser();
 
   const handleToggle = () => {
     setToggle(!toggle);
@@ -71,7 +80,10 @@ const Header = () => {
 
   return (
     <HeaderWrap>
-      <NotificationIcon />
+      <HeaderLeft>
+        <NotificationIcon />
+        {data.role === "USER" && <SubscriptionStatus subscription={data?.subscription} />}
+      </HeaderLeft>
       <HeaderRight onClick={() => handleToggle()}>
         <Avatar />
         <DropDownBox fromTop={toggle}>

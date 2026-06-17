@@ -35,6 +35,8 @@ import BlogCategory from "./pages/BlogCategory.jsx";
 import BlogEditorDnd from "./components/blog/blog-dnd/BlogEditorDnd.jsx";
 import Blog from "./pages/Blog.jsx";
 import EditBlog from "./pages/EditBlog.jsx";
+import PaymentSuccess from "./pages/PaymentSuccess.jsx";
+import PaymentError from "./pages/PaymentError.jsx";
 
 function App() {
   return (
@@ -67,6 +69,8 @@ function App() {
               <Route path='/profile' element={<Profile />} />
             </Route>
             <Route path='/billing' element={<Billing />} />
+            <Route path='/payment-success' element={<PaymentSuccess />} />
+            <Route path='/payment-error' element={<PaymentError />} />
           </Route>
         </Route>
 
@@ -76,6 +80,7 @@ function App() {
             <Route path='/users' element={<Users />} />
             <Route path='/categories' element={<Categories />} />
             <Route path='/payments' element={<Payments />} />
+
             <Route path='/blogs'>
               <Route index element={<Blogs />} />
               <Route path=':slug' element={<Blog />} />

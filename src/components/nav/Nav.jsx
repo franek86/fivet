@@ -19,17 +19,24 @@ function Nav() {
   const { data: user } = useUser();
   const { data: users } = useGetAllUserProfile();
 
+  console.log(users);
+
   useAdminSocket();
 
   const onlineCount = users?.filter((u) => u.online).length;
+
+  const badgeValues = {
+    onlineCount,
+  };
 
   return (
     <StyledNav>
       {navLinks
         .filter((item) => item.allowRoles.includes(user.role))
-        .map((item) => (
-          <NavItem key={item.label} item={item} badgeMap={onlineCount} />
-        ))}
+        .map((item) => {
+          const badgeValue = item.badge ? badgeValues[item.badge] : undefined;
+          return <NavItem key={item.label} item={item} badgeMap={badgeValue} />;
+        })}
     </StyledNav>
   );
 }

@@ -206,6 +206,10 @@ const NavItem = ({ item, badgeMap }) => {
         {item.label}
         {item.requiredPlan === "PREMIUM" && <PremiumSticker />}
         {item.badge && badgeMap > 0 && <NavBadge>{badgeMap}</NavBadge>}
+        {badgeMap > 0 && <NavBadge>{badgeMap}</NavBadge>}
+        {/* {badgeMap.map((b) => {
+          <NavBadge>{b}</NavBadge>;
+        })} */}
       </NavContent>
     </NavList>
   );

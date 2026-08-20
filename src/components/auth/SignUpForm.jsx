@@ -26,6 +26,7 @@ import { countriesJson } from "../../utils/countriesJson.js";
  */
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
+import TextArea from "../ui/TextArea.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import Title from "../ui/Title.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
@@ -45,18 +46,21 @@ const FormContainer = styled.div`
   flex-direction: column;
 
   @media screen and (min-width: 640px) {
-    flex-direction: row;
     gap: 20px;
   }
 `;
 
 const Column = styled.div`
-  margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
+  margin-bottom: 10px;
 `;
 
-const Row = styled.div``;
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
 
 const PasswordWrap = styled.div`
   position: relative;
@@ -94,7 +98,41 @@ const ResendOtp = styled.p`
   }
 `;
 
+const StepIndicator = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+`;
+
+const StepItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const StepCircle = styled.div`
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: ${({ $active }) => ($active ? "var(--color-accent)" : "var(--color-border)")};
+
+  color: ${({ $active }) => ($active ? "var(--color-text)" : "var(--color-text)")};
+`;
+
+const StepLine = styled.div`
+  width: 70px;
+  height: 1px;
+  background: var(--color-border);
+`;
+
 function SignUpForm() {
+  const roles = ["BROKER", "SELLER", "BUYER"];
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const plan = searchParams.get("plan");
@@ -106,6 +144,7 @@ function SignUpForm() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [userData, setUserData] = useState(null);
   const inputRefs = useRef([]);
+  const [step, setStep] = useState(1);
 
   const navigate = useNavigate();
 
@@ -158,8 +197,21 @@ function SignUpForm() {
     control,
     handleSubmit,
     watch,
+    trigger,
     formState: { errors },
-  } = useForm({});
+  } = useForm({
+    mode: "onTouched",
+    defaultValues: {
+      fullName: "",
+      email: "",
+      address: "",
+      zipCode: "",
+      city: "",
+      country: "",
+      password: "",
+      repeatPassword: "",
+    },
+  });
 
   const onHandleSubmit = (data) => {
     signUp({ ...data });
@@ -194,17 +246,62 @@ function SignUpForm() {
     }
   };
 
+  const nextStep = async () => {
+    let fields = [];
+
+    if (step === 1) {
+      fields = ["fullName", "email", "password", "repeatPassword"];
+    }
+
+    if (step === 2) {
+      fields = ["address", "zipCode", "city", "country"];
+    }
+
+    const isValid = await trigger(fields);
+
+    if (isValid) {
+      setStep((prev) => prev + 1);
+    }
+  };
+
+  const prevStep = () => {
+    setStep((prev) => Math.max(prev - 1, 1));
+  };
+
   return (
     <>
       {!showOtp ? (
         <FormWrapper onSubmit={handleSubmit(onHandleSubmit)}>
-          <FormContainer>
-            <Row>
+          {/* Step indicators */}
+          <StepIndicator>
+            <StepItem>
+              <StepCircle $active={step >= 1}>1</StepCircle>
+              <span>Account</span>
+            </StepItem>
+
+            <StepLine />
+
+            <StepItem>
+              <StepCircle $active={step >= 2}>2</StepCircle>
+              <span>Company info</span>
+            </StepItem>
+
+            <StepLine />
+
+            <StepItem>
+              <StepCircle $active={step >= 3}>3</StepCircle>
+              <span>Choose your role</span>
+            </StepItem>
+          </StepIndicator>
+
+          {/* Step one */}
+          {step === 1 && (
+            <FormContainer>
               <Column>
                 <Input
                   directions='column'
-                  label='Name *'
-                  placeholder='Enter your name'
+                  label='Full name *'
+                  placeholder='Enter full name'
                   register={register}
                   {...register("fullName", { required: "Full name is required" })}
                   autoComplete='fullName'
@@ -215,7 +312,7 @@ function SignUpForm() {
               <Column>
                 <Input
                   directions='column'
-                  label='Email *'
+                  label='Business email *'
                   placeholder='Enter your email'
                   register={register}
                   {...register("email", {
@@ -229,58 +326,7 @@ function SignUpForm() {
                 />
                 <InputErrorMessage message={errors.email?.message} />
               </Column>
-              <Column>
-                <Input
-                  directions='column'
-                  label='Address *'
-                  placeholder='Enter address'
-                  register={register}
-                  {...register("address", { required: "Address required" })}
-                />
-              </Column>
 
-              <Column>
-                <Input
-                  directions='column'
-                  label='Zip code *'
-                  placeholder='Enter zip code'
-                  register={register}
-                  {...register("zipCode", { required: "Zip code required" })}
-                />
-              </Column>
-            </Row>
-            <Row>
-              <Column>
-                <Input
-                  directions='column'
-                  label='City *'
-                  placeholder='Enter City'
-                  register={register}
-                  {...register("city", { required: "City required" })}
-                />
-
-                <InputErrorMessage message={errors.city?.message} />
-              </Column>
-              <Column>
-                <Controller
-                  name='country'
-                  control={control}
-                  render={({ field }) => (
-                    <CustomSelect
-                      {...field}
-                      control={control}
-                      options={countriesJson}
-                      placeholder='Enter country'
-                      label='Country *'
-                      size='medium'
-                      variation='transparent'
-                      {...register("country", { required: "Country is required" })}
-                    />
-                  )}
-                />
-
-                <InputErrorMessage message={errors.country?.message} />
-              </Column>
               <Column>
                 <PasswordWrap>
                   <Input
@@ -317,10 +363,145 @@ function SignUpForm() {
                 />
                 <InputErrorMessage message={errors.repeatPassword?.message} />
               </Column>
-            </Row>
-          </FormContainer>
-          <p>Siging up I accept Fivet Terms and Conditions and I read Fivet Privacy Policy</p>
-          <Button disabled={isPending}>{isPending ? "Signing up ..." : "Sign up"}</Button>
+
+              <Row>
+                <Button type='button' onClick={nextStep}>
+                  Continue
+                </Button>
+              </Row>
+            </FormContainer>
+          )}
+          {/* Step two */}
+          {step === 2 && (
+            <FormContainer>
+              <Column>
+                <Input
+                  directions='column'
+                  label='Company name *'
+                  placeholder='e.g. Company name Ltd'
+                  register={register}
+                  {...register("companyName", { required: "Company name required" })}
+                />
+              </Column>
+
+              <Column>
+                <Input
+                  directions='column'
+                  label='Company registration number'
+                  placeholder='Enter company register number'
+                  register={register}
+                  {...register("companyRegistrationNumber")}
+                />
+              </Column>
+
+              <Column>
+                <Input
+                  directions='column'
+                  label='City *'
+                  placeholder='Enter City'
+                  register={register}
+                  {...register("city", { required: "City required" })}
+                />
+
+                <InputErrorMessage message={errors.city?.message} />
+              </Column>
+              <Column>
+                <Controller
+                  name='country'
+                  control={control}
+                  render={({ field }) => (
+                    <CustomSelect
+                      {...field}
+                      control={control}
+                      options={countriesJson}
+                      placeholder='Enter country'
+                      label='Country *'
+                      size='medium'
+                      variation='transparent'
+                      {...register("country", { required: "Country is required" })}
+                    />
+                  )}
+                />
+
+                <InputErrorMessage message={errors.country?.message} />
+              </Column>
+
+              <Column>
+                <Input directions='column' label='Address' placeholder='Enter address' register={register} {...register("address")} />
+              </Column>
+              <Column>
+                <Input
+                  directions='column'
+                  label='Postal code'
+                  placeholder='Enter postal code'
+                  register={register}
+                  {...register("zipCode")}
+                />
+              </Column>
+
+              <Column>
+                <Input
+                  directions='column'
+                  label='Business web'
+                  placeholder='Enter business web'
+                  register={register}
+                  {...register("businessWeb")}
+                />
+              </Column>
+
+              <Column>
+                <Input
+                  directions='column'
+                  label='Business email'
+                  placeholder='Enter business email'
+                  register={register}
+                  {...register("businessEmail")}
+                />
+              </Column>
+
+              <Column>
+                <Input
+                  directions='column'
+                  label='Business phone'
+                  placeholder='Enter business phone'
+                  register={register}
+                  {...register("businessPhone")}
+                />
+              </Column>
+
+              {/*  <Column>
+                <TextArea
+                  directions='column'
+                  label='Company description'
+                  name='companyDescription'
+                  register={register}
+                  {...register("companyDescription'")}
+                />
+              </Column> */}
+
+              <Row>
+                <Button type='button' onClick={prevStep}>
+                  Back
+                </Button>
+                <Button type='button' onClick={nextStep}>
+                  Continue
+                </Button>
+              </Row>
+            </FormContainer>
+          )}
+          {/* Step three */}
+          {step === 3 && (
+            <>
+              <p>Siging up I accept Fivet Terms and Conditions and I read Fivet Privacy Policy</p>
+              <Button type='submit' disabled={isPending}>
+                {isPending ? "Signing up ..." : "Sign up"}
+              </Button>
+
+              <Button type='button' onClick={prevStep}>
+                Back
+              </Button>
+            </>
+          )}
         </FormWrapper>
       ) : (
         <>

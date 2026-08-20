@@ -8,10 +8,6 @@ const Wrap = styled.div`
   padding: 4rem 0;
   align-items: center;
   justify-content: center;
-
-  @media screen and (min-width: 640px) {
-    height: 100vh;
-  }
 `;
 
 const FormSection = styled.section`

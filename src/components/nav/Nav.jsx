@@ -19,8 +19,6 @@ function Nav() {
   const { data: user } = useUser();
   const { data: users } = useGetAllUserProfile();
 
-  console.log(users);
-
   useAdminSocket();
 
   const onlineCount = users?.filter((u) => u.online).length;

@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
-import Title from "../components/ui/Title.jsx";
+import Title from "../../components/ui/Title.jsx";
 import styled from "styled-components";
-import BillingCard from "../components/BillingCard.jsx";
+import BillingCard from "../../components/BillingCard.jsx";
 
 import { useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
-import { useUser } from "../hooks/useAuth.js";
+import { useUser } from "../../hooks/useAuth.js";
 
 const Container = styled.div`
   max-width: 720px;

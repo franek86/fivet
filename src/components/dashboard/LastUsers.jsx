@@ -73,8 +73,8 @@ function LastUsers({ data, isLoading }) {
       </div>
       {data?.lastFiveUsers?.map((user) => (
         <Box key={user.id}>
-          {user?.profile?.avatar ? (
-            <Image src={user.profile.avatar} alt={user.fullName} />
+          {user?.avatar ? (
+            <Image src={user.avatar} alt={user.fullName} />
           ) : (
             <ImagePlaceholder>
               <UserRound />

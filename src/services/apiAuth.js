@@ -1,18 +1,11 @@
 import apiClient, { setAccessToken } from "./axiosConfig.js";
 
 /* Register user */
-export const registerUser = async ({ email, password, fullName }) => {
-  try {
-    const res = await apiClient.post("/auth/register", {
-      email,
-      password,
-      fullName,
-    });
-    return res.data;
-  } catch (error) {
-    const message = error.response?.data?.message || "An error occurred during registration.";
-    throw new Error(message);
-  }
+export const registerUser = async (data) => {
+  const res = await apiClient.post("/auth/register", {
+    ...data,
+  });
+  return res.data;
 };
 
 /* Verify OTP */

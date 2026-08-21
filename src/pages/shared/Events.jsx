@@ -1,9 +1,9 @@
-import SearchBar from "../components/SearchBar.jsx";
-import Title from "../components/ui/Title.jsx";
-import AddEvent from "../components/events/AddEvent.jsx";
-import EventCalendar from "../components/events/EventCalendar.jsx";
+import SearchBar from "../../components/SearchBar.jsx";
+import Title from "../../components/ui/Title.jsx";
+import AddEvent from "../../components/events/AddEvent.jsx";
+import EventCalendar from "../../components/events/EventCalendar.jsx";
 import styled from "styled-components";
-import AsideEvents from "../components/events/AsideEvents.jsx";
+import AsideEvents from "../../components/events/AsideEvents.jsx";
 
 const EventWrapper = styled.main`
   display: grid;

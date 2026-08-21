@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import BackBtn from "../components/BackBtn.jsx";
-import SingleShipData from "../components/ships/SingleShipData.jsx";
-import Title from "../components/ui/Title.jsx";
+import BackBtn from "../../components/BackBtn.jsx";
+import SingleShipData from "../../components/ships/SingleShipData.jsx";
+import Title from "../../components/ui/Title.jsx";
 
 const FlexWrap = styled.div`
   display: flex;

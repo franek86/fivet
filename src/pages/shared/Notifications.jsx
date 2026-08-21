@@ -1,6 +1,6 @@
-import Title from "../components/ui/Title.jsx";
-import SearchBar from "../components/SearchBar.jsx";
-import NotificationLists from "../components/notification/NotificationLists.jsx";
+import Title from "../../components/ui/Title.jsx";
+import SearchBar from "../../components/SearchBar.jsx";
+import NotificationLists from "../../components/notification/NotificationLists.jsx";
 
 function Notifications() {
   return (

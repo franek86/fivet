@@ -1,6 +1,6 @@
-import PaymentTable from "../components/payments/PaymentTable.jsx";
-import SearchBar from "../components/SearchBar.jsx";
-import Title from "../components/ui/Title.jsx";
+import PaymentTable from "../../components/payments/PaymentTable.jsx";
+import SearchBar from "../../components/SearchBar.jsx";
+import Title from "../../components/ui/Title.jsx";
 
 function Payments() {
   return (

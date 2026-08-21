@@ -1,17 +1,17 @@
 import { lazy, Suspense } from "react";
 
-import LastUsers from "../components/dashboard/LastUsers.jsx";
-import StatisticBox from "../components/dashboard/StatisticBox.jsx";
-import TopShips from "../components/dashboard/TopShips.jsx";
-import Title from "../components/ui/Title.jsx";
+import LastUsers from "../../components/dashboard/LastUsers.jsx";
+import StatisticBox from "../../components/dashboard/StatisticBox.jsx";
+import TopShips from "../../components/dashboard/TopShips.jsx";
+import Title from "../../components/ui/Title.jsx";
 import styled from "styled-components";
 
-import Earnings from "../components/dashboard/Earnings.jsx";
+import Earnings from "../../components/dashboard/Earnings.jsx";
 
-const MapChart = lazy(() => import("../components/dashboard/MapChart.jsx"));
+const MapChart = lazy(() => import("../../components/dashboard/MapChart.jsx"));
 
-import { useAdminDashboardData, useGeoWorldData } from "../hooks/useDashboardStatistic.js";
-import LastBlogs from "../components/dashboard/LastBlogs.jsx";
+import { useAdminDashboardData, useGeoWorldData } from "../../hooks/useDashboardStatistic.js";
+import LastBlogs from "../../components/dashboard/LastBlogs.jsx";
 
 const TwoColumnsRole = styled.section`
   display: grid;

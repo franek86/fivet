@@ -30,6 +30,7 @@ import TextArea from "../ui/TextArea.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import Title from "../ui/Title.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
+import RolesSection from "./RolesSection.jsx";
 
 const FormWrapper = styled.form`
   display: grid;
@@ -132,7 +133,7 @@ const StepLine = styled.div`
 `;
 
 function SignUpForm() {
-  const roles = ["BROKER", "SELLER", "BUYER"];
+  const roles = ["BROKER", "OWNER", "BUYER"];
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const plan = searchParams.get("plan");
@@ -198,16 +199,19 @@ function SignUpForm() {
     handleSubmit,
     watch,
     trigger,
+    setValue,
     formState: { errors },
   } = useForm({
     mode: "onTouched",
     defaultValues: {
+      role: "",
       fullName: "",
       email: "",
       address: "",
       zipCode: "",
       city: "",
       country: "",
+      companyName: "",
       password: "",
       repeatPassword: "",
     },
@@ -250,10 +254,14 @@ function SignUpForm() {
     let fields = [];
 
     if (step === 1) {
-      fields = ["fullName", "email", "password", "repeatPassword"];
+      fields = ["role"];
     }
 
     if (step === 2) {
+      fields = ["fullName", "email", "password", "repeatPassword"];
+    }
+
+    if (step === 3) {
       fields = ["address", "zipCode", "city", "country"];
     }
 
@@ -276,26 +284,54 @@ function SignUpForm() {
           <StepIndicator>
             <StepItem>
               <StepCircle $active={step >= 1}>1</StepCircle>
+              <span>Role</span>
+            </StepItem>
+            <StepLine />
+
+            <StepItem>
+              <StepCircle $active={step >= 2}>2</StepCircle>
               <span>Account</span>
             </StepItem>
 
             <StepLine />
 
             <StepItem>
-              <StepCircle $active={step >= 2}>2</StepCircle>
-              <span>Company info</span>
-            </StepItem>
-
-            <StepLine />
-
-            <StepItem>
               <StepCircle $active={step >= 3}>3</StepCircle>
-              <span>Choose your role</span>
+              <span>Company info</span>
             </StepItem>
           </StepIndicator>
 
-          {/* Step one */}
+          {/* Step 1 */}
           {step === 1 && (
+            <FormContainer>
+              <input
+                type='hidden'
+                {...register("role", {
+                  required: "Please select a role",
+                })}
+              />
+              <RolesSection
+                value={watch("role")}
+                onChange={(role) =>
+                  setValue("role", role, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  })
+                }
+              />
+
+              <InputErrorMessage message={errors.role?.message} />
+
+              <Row>
+                <Button type='button' onClick={nextStep}>
+                  Continue
+                </Button>
+              </Row>
+            </FormContainer>
+          )}
+
+          {/* Step two */}
+          {step === 2 && (
             <FormContainer>
               <Column>
                 <Input
@@ -365,6 +401,9 @@ function SignUpForm() {
               </Column>
 
               <Row>
+                <Button type='button' onClick={prevStep}>
+                  Back
+                </Button>
                 <Button type='button' onClick={nextStep}>
                   Continue
                 </Button>
@@ -372,7 +411,7 @@ function SignUpForm() {
             </FormContainer>
           )}
           {/* Step two */}
-          {step === 2 && (
+          {step === 3 && (
             <FormContainer>
               <Column>
                 <Input
@@ -439,36 +478,6 @@ function SignUpForm() {
                 />
               </Column>
 
-              <Column>
-                <Input
-                  directions='column'
-                  label='Business web'
-                  placeholder='Enter business web'
-                  register={register}
-                  {...register("businessWeb")}
-                />
-              </Column>
-
-              <Column>
-                <Input
-                  directions='column'
-                  label='Business email'
-                  placeholder='Enter business email'
-                  register={register}
-                  {...register("businessEmail")}
-                />
-              </Column>
-
-              <Column>
-                <Input
-                  directions='column'
-                  label='Business phone'
-                  placeholder='Enter business phone'
-                  register={register}
-                  {...register("businessPhone")}
-                />
-              </Column>
-
               {/*  <Column>
                 <TextArea
                   directions='column'
@@ -483,24 +492,13 @@ function SignUpForm() {
                 <Button type='button' onClick={prevStep}>
                   Back
                 </Button>
-                <Button type='button' onClick={nextStep}>
-                  Continue
-                </Button>
               </Row>
-            </FormContainer>
-          )}
-          {/* Step three */}
-          {step === 3 && (
-            <>
+
               <p>Siging up I accept Fivet Terms and Conditions and I read Fivet Privacy Policy</p>
               <Button type='submit' disabled={isPending}>
                 {isPending ? "Signing up ..." : "Sign up"}
               </Button>
-
-              <Button type='button' onClick={prevStep}>
-                Back
-              </Button>
-            </>
+            </FormContainer>
           )}
         </FormWrapper>
       ) : (

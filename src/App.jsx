@@ -4,71 +4,56 @@ import GlobalStyles from "./GlobalStyles.js";
 import { ToastContainer } from "react-toastify";
 
 import MainLayout from "./layouts/MainLayout.jsx";
-import AuthLayout from "./layouts/AuthLayout.jsx";
-
-import UserDashboard from "./pages/UserDashboard.jsx";
-import Ships from "./pages/Ships.jsx";
-import SingleShip from "./pages/SingleShip.jsx";
-import Categories from "./pages/Categories.jsx";
-import Users from "./pages/Users.jsx";
-import SignUp from "./pages/SignUp.jsx";
-import Login from "./pages/Login.jsx";
-import CreateShip from "./pages/CreateShip.jsx";
-import NotFound from "./pages/NotFound.jsx";
-import EditShip from "./pages/EditShip.jsx";
-import Unauthorized from "./pages/Unauthorized.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
-import Profile from "./pages/Profile.jsx";
-import AddressBook from "./pages/AddressBook.jsx";
-import ForgotPassword from "./pages/ForgotPassword.jsx";
-import Events from "./pages/Events.jsx";
-import Notifications from "./pages/Notifications.jsx";
-import Payments from "./pages/Payments.jsx";
-import Billing from "./pages/Billing.jsx";
-import PremiumRoute from "./pages/PremiumRoute.jsx";
 import PaymentProtectedRoute from "./pages/PaymentProtectedRoute.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
 import DashboardRedirect from "./pages/DashboardRedirect.jsx";
-import CreateBlog from "./components/blog/CreateBlog.jsx";
-import Blogs from "./pages/Blogs.jsx";
-import BlogCategory from "./pages/BlogCategory.jsx";
-import BlogEditorDnd from "./components/blog/blog-dnd/BlogEditorDnd.jsx";
-import Blog from "./pages/Blog.jsx";
-import EditBlog from "./pages/EditBlog.jsx";
+import NotFound from "./pages/NotFound.jsx";
+
+import CreateShip from "./pages/CreateShip.jsx";
+import EditShip from "./pages/EditShip.jsx";
+
+import AddressBook from "./pages/shared/AddressBook.jsx";
+import Events from "./pages/shared//Events.jsx";
+import Notifications from "./pages/shared/Notifications.jsx";
+
+import Billing from "./pages/admin/Billing.jsx";
+import PremiumRoute from "./pages/PremiumRoute.jsx";
+
 import PaymentSuccess from "./pages/PaymentSuccess.jsx";
 import PaymentError from "./pages/PaymentError.jsx";
 import Settings from "./pages/Settings.jsx";
+
+import { AuthRoutes } from "./routes/authRoutes.jsx";
+import { AdminRoutes } from "./routes/adminRoutes.jsx";
+import { BrokerRoutes } from "./routes/brokerRoutes.jsx";
+
+const ALL_ROLES = ["ADMIN", "BROKER", "OWNER", "BUYER"];
 
 function App() {
   return (
     <>
       <ToastContainer position='top-center' autoClose={1800} />
-
       <GlobalStyles />
+
       <Routes>
-        <Route element={<AuthLayout />}>
-          <Route index element={<Login />} />
-          <Route path='/sign-up' element={<SignUp />} />
-          <Route path='/forgot-password' element={<ForgotPassword />} />
-          <Route path='/unauthorized' element={<Unauthorized />} />
-        </Route>
-        <Route element={<ProtectedRoute allowedRoles={["ADMIN", "USER"]} />}>
+        {AuthRoutes}
+        <Route element={<ProtectedRoute allowedRoles={ALL_ROLES} />}>
           <Route element={<MainLayout />}>
             <Route path='/dashboard' element={<DashboardRedirect />} />
+
             <Route element={<PaymentProtectedRoute />}>
-              <Route path='/user/dashboard' element={<UserDashboard />} />
-              <Route path='/ships' element={<Ships />} />
+              {AdminRoutes}
+              {BrokerRoutes}
               <Route path='/ships/create' element={<CreateShip />} />
               <Route path='/ships/edit/:id' element={<EditShip />} />
-              <Route path='/ships/:id' element={<SingleShip />} />
+
               <Route path='/events' element={<Events />} />
               <Route path='/settings' element={<Settings />} />
-              <Route path='/dnd-test' element={<BlogEditorDnd />} />
+
               <Route element={<PremiumRoute />}>
                 <Route path='/address-book' element={<AddressBook />} />
               </Route>
               <Route path='/notifications' element={<Notifications />} />
-              <Route path='/profile' element={<Profile />} />
             </Route>
             <Route path='/billing' element={<Billing />} />
             <Route path='/payment-success' element={<PaymentSuccess />} />
@@ -76,22 +61,6 @@ function App() {
           </Route>
         </Route>
 
-        <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
-          <Route element={<MainLayout />}>
-            <Route path='/admin/dashboard' element={<AdminDashboard />} />
-            <Route path='/users' element={<Users />} />
-            <Route path='/categories' element={<Categories />} />
-            <Route path='/payments' element={<Payments />} />
-
-            <Route path='/blogs'>
-              <Route index element={<Blogs />} />
-              <Route path=':slug' element={<Blog />} />
-              <Route path='create' element={<CreateBlog />} />
-              <Route path='edit/:slug' element={<EditBlog />} />
-              <Route path='category' element={<BlogCategory />} />
-            </Route>
-          </Route>
-        </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>
     </>

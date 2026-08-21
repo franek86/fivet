@@ -40,7 +40,7 @@ function Avatar() {
 
   if (isLoading) return <Spinner />;
 
-  const { fullName, avatar } = data.profile;
+  const { fullName, avatar } = data;
 
   return (
     <StyledAvatar>

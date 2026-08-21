@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
 
-import UserProfileList from "../components/profile/UserProfileList.jsx";
-import Title from "../components/ui/Title.jsx";
-import Unauthorized from "./Unauthorized.jsx";
-import SearchBar from "../components/SearchBar.jsx";
+import UserProfileList from "../../components/profile/UserProfileList.jsx";
+import Title from "../../components/ui/Title.jsx";
+import Unauthorized from "../Unauthorized.jsx";
+import SearchBar from "../../components/SearchBar.jsx";
 import styled from "styled-components";
-import { useUser } from "../hooks/useAuth.js";
+import { useUser } from "../../hooks/useAuth.js";
 
 const Flex = styled.div`
   display: flex;

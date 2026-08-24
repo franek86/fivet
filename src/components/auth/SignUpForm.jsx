@@ -107,10 +107,16 @@ const StepIndicator = styled.div`
 `;
 
 const StepItem = styled.div`
+  position: relative;
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+
+  span {
+    display: flex;
+  }
 `;
 
 const StepCircle = styled.div`
@@ -127,8 +133,15 @@ const StepCircle = styled.div`
 `;
 
 const StepLine = styled.div`
-  width: 70px;
-  height: 1px;
+  position: absolute;
+  top: 18px;
+  left: 50%;
+
+  width: 100%;
+  height: 2px;
+
+  z-index: 1;
+
   background: var(--color-border);
 `;
 
@@ -186,7 +199,7 @@ function SignUpForm() {
     mutationFn: verifyOtpApi,
     onSuccess: () => {
       toast.success("OTP verified successfully");
-      navigate(`/billing`);
+      navigate(`/`);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -285,15 +298,14 @@ function SignUpForm() {
             <StepItem>
               <StepCircle $active={step >= 1}>1</StepCircle>
               <span>Role</span>
+              <StepLine />
             </StepItem>
-            <StepLine />
 
             <StepItem>
               <StepCircle $active={step >= 2}>2</StepCircle>
               <span>Account</span>
+              <StepLine />
             </StepItem>
-
-            <StepLine />
 
             <StepItem>
               <StepCircle $active={step >= 3}>3</StepCircle>

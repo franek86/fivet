@@ -28,6 +28,7 @@ import { AdminRoutes } from "./routes/adminRoutes.jsx";
 import { BrokerRoutes } from "./routes/brokerRoutes.jsx";
 import { OwnerRoutes } from "./routes/ownerRouter.jsx";
 import { BuyerRoutes } from "./routes/buyerRoutes.jsx";
+import { SharedRoutes } from "./routes/sharedRoutes.jsx";
 
 const ALL_ROLES = ["ADMIN", "BROKER", "OWNER", "BUYER"];
 
@@ -47,19 +48,10 @@ function App() {
             {BrokerRoutes}
             {OwnerRoutes}
             {BuyerRoutes}
+            {SharedRoutes}
           </Route>
 
-          <Route element={<PaymentProtectedRoute />}>
-            <Route path='/ships/create' element={<CreateShip />} />
-            <Route path='/ships/edit/:id' element={<EditShip />} />
-
-            <Route path='/events' element={<Events />} />
-
-            <Route element={<PremiumRoute />}>
-              <Route path='/address-book' element={<AddressBook />} />
-            </Route>
-            <Route path='/notifications' element={<Notifications />} />
-          </Route>
+          {/*  <Route element={<PaymentProtectedRoute />}>{PremiumRoute}</Route> */}
 
           <Route path='/billing' element={<Billing />} />
           <Route path='/payment-success' element={<PaymentSuccess />} />

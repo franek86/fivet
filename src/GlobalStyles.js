@@ -16,6 +16,7 @@ const GlobalStyles = styled.createGlobalStyle`
     --color-text-muted: #6b7280;
     --color-success: #16a34a;
     --color-danger: #dc2626;
+    --color-warning: #ffec96;
 
     --dashboard-broker-bg: #d5eae5;
     --dashboard-broker-accent: #3f7d72;
@@ -74,6 +75,7 @@ const GlobalStyles = styled.createGlobalStyle`
     --color-text-muted: #9ca3af;
     --color-success: #22c55e;
     --color-danger: #ef4444;
+    --color-warning: #928139;
 
     /* DARK */
 

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const Wrap = styled.div`
   display: flex;
-  max-width: 50rem;
+  max-width: 55rem;
   margin: 0 auto;
   padding: 4rem 0;
   align-items: center;

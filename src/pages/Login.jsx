@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 
 import styled from "styled-components";
 
@@ -28,23 +28,30 @@ const ButtonTest = styled.div`
     background: var(--color-accent);
   }
 `;
+const LinkText = styled(Link)`
+  font-weight: 600;
+  font-size: 1.5rem;
+  &:hover {
+    color: var(--color-text-muted);
+  }
+`;
 
 function Login() {
   const navigate = useNavigate();
   return (
     <FormWrap>
-      <ButtonTest className='btn bg-gradient' onClick={() => navigate("/sign-up?plan=STANDARD")}>
+      {/*  <ButtonTest className='btn bg-gradient' onClick={() => navigate("/sign-up?plan=STANDARD")}>
         Standard test
       </ButtonTest>
       <ButtonTest className='btn bg-gradient' onClick={() => navigate("/sign-up?plan=PREMIUM")}>
         Premium test
-      </ButtonTest>
+      </ButtonTest> */}
       <Title>Login</Title>
       <p>Please sign in to continue</p>
       <LoginForm />
-      {/*  <TextWrap>
+      <div>
         Don't have a Fivet account? Please <LinkText to='/sign-up'>Sign up</LinkText>.
-      </TextWrap> */}
+      </div>
     </FormWrap>
   );
 }

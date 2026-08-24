@@ -17,6 +17,15 @@ const GlobalStyles = styled.createGlobalStyle`
     --color-success: #16a34a;
     --color-danger: #dc2626;
 
+    --dashboard-broker-bg: #d5eae5;
+    --dashboard-broker-accent: #3f7d72;
+
+    --dashboard-owner-bg: #d7e2ec;
+    --dashboard-owner-accent: #416a8f;
+
+    --dashboard-buyer-bg: #e0e2f2;
+    --dashboard-buyer-accent: #6875a3;
+
     --backdrop-color: rgba(255, 255, 255, 0.1);
     --linear-gradient: linear-gradient(90deg, #e0e0e0 25%, #ffffff 50%, #f0f0f0 75%);
 
@@ -65,6 +74,20 @@ const GlobalStyles = styled.createGlobalStyle`
     --color-text-muted: #9ca3af;
     --color-success: #22c55e;
     --color-danger: #ef4444;
+
+    /* DARK */
+
+    --dashboard-admin-bg: #172338;
+    --dashboard-admin-accent: #8eaad3;
+
+    --dashboard-broker-bg: #172b29;
+    --dashboard-broker-accent: #7fb8ad;
+
+    --dashboard-owner-bg: #172638;
+    --dashboard-owner-accent: #86a9c9;
+
+    --dashboard-buyer-bg: #202438;
+    --dashboard-buyer-accent: #a2aad1;
 
     --backdrop-color: rgba(0, 0, 0, 0.3);
     --linear-gradient: linear-gradient(90deg, #1f2937 25%, #374151 50%, #1f2937 75%);

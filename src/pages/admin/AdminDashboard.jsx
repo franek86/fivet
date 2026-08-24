@@ -12,6 +12,8 @@ const MapChart = lazy(() => import("../../components/dashboard/MapChart.jsx"));
 
 import { useAdminDashboardData, useGeoWorldData } from "../../hooks/useDashboardStatistic.js";
 import LastBlogs from "../../components/dashboard/LastBlogs.jsx";
+import { useUser } from "../../hooks/useAuth.js";
+import DashboardWelcome from "../../components/dashboard/DashboardWelcome.jsx";
 
 const TwoColumnsRole = styled.section`
   display: grid;
@@ -27,12 +29,15 @@ const TwoColumnsRole = styled.section`
 function AdminDashboard() {
   const { data, isStatisticLoading, isEarningsLoading } = useAdminDashboardData();
   const { data: geoData, isLoading: isGeoLoading } = useGeoWorldData();
+  const { data: user } = useUser();
+
+  console.log(user);
 
   return (
     <>
-      <div className='search-container'>
-        <Title tag='h1'>Dashboard</Title>
-      </div>
+      <>
+        <DashboardWelcome user={user} />
+      </>
 
       <>
         <StatisticBox data={data?.statistic} isLoading={isStatisticLoading} />

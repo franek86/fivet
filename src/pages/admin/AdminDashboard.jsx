@@ -31,8 +31,6 @@ function AdminDashboard() {
   const { data: geoData, isLoading: isGeoLoading } = useGeoWorldData();
   const { data: user } = useUser();
 
-  console.log(user);
-
   return (
     <>
       <>

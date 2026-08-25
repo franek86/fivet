@@ -16,7 +16,11 @@ const GlobalStyles = styled.createGlobalStyle`
     --color-text-muted: #6b7280;
     --color-success: #16a34a;
     --color-danger: #dc2626;
-    --color-warning: #ffec96;
+    --color-warning: #fed7aa;
+
+    --color-success-600: #22c55e;
+    --color-danger-600: #ef4444;
+    --color-warning-600: #928139;
 
     --dashboard-broker-bg: #d5eae5;
     --dashboard-broker-accent: #3f7d72;

@@ -1,128 +1,23 @@
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import { Calendar, Calendar1Icon, CalendarClock, TrashIcon, User, UserRound } from "lucide-react";
+import { Calendar, Calendar1Icon, CalendarClock, Pencil, Trash2, TrashIcon, User, UserRound } from "lucide-react";
 
 import Spinner from "../Spinner.jsx";
 import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
+import Pagination from "../Pagination.jsx";
+import Button from "../ui/Button.jsx";
+import Dropdown from "../ui/Dropdown.jsx";
+import VerificationSelect from "./VerificationSelect.jsx";
 
 import { customFormatDate } from "../../utils/formatDate.js";
 
-import { useDeleteUserProfile, useGetAllUserProfile } from "../../hooks/useProfile.js";
+import { getUserApi } from "../../services/apiUsers.js";
+import { useDeleteUserProfile, useGetAllUserProfile, useUpdateUserProfileVerification } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useAdminSocket } from "../../hooks/useAdminSocket.js";
-import { getUserApi } from "../../services/apiUsers.js";
-import Pagination from "../Pagination.jsx";
-import Button from "../ui/Button.jsx";
-
-/* const CardWrap = styled.div`
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 2rem;
-`;
-
-const Card = styled.article`
-  background-color: var(--color-white);
-  border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--color-border);
-  padding: 2rem;
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-  .card-body {
-    display: flex;
-    gap: 10px;
-    padding: 10px 0;
-    img {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--border-radius-lg);
-      background-color: var(--color-accent);
-    }
-
-    .card-content {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      .name {
-        font-weight: 600;
-      }
-    }
-  }
-
-  .footer {
-    display: flex;
-    justify-content: space-between;
-  }
-`;
-
-const CardButton = styled.div`
-  background-color: var(--color-danger);
-  color: var(--color-white);
-  padding: 1rem;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  box-shadow: var(--shadow-md);
-  border-radius: var(--border-radius-lg);
-
-  &:hover {
-  }
-`;
-
-const CardButtonDelete = styled(CardButton)`
-  text-align: center;
-  &:hover {
-    background-color: var(--color-danger);
-  }
-`;
-
-const Link = styled.a`
-  color: var(--color-text);
-  font-size: 14px;
-  &:hover {
-    color: var(--color-accent-600);
-  }
-`;
-
-const DateWrapp = styled.p`
-  font-size: 1.25rem;
-  color: var(--color-text-muted);
-  font-style: italic;
-`;
-
-const CardImagePlaceholder = styled.div`
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  background-color: var(--color-accent);
-  border-radius: var(--border-radius-lg);
-`;
-
-const ActiveUser = styled("div")`
-  display: flex;
-  align-items: center;
-  font-size: 1.25rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  color: ${({ $props }) => ($props ? "var(--color-success)" : "var(--color-danger)")};
-
-  span {
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-right: 0.5rem;
-    display: flex;
-    background-color: ${({ $props }) => ($props ? "var(--color-success)" : "var(--color-danger)")};
-    border-radius: 50%;
-  }
-`; */
 
 function UserProfileList() {
   const { data, isPending } = useQuery({
@@ -131,32 +26,60 @@ function UserProfileList() {
     keepPreviousData: true,
   });
 
+  const { mutate: updateVerification } = useUpdateUserProfileVerification();
   const { mutate } = useDeleteUserProfile();
   const dispatch = useDispatch();
 
   useAdminSocket();
 
+  const getVerificationProfile = (user) => {
+    if (user.brokerProfile) {
+      return {
+        type: "BROKER",
+        status: user.brokerProfile.verificationStatus,
+      };
+    }
+
+    if (user.ownerProfile) {
+      return {
+        type: "OWNER",
+        status: user.ownerProfile.verificationStatus,
+      };
+    }
+
+    return null;
+  };
+
+  const handleVerificationChange = (userId, verificationStatus) => {
+    updateVerification({
+      userId,
+      verificationStatus,
+    });
+  };
+
   if (isPending) return <Spinner />;
 
   return (
     <Page>
-      <Container>
-        <Header>
-          <UserCount>{data.users.length} users</UserCount>
-        </Header>
+      <Header>
+        <UserCount>{data.users.length} users</UserCount>
+      </Header>
 
-        <TableCard>
-          <TableHeader>
-            <HeaderCell>User</HeaderCell>
-            <HeaderCell>Email</HeaderCell>
-            <HeaderCell>Created at</HeaderCell>
-            <HeaderCell>Status</HeaderCell>
-            <HeaderCell>Verification</HeaderCell>
-            <HeaderCell />
-          </TableHeader>
+      <TableCard>
+        <TableHeader>
+          <HeaderCell>User</HeaderCell>
+          <HeaderCell>Email</HeaderCell>
+          <HeaderCell>Created at</HeaderCell>
+          <HeaderCell>Status</HeaderCell>
+          <HeaderCell>Verification</HeaderCell>
+          <HeaderCell />
+        </TableHeader>
 
-          <UserRows>
-            {data.users.map((user) => (
+        <UserRows>
+          {data.users.map((user) => {
+            const verification = getVerificationProfile(user);
+
+            return (
               <UserRow key={user.id}>
                 <UserCell>
                   <AvatarWrapper>
@@ -167,11 +90,13 @@ function UserProfileList() {
 
                   <UserInfo>
                     <UserName>{user.fullName}</UserName>
-                    <UserEmail>{user.email}</UserEmail>
                   </UserInfo>
                 </UserCell>
 
-                <EmailCell>{user.email}</EmailCell>
+                {/* Email */}
+                <EmailCell>
+                  <UserEmail>{user.email}</UserEmail>
+                </EmailCell>
 
                 <CreatedCell>
                   <CalendarClock size={14} />
@@ -186,53 +111,55 @@ function UserProfileList() {
                 </StatusCell>
 
                 <VerificationCell>
-                  {user.verified ? (
-                    <VerifiedBadge>
-                      <CheckIcon>✓</CheckIcon>
-                      Verified
-                    </VerifiedBadge>
-                  ) : (
-                    <VerifyButton>Verify</VerifyButton>
-                  )}
+                  <VerificationSelect
+                    value={user.brokerProfile?.verificationStatus ?? user.ownerProfile?.verificationStatus ?? "PENDING"}
+                    onChange={(status) => handleVerificationChange(user.id, status)}
+                    //isLoading={updateVerification.isPending && updateVerification.variables?.userId === user.id}
+                  />
                 </VerificationCell>
 
-                <Actions>
-                  <MoreButton aria-label={`Actions for ${user.fullName}`}>⋮</MoreButton>
+                <Dropdown>
+                  <Button $variation='icon' onClick={() => dispatch(openModalByName(`edit-${user.id}`))}>
+                    <Pencil size={16} />
+                    <p>Edit</p>
+                  </Button>
+                  <Button $variation='icon' onClick={() => dispatch(openModalByName(user.id))}>
+                    <Trash2 size={16} />
+                    <p>Delete</p>
+                  </Button>
+                </Dropdown>
 
-                  <DeleteButton aria-label={`Delete ${user.fullName}`}>
-                    <TrashIcon size={16} />
-                    Delete
-                  </DeleteButton>
-                </Actions>
+                <Modal name={user.id} onClose={() => dispatch(closeModalByName())}>
+                  <ConfirmDialog
+                    itemName={user.fullName}
+                    onConfirm={() => mutate(user.id)}
+                    onCloseModal={() => dispatch(closeModalByName())}
+                  />
+                </Modal>
               </UserRow>
-            ))}
-          </UserRows>
-        </TableCard>
-      </Container>
+            );
+          })}
+        </UserRows>
+      </TableCard>
     </Page>
   );
 }
 
-const Page = styled.div`
+const Page = styled.main`
   min-height: 100vh;
-  color: var(--color-text);
+  color: var(--text-color);
 `;
 
-const Container = styled.div`
-  width: 100%;
-  margin: 0 auto;
-`;
-
-const Header = styled.div`
+const Header = styled.header`
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  gap: 20px;
   margin-bottom: 24px;
 
-  @media (max-width: 700px) {
+  @media (max-width: 640px) {
     align-items: flex-start;
-    flex-direction: column;
-    gap: 12px;
+    margin-bottom: 18px;
   }
 `;
 
@@ -274,17 +201,31 @@ const TableCard = styled.div`
 const TableHeader = styled.div`
   display: grid;
   grid-template-columns:
-    minmax(220px, 1.5fr)
-    minmax(220px, 1.4fr)
-    minmax(140px, 1fr)
-    minmax(110px, 0.8fr)
+    minmax(210px, 1.4fr)
+    minmax(200px, 1.4fr)
     minmax(130px, 0.9fr)
-    90px;
+    minmax(100px, 0.7fr)
+    minmax(125px, 0.8fr)
+    minmax(90px, 0.5fr);
 
-  min-width: 1000px;
-  padding: 14px 20px;
-
+  align-items: center;
+  min-height: 48px;
+  padding: 0 20px;
   border-bottom: 1px solid var(--color-border);
+
+  @media (max-width: 1200px) {
+    grid-template-columns:
+      minmax(190px, 1.5fr)
+      minmax(160px, 1.2fr)
+      minmax(120px, 0.9fr)
+      minmax(100px, 0.8fr)
+      minmax(110px, 0fr)
+      0px;
+  }
+
+  @media (max-width: 760px) {
+    display: none;
+  }
 `;
 
 const HeaderCell = styled.div`
@@ -296,18 +237,18 @@ const HeaderCell = styled.div`
 `;
 
 const UserRows = styled.div`
-  min-width: 1000px;
+  height: 100vh;
 `;
 
 const UserRow = styled.div`
   display: grid;
   grid-template-columns:
-    minmax(220px, 1.5fr)
-    minmax(220px, 1.4fr)
-    minmax(140px, 1fr)
-    minmax(110px, 0.8fr)
+    minmax(210px, 1.4fr)
+    minmax(200px, 1.4fr)
     minmax(130px, 0.9fr)
-    90px;
+    minmax(100px, 0.7fr)
+    minmax(125px, 0.8fr)
+    minmax(90px, 0.5fr);
 
   align-items: center;
   min-height: 78px;
@@ -322,12 +263,67 @@ const UserRow = styled.div`
   &:hover {
     background: var(--color-accent);
   }
+
+  @media (max-width: 1200px) {
+    grid-template-columns:
+      minmax(190px, 1.5fr)
+      minmax(160px, 1.2fr)
+      minmax(120px, 0.9fr)
+      minmax(100px, 0.8fr)
+      minmax(110px, 0fr)
+      0px;
+
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /*
+    Mobile:
+    Convert the entire row into a card.
+  */
+  @media (max-width: 760px) {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0;
+    min-height: 0;
+    margin: 12px;
+    padding: 18px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: var(--color-white);
+
+    &:last-child {
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    &:hover {
+      background: var(--color-white);
+      box-shadow: var(--box-shadow-md);
+    }
+  }
+
+  @media (max-width: 480px) {
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    gap: 0.7rem;
+    margin: 10px;
+    padding: 16px;
+    border-radius: 11px;
+  }
 `;
 
 const UserCell = styled.div`
   display: flex;
   align-items: center;
+  min-width: 0;
   gap: 12px;
+
+  @media (max-width: 760px) {
+    grid-column: 1 / -1;
+    width: 100%;
+    border-bottom: 1px solid var(--color-border);
+  }
 `;
 
 const AvatarWrapper = styled.div`
@@ -379,6 +375,12 @@ const EmailCell = styled.div`
   color: var(--color-text);
   font-size: 13px;
   white-space: nowrap;
+  min-width: 0;
+
+  @media (max-width: 760px) {
+    grid-column: 1 / -1;
+    padding-top: 15px;
+  }
 `;
 
 const CreatedCell = styled.div`
@@ -389,7 +391,36 @@ const CreatedCell = styled.div`
   font-size: 13px;
 `;
 
-const StatusCell = styled.div``;
+const StatusCell = styled.div`
+  @media (max-width: 1200px) {
+    display: none;
+    padding-top: 14px;
+  }
+`;
+
+const MobileEmail = styled.div`
+  display: none;
+
+  @media (max-width: 1200px) {
+    display: block;
+    max-width: min(55vw, 280px);
+    margin-top: 4px;
+    overflow: hidden;
+    color: var(--color-text);
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+`;
+
+const MobileStatus = styled.div`
+  display: none;
+
+  @media (max-width: 760px) {
+    display: block;
+    margin-left: auto;
+  }
+`;
 
 const StatusBadge = styled.div`
   display: inline-flex;
@@ -416,7 +447,20 @@ const VerifiedBadge = styled.div`
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: var(--color-success);
+  color: ${({ $status }) => {
+    switch ($status) {
+      case "PENDING":
+        return "var(--color-accent-600)";
+      case "VERIFIED":
+        return "var(--color-success)";
+      case "REJECTED":
+        return "var(--color-danger)";
+      case "SUSPENDED":
+        return "var(--color-danger)";
+      default:
+        return "var(--color-text-muted)";
+    }
+  }};
   font-size: 12px;
   font-weight: 600;
 `;
@@ -427,7 +471,20 @@ const CheckIcon = styled.span`
   height: 18px;
   place-items: center;
   border-radius: 50%;
-  background: var(--color-success);
+  background-color: ${({ $status }) => {
+    switch ($status) {
+      case "PENDING":
+        return "var(--color-accent-600)";
+      case "VERIFIED":
+        return "var(--color-success)";
+      case "REJECTED":
+        return "var(--color-danger)";
+      case "SUSPENDED":
+        return "var(--color-danger)";
+      default:
+        return "var(--color-text-muted)";
+    }
+  }};
   font-size: 11px;
 `;
 
@@ -448,48 +505,24 @@ const VerifyButton = styled.button`
   }
 `;
 
-const Actions = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
+const UserTable = styled.section`
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-white);
+  box-shadow: var(--box-shadow-md);
 `;
 
-const MoreButton = styled.button`
-  display: grid;
-  width: 32px;
-  height: 32px;
-  place-items: center;
-  border: 0;
-  border-radius: 7px;
-  background: transparent;
+const Column = styled.div`
   color: var(--color-text);
-  font-size: 20px;
-  cursor: pointer;
-
-  &:hover {
-    background: #f1f2f4;
-  }
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
 `;
 
-const DeleteButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 0;
-  padding: 7px 9px;
-  border-radius: 7px;
-  background: transparent;
-  color: var(--color-text);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.15s ease;
-
-  &:hover {
-    background: var(--color-danger);
-    color: var(--color-white);
-  }
+const UserListContainer = styled.div`
+  width: 100%;
 `;
 
 export default UserProfileList;

@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteUserProfileApi, getAllProfileApi, getUserProfileApi, updateProfileApi } from "../services/apiProfile.js";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { updateUserProfileVerification } from "../services/apiUsers.js";
 
 export const useUpdateProfile = (user) => {
   const queryClient = useQueryClient();
@@ -50,6 +51,22 @@ export const useDeleteUserProfile = () => {
     },
     onError: (error) => {
       toast.error(error.message);
+    },
+  });
+
+  return { mutate };
+};
+
+export const useUpdateUserProfileVerification = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: updateUserProfileVerification,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["all-users"],
+      });
     },
   });
 

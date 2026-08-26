@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router";
 import { Calendar, Calendar1Icon, CalendarClock, Eye, Pencil, Trash2, TrashIcon, User, UserRound } from "lucide-react";
 
 import Spinner from "../Spinner.jsx";
@@ -18,7 +19,6 @@ import { getUserApi } from "../../services/apiUsers.js";
 import { useDeleteUserProfile, useGetAllUserProfile, useUpdateUserProfileVerification } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useAdminSocket } from "../../hooks/useAdminSocket.js";
-import { Link } from "react-router";
 
 function UserProfileList() {
   const { data, isPending } = useQuery({

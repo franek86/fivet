@@ -13,11 +13,15 @@ import Payments from "../pages/admin/Payments.jsx";
 import Vessels from "../pages/admin/Vessels.jsx";
 import SingleShip from "../pages/admin/SingleShip.jsx";
 import Blog from "../pages/admin/Blog.jsx";
+import SingleUser from "../pages/admin/SingleUser.jsx";
 
 export const AdminRoutes = (
   <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
     <Route path='/admin/dashboard' element={<AdminDashboard />} />
-    <Route path='/admin/users' element={<Users />} />
+    <Route path='/admin/users'>
+      <Route index element={<Users />} />
+      <Route path=':id' element={<SingleUser />} />
+    </Route>
     <Route path='/admin/categories' element={<Categories />} />
     <Route path='/admin/vessels' element={<Vessels />} />
     <Route path='/admin/vessels/:id' element={<SingleShip />} />

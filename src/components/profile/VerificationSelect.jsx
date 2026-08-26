@@ -5,8 +5,8 @@ import { CheckIcon } from "lucide-react";
 
 const VERIFICATION_STATUSES = ["PENDING", "VERIFIED", "REJECTED", "SUSPENDED"];
 
-const VerificationSelect = ({ value, onChange, isLoading = false }) => {
-  const [valueStatus, setValueStatus] = useState(value || "PENDING");
+const VerificationSelect = ({ value = "PENDING", onChange, isLoading = false }) => {
+  const [valueStatus, setValueStatus] = useState(value);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 

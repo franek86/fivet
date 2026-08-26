@@ -22,6 +22,10 @@ const GlobalStyles = styled.createGlobalStyle`
     --color-danger-600: #ef4444;
     --color-warning-600: #928139;
 
+    --color-success-200: oklch(92.5% 0.084 155.995);
+    --color-danger-200: oklch(88.5% 0.062 18.334);
+    --color-warning-200: oklch(92.4% 0.12 95.746);
+
     --dashboard-broker-bg: #d5eae5;
     --dashboard-broker-accent: #3f7d72;
 

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import { Calendar, Calendar1Icon, CalendarClock, Pencil, Trash2, TrashIcon, User, UserRound } from "lucide-react";
+import { Calendar, Calendar1Icon, CalendarClock, Eye, Pencil, Trash2, TrashIcon, User, UserRound } from "lucide-react";
 
 import Spinner from "../Spinner.jsx";
 import Modal from "../Modal.jsx";
@@ -18,6 +18,7 @@ import { getUserApi } from "../../services/apiUsers.js";
 import { useDeleteUserProfile, useGetAllUserProfile, useUpdateUserProfileVerification } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useAdminSocket } from "../../hooks/useAdminSocket.js";
+import { Link } from "react-router";
 
 function UserProfileList() {
   const { data, isPending } = useQuery({
@@ -119,9 +120,21 @@ function UserProfileList() {
                 </VerificationCell>
 
                 <Dropdown>
-                  <Button $variation='icon' onClick={() => dispatch(openModalByName(`edit-${user.id}`))}>
-                    <Pencil size={16} />
-                    <p>Edit</p>
+                  <Button $variation='icon'>
+                    <Link to={`${user.id}`}>
+                      <ButtonInner>
+                        <Eye size={16} />
+                        <p>View</p>
+                      </ButtonInner>
+                    </Link>
+                  </Button>
+                  <Button $variation='icon'>
+                    <Link to={`edit/${user.id}`}>
+                      <ButtonInner>
+                        <Pencil size={16} />
+                        <p>Edit</p>
+                      </ButtonInner>
+                    </Link>
                   </Button>
                   <Button $variation='icon' onClick={() => dispatch(openModalByName(user.id))}>
                     <Trash2 size={16} />
@@ -148,6 +161,13 @@ function UserProfileList() {
 const Page = styled.main`
   min-height: 100vh;
   color: var(--text-color);
+`;
+
+const ButtonInner = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 `;
 
 const Header = styled.header`

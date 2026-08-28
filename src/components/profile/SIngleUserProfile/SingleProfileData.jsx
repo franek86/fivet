@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router";
 import {
   BadgeCheck,
   Building2,
@@ -59,38 +61,11 @@ import {
   FieldLink,
   Badge,
 } from "./SingleUserProfile.styles.js";
-
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
-import { getSingleUserProfileApi } from "../../../services/apiUsers.js";
 import BackBtn from "../../BackBtn.jsx";
 import Spinner from "../../Spinner.jsx";
 
-const user = {
-  fullName: "Marta Kowalska",
-  email: "marta.kowalska@northgate-re.com",
-  lastLogin: "26 Aug 2026, 08:42 (UTC+2)",
-  initials: "MK",
-  status: "VERIFIED",
-  role: "broker",
-  brokerStatus: "VERIFIED",
-  yearsOfExperience: 9,
-  ownerStatus: "PENDING",
-};
-
-const company = {
-  name: "Northgate RE",
-  legalName: "Northgate Real Estate Sp. z o.o.",
-  vat: "PL 5252445566",
-  website: "www.northgate-re.com",
-  businessEmail: "office@northgate-re.com",
-  phone: "+48 22 118 44 90",
-  address: "ul. Prosta 51, 00-838",
-  city: "Warsaw",
-  country: "Poland",
-  description:
-    "Boutique commercial real-estate agency specialising in office and logistics leasing across Central Europe. Founded in 2016, the team advises landlords and occupiers on 120+ transactions per year.",
-};
+import { getSingleUserProfileApi } from "../../../services/apiUsers.js";
+import { formatDateTime } from "../../../utils/formatDate.js";
 
 const statusStyles = {
   VERIFIED: {
@@ -153,7 +128,6 @@ const SingleProfileData = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["user-profile"],
     queryFn: () => getSingleUserProfileApi(id),
-    keepPreviousData: true,
   });
 
   {
@@ -188,7 +162,7 @@ const SingleProfileData = () => {
 
             <LastLogin>
               <Label>Last login</Label>
-              <LoginValue>{data.lastLogin}</LoginValue>
+              <LoginValue>{formatDateTime(data.lastLogin)}</LoginValue>
             </LastLogin>
           </ProfileContent>
         </ProfileCard>
@@ -276,7 +250,9 @@ const SingleProfileData = () => {
               <VerificationList>
                 {["PENDING", "VERIFIED", "SUSPENDED", "REJECTED"].map((s) => (
                   <StatusRow key={s}>
-                    <VerificationLabel>{s === user.status ? "Current status" : statusStyles[s].label}</VerificationLabel>
+                    <VerificationLabel>
+                      {s === data?.brokerProfile?.verificationStatus ? "Current status" : statusStyles[s].label}
+                    </VerificationLabel>
 
                     <StatusBadge status={s} />
                   </StatusRow>

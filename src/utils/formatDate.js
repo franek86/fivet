@@ -11,6 +11,10 @@ export const customFormatDate = (date) => {
   return format(new Date(date), "dd.MM.yyyy");
 };
 
+export const formatDateTime = (date) => {
+  return format(new Date(date), "dd.MM.yyyy HH:mm");
+};
+
 /**
  * Formats a date into "yyyy-MM-dd" format suitable for URLs or APIs.
  * Example:

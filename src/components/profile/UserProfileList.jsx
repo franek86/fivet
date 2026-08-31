@@ -16,16 +16,18 @@ import VerificationSelect from "./VerificationSelect.jsx";
 import { customFormatDate } from "../../utils/formatDate.js";
 
 import { getUserApi } from "../../services/apiUsers.js";
-import { useDeleteUserProfile, useGetAllUserProfile, useUpdateUserProfileVerification } from "../../hooks/useProfile.js";
+import { useDeleteUserProfile, useUpdateUserProfileVerification } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useAdminSocket } from "../../hooks/useAdminSocket.js";
 
 function UserProfileList() {
-  const { data, isPending } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["all-users"],
-    queryFn: () => getUserApi(),
+    queryFn: getUserApi,
     keepPreviousData: true,
   });
+
+  console.log(data);
 
   const { mutate: updateVerification } = useUpdateUserProfileVerification();
   const { mutate } = useDeleteUserProfile();
@@ -58,12 +60,12 @@ function UserProfileList() {
     });
   };
 
-  if (isPending) return <Spinner />;
+  if (isLoading) return <Spinner />;
 
   return (
     <Page>
       <Header>
-        <UserCount>{data.users.length} users</UserCount>
+        <UserCount>{data.users?.length} users</UserCount>
       </Header>
 
       <TableCard>
@@ -77,7 +79,7 @@ function UserProfileList() {
         </TableHeader>
 
         <UserRows>
-          {data.users.map((user) => {
+          {data.users?.map((user) => {
             const verification = getVerificationProfile(user);
 
             return (

@@ -270,7 +270,12 @@ export const VerificationList = styled.div`
   gap: 0.75rem;
 `;
 
-export const VerificationLabel = styled.span``;
+export const VerificationLabel = styled.div`
+  > span {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+`;
 
 export const SectionWrapper = styled.section`
   border: 1px solid var(--border-color);
@@ -371,4 +376,27 @@ export const Badge = styled.span`
         return "var(--color-accent)";
     }
   }};
+
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    transform: scale(1.08);
+    cursor: pointer;
+    background-color: ${({ $status }) => {
+      switch ($status) {
+        case "VERIFIED":
+          return "var(--color-success)";
+
+        case "REJECTED":
+          return "var(--color-danger)";
+
+        case "SUSPENDED":
+          return "var(--color-warning)";
+
+        case "PENDING":
+        default:
+          return "var(--color-accent-600)";
+      }
+    }};
+  }
 `;

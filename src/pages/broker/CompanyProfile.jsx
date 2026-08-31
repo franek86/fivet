@@ -1,7 +1,8 @@
 import React from "react";
+import CompanyProfileData from "../../components/company/CompanyProfile.jsx";
 
 const CompanyProfile = () => {
-  return <div>CompanyProfile</div>;
+  return <CompanyProfileData />;
 };
 
 export default CompanyProfile;

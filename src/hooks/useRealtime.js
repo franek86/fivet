@@ -17,7 +17,7 @@ export const useRealtime = () => {
       dispatch(setOnlineUsers({ userIds: onlineIds, count }));
 
       const onlineSet = new Set(onlineIds);
-      queryClient.setQueriesData({ queryKey: ["all-profile"] }, (oldData) => {
+      queryClient.setQueriesData({ queryKey: ["all-users"] }, (oldData) => {
         if (!oldData) return oldData;
 
         return oldData.map((user) => ({

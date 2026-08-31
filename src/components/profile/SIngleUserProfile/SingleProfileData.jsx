@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
 import {
   BadgeCheck,
   Building2,
@@ -66,6 +66,7 @@ import Spinner from "../../Spinner.jsx";
 
 import { getSingleUserProfileApi } from "../../../services/apiUsers.js";
 import { formatDateTime } from "../../../utils/formatDate.js";
+import { useUpdateUserProfileVerification } from "../../../hooks/useProfile.js";
 
 const statusStyles = {
   VERIFIED: {
@@ -125,14 +126,16 @@ const Section = ({ title, subtitle, action, children }) => {
 
 const SingleProfileData = () => {
   const { id } = useParams();
+
   const { data, isLoading } = useQuery({
-    queryKey: ["user-profile"],
+    queryKey: ["user-profile", id],
     queryFn: () => getSingleUserProfileApi(id),
   });
 
-  {
-    if (isLoading) return <Spinner />;
-  }
+  const { mutate: updateVerification, isPending } = useUpdateUserProfileVerification();
+
+  if (isLoading) return <Spinner />;
+  if (isPending) return <Spinner />;
   console.log(data);
   return (
     <main>
@@ -176,7 +179,7 @@ const SingleProfileData = () => {
             >
               <CompanyGrid>
                 <Field icon={Building2} label='Name' value={data?.company?.name} />
-                <Field label='Legal name' value={data?.company?.legaleName} />
+                <Field label='Legal name' value={data?.company?.legalName} />
                 <Field icon={Receipt} label='VAT number' value={data?.company?.vat} />
                 <Field icon={Globe} label='Website' value={data?.company?.website} href={`https://${data?.company?.website}`} />
                 <Field icon={Mail} label='Business email' value={data?.company?.email} href={`mailto:${data?.company?.email}`} />
@@ -249,9 +252,14 @@ const SingleProfileData = () => {
             <Section title='Verification' subtitle='Reviewed by an administrator'>
               <VerificationList>
                 {["PENDING", "VERIFIED", "SUSPENDED", "REJECTED"].map((s) => (
-                  <StatusRow key={s}>
+                  <StatusRow
+                    key={s}
+                    onClick={() => {
+                      updateVerification({ userId: id, verificationStatus: s });
+                    }}
+                  >
                     <VerificationLabel>
-                      {s === data?.brokerProfile?.verificationStatus ? "Current status" : statusStyles[s].label}
+                      {s === data?.brokerProfile?.verificationStatus ? <span>Current status</span> : statusStyles[s].label}
                     </VerificationLabel>
 
                     <StatusBadge status={s} />

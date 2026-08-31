@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteUserProfileApi, getAllProfileApi, getUserProfileApi, updateProfileApi } from "../services/apiProfile.js";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { updateUserProfileVerification } from "../services/apiUsers.js";
+import { getUserApi, updateUserProfileVerification } from "../services/apiUsers.js";
 
 export const useUpdateProfile = (user) => {
   const queryClient = useQueryClient();
@@ -20,16 +20,16 @@ export const useUpdateProfile = (user) => {
   return { mutate, isPending };
 };
 
-export const useGetUserProfile = () => {
+/* export const useGetUserProfile = () => {
   const { data, isPending } = useQuery({
     queryKey: ["profile"],
     queryFn: getUserProfileApi,
     keepPreviousData: true,
   });
   return { data, isPending };
-};
+}; */
 
-export const useGetAllUserProfile = () => {
+/* export const useGetAllUserProfile = () => {
   const searchTerm = useSelector((state) => state.search.term);
   const search = searchTerm?.trim() || undefined;
 
@@ -39,6 +39,16 @@ export const useGetAllUserProfile = () => {
     keepPreviousData: true,
   });
   return { data, isPending, isFetching };
+}; */
+
+export const useGetUserProfile = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["all-users"],
+    queryFn: getUserApi,
+    keepPreviousData: true,
+  });
+
+  return { data, isLoading };
 };
 
 export const useDeleteUserProfile = () => {
@@ -60,15 +70,20 @@ export const useDeleteUserProfile = () => {
 export const useUpdateUserProfileVerification = () => {
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: updateUserProfileVerification,
 
-    onSuccess: () => {
+    onSuccess: (_, user) => {
+      console.log(user);
       queryClient.invalidateQueries({
         queryKey: ["all-users"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["user-profile", user.userId],
+      });
+      toast.success(`Verification updated to ${user.verificationStatus}`);
     },
   });
 
-  return { mutate };
+  return { mutate, isPending };
 };

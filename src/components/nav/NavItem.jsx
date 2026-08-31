@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { NavLink } from "react-router";
-
 import { useDispatch } from "react-redux";
+import { NavLink } from "react-router";
 import styled from "styled-components";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { closeNav } from "../../slices/uiSlice.js";
 
 import PremiumSticker from "../ui/PremiumSticker.jsx";
-import { ChevronDown, ChevronRight } from "lucide-react";
 
 const NavContent = styled.div`
   position: relative;

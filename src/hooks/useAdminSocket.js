@@ -14,7 +14,7 @@ export function useAdminSocket() {
     };
 
     const updateUserStatus = (userId, online) => {
-      queryClient.setQueriesData({ queryKey: ["all-profile"] }, (old) => {
+      queryClient.setQueriesData({ queryKey: ["all-users"] }, (old) => {
         if (!old) return old;
 
         if (Array.isArray(old)) {

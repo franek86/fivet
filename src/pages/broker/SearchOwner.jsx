@@ -1,7 +1,8 @@
 import React from "react";
+import OwnerList from "../../components/owner/ownerlist.jsx";
 
 const SearchOwner = () => {
-  return <div>SearchOwner</div>;
+  return <OwnerList />;
 };
 
 export default SearchOwner;

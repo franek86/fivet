@@ -16,18 +16,12 @@ import VerificationSelect from "./VerificationSelect.jsx";
 import { customFormatDate } from "../../utils/formatDate.js";
 
 import { getUserApi } from "../../services/apiUsers.js";
-import { useDeleteUserProfile, useUpdateUserProfileVerification } from "../../hooks/useProfile.js";
+import { useDeleteUserProfile, useGetUserProfile, useUpdateUserProfileVerification } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useAdminSocket } from "../../hooks/useAdminSocket.js";
 
 function UserProfileList() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["all-users"],
-    queryFn: getUserApi,
-    keepPreviousData: true,
-  });
-
-  console.log(data);
+  const { data, isLoading } = useGetUserProfile();
 
   const { mutate: updateVerification } = useUpdateUserProfileVerification();
   const { mutate } = useDeleteUserProfile();

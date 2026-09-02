@@ -19,8 +19,9 @@ function Nav() {
   const { data: usersData } = useGetUserProfile();
   const navLinks = getNavigationForRole(user.role);
 
-  useAdminSocket();
-
+  if (user.role === "ADMIN") {
+    useAdminSocket();
+  }
   const onlineCount = usersData?.users?.filter((u) => u.online).length;
 
   const badgeValues = {

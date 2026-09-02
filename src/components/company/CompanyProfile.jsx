@@ -65,23 +65,38 @@ function CompanyProfileData() {
         website: data?.website || "",
         address: data?.address || "",
         description: data?.description || "",
-        logo: data?.logo || "",
+        logo: data?.logo || null,
       });
     }
   }, [data, reset]);
 
-  const handleOnSubmit = (data) => {
-    const file = data.logo;
+  const handleOnSubmit = (formData) => {
+    const payload = new FormData();
 
-    if (file instanceof File) {
-      updateCompanyProfile({ ...data, logo: file });
-    } else {
-      updateCompanyProfile(data);
+    payload.append("name", formData.name || "");
+    payload.append("legalName", formData.legalName || "");
+    payload.append("vat", formData.vat || "");
+    payload.append("email", formData.email || "");
+    payload.append("country", formData.country || "");
+    payload.append("city", formData.city || "");
+    payload.append("phone", formData.phone || "");
+    payload.append("website", formData.website || "");
+    payload.append("address", formData.address || "");
+    payload.append("description", formData.description || "");
+
+    // Only append logo when user selected a new file
+    if (formData.logo instanceof File) {
+      payload.append("logo", formData.logo);
     }
+
+    updateCompanyProfile(payload);
   };
 
-  const handleAvatarChange = (file) => {
-    setValue("logo", file);
+  const handleLogoChange = (file) => {
+    setValue("logo", file, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
   };
 
   if (isLoading) return <Spinner />;
@@ -90,7 +105,7 @@ function CompanyProfileData() {
     <StyledForm onSubmit={handleSubmit(handleOnSubmit)}>
       <div className='profile-header'>
         <div className='profile-header-left'>
-          <ProfileImageUploader name='logo' value={watch("logo")} initialImage={data?.logo} onChange={handleAvatarChange} />
+          <ProfileImageUploader name='logo' value={watch("logo")} initialImage={data?.logo} onChange={handleLogoChange} />
           <div className='profile-info'>
             <h2 className='name'>{data?.name}</h2>
             <div className='email'>{data?.email}</div>

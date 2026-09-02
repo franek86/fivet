@@ -12,7 +12,7 @@ export const getCompanyProfileApi = async () => {
 
 export const updateCompanyProfileApi = async (data) => {
   try {
-    const res = await apiClient.patch("/company", { data });
+    const res = await apiClient.patch("/company", data, { headers: { "Content-Type": "multipart/form-data" } });
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

@@ -15,7 +15,6 @@ import CompanyProfile from "../pages/broker/CompanyProfile.jsx";
 export const BrokerRoutes = (
   <Route element={<ProtectedRoute allowedRoles={["BROKER"]} />}>
     <Route path='/broker/dashboard' element={<BrokerDashboard />} />
-    <Route path='/broker/buyers' element={<BuyersLists />} />
     <Route path='/broker/enquiries' element={<Enquiries />} />
     <Route path='/broker/vessels' element={<Vessels />} />
     <Route path='/broker/vessels:id' element={<SingleShip />} />

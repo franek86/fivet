@@ -1,19 +1,35 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import styled from "styled-components";
-import { getOwnerLists } from "../../services/apiUsers.js";
 import Spinner from "../Spinner.jsx";
+import { getOwnerLists } from "../../services/apiUsers.js";
+import { sendRequestToOwner } from "../../services/apiBrokerAssignment.js";
+import { toast } from "react-toastify";
 
-const OwnerList = ({ onSendRequest }) => {
+const OwnerList = () => {
+  const queryClient = useQueryClient();
+  /* get all owners */
   const { data, isLoading } = useQuery({
     queryKey: ["owners"],
     queryFn: getOwnerLists,
   });
 
-  const getStatus = (owner) => {
-    if (!owner.brokerAssignmentsAsOwner?.status) return "NOT_CONNECTED";
+  const sendRequestMutation = useMutation({
+    mutationFn: sendRequestToOwner,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["owners"] });
+      toast.success("Request sent to owner successfully");
+    },
+    onError: (error) => {
+      console.error(error.message);
+    },
+  });
 
-    return owner.brokerAssignmentsAsOwner?.status;
+  /* Get status of requests */
+  const getStatus = (owner) => {
+    if (!owner.brokerAssignmentsAsOwner[0]?.status) return "NOT_CONNECTED";
+
+    return owner.brokerAssignmentsAsOwner[0]?.status;
   };
 
   if (isLoading) return <Spinner />;
@@ -75,18 +91,18 @@ const OwnerList = ({ onSendRequest }) => {
                     </StatusButton>
                   )}
                   {status === "DECLINED" && (
-                    <Button onClick={() => onSendRequest(owner.id)} disabled={isLoading}>
-                      Send request
+                    <Button onClick={() => sendRequestMutation.mutate(owner.id)} disabled={isLoading}>
+                      {sendRequestMutation.isPending ? "Sending..." : "Send request"}
                     </Button>
                   )}
                   {status === "REVOKED" && (
-                    <Button onClick={() => onSendRequest(owner.id)} disabled={isLoading}>
-                      Send request
+                    <Button onClick={() => sendRequestMutation.mutate(owner.id)} disabled={isLoading}>
+                      {sendRequestMutation.isPending ? "Sending..." : "Send request"}
                     </Button>
                   )}
                   {status === "NOT_CONNECTED" && (
-                    <Button onClick={() => onSendRequest(owner.id)} disabled={isLoading}>
-                      Send request
+                    <Button onClick={() => sendRequestMutation.mutate(owner.id)} disabled={isLoading}>
+                      {sendRequestMutation.isPending ? "Sending..." : "Send request"}
                     </Button>
                   )}
                 </Action>

@@ -40,7 +40,7 @@ const Main = styled.main`
 function MainLayout() {
   const { data: user } = useUser();
 
-  if (user?.role === "USER") {
+  if (user?.role !== "ADMIN") {
     useUserSocket(user?.id ?? "");
   }
 

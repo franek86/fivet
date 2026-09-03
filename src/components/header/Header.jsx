@@ -82,7 +82,7 @@ const Header = () => {
     <HeaderWrap>
       <HeaderLeft>
         <NotificationIcon />
-        {data.role === "USER" && <SubscriptionStatus subscription={data?.subscription} />}
+        {data.role !== "ADMIN" && <SubscriptionStatus subscription={data?.subscription} />}
       </HeaderLeft>
       <HeaderRight onClick={() => handleToggle()}>
         <Avatar />

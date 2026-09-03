@@ -105,12 +105,15 @@ const DeleteCircle = styled.div`
 export default function NotificationIcon() {
   const dropdownRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const { data: unreadData, isLoading } = useAllUnreadNotification();
+
+  const { data, isLoading } = useAllUnreadNotification();
   //const { data: count } = useNotificationCount();
   const { mutate: markAsRead, isPending } = useUpdateReadNotification();
 
-  const notifications = unreadData?.notifications ?? [];
-  const count = unreadData?.unreadCount;
+  const notifications = data?.notifications ?? [];
+  const count = data?.unreadCount ?? 0;
+
+  console.log(data);
 
   useEffect(() => {
     function handleClickOutside(event) {

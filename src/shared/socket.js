@@ -15,6 +15,10 @@ socket.on("connect", () => {
   console.log("Socket connected:", socket.id);
 });
 
+socket.on("disconnect", (reason) => {
+  console.log("Socket disconnected:", reason);
+});
+
 socket.on("connect_error", (err) => {
   console.error("Socket connect_error:", err.message);
 });
@@ -22,7 +26,12 @@ socket.on("connect_error", (err) => {
 export function disconnectSocket() {
   if (socket) {
     socket.disconnect();
-    socket = null;
+  }
+}
+
+export function connectSocket() {
+  if (!socket.connected) {
+    socket.connect();
   }
 }
 

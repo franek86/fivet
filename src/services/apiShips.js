@@ -3,9 +3,10 @@ import apiClient from "./axiosConfig.js";
 /* 
     Get all ships depend if is user or admin with pagination
 */
-export const getShips = async (params = {}) => {
+export const getShips = async (params) => {
   try {
     const res = await apiClient.get("/ships", { params });
+    console.log(res.data);
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

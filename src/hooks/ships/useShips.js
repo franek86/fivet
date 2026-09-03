@@ -16,7 +16,7 @@ export const useShips = ({ page = 1, limit = PAGE_SIZE, sortBy = "createdAt-desc
   const { data, isLoading, error, isFetching } = useQuery({
     queryKey: ["ships", queryParams],
     queryFn: () => getShips(queryParams),
-    keepPreviousData: true,
+    //keepPreviousData: true,
     staleTime: 30 * 60 * 1000,
     gcTime: 5 * 60 * 1000,
   });

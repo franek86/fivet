@@ -162,7 +162,7 @@ function ShipsTable() {
 
   // Loading, error, and empty states
   if (isLoading) return <Spinner />;
-  if (!isLoading && ships.length === 0) {
+  if (!isLoading && ships?.length === 0) {
     if (!hasFilters) {
       return <EmptyState message='No ships for now. Please create ship' />;
     }

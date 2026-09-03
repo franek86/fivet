@@ -74,9 +74,7 @@ function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
     price,
     shipType: { name: shipTypeName },
     userId,
-    user: {
-      profile: { fullName },
-    },
+    listedBy: { fullName },
   } = ship;
 
   const [isPublish, setIsPublish] = useState(isPublished);
@@ -113,7 +111,7 @@ function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
         </td>
       )}
 
-      {user?.role !== "USER" ? null : (
+      {user?.role === "ADMIN" ? null : (
         <td className='table-td'>
           <TdCenter>
             <PublishedStatus $props={isPublished} />

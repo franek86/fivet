@@ -113,8 +113,6 @@ export default function NotificationIcon() {
   const notifications = data?.notifications ?? [];
   const count = data?.unreadCount ?? 0;
 
-  console.log(data);
-
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {

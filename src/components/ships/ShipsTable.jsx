@@ -111,7 +111,7 @@ function ShipsTable() {
       style: "hidden-table-sm",
     },
     { header: "Image", accessor: "image", style: "hidden-table-sm" },
-    ...(user?.role === "ADMIN" ? [{ header: "Published", accessor: "published", style: "hidden-table-sm" }] : []),
+    ...(user?.role === "ADMIN" ? [{ header: "Publish on web", accessor: "published", style: "hidden-table-sm" }] : []),
     ...(user?.role !== "ADMIN" ? [{ header: "Status", accessor: "publish-status" }] : []),
 
     { header: `${user?.role !== "ADMIN" ? "Ship type" : "User"}`, accessor: "ship-type-user", style: "hidden-table-sm" },

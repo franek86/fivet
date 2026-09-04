@@ -6,8 +6,19 @@ import apiClient from "./axiosConfig.js";
 export const getShips = async (params) => {
   try {
     const res = await apiClient.get("/ships", { params });
-    console.log(res.data);
     return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
+/* 
+  Get all pending ship wating approval
+*/
+export const getPendingShips = async () => {
+  try {
+    const res = await apiClient.get("/ships/pending-ships");
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);

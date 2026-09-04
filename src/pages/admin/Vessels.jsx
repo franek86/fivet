@@ -2,6 +2,7 @@ import Title from "../../components/ui/Title.jsx";
 import ShipsTable from "../../components/ships/ShipsTable.jsx";
 import AddShip from "../../components/ships/AddShip.jsx";
 import SearchBar from "../../components/SearchBar.jsx";
+import ApprovalCard from "../../components/ships/ApprovalCard.jsx";
 
 function Vessels() {
   return (
@@ -13,6 +14,7 @@ function Vessels() {
           <AddShip />
         </div>
       </div>
+      <ApprovalCard />
       <ShipsTable />
     </>
   );

@@ -1,7 +1,7 @@
 /**
  * Third-party libraries
  */
-import { Trash2 } from "lucide-react";
+import { Contact, Trash2 } from "lucide-react";
 import styled from "styled-components";
 
 /**
@@ -55,7 +55,12 @@ function AddressBookTable() {
   );
   const dataLength = data?.length;
 
-  if (dataLength < 1) return <EmptyState message='Your address book is empty.' />;
+  if (dataLength < 1)
+    return (
+      <EmptyState message='Your address book is empty.' icon={<Contact />}>
+        <p>Save trusted owners, brokers, and business contacts here for quick access and easier communication.</p>
+      </EmptyState>
+    );
   return (
     <Header>
       {selected.length > 0 && (

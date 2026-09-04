@@ -14,6 +14,7 @@ import Vessels from "../pages/admin/Vessels.jsx";
 import SingleShip from "../pages/admin/SingleShip.jsx";
 import Blog from "../pages/admin/Blog.jsx";
 import SingleUser from "../pages/admin/SingleUser.jsx";
+import ApprovalVesselsList from "../pages/admin/ApprovalVesselsList.jsx";
 
 export const AdminRoutes = (
   <Route element={<ProtectedRoute allowedRoles={["ADMIN"]} />}>
@@ -25,6 +26,7 @@ export const AdminRoutes = (
     <Route path='/admin/categories' element={<Categories />} />
     <Route path='/admin/vessels' element={<Vessels />} />
     <Route path='/admin/vessels/:id' element={<SingleShip />} />
+    <Route path='/admin/vessels/approvals' element={<ApprovalVesselsList />} />
 
     <Route path='/admin/blogs'>
       <Route index element={<Blogs />} />

@@ -17,7 +17,7 @@ export const BrokerRoutes = (
     <Route path='/broker/dashboard' element={<BrokerDashboard />} />
     <Route path='/broker/enquiries' element={<Enquiries />} />
     <Route path='/broker/vessels' element={<Vessels />} />
-    <Route path='/broker/vessels:id' element={<SingleShip />} />
+    <Route path='/broker/vessels/:id' element={<SingleShip />} />
     <Route path='/broker/find-owners' element={<SearchOwner />} />
 
     <Route path='/broker/messages' element={<Messages />} />

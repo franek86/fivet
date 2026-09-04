@@ -1,8 +1,8 @@
 import React from "react";
-import styled from "styled-components";
-import Title from "../../components/ui/Title.jsx";
 import BackBtn from "../../components/BackBtn.jsx";
 import SingleShipData from "../../components/ships/SingleShipData.jsx";
+import Title from "../../components/ui/Title.jsx";
+import styled from "styled-components";
 
 const FlexWrap = styled.div`
   display: flex;
@@ -10,7 +10,7 @@ const FlexWrap = styled.div`
   justify-content: space-between;
 `;
 
-const SingleShip = () => {
+const OwnerSingleVessels = () => {
   return (
     <>
       <FlexWrap>
@@ -22,4 +22,4 @@ const SingleShip = () => {
   );
 };
 
-export default SingleShip;
+export default OwnerSingleVessels;

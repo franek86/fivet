@@ -11,7 +11,7 @@ import Button from "../ui/Button.jsx";
 
 import { useGetPayments } from "../../hooks/usePayments.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
-import { Trash2 } from "lucide-react";
+import { CreditCard, Trash2 } from "lucide-react";
 
 const Header = styled.div`
   display: flex;
@@ -46,7 +46,15 @@ function PaymentTable() {
   ];
 
   if (isLoading) return <Spinner />;
-  if (data.length < 1) return <EmptyState message='No notifications for now.' />;
+  if (data.length < 1)
+    return (
+      <EmptyState message='No payments yet' icon={<CreditCard />}>
+        <p>
+          Your payment activity will appear here once you complete your first transaction. Keep everything organized and easy to track in
+          one place.
+        </p>
+      </EmptyState>
+    );
   if (isError) return <div>Error</div>;
 
   const renderRow = (item) => <PaymentColumn key={item.id} data={item} selected={selected} onCheckboxChange={handleCheckboxChange} />;

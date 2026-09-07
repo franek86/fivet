@@ -1,22 +1,40 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { usePendingShips } from "../../hooks/ships/usePendingShips.js";
 import Spinner from "../Spinner.jsx";
 import BackBtn from "../BackBtn.jsx";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateShipListsingStatus } from "../../services/apiShips.js";
+import { toast } from "react-toastify";
 
 const ApprovalList = () => {
   const { data, isLoading } = usePendingShips();
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: ({ shipId, status, rejectionReason }) => updateShipListsingStatus({ shipId, status, rejectionReason }),
+    onSuccess: (data) => {
+      toast.success("Your approved ship");
+      queryClient.invalidateQueries(["pending-ship"]);
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message);
+    },
+  });
 
   if (isLoading) return <Spinner />;
 
-  const vessels = data.data;
+  const vessels = data?.data;
 
-  const onApprove = () => {
-    console.log("Approve");
+  const onApprove = (id, data) => {
+    mutate({
+      shipId: id,
+      status: data,
+    });
   };
 
-  const onReject = () => {
-    console.log("Reject");
+  const onReject = (id, data) => {
+    mutate({ shipId: id, status: "REJECTED", rejectionReason: data });
   };
 
   return (
@@ -46,7 +64,7 @@ const ApprovalList = () => {
   );
 };
 
-const ApprovalCard = ({ vessel, onApprove, onReject }) => {
+const ApprovalCard = ({ vessel, onApprove, onReject, mutate }) => {
   const [showReject, setShowReject] = useState(false);
   const [reason, setReason] = useState("");
 
@@ -99,7 +117,7 @@ const ApprovalCard = ({ vessel, onApprove, onReject }) => {
         <Actions>
           <RejectButton onClick={() => setShowReject(true)}>Reject</RejectButton>
 
-          <ApproveButton onClick={() => onApprove?.(vessel.id)}>
+          <ApproveButton onClick={() => onApprove?.(vessel.id, "VERIFIED")}>
             <CheckIcon>✓</CheckIcon>
             Approve
           </ApproveButton>
@@ -160,7 +178,7 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  margin: 0;
+  margin-top: 2.5rem;
   font-size: 24px;
   font-weight: 700;
   color: var(--color-text);

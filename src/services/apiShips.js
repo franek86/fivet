@@ -19,6 +19,7 @@ export const getShips = async (params) => {
 export const getPendingShips = async () => {
   try {
     const res = await apiClient.get("/ships/pending-ships");
+    return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);
@@ -80,6 +81,21 @@ export const publishShipApi = async (id, isPublished, userId) => {
       userId,
     });
     return response;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
+/* 
+  Update ship Listing Status 
+*/
+
+export const updateShipListsingStatus = async ({ shipId, status, rejectionReason }) => {
+  console.log({ shipId, status, rejectionReason });
+  try {
+    const res = await apiClient.patch(`/ships/${shipId}/approval`, { status, rejectionReason });
+    return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);

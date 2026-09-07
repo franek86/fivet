@@ -1,8 +1,7 @@
-import React from "react";
 import SearchBar from "../../components/SearchBar.jsx";
 import AddShip from "../../components/ships/AddShip.jsx";
-import ShipsTable from "../../components/ships/ShipsTable.jsx";
 import Title from "../../components/ui/Title.jsx";
+import OwnerApprovalList from "../../components/owner/OwnerApprovalList.jsx";
 
 const OwnerVessels = () => {
   return (
@@ -14,7 +13,7 @@ const OwnerVessels = () => {
           <AddShip />
         </div>
       </div>
-      <ShipsTable />
+      <OwnerApprovalList />
     </>
   );
 };

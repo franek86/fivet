@@ -5,6 +5,7 @@ import ProtectedRoute from "../pages/ProtectedRoute.jsx";
 import CompanyOwnerProfile from "../pages/owner/CompanyOwnerProfile.jsx";
 import OwnerVessels from "../pages/owner/OwnerVessels.jsx";
 import OwnerSingleVessels from "../pages/owner/OwnerSingleVessels.jsx";
+import VerifiedBrokerList from "../pages/owner/VerifiedBrokerLIst.jsx";
 
 export const OwnerRoutes = (
   <Route element={<ProtectedRoute allowedRoles={["OWNER"]} />}>
@@ -12,5 +13,6 @@ export const OwnerRoutes = (
     <Route path='/owner/profile' element={<CompanyOwnerProfile />} />
     <Route path='/owner/vessels' element={<OwnerVessels />} />
     <Route path='/owner/vessels/:id' element={<OwnerSingleVessels />} />
+    <Route path='/owner/brokers' element={<VerifiedBrokerList />} />
   </Route>
 );

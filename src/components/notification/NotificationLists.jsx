@@ -17,6 +17,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { createSelector } from "@reduxjs/toolkit";
+import { BellPlus } from "lucide-react";
 
 const Wrapper = styled.section`
   display: flex;
@@ -73,7 +74,12 @@ function NotificationLists() {
   const { mutate: deleteNotification } = useDeleteNotification();
 
   if (isLoading) return <Spinner />;
-  if (notifications.length < 1) return <EmptyState message='No notifications for now.' />;
+  if (notifications.length < 1)
+    return (
+      <EmptyState message='You are all caught up! 🎉' icon={<BellPlus />}>
+        <p>There are no new notifications right now.</p>
+      </EmptyState>
+    );
   if (isError) return <div>Error</div>;
 
   const handleToggleRead = (id, checked) => {

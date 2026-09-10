@@ -12,22 +12,11 @@ const FormWrap = styled.div`
   gap: 2.4rem;
   padding: 4rem 2.8rem;
   box-shadow: var(--shadow-lg);
-  width: 100%;
   text-align: center;
   background-color: var(--color-white);
-  border-radius: var(--border-radius-md);
+  border-radius: var(--border-radius-lg);
 `;
 
-const ButtonTest = styled.div`
-  background: var(--color-accent-600);
-  padding: 1rem;
-  color: var(--color-white);
-  cursor: pointer;
-
-  &:hover {
-    background: var(--color-accent);
-  }
-`;
 const LinkText = styled(Link)`
   font-weight: 600;
   font-size: 1.5rem;

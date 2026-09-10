@@ -12,7 +12,7 @@ import Sort from "../ui/Sort.jsx";
 import Button from "../ui/Button.jsx";
 import Modal from "../Modal.jsx";
 import ShipFilters from "./ShipFilters.jsx";
-
+import AppShip from "./AddShip.jsx";
 import styled from "styled-components";
 
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
@@ -20,7 +20,7 @@ import { useShips } from "../../hooks/ships/useShips.js";
 import { setSearchTerm } from "../../slices/searchSlice.js";
 import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
-import { SlidersHorizontal, Trash2 } from "lucide-react";
+import { Ship, SlidersHorizontal, Trash2 } from "lucide-react";
 import { useAllShipType } from "../../hooks/useShipType.js";
 import { urlFormatDate } from "../../utils/formatDate.js";
 import { useUser } from "../../hooks/useAuth.js";
@@ -164,7 +164,14 @@ function ShipsTable() {
   if (isLoading) return <Spinner />;
   if (!isLoading && ships?.length === 0) {
     if (!hasFilters) {
-      return <EmptyState message='No ships for now. Please create ship' />;
+      return (
+        <EmptyState message='No vessels yet' icon={<Ship />}>
+          <p>
+            There are no vessels to display right now. <br /> Create a vessel to get started.
+          </p>
+          <AppShip />
+        </EmptyState>
+      );
     }
 
     return (

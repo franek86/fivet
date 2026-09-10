@@ -23,7 +23,7 @@ export const getSingleUserProfileApi = async (id) => {
 
 export const getOwnerLists = async () => {
   try {
-    const res = await apiClient.get("/users/owners");
+    const res = await apiClient.get("/users/verify-owners");
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

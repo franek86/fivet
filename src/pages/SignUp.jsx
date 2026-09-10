@@ -12,7 +12,6 @@ const FormWrap = styled.div`
   gap: 2.4rem;
   padding: 4rem 2.8rem;
   box-shadow: var(--shadow-lg);
-  width: 100%;
   text-align: center;
   border-radius: var(--border-radius-md);
 `;

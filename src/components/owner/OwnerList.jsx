@@ -1,10 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import React from "react";
+
 import styled from "styled-components";
 import Spinner from "../Spinner.jsx";
 import { getOwnerLists } from "../../services/apiUsers.js";
 import { sendRequestToOwner } from "../../services/apiBrokerAssignment.js";
 import { toast } from "react-toastify";
+import { Anchor, ShieldCheck } from "lucide-react";
+import EmptyState from "../EmptyState.jsx";
 
 const OwnerList = () => {
   const queryClient = useQueryClient();
@@ -16,7 +18,7 @@ const OwnerList = () => {
 
   const sendRequestMutation = useMutation({
     mutationFn: sendRequestToOwner,
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["owners"] });
       toast.success("Request sent to owner successfully");
     },
@@ -33,6 +35,13 @@ const OwnerList = () => {
   };
 
   if (isLoading) return <Spinner />;
+
+  if (data.owners?.length < 1)
+    return (
+      <EmptyState message='No verified owner' icon={<Anchor />}>
+        <p>Owners must by verifed by admin.</p>
+      </EmptyState>
+    );
 
   return (
     <Container>
@@ -76,7 +85,14 @@ const OwnerList = () => {
               <RightSide>
                 <Verification $verificationStatus={owner.ownerProfile?.verificationStatus}>
                   <StatusDot $verificationStatus={owner.ownerProfile?.verificationStatus} />
-                  Verificaton: {owner.ownerProfile?.verificationStatus}
+                  {owner.ownerProfile?.verificationStatus === "PENDING" ? (
+                    <p>Waiting for admin approval.</p>
+                  ) : (
+                    <>
+                      <ShieldCheck />
+                      <div>{owner.ownerProfile?.verificationStatus}</div>
+                    </>
+                  )}
                 </Verification>
 
                 <Action>
@@ -91,9 +107,9 @@ const OwnerList = () => {
                     </StatusButton>
                   )}
                   {status === "DECLINED" && (
-                    <Button onClick={() => sendRequestMutation.mutate(owner.id)} disabled={isLoading}>
-                      {sendRequestMutation.isPending ? "Sending..." : "Send request"}
-                    </Button>
+                    <StatusButton $status='DECLINED' disabled>
+                      Request declined
+                    </StatusButton>
                   )}
                   {status === "REVOKED" && (
                     <Button onClick={() => sendRequestMutation.mutate(owner.id)} disabled={isLoading}>
@@ -241,6 +257,7 @@ const RightSide = styled.div`
 const Verification = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
 
   color: ${({ $verificationStatus }) => {
@@ -330,7 +347,39 @@ const StatusButton = styled.button`
 
   cursor: default;
 
-  background: ${({ $status }) => ($status === "ACCEPTED" ? "#dcfce7" : "#fef3c7")};
+  background: ${({ $status }) => {
+    switch ($status) {
+      case "ACCEPTED":
+        return "var(--color-success-600)";
 
-  color: ${({ $status }) => ($status === "ACCEPTED" ? "#166534" : "#92400e")};
+      case "DECLINED":
+        return "var(--color-danger-600)";
+
+      case "REVOCED":
+        return "var(--color-warning-600)";
+
+      case "PENDING":
+      default:
+        return "var(--color-warning-600)";
+    }
+  }};
+
+  color: ${({ $status }) => {
+    switch ($status) {
+      case "ACCEPTED":
+        return "var(--color-success)";
+
+      case "DECLINED":
+        return "var(--color-danger)";
+
+      case "REVOCED":
+        return "var(--color-warning)";
+
+      case "PENDING":
+      default:
+        return "var(--color-warning)";
+    }
+  }};
+
+  cursor: ${({ $status }) => ($status === "DECLINED" ? "not-allowed" : "pointer")};
 `;

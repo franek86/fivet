@@ -8,7 +8,7 @@ const Btn = styled.div`
   width: 100%;
   padding: 10px 12px;
   font-size: 14px;
-  color: var(--color-text);
+  color: var(--color-white);
   background: var(--color-accent);
   font-weight: 600;
   cursor: pointer;

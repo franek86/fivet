@@ -27,12 +27,20 @@ const Icon = styled.div`
   border-radius: var(--border-radius-md);
 `;
 
+const Inner = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+`;
+
 function EmptyState({ message = "No data available", icon = null, children }) {
   return (
     <StyledWrap>
       {icon && <Icon>{icon}</Icon>}
       <P className='text-lg'>{message}</P>
-      {children}
+      <Inner>{children}</Inner>
     </StyledWrap>
   );
 }

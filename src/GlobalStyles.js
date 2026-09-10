@@ -7,24 +7,22 @@ const styled = { createGlobalStyle };
 const GlobalStyles = styled.createGlobalStyle`
   :root {
     /* LIGHT MODE (default) */
-    --color-white: #fff;
+    --color-white: #ffffff;
     --color-grey-200: #f4f5f7;
-    --color-accent: oklch(93.2% 0.032 255.585);
-    --color-accent-600: oklch(78% 0.06 255.585);
-    --color-border: oklch(90% 0.015 255.585);
-    --color-text: #1a2238;
+    --color-accent: #1769aa;
+    --color-accent-600: #125a91;
+    --color-border: #d9e2ec;
+    --color-text: #0b1f33;
     --color-text-muted: #6b7280;
-    --color-success: #16a34a;
-    --color-danger: #dc2626;
-    --color-warning: #fed7aa;
+    --color-success: #e8f5ef;
+    --color-danger: #fcebec;
+    --color-warning: #fff5db;
 
-    --color-success-600: #22c55e;
-    --color-danger-600: #ef4444;
-    --color-warning-600: #928139;
+    --color-success-600: #16825d;
+    --color-danger-600: #c53d4b;
+    --color-warning-600: #b7791f;
 
-    --color-success-200: oklch(92.5% 0.084 155.995);
-    --color-danger-200: oklch(88.5% 0.062 18.334);
-    --color-warning-200: oklch(92.4% 0.12 95.746);
+    --color-bg: #f7f8fa;
 
     --dashboard-broker-bg: #d5eae5;
     --dashboard-broker-accent: #3f7d72;
@@ -75,7 +73,7 @@ const GlobalStyles = styled.createGlobalStyle`
   /* DARK MODE */
   body.dark-mode {
     --color-white: #18212f;
-    --color-grey-200: oklch(18% 0.01 255.585);
+    --color-grey-200: #071521;
     --color-accent: oklch(42% 0.08 255.585);
     --color-accent-600: oklch(55% 0.11 255.585);
     --color-border: oklch(30% 0.02 255.585);
@@ -84,6 +82,7 @@ const GlobalStyles = styled.createGlobalStyle`
     --color-success: #22c55e;
     --color-danger: #ef4444;
     --color-warning: #928139;
+    --color-bg: #18212f;
 
     /* DARK */
 
@@ -118,7 +117,7 @@ const GlobalStyles = styled.createGlobalStyle`
     font-family: "Inter", serif;
     font-size: 14px;
     color: var(--color-text);
-    background-color: var(--color-grey-200);
+    background-color: var(--color-bg);
 
     transition:
       color 0.3s,
@@ -210,7 +209,7 @@ const GlobalStyles = styled.createGlobalStyle`
   }
 
   .input-icon {
-    color: var(--color-text);
+    color: var(--color-text-muted);
   }
 
   /* Title and search container */
@@ -332,6 +331,11 @@ const GlobalStyles = styled.createGlobalStyle`
 
       &.today {
         background-color: var(--color-accent);
+        color: var(--color-white);
+
+        .day {
+          color: var(--color-white);
+        }
       }
 
       .date {

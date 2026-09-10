@@ -22,7 +22,7 @@ const Header = styled.header`
   background: ${({ $bgColor }) => {
     switch ($bgColor) {
       case "ADMIN":
-        return "var(--color-accent)";
+        return "var(--color-bg)";
       case "BUYER":
         return "var(--dashboard-buyer-bg)";
       case "OWNER":
@@ -30,7 +30,7 @@ const Header = styled.header`
       case "BROKER":
         return "var(--dashboard-broker-bg)";
       default:
-        return "#d1d5db";
+        return "var(--color-bg)";
     }
   }};
 `;

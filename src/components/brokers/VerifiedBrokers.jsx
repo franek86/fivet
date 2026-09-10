@@ -1,39 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
-
-const brokers = [
-  {
-    id: "1",
-    name: "James Wilson",
-    company: "Wilson Marine Brokerage",
-    location: "London, UK",
-    initials: "JW",
-    requestStatus: "NONE",
-  },
-  {
-    id: "2",
-    name: "Michael Brown",
-    company: "Atlantic Yacht Brokers",
-    location: "Hamburg, Germany",
-    initials: "MB",
-    requestStatus: "PENDING",
-  },
-  {
-    id: "3",
-    name: "David Miller",
-    company: "Ocean Trade Marine",
-    location: "Rotterdam, Netherlands",
-    initials: "DM",
-    requestStatus: "ACCEPTED",
-  },
-  {
-    id: "4",
-    name: "Robert Taylor",
-    company: "Bluewater Ship Brokers",
-    location: "Athens, Greece",
-    initials: "RT",
-    requestStatus: "DECLINED",
-  },
-];
+import Spinner from "../Spinner.jsx";
+import { getVerifedBrokerLists } from "../../services/apiUsers.js";
 
 const getStatus = (status) => {
   switch (status) {
@@ -64,6 +32,15 @@ const getStatus = (status) => {
 };
 
 const VerifiedBrokers = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["brokers"],
+    queryFn: getVerifedBrokerLists,
+  });
+
+  if (isLoading) return <Spinner />;
+
+  console.log(data);
+
   const handleContact = (broker) => {
     console.log("Contact broker:", broker.id);
   };
@@ -80,13 +57,13 @@ const VerifiedBrokers = () => {
       </Header>
 
       <BrokerGrid>
-        {brokers.map((broker) => {
+        {data?.brokers.map((broker) => {
           const status = getStatus(broker.requestStatus);
 
           return (
             <BrokerCard key={broker.id}>
               <CardTop>
-                <Avatar>{broker.initials}</Avatar>
+                <Avatar>{broker.company?.logo}</Avatar>
 
                 <VerifiedBadge>
                   <CheckIcon>✓</CheckIcon>
@@ -94,13 +71,13 @@ const VerifiedBrokers = () => {
                 </VerifiedBadge>
               </CardTop>
 
-              <BrokerName>{broker.name}</BrokerName>
+              <BrokerName>{broker.fullName}</BrokerName>
 
-              <Company>{broker.company}</Company>
+              <Company>{broker.company?.name}</Company>
 
               <Location>
                 <LocationIcon>⌖</LocationIcon>
-                {broker.location}
+                {broker.company?.country}
               </Location>
 
               <Divider />
@@ -228,8 +205,8 @@ const VerifiedBadge = styled.div`
   gap: 5px;
   padding: 5px 9px;
   border-radius: 999px;
-  background: var(--color-success);
-  color: var(--color-success-200);
+  background: var(--color-success-600);
+  color: var(--color-success);
   font-size: 11px;
   font-weight: 600;
 `;

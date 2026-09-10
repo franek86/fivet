@@ -195,7 +195,7 @@ const Avatar = styled.div`
   justify-content: center;
 
   border-radius: 50%;
-  background: var(--color-accent);
+  background: var(--color-border);
 
   color: var(--color-accent-600);
   font-size: 16px;
@@ -227,7 +227,7 @@ const Company = styled.div`
 
 const Location = styled.div`
   margin-top: 3px;
-  color: #9ca3af;
+  color: var(--color-text-muted);
   font-size: 12px;
 `;
 
@@ -246,13 +246,13 @@ const Verification = styled.div`
   color: ${({ $verificationStatus }) => {
     switch ($verificationStatus) {
       case "VERIFIED":
-        return "var(--color-success)";
+        return "var(--color-success-600)";
 
       case "REJECTED":
-        return "var(--color-danger)";
+        return "var(--color-danger-600)";
 
       case "SUSPENDED":
-        return "var(--color-warning)";
+        return "var(--color-warning-600)";
 
       case "PENDING":
       default:

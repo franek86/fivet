@@ -150,7 +150,7 @@ export const CompanyLogo = styled.div`
   border: 1px solid var(--color-white);
   border-radius: 0.75rem;
   font-weight: 700;
-  color: var(--color-accent);
+  color: var(--color-white);
 `;
 
 export const Description = styled.div`
@@ -363,17 +363,34 @@ export const Badge = styled.span`
   background-color: ${({ $status }) => {
     switch ($status) {
       case "VERIFIED":
-        return "var(--color-success-200)";
+        return "var(--color-success-600)";
 
       case "REJECTED":
-        return "var(--color-danger-200)";
+        return "var(--color-danger-600)";
 
       case "SUSPENDED":
-        return "var(--color-warning-200)";
+        return "var(--color-warning-600)";
 
       case "PENDING":
       default:
         return "var(--color-accent)";
+    }
+  }};
+
+  color: ${({ $status }) => {
+    switch ($status) {
+      case "VERIFIED":
+        return "var(--color-success)";
+
+      case "REJECTED":
+        return "var(--color-danger)";
+
+      case "SUSPENDED":
+        return "var(--color-warning)";
+
+      case "PENDING":
+      default:
+        return "var(--color-white)";
     }
   }};
 
@@ -382,21 +399,5 @@ export const Badge = styled.span`
   &:hover {
     transform: scale(1.08);
     cursor: pointer;
-    background-color: ${({ $status }) => {
-      switch ($status) {
-        case "VERIFIED":
-          return "var(--color-success)";
-
-        case "REJECTED":
-          return "var(--color-danger)";
-
-        case "SUSPENDED":
-          return "var(--color-warning)";
-
-        case "PENDING":
-        default:
-          return "var(--color-accent-600)";
-      }
-    }};
   }
 `;

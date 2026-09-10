@@ -17,7 +17,7 @@ const BoxIcon = styled.span`
   place-items: center;
   color: var(--color-text);
   border-radius: 12px;
-  background-color: var(--color-accent);
+  background-color: var(--color-grey-200);
   width: 44px;
   height: 44px;
 `;
@@ -64,15 +64,16 @@ const IconStyle = styled.span`
 const P = styled.div`
   font-size: 12px;
   font-weight: 600;
-  color: ${(props) => (props.trend === "up" ? "#16a34a" : props.trend === "down" ? "#dc2626" : "#6b7280")};
+  color: ${(props) =>
+    props.trend === "up" ? "var(--color-success-600)" : props.trend === "down" ? "var(--color-success-600)" : "var(--color-text)"};
 `;
 
 const IconStyleUp = styled(ArrowUpRight)`
-  color: var(--color-success);
+  color: var(--color-bg);
 `;
 
 const IconStyleDown = styled(ArrowDownRight)`
-  color: var(--color-danger);
+  color: var(--color-danger-600);
 `;
 
 function StatisticCard({ text, icon, data, trend, trendChange }) {

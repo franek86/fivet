@@ -34,8 +34,8 @@ import SingleAddressBook from "./SingleAddressBook.jsx";
 const StyledPriority = styled.div`
   max-width: max-content;
   margin: auto;
-  background-color: ${({ $props }) => ($props === "REGULAR" ? "var(--color-accent-600)" : "var(--color-success)")};
-  color: ${({ $props }) => ($props === "REGULAR" ? "var(--color-text)" : "var(--color-white)")};
+  background-color: ${({ $props }) => ($props === "REGULAR" ? "var(--color-accent-600)" : "var(--color-success-600)")};
+  color: var(--color-white);
   padding: 0.5rem 0.85rem;
   font-size: 1.2rem;
   border-radius: var(--border-radius-lg);
@@ -53,7 +53,7 @@ const StyledDropdown = styled.form`
   border-radius: var(--border-radius-lg);
 
   background-color: ${({ $props }) => ($props !== "REGULAR" ? "var(--color-accent-600)" : "var(--color-success)")};
-  color: ${({ $props }) => ($props !== "REGULAR" ? "var(--color-text)" : "var(--color-white)")};
+  color: var(--color-white);
   text-align: center;
 `;
 

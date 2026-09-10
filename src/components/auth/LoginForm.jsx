@@ -44,9 +44,10 @@ const PasswordWrap = styled.div`
 `;
 
 const PasswordIcon = styled.div`
+  display: flex;
   position: absolute;
   right: 1rem;
-  top: 4rem;
+  top: 37px;
   cursor: pointer;
 `;
 
@@ -101,7 +102,7 @@ function LoginForm() {
       <div>
         <Input
           directions='column'
-          placeholder='Enter your email'
+          placeholder='youremail@email.com'
           label='Email *'
           name='email'
           register={register}
@@ -115,15 +116,14 @@ function LoginForm() {
           <Input
             directions='column'
             type={showPassword ? "text" : "password"}
-            placeholder='Enter your password'
+            placeholder='*********'
             label='Password *'
             name='password'
             register={register}
             {...register("password")}
-            autoComplete='password'
           />
           <PasswordIcon onClick={() => setShowPassword(!showPassword)}>
-            {showPassword ? <EyeOff className='input-icon' size={18} /> : <Eye className='input-icon' size={18} />}
+            {showPassword ? <EyeOff className='input-icon' size={18} /> : <Eye className='input-icon' size={16} />}
           </PasswordIcon>
         </PasswordWrap>
 

@@ -129,7 +129,8 @@ const StepCircle = styled.div`
 
   background: ${({ $active }) => ($active ? "var(--color-accent)" : "var(--color-border)")};
 
-  color: ${({ $active }) => ($active ? "var(--color-text)" : "var(--color-text)")};
+  color: ${({ $active }) => ($active ? "var(--color-white)" : "var(--color-text)")};
+  z-index: 2;
 `;
 
 const StepLine = styled.div`
@@ -146,7 +147,6 @@ const StepLine = styled.div`
 `;
 
 function SignUpForm() {
-  const roles = ["BROKER", "OWNER", "BUYER"];
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const plan = searchParams.get("plan");

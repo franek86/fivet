@@ -14,7 +14,7 @@ const sizes = {
 
 const variations = {
   primary: css`
-    color: var(--color-text);
+    color: var(--color-white);
     background-color: var(--color-accent);
     font-weight: 600;
     box-shadow: var(--shadow-md);
@@ -45,7 +45,7 @@ const variations = {
   `,
   danger: css`
     color: var(--color-white);
-    background-color: var(--color-danger);
+    background-color: var(--color-danger-600);
     gap: 4px;
     font-size: 1.2rem;
 
@@ -61,7 +61,7 @@ const variations = {
     justify-content: space-between;
 
     &:hover {
-      background: var(--color-accent);
+      background: var(--color-border);
     }
   `,
 };
@@ -72,6 +72,7 @@ const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 2;
 
   &:focus {
     outline: none;

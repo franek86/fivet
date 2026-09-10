@@ -58,7 +58,7 @@ const ImagePlaceholder = styled.div`
   width: 44px;
   height: 44px;
   border-radius: var(--border-radius-lg);
-  background-color: var(--color-accent);
+  background-color: var(--color-bg);
 `;
 
 function LastUsers({ data, isLoading }) {

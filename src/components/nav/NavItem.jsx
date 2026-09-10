@@ -45,7 +45,7 @@ const NavList = styled(NavLink)`
   &:active,
   &.active:link,
   &.active:visited {
-    color: var(--color-text);
+    color: var(--color-white);
     background: var(--color-accent);
     font-weight: 600;
   }

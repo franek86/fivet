@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Spinner from "../Spinner.jsx";
 import { usePendingShips } from "../../hooks/ships/usePendingShips.js";
 import { useNavigate } from "react-router";
+import { Anchor } from "lucide-react";
 
 const ApprovalCard = () => {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ const ApprovalCard = () => {
   return (
     <Card>
       <Icon>
-        <span>⚓</span>
+        <Anchor size={16} />
       </Icon>
 
       <Content>
@@ -61,6 +62,7 @@ const Icon = styled.div`
   flex-shrink: 0;
 
   background: var(--color-accent);
+  color: var(--color-white);
   border-radius: 10px;
 
   font-size: 22px;
@@ -98,12 +100,12 @@ const Action = styled.button`
 
   font-size: 14px;
   font-weight: 600;
-  color: var(--color-success);
+  color: var(--color-success-600);
 
   cursor: pointer;
 
   &:hover {
-    color: var(--color-success-600);
+    color: var(--color-text);
   }
 `;
 

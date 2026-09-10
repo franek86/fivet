@@ -157,6 +157,6 @@ const TabCount = styled.span`
   min-width: 18px;
   padding: 2px 5px;
   border-radius: 999px;
-  background: var(--color-accent);
+  background: var(--color-border);
   font-size: 10px;
 `;

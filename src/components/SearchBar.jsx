@@ -25,7 +25,6 @@ const SearchIcon = styled(Search)`
   top: 50%;
   transform: translateY(-50%);
   font-size: 4rem;
-  background: var(--color-accent);
   border-radius: 50%;
   padding: 0.5rem;
   color: var(--color-text);

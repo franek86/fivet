@@ -67,7 +67,7 @@ const Header = styled.div`
       padding: 6px 10px;
 
       &.active {
-        background-color: var(--color-accent);
+        background-color: var(--color-border);
       }
     }
   }
@@ -116,6 +116,7 @@ const StyledLayout = styled.div`
       .cell:hover,
       .today {
         background: var(--color-accent);
+        color: var(--color-white);
       }
 
       .muted {

@@ -40,8 +40,8 @@ const StyledList = styled.div`
 `;
 
 const Priority = styled.div`
-  background-color: ${({ $props }) => ($props === "REGULAR" ? "var(--color-accent-600)" : "var(--color-success)")};
-  color: ${({ $props }) => ($props === "REGULAR" ? "var(--color-text)" : "var(--color-white)")};
+  background-color: ${({ $props }) => ($props === "REGULAR" ? "var(--color-accent-600)" : "var(--color-success-600)")};
+  color: var(--color-white);
   padding: 0.5rem 0.85rem;
   font-size: 12px;
   border-radius: var(--border-radius-md);

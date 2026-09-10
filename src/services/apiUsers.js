@@ -31,7 +31,22 @@ export const getOwnerLists = async () => {
   }
 };
 
+export const getVerifedBrokerLists = async () => {
+  try {
+    const res = await apiClient.get("/users/verified-brokers");
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
 export const updateUserProfileVerification = async ({ userId, verificationStatus }) => {
-  const res = await apiClient.patch("/users/verify-user-account", { userId, verificationStatus });
-  return res.data;
+  try {
+    const res = await apiClient.patch("/users/verify-user-account", { userId, verificationStatus });
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
 };

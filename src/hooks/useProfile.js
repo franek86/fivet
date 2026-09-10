@@ -83,6 +83,9 @@ export const useUpdateUserProfileVerification = () => {
       });
       toast.success(`Verification updated to ${user.verificationStatus}`);
     },
+    onError: (error) => {
+      console.log(error);
+    },
   });
 
   return { mutate, isPending };

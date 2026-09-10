@@ -20,6 +20,7 @@ const FormWrap = styled.div`
 const TextWrap = styled.p`
   font-size: 13px;
   font-weight: 600;
+  color: var(--color-text-muted);
 `;
 
 const LinkText = styled(Link)`

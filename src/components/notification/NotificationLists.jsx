@@ -31,7 +31,7 @@ const Card = styled.article`
   justify-content: space-between;
 
   border-left: 10px solid;
-  border-color: ${({ $props }) => ($props ? "#15803d" : "#b91c1c")};
+  border-color: ${({ $props }) => ($props ? "var(--color-success-600)" : "var(--color-danger-600)")};
   background-color: var(--color-white);
   letter-spacing: 0.5px;
   padding: 2rem;

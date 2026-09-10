@@ -38,7 +38,7 @@ const LogoIcon = styled.div`
 const LogoText = styled.div`
   font-weight: 700;
   font-size: 18px;
-  color: var(--color-text);
+  color: var(--color-accent);
 
   @media screen and (min-width: 640px) {
     display: none;
@@ -68,7 +68,7 @@ function Logo() {
     <LogoWrapper>
       <StyledLogo onClick={() => navigate("/dashboard")}>
         <LogoIcon>
-          <ShipWheelIcon size={20} />
+          <ShipWheelIcon size={20} color='#ffffff' />
         </LogoIcon>
         <LogoText>Fivet</LogoText>
       </StyledLogo>

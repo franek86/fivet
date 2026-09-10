@@ -83,13 +83,13 @@ const SelectWrapper = styled.div`
   background-color: ${({ $status }) => {
     switch ($status) {
       case "VERIFIED":
-        return "var(--color-success)";
+        return "var(--color-success-600)";
 
       case "REJECTED":
-        return "var(--color-danger)";
+        return "var(--color-danger-600)";
 
       case "SUSPENDED":
-        return "var(--color-warning)";
+        return "var(--color-warning-600)";
 
       default:
         return "var(--color-accent)";
@@ -97,18 +97,7 @@ const SelectWrapper = styled.div`
   }};
 
   border-radius: var(--border-radius-md);
-  color: ${({ $status }) => {
-    switch ($status) {
-      case "VERIFIED":
-        return "var(--color-white)";
-
-      case "REJECTED":
-        return "var(--color-white)";
-
-      default:
-        return "var(--color-text)";
-    }
-  }};
+  color: var(--color-white);
   font-size: 12px;
   font-weight: 600;
   cursor: ${({ $disabled }) => ($disabled ? "wait" : "pointer")};
@@ -151,21 +140,9 @@ const StatusDot = styled.div`
 
       case "PENDING":
       default:
-        return "var(--color-accent-600)";
+        return "var(--color-border)";
     }
   }};
-
-  pointer-events: none;
-`;
-
-const Arrow = styled.span`
-  position: absolute;
-  right: 9px;
-
-  display: flex;
-  align-items: center;
-
-  color: currentColor;
 
   pointer-events: none;
 `;
@@ -202,13 +179,14 @@ const DropdownItem = styled.div`
   min-height: 36px;
   padding: 0 9px;
   border-radius: 6px;
-  background: ${({ $active }) => ($active ? "var(--color-accent)" : "transparent")};
+  background: ${({ $active }) => ($active ? "var(--color-border)" : "transparent")};
   color: var(--color-text);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   &:hover {
-    background: var(--color-accent-600);
+    background: transparent;
+    color: var(--color-accent);
   }
   ${StatusDot} {
     margin-right: 8px;

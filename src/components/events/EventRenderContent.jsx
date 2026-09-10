@@ -25,13 +25,13 @@ const Status = styled.div`
   background-color: ${({ $status }) => {
     switch ($status) {
       case "DONE":
-        return "#51cab2";
+        return "var(--color-success-600)";
       case "CANCALLED":
-        return "#b91c1c";
+        return "var(--color-danger-600)";
       case "PLANNED":
-        return "#312e81";
+        return "var(--color-accent-600)";
       default:
-        return "#d1d5db";
+        return "var(--color-grey-200)";
     }
   }};
 `;

@@ -10,13 +10,14 @@ const Wrap = styled.div`
 
 const StyledInput = styled.input`
   background-color: var(--color-white);
-  padding: 1.25rem 0.9rem;
+  padding: 1.35rem 1rem;
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius-sm);
   min-width: 100%;
 
   &::placeholder {
-    color: var(--color-text);
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
   }
 `;
 

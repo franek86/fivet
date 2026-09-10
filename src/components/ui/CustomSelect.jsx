@@ -26,7 +26,7 @@ const variations = {
   primary: css`
     border: 1px solid var(--color-border);
     background-color: var(--color-accent);
-    color: var(--color-text);
+    color: var(--color-white);
   `,
   transparent: css`
     border: 1px solid var(--color-border);
@@ -76,6 +76,7 @@ const SelectOption = styled.div`
 
   &:hover {
     background-color: var(--color-accent);
+    color: var(--color-white);
   }
 `;
 

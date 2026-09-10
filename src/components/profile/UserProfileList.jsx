@@ -277,7 +277,7 @@ const UserRow = styled.div`
   }
 
   &:hover {
-    background: var(--color-accent);
+    background: var(--color-bg);
   }
 
   @media (max-width: 1200px) {
@@ -364,7 +364,7 @@ const StatusDot = styled.span`
   height: 10px;
   border: 2px solid white;
   border-radius: 50%;
-  background: ${({ $online }) => ($online ? "var(--color-success)" : "var(--color-danger)")};
+  background: ${({ $online }) => ($online ? "var(--color-success-600)" : "var(--color-danger-600)")};
 `;
 
 const UserInfo = styled.div`
@@ -444,8 +444,8 @@ const StatusBadge = styled.div`
   gap: 7px;
   padding: 5px 9px;
   border-radius: 999px;
-  background: ${({ $online }) => ($online ? "#ecfdf3" : "#f3f4f6")};
-  color: ${({ $online }) => ($online ? "var(--color-success)" : "var(--color-text)")};
+  background: ${({ $online }) => ($online ? "var(--color-success-600)" : "var(--color-grey-200)")};
+  color: ${({ $online }) => ($online ? "var(--color-white)" : "var(--color-text)")};
   font-size: 12px;
   font-weight: 600;
 `;
@@ -454,7 +454,7 @@ const StatusIndicator = styled.span`
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: ${({ $online }) => ($online ? "var(--color-success)" : "var(--color-danger)")};
+  background: ${({ $online }) => ($online ? "var(--color-success)" : "var(--color-danger-600)")};
 `;
 
 const VerificationCell = styled.div``;

@@ -69,8 +69,9 @@ export const StatIcon = styled.div`
   display: grid;
   place-items: center;
   border-radius: 11px;
-  background: var(--color-accent);
-  color: ${({ $success, $warning }) => ($success ? "var(--color-success-600)" : $warning ? "var(--color-warning-600)" : "#374151")};
+  background: var(--color-bg);
+  color: ${({ $success, $warning }) =>
+    $success ? "var(--color-success-600)" : $warning ? "var(--color-warning-600)" : "var(--color-accent-600)"};
 `;
 
 export const StatValue = styled.div`

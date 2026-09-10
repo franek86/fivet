@@ -27,11 +27,11 @@ const ZoomBtn = styled.div`
   display: flex;
   gap: 0.7rem;
   button {
-    background: var(--color-accent-600);
+    background: var(--color-border);
     border: none;
-    color: var(--color-white);
-    padding: 1rem 1.6rem;
-    font-size: 1.5rem;
+    color: var(--color-accent-600);
+    padding: 0.35rem 1.25rem;
+    font-size: 2rem;
   }
 `;
 

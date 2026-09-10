@@ -35,6 +35,19 @@ const Container = styled.div`
   }
 `;
 
+const Title = styled.h3`
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+  color: ${({ $selected }) => ($selected ? "var(--color-white)" : "var(--color-text)")};
+`;
+
+const Description = styled.p`
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: ${({ $selected }) => ($selected ? "var(--color-white)" : "var(--color-text)")};
+`;
+
 const Card = styled.div`
   display: flex;
   flex-direction: column;
@@ -61,6 +74,15 @@ const Card = styled.div`
   &:hover {
     transform: translateY(-2px);
     background-color: var(--color-accent);
+    color: var(--color-white);
+
+    ${Title} {
+      color: var(--color-white);
+    }
+
+    ${Description} {
+      color: var(--color-white);
+    }
   }
 `;
 
@@ -74,19 +96,7 @@ const IconWrapper = styled.div`
   margin-bottom: 1rem;
   border-radius: var(--border-radius-lg);
 
-  background-color: ${({ $selected }) => ($selected ? "var(--color-text)" : "transparent")};
-`;
-
-const Title = styled.h3`
-  margin: 0 0 0.5rem;
-  font-size: 1.4rem;
-  color: var(--color-text);
-`;
-
-const Description = styled.p`
-  margin: 0;
-  font-size: 1.2rem;
-  line-height: 1.5;
+  background-color: transparent;
 `;
 
 const RolesSection = ({ value, onChange }) => {
@@ -104,9 +114,9 @@ const RolesSection = ({ value, onChange }) => {
                 <Icon size={32} strokeWidth={1.7} />
               </IconWrapper>
 
-              <Title>{role.label}</Title>
+              <Title $selected={selected}>{role.label}</Title>
 
-              <Description>{role.description}</Description>
+              <Description $selected={selected}>{role.description}</Description>
             </Card>
           );
         })}

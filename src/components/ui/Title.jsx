@@ -19,6 +19,7 @@ const StyledTitle = styled.div`
         return "calc(1rem + 0.2vw)";
     }
   }};
+  font-weight: 700;
 `;
 
 function Title({ tag = "h1", children }) {

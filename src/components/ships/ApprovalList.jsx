@@ -194,7 +194,7 @@ const PendingBadge = styled.span`
   padding: 7px 12px;
   border-radius: 999px;
 
-  background: var(--color-warning);
+  background: var(--color-warning-600);
   color: var(--color-danger);
 
   font-size: 13px;
@@ -327,7 +327,7 @@ const Status = styled.span`
   padding: 6px 10px;
   border-radius: 6px;
 
-  background: var(--color-warning);
+  background: var(--color-warning-600);
   color: var(--color-danger);
 
   font-size: 10px;
@@ -378,6 +378,7 @@ const ApproveButton = styled.button`
 
   &:hover {
     background: var(--color-success);
+    color: var(--color-success-600);
   }
 `;
 
@@ -485,7 +486,7 @@ const ConfirmRejectButton = styled.button`
   border: none;
   border-radius: 8px;
 
-  background: var(--color-danger);
+  background: var(--color-danger-600);
   color: white;
 
   font-size: 13px;
@@ -494,7 +495,7 @@ const ConfirmRejectButton = styled.button`
   cursor: pointer;
 
   &:hover:not(:disabled) {
-    background: var(--color-danger-200);
+    background: var(--color-danger-600);
   }
 
   &:disabled {
@@ -530,7 +531,7 @@ const EmptyIcon = styled.div`
   margin-bottom: 12px;
 
   border-radius: 50%;
-  background: var(--color-success-200);
+  background: var(--color-success-600);
   color: var(--color-success);
 
   font-size: 20px;

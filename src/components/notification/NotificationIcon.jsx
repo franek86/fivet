@@ -33,7 +33,7 @@ const Count = styled.div`
   right: -10px;
   font-size: 1rem;
   font-weight: bold;
-  background-color: var(--color-danger);
+  background-color: var(--color-danger-600);
   color: var(--color-white);
   border-radius: 50%;
 `;
@@ -95,7 +95,7 @@ const DeleteCircle = styled.div`
   top: 0px;
   right: 0px;
   padding: 0.2rem;
-  background-color: var(--color-danger);
+  background-color: var(--color-danger-600);
   color: white;
   border-radius: 50%;
   z-index: 9;

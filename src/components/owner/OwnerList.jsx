@@ -29,9 +29,9 @@ const OwnerList = () => {
 
   /* Get status of requests */
   const getStatus = (owner) => {
-    if (!owner.brokerAssignmentsAsOwner[0]?.status) return "NOT_CONNECTED";
+    if (!owner.ownerRequestsReceived[0]?.status) return "NOT_CONNECTED";
 
-    return owner.brokerAssignmentsAsOwner[0]?.status;
+    return owner.ownerRequestsReceived[0]?.status;
   };
 
   if (isLoading) return <Spinner />;
@@ -79,6 +79,8 @@ const OwnerList = () => {
                       ? `${owner.company?.city}, ${owner.company?.country}`
                       : owner.company?.country || "Location not available"}
                   </Location>
+
+                  {status === "ACCEPTED" && <div className='status'>Request accepted</div>}
                 </Info>
               </OwnerInfo>
 
@@ -90,7 +92,7 @@ const OwnerList = () => {
                   ) : (
                     <>
                       <ShieldCheck />
-                      <div>{owner.ownerProfile?.verificationStatus}</div>
+                      <div>USER {owner.ownerProfile?.verificationStatus}</div>
                     </>
                   )}
                 </Verification>
@@ -103,15 +105,15 @@ const OwnerList = () => {
                   )}
                   {status === "ACCEPTED" && (
                     <StatusButton $status='ACCEPTED' disabled>
-                      Connected
+                      Send message
                     </StatusButton>
                   )}
-                  {status === "DECLINED" && (
+                  {status === "REJECTED" && (
                     <StatusButton $status='DECLINED' disabled>
                       Request declined
                     </StatusButton>
                   )}
-                  {status === "REVOKED" && (
+                  {status === "CANCELLED" && (
                     <Button onClick={() => sendRequestMutation.mutate(owner.id)} disabled={isLoading}>
                       {sendRequestMutation.isPending ? "Sending..." : "Send request"}
                     </Button>
@@ -227,6 +229,12 @@ const AvatarImage = styled.img`
 
 const Info = styled.div`
   min-width: 0;
+
+  .status {
+    margin-top: 3px;
+    font-size: 1.2rem;
+    color: var(--color-success-600);
+  }
 `;
 
 const Name = styled.div`

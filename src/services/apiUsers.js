@@ -31,6 +31,7 @@ export const getOwnerLists = async () => {
   }
 };
 
+/* Get verified broker list */
 export const getVerifedBrokerLists = async () => {
   try {
     const res = await apiClient.get("/users/verified-brokers");
@@ -41,6 +42,7 @@ export const getVerifedBrokerLists = async () => {
   }
 };
 
+/* Verify profile */
 export const updateUserProfileVerification = async ({ userId, verificationStatus }) => {
   try {
     const res = await apiClient.patch("/users/verify-user-account", { userId, verificationStatus });

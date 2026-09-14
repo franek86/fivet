@@ -1,13 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import Spinner from "../Spinner.jsx";
 import { getVerifedBrokerLists } from "../../services/apiUsers.js";
+import { updateBrokerRequestToUser } from "../../services/apiBrokerAssignment.js";
+import { toast } from "react-toastify";
+import { MessageCircleMore } from "lucide-react";
 
 const getStatus = (status) => {
   switch (status) {
     case "PENDING":
       return {
-        label: "Request sent",
+        label: "New request",
         type: "pending",
       };
 
@@ -17,10 +20,15 @@ const getStatus = (status) => {
         type: "accepted",
       };
 
-    case "DECLINED":
+    case "REJECTED":
       return {
-        label: "Declined",
-        type: "declined",
+        label: "Rejected",
+        type: "rejected",
+      };
+    case "CANCELLED":
+      return {
+        label: "Cancelled",
+        type: "cancelled",
       };
 
     default:
@@ -37,12 +45,38 @@ const VerifiedBrokers = () => {
     queryFn: getVerifedBrokerLists,
   });
 
-  if (isLoading) return <Spinner />;
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationFn: ({ brokerId, status }) => updateBrokerRequestToUser({ brokerId, status }),
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success(data);
+      queryClient.invalidateQueries(["brokers"]);
+      queryClient.invalidateQueries(["owners"]);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
-  console.log(data);
+  if (isLoading) return <Spinner />;
 
   const handleContact = (broker) => {
     console.log("Contact broker:", broker.id);
+  };
+
+  const handleAcceptRequest = (broker) => {
+    mutate({
+      brokerId: broker.id,
+      status: "ACCEPTED",
+    });
+  };
+
+  const handleRejectRequest = (broker) => {
+    mutate({
+      brokerId: broker.id,
+      status: "REJECTED",
+    });
   };
 
   return (
@@ -58,7 +92,9 @@ const VerifiedBrokers = () => {
 
       <BrokerGrid>
         {data?.brokers.map((broker) => {
-          const status = getStatus(broker.requestStatus);
+          const dataStatus = broker?.brokerRequestsSent?.[0]?.status;
+
+          const status = getStatus(dataStatus);
 
           return (
             <BrokerCard key={broker.id}>
@@ -88,13 +124,24 @@ const VerifiedBrokers = () => {
                   {status.label}
                 </Status>
 
-                {broker.requestStatus === "NONE" && <ContactButton onClick={() => handleContact(broker)}>Contact Broker</ContactButton>}
+                {status.type === "default" && <ContactButton onClick={() => handleContact(broker)}>Contact Broker</ContactButton>}
 
-                {broker.requestStatus === "PENDING" && <DisabledButton disabled>Request Pending</DisabledButton>}
+                {status.type === "pending" && (
+                  <div className='btn-group'>
+                    <PendingButton onClick={() => handleAcceptRequest(broker)}>
+                      {isPending ? "Accpeting..." : "Accept request"}
+                    </PendingButton>
+                    <RejectButton onClick={() => handleRejectRequest(broker)}>Reject</RejectButton>
+                  </div>
+                )}
 
-                {broker.requestStatus === "ACCEPTED" && <ContactButton onClick={() => handleContact(broker)}>Message Broker</ContactButton>}
+                {status.type === "accepted" && (
+                  <ChatButton onClick={() => handleContact(broker)}>
+                    <MessageCircleMore size={16} /> Chat
+                  </ChatButton>
+                )}
 
-                {broker.requestStatus === "DECLINED" && (
+                {status.type === "cancelled" && (
                   <ContactButton $secondary onClick={() => handleContact(broker)}>
                     Send Again
                   </ContactButton>
@@ -250,6 +297,11 @@ const CardBottom = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+
+  .btn-group {
+    display: flex;
+    gap: 1rem;
+  }
 `;
 
 const Status = styled.div`
@@ -259,10 +311,10 @@ const Status = styled.div`
   font-size: 12px;
   font-weight: 600;
   color: ${({ $type }) => {
-    if ($type === "pending") return "var(--color-warning-600)";
+    if ($type === "pending") return "var(--color-accent-600)";
     if ($type === "accepted") return "var(--color-success-600)";
-    if ($type === "declined") return "var(--color-danger-600)";
-    return "#6b7280";
+    if ($type === "cancelled") return "var(--color-danger-600)";
+    return "var(--color-text)";
   }};
 `;
 
@@ -271,10 +323,10 @@ const StatusDot = styled.span`
   height: 7px;
   border-radius: 50%;
   background: ${({ $type }) => {
-    if ($type === "pending") return "var(--color-warning-600)";
+    if ($type === "pending") return "var(--color-accent-600)";
     if ($type === "accepted") return "var(--color-success-600)";
-    if ($type === "declined") return "var(--color-danger-600)";
-    return "#9ca3af";
+    if ($type === "cancelled") return "var(--color-danger-600)";
+    return "var(--color-text)";
   }};
 `;
 
@@ -293,13 +345,48 @@ const ContactButton = styled.button`
   }
 `;
 
-const DisabledButton = styled.button`
+const PendingButton = styled.button`
   border: none;
   border-radius: 9px;
   padding: 9px 13px;
-  background: var(--color-grey-200);
-  color: var(--color-text);
+  background: var(--color-accent);
+  color: var(--color-white);
   font-size: 12px;
   font-weight: 600;
-  cursor: not-allowed;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+const RejectButton = styled.button`
+  border: var(--color-danger-600);
+  border-radius: 9px;
+  padding: 9px 13px;
+  background: var(--color-danger-600);
+  color: var(--color-white);
+  font-size: 12px;
+  font-weight: 600;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+
+const ChatButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: var(--color-success-600);
+  border-radius: 9px;
+  padding: 9px 13px;
+  background: var(--color-success-600);
+  color: var(--color-white);
+  font-size: 12px;
+  font-weight: 600;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `;

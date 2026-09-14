@@ -99,7 +99,7 @@ const VerifiedBrokers = () => {
           return (
             <BrokerCard key={broker.id}>
               <CardTop>
-                <Avatar>{broker.company?.logo}</Avatar>
+                <Avatar src={broker.company?.logo} />
 
                 <VerifiedBadge>
                   <CheckIcon>✓</CheckIcon>
@@ -235,7 +235,7 @@ const CardTop = styled.div`
   margin-bottom: 18px;
 `;
 
-const Avatar = styled.div`
+const Avatar = styled.img`
   width: 48px;
   height: 48px;
   display: grid;

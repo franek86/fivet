@@ -5,7 +5,7 @@ import Spinner from "../Spinner.jsx";
 import { getOwnerLists } from "../../services/apiUsers.js";
 import { sendRequestToOwner } from "../../services/apiBrokerAssignment.js";
 import { toast } from "react-toastify";
-import { Anchor, ShieldCheck } from "lucide-react";
+import { Anchor, MessageCircleMore, ShieldCheck } from "lucide-react";
 import EmptyState from "../EmptyState.jsx";
 
 const OwnerList = () => {
@@ -105,7 +105,7 @@ const OwnerList = () => {
                   )}
                   {status === "ACCEPTED" && (
                     <StatusButton $status='ACCEPTED' disabled>
-                      Send message
+                      <MessageCircleMore size={16} /> Start chat
                     </StatusButton>
                   )}
                   {status === "REJECTED" && (
@@ -346,6 +346,10 @@ const Button = styled.button`
 `;
 
 const StatusButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   border: none;
   border-radius: 8px;
   padding: 9px 14px;

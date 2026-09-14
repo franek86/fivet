@@ -1,7 +1,7 @@
-import React from "react";
+import EnquiriesCard from "../../components/enquiries/EnquiriesCard.jsx";
 
 const Enquiries = () => {
-  return <div>Enquiries</div>;
+  return <EnquiriesCard />;
 };
 
 export default Enquiries;

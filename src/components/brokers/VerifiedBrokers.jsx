@@ -5,6 +5,7 @@ import { getVerifedBrokerLists } from "../../services/apiUsers.js";
 import { updateBrokerRequestToUser } from "../../services/apiBrokerAssignment.js";
 import { toast } from "react-toastify";
 import { MessageCircleMore } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const getStatus = (status) => {
   switch (status) {
@@ -40,6 +41,8 @@ const getStatus = (status) => {
 };
 
 const VerifiedBrokers = () => {
+  const navigate = useNavigate();
+
   const { data, isLoading } = useQuery({
     queryKey: ["brokers"],
     queryFn: getVerifedBrokerLists,
@@ -49,7 +52,6 @@ const VerifiedBrokers = () => {
   const { mutate, isPending } = useMutation({
     mutationFn: ({ brokerId, status }) => updateBrokerRequestToUser({ brokerId, status }),
     onSuccess: (data) => {
-      console.log(data);
       toast.success(data);
       queryClient.invalidateQueries(["brokers"]);
       queryClient.invalidateQueries(["owners"]);
@@ -61,8 +63,8 @@ const VerifiedBrokers = () => {
 
   if (isLoading) return <Spinner />;
 
-  const handleContact = (broker) => {
-    console.log("Contact broker:", broker.id);
+  const handleContact = () => {
+    navigate("/owner/chat");
   };
 
   const handleAcceptRequest = (broker) => {
@@ -141,11 +143,7 @@ const VerifiedBrokers = () => {
                   </ChatButton>
                 )}
 
-                {status.type === "cancelled" && (
-                  <ContactButton $secondary onClick={() => handleContact(broker)}>
-                    Send Again
-                  </ContactButton>
-                )}
+                {status.type === "cancelled" && <ContactButton onClick={() => handleContact(broker)}>Send Again</ContactButton>}
               </CardBottom>
             </BrokerCard>
           );

@@ -8,8 +8,10 @@ import { toast } from "react-toastify";
 import { Anchor, MessageCircleMore, ShieldCheck } from "lucide-react";
 import EmptyState from "../EmptyState.jsx";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 const OwnerList = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [loadingOwnerId, setLoadingOwnerId] = useState(null);
 
@@ -37,6 +39,11 @@ const OwnerList = () => {
     if (!owner.ownerRequestsReceived[0]?.status) return "NOT_CONNECTED";
 
     return owner.ownerRequestsReceived[0]?.status;
+  };
+
+  /* Handle chat click */
+  const handleChatClick = () => {
+    navigate("/broker/chat");
   };
 
   if (isLoading) return <Spinner />;
@@ -109,7 +116,7 @@ const OwnerList = () => {
                     </StatusButton>
                   )}
                   {status === "ACCEPTED" && (
-                    <StatusButton $status='ACCEPTED' disabled>
+                    <StatusButton $status='ACCEPTED' onClick={() => handleChatClick()}>
                       <MessageCircleMore size={16} /> Start chat
                     </StatusButton>
                   )}

@@ -7,9 +7,12 @@ import { sendRequestToOwner } from "../../services/apiBrokerAssignment.js";
 import { toast } from "react-toastify";
 import { Anchor, MessageCircleMore, ShieldCheck } from "lucide-react";
 import EmptyState from "../EmptyState.jsx";
+import { useState } from "react";
 
 const OwnerList = () => {
   const queryClient = useQueryClient();
+  const [loadingOwnerId, setLoadingOwnerId] = useState(null);
+
   /* get all owners */
   const { data, isLoading } = useQuery({
     queryKey: ["owners"],
@@ -21,9 +24,11 @@ const OwnerList = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["owners"] });
       toast.success("Request sent to owner successfully");
+      setLoadingOwnerId(null);
     },
     onError: (error) => {
       console.error(error.message);
+      setLoadingOwnerId(null);
     },
   });
 
@@ -114,13 +119,25 @@ const OwnerList = () => {
                     </StatusButton>
                   )}
                   {status === "CANCELLED" && (
-                    <Button onClick={() => sendRequestMutation.mutate(owner.id)} disabled={isLoading}>
-                      {sendRequestMutation.isPending ? "Sending..." : "Send request"}
+                    <Button
+                      onClick={() => {
+                        setLoadingOwnerId(owner.id);
+                        sendRequestMutation.mutate(owner.id);
+                      }}
+                      disabled={loadingOwnerId === owner.id}
+                    >
+                      {loadingOwnerId === owner.id ? "Sending..." : "Send request"}
                     </Button>
                   )}
                   {status === "NOT_CONNECTED" && (
-                    <Button onClick={() => sendRequestMutation.mutate(owner.id)} disabled={isLoading}>
-                      {sendRequestMutation.isPending ? "Sending..." : "Send request"}
+                    <Button
+                      onClick={() => {
+                        setLoadingOwnerId(owner.id);
+                        sendRequestMutation.mutate(owner.id);
+                      }}
+                      disabled={loadingOwnerId === owner.id}
+                    >
+                      {loadingOwnerId === owner.id ? "Sending..." : "Send request"}
                     </Button>
                   )}
                 </Action>

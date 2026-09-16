@@ -1,100 +1,79 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
+
 import { Send, Search, Paperclip } from "lucide-react";
 
-const conversations = [
-  {
-    id: 1,
-    name: "John Smith",
-    role: "Owner",
-    lastMessage: "Yes, that works for me.",
-    time: "10:42",
-    unread: 2,
-    online: true,
-  },
-  {
-    id: 2,
-    name: "Michael Brown",
-    role: "Owner",
-    lastMessage: "Can you send me the vessel details?",
-    time: "09:18",
-    unread: 0,
-    online: false,
-  },
-  {
-    id: 3,
-    name: "David Wilson",
-    role: "Broker",
-    lastMessage: "I will get back to you tomorrow.",
-    time: "Yesterday",
-    unread: 0,
-    online: true,
-  },
-];
-
-const initialMessages = [
-  {
-    id: 1,
-    senderId: "owner",
-    text: "Hi, thanks for contacting me.",
-    time: "10:35",
-  },
-  {
-    id: 2,
-    senderId: "me",
-    text: "Hi John. I would like to discuss the vessel you have available.",
-    time: "10:36",
-  },
-  {
-    id: 3,
-    senderId: "owner",
-    text: "Sure. Which vessel are you interested in?",
-    time: "10:38",
-  },
-  {
-    id: 4,
-    senderId: "me",
-    text: "I'm interested in the tanker available for sale.",
-    time: "10:40",
-  },
-  {
-    id: 5,
-    senderId: "owner",
-    text: "Yes, that vessel is still available.",
-    time: "10:41",
-  },
-  {
-    id: 6,
-    senderId: "me",
-    text: "Great. Could you send me the full specifications?",
-    time: "10:42",
-  },
-];
+import socket from "../../shared/socket.js";
+import { fetchChatConversationApi, fetchChatMessagesApi } from "../../services/apiChat.js";
+import Spinner from "../Spinner.jsx";
+import { useUser } from "../../hooks/useAuth.js";
 
 export default function Chat() {
-  const [selectedConversation, setSelectedConversation] = useState(conversations[0]);
-
-  const [messages, setMessages] = useState(initialMessages);
+  const { data: user } = useUser();
+  const [selectedConversation, setSelectedConversation] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
 
-  const handleSendMessage = (e) => {
-    e.preventDefault();
+  /* get conversation */
+  const { data, isLoading } = useQuery({
+    queryKey: ["conversations"],
+    queryFn: () => fetchChatConversationApi(),
+  });
 
-    if (!message.trim()) return;
+  /* Get messages */
+  useEffect(() => {
+    if (!selectedConversation) return;
 
-    const newMessage = {
-      id: Date.now(),
-      senderId: "me",
-      text: message.trim(),
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+    const loadMessages = async () => {
+      try {
+        const messages = await fetchChatMessagesApi(selectedConversation.id);
+        setMessages(messages);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
-    setMessages((prev) => [...prev, newMessage]);
+    loadMessages();
+  }, [selectedConversation]);
+
+  /* Handle real time messages */
+  useEffect(() => {
+    const handleNewMessage = (newMessage) => {
+      console.log("new message ==== ", newMessage);
+      if (newMessage.conversationId !== selectedConversation?.id) {
+        return;
+      }
+
+      setMessages((prev) => [...prev, newMessage]);
+    };
+
+    socket.on("message:new", handleNewMessage);
+
+    return () => {
+      socket.off("message:new", handleNewMessage);
+    };
+  }, [selectedConversation]);
+
+  /* Join room */
+  useEffect(() => {
+    if (!selectedConversation) return;
+
+    socket.emit("conversation:join", selectedConversation.id);
+  }, [selectedConversation]);
+
+  /* Handle new message */
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (!message.trim() || !selectedConversation) {
+      return;
+    }
+    console.log("message send ===== ");
+    socket.emit("message:send", { conversationId: selectedConversation.id, content: message.trim() });
     setMessage("");
   };
+
+  if (isLoading) return <Spinner />;
 
   return (
     <ChatWrapper>
@@ -110,92 +89,106 @@ export default function Chat() {
         </SearchWrapper>
 
         <ConversationList>
-          {conversations.map((conversation) => (
+          {data.conversations?.map((conversation) => (
             <Conversation
               key={conversation.id}
-              $active={selectedConversation.id === conversation.id}
+              $active={selectedConversation?.id === conversation.id}
               onClick={() => setSelectedConversation(conversation)}
             >
               <Avatar>
-                {conversation.name
-                  .split(" ")
-                  .map((name) => name[0])
-                  .join("")}
-
-                {conversation.online && <OnlineDot />}
+                {conversation.user.avatar ? (
+                  <img src={conversation.user.avatar} alt={conversation.user.name} />
+                ) : (
+                  conversation.user.name
+                    .split(" ")
+                    .map((name) => name[0])
+                    .join("")
+                )}
+                <OnlineDot />
               </Avatar>
 
               <ConversationContent>
                 <ConversationTop>
-                  <Name>{conversation.name}</Name>
-                  <Time>{conversation.time}</Time>
+                  <Name>{conversation.user?.name}</Name>
+                  <Time>
+                    {conversation.lastMessageAt
+                      ? new Date(conversation.lastMessageAt).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })
+                      : ""}
+                  </Time>
                 </ConversationTop>
 
                 <ConversationBottom>
-                  <LastMessage>{conversation.lastMessage}</LastMessage>
+                  <LastMessage> {conversation.lastMessage?.content ?? "No messages yet"}</LastMessage>
 
-                  {conversation.unread > 0 && <Unread>{conversation.unread}</Unread>}
+                  {conversation.unreadCount > 0 && <Unread>{conversation.unreadCount}</Unread>}
                 </ConversationBottom>
-
-                <Role>{conversation.role}</Role>
               </ConversationContent>
             </Conversation>
           ))}
         </ConversationList>
       </Sidebar>
 
-      {/* Chat */}
-      <ChatContainer>
-        <ChatHeader>
-          <UserInfo>
-            <Avatar>
-              {selectedConversation.name
-                .split(" ")
-                .map((name) => name[0])
-                .join("")}
+      {/* No conversation selected */}
+      {!selectedConversation ? (
+        <ChatContainer>
+          <EmptyChat>
+            <h3>Select a conversation</h3>
+            <p> Choose a conversation to start messaging. </p>
+          </EmptyChat>
+        </ChatContainer>
+      ) : (
+        <ChatContainer>
+          <ChatHeader>
+            <UserInfo>
+              <Avatar>
+                {selectedConversation.user?.avatar ? selectedConversation.user?.avatar : <div>A</div>}
 
-              {selectedConversation.online && <OnlineDot />}
-            </Avatar>
+                {/* {selectedConversation.online && <OnlineDot />} */}
+              </Avatar>
 
-            <div>
-              <ChatName>{selectedConversation.name}</ChatName>
+              <div>
+                <ChatName>{selectedConversation.user?.name}</ChatName>
+                {/* 
+                <Status>
+                  <StatusDot />
+                  {selectedConversation.online ? "Online" : "Offline"}
+                </Status> */}
+              </div>
+            </UserInfo>
+          </ChatHeader>
 
-              <Status>
-                <StatusDot />
-                {selectedConversation.online ? "Online" : "Offline"}
-              </Status>
-            </div>
-          </UserInfo>
-        </ChatHeader>
+          <Messages>
+            {messages?.map((msg) => {
+              const isMine = msg.senderId === user?.id;
 
-        <Messages>
-          {messages.map((msg) => {
-            const isMine = msg.senderId === "me";
+              return (
+                <MessageRow key={msg.id} $mine={isMine}>
+                  <MessageBubble $mine={isMine}>
+                    <MessageText>{msg.content}</MessageText>
 
-            return (
-              <MessageRow key={msg.id} $mine={isMine}>
-                <MessageBubble $mine={isMine}>
-                  <MessageText>{msg.text}</MessageText>
+                    <MessageTime>{msg.time}</MessageTime>
+                  </MessageBubble>
+                </MessageRow>
+              );
+            })}
+          </Messages>
 
-                  <MessageTime>{msg.time}</MessageTime>
-                </MessageBubble>
-              </MessageRow>
-            );
-          })}
-        </Messages>
+          <MessageForm onSubmit={handleSendMessage}>
+            <AttachButton type='button'>
+              <Paperclip size={20} />
+            </AttachButton>
 
-        <MessageForm onSubmit={handleSendMessage}>
-          <AttachButton type='button'>
-            <Paperclip size={20} />
-          </AttachButton>
+            <MessageInput value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Write a message...' />
 
-          <MessageInput value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Write a message...' />
-
-          <SendButton type='submit' disabled={!message.trim()}>
-            <Send size={18} />
-          </SendButton>
-        </MessageForm>
-      </ChatContainer>
+            <SendButton type='submit' disabled={!message}>
+              <Send size={18} />
+            </SendButton>
+          </MessageForm>
+        </ChatContainer>
+      )}
     </ChatWrapper>
   );
 }
@@ -206,24 +199,41 @@ export default function Chat() {
 
 const ChatWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   width: 100%;
   height: 700px;
   background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: 12px;
   overflow: hidden;
+
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+  }
 `;
 
 /* =========================
    Sidebar
 ========================= */
 
+const EmptyChat = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Sidebar = styled.aside`
-  width: 340px;
+  width: 100%;
   flex-shrink: 0;
   border-right: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
+
+  @media screen and (min-width: 640px) {
+    width: 340px;
+  }
 `;
 
 const SidebarHeader = styled.div`
@@ -328,12 +338,6 @@ const LastMessage = styled.div`
   white-space: nowrap;
 
   font-size: 13px;
-  color: var(--color-text-muted);
-`;
-
-const Role = styled.div`
-  margin-top: 4px;
-  font-size: 11px;
   color: var(--color-text-muted);
 `;
 

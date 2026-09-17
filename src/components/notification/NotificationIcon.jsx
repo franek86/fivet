@@ -1,105 +1,197 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 
 import styled from "styled-components";
-import { Bell, BellOff, X } from "lucide-react";
+import { Bell, CheckCheck } from "lucide-react";
 
 import { markNotificationRead } from "../../slices/realtimeSlice.js";
 import { toggleDropdown } from "../../slices/uiSlice.js";
-import { useAllUnreadNotification, useNotificationCount, useUpdateReadNotification } from "../../hooks/useNotification.js";
 import { customFormatDate } from "../../utils/formatDate.js";
+import { useAllUnreadNotification, useUpdateReadNotification } from "../../hooks/useNotification.js";
+import { useClickOutSide } from "../../hooks/useClickOutside.js";
+
 import Spinner from "../Spinner.jsx";
 
-const Wrapper = styled.div`
-  display: grid;
-  place-items: center;
+const Container = styled.div`
   position: relative;
-  cursor: pointer;
-  background-color: var(--color-white);
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
 `;
 
-const Count = styled.div`
+const BellButton = styled.button`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  font-size: 1rem;
-  font-weight: bold;
-  background-color: var(--color-danger-600);
-  color: var(--color-white);
-  border-radius: 50%;
-`;
-
-const DropdownToggle = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 1rem;
-  position: absolute;
-  left: 0;
-  top: 3.5rem;
-  background-color: var(--color-white);
-  box-shadow: var(--box-shadow-lg);
-  z-index: 2;
-`;
-
-const NotificationCard = styled.div`
-  position: relative;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: var(--color-white);
   color: var(--color-text);
-  border-radius: var(--border-radius-md);
-  width: 300px;
-  max-height: 300px;
-  overflow-y: auto;
-  z-index: 100;
-
-  .content {
-    padding: 1rem 2rem;
-    background-color: var(--color-white);
-    p {
-      font-size: 1.35rem;
-      font-weight: 600;
-    }
-    span {
-      font-size: 1rem;
-      display: block;
-    }
+  cursor: pointer;
+  transition: background 0.15s ease;
+  &:hover {
+    background: var(--color-border);
   }
 `;
 
-const NotificationMsg = styled.div`
+const UnreadBadge = styled.span`
+  position: absolute;
+  top: 2px;
+  right: 1px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  gap: 1rem;
-  font-size: 1.3rem;
-  color: var(--color-text-muted);
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border: 2px solid white;
+  border-radius: 999px;
+  background: var(--color-danger-600);
+  color: var(--color-white);
+  font-size: 9px;
+  font-weight: 700;
 `;
 
-const DeleteCircle = styled.div`
+const Dropdown = styled.div`
+  position: absolute;
+  top: calc(100% + 10px);
+  width: 390px;
+  overflow: hidden;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+`;
+
+const DropdownHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 16px;
+  border-bottom: 1px solid var(--color-border);
+`;
+
+const HeaderTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--color-text);
+  font-size: 15px;
+  font-weight: 600;
+`;
+
+const UnreadCount = styled.span`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.5rem;
-  height: 1.5rem;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  padding: 0.2rem;
-  background-color: var(--color-danger-600);
-  color: white;
-  border-radius: 50%;
-  z-index: 9;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--color-danger-600);
+  color: var(--color-white);
+  font-size: 12px;
+`;
+
+const MarkAllButton = styled.button`
+  border: none;
+  background: transparent;
+  color: var(--color-accent);
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
+  &:hover {
+    text-decoration: var(--color-border);
+  }
+`;
+
+const NotificationItem = styled.div`
+  position: relative;
+  display: flex;
+  gap: 12px;
+  padding: 16px 18px;
+  background: ${({ $isRead }) => ($isRead ? "var(--color-bg)" : "#f8fafc")};
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: var(--color-border);
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+const UnreadDot = styled.span`
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: var(--color-danger-600);
+`;
+
+const NotificationTitle = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+`;
+
+const NotificationList = styled.div`
+  max-height: 300px;
+  overflow-y: auto;
+`;
+
+const NotificationContent = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+const NotificationTop = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+`;
+
+const NotificationDate = styled.span`
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  font-size: 11px;
+`;
+const NotificationMessage = styled.p`
+  margin: 4px 0 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+const SeeMoreButton = styled.button`
+  width: 100%;
+  padding: 13px 16px;
+  border: none;
+  border-top: 1px solid var(--color-border);
+  background: var(--color-white);
+  color: var(--color-accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover {
+    background: var(--color-bg);
+  }
+`;
+
+const EmptyState = styled.div`
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--color-gray-200);
+  font-size: 14px;
 `;
 
 export default function NotificationIcon() {
@@ -107,58 +199,63 @@ export default function NotificationIcon() {
   const [open, setOpen] = useState(false);
 
   const { data, isLoading } = useAllUnreadNotification();
-  //const { data: count } = useNotificationCount();
-  const { mutate: markAsRead, isPending } = useUpdateReadNotification();
+  const { mutate: markAsRead } = useUpdateReadNotification();
 
   const notifications = data?.notifications ?? [];
   const count = data?.unreadCount ?? 0;
 
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpen(false);
-      }
-    }
-
-    if (open) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [open]);
+  useClickOutSide(dropdownRef, () => setOpen(false));
 
   if (isLoading) return <Spinner />;
 
   return (
-    <Wrapper ref={dropdownRef}>
-      <Bell size={20} onClick={() => setOpen((prev) => !prev)} />
-      {count > 0 && <Count>{count}</Count>}
+    <Container ref={dropdownRef}>
+      <BellButton onClick={() => setOpen((prev) => !prev)}>
+        <Bell size={22} />
+        {count > 0 && <UnreadBadge> {count > 99 ? "99+" : count} </UnreadBadge>}
+      </BellButton>
 
       {open && (
-        <DropdownToggle>
-          {notifications.length === 0 && (
-            <NotificationCard>
-              <NotificationMsg>
-                <BellOff />
-                We'll you keep updated <br /> on any feature notifications
-              </NotificationMsg>
-            </NotificationCard>
+        <Dropdown>
+          <DropdownHeader>
+            <HeaderTitle>
+              Notifications
+              {count > 0 && <UnreadCount>{count}</UnreadCount>}
+            </HeaderTitle>
+
+            {count > 0 && (
+              <MarkAllButton type='button'>
+                <CheckCheck size={14} /> Mark all as read
+              </MarkAllButton>
+            )}
+          </DropdownHeader>
+
+          {notifications.length === 0 ? (
+            <EmptyState>
+              <Bell size={28} /> <span>No notifications</span>
+            </EmptyState>
+          ) : (
+            <NotificationList>
+              {notifications.map((n) => (
+                <NotificationItem key={n.id} $isRead={n.isRead} onClick={() => markAsRead({ id: n.id, data: true })}>
+                  {!n.isRead && <UnreadDot />}
+                  <NotificationContent>
+                    <NotificationTop>
+                      <NotificationTitle>Hello</NotificationTitle>
+
+                      <NotificationDate>{customFormatDate(n.createdAt)}</NotificationDate>
+                    </NotificationTop>
+
+                    <NotificationMessage>{n.message}</NotificationMessage>
+                  </NotificationContent>
+                </NotificationItem>
+              ))}
+            </NotificationList>
           )}
-          {notifications.map((n) => (
-            <NotificationCard key={n.id}>
-              <DeleteCircle onClick={() => markAsRead({ id: n.id, data: true })}>
-                <X />
-              </DeleteCircle>
-              <div className='content'>
-                <p>{n.message}</p>
-                <span>{customFormatDate(n.createdAt)}</span>
-              </div>
-            </NotificationCard>
-          ))}
-        </DropdownToggle>
+
+          <SeeMoreButton type='button'>See more notifications</SeeMoreButton>
+        </Dropdown>
       )}
-    </Wrapper>
+    </Container>
   );
 }

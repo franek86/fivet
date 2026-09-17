@@ -25,6 +25,7 @@ const OwnerList = () => {
     mutationFn: sendRequestToOwner,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["owners"] });
+      queryClient.invalidateQueries({ queryKey: ["brokers"] });
       toast.success("Request sent to owner successfully");
       setLoadingOwnerId(null);
     },
@@ -121,8 +122,15 @@ const OwnerList = () => {
                     </StatusButton>
                   )}
                   {status === "REJECTED" && (
-                    <StatusButton $status='DECLINED' disabled>
-                      Request declined
+                    <StatusButton
+                      $status='DECLINED'
+                      onClick={() => {
+                        setLoadingOwnerId(owner.id);
+                        sendRequestMutation.mutate(owner.id);
+                      }}
+                      disabled={loadingOwnerId === owner.id}
+                    >
+                      {loadingOwnerId === owner.id ? "Sending..." : "Send again"}
                     </StatusButton>
                   )}
                   {status === "CANCELLED" && (
@@ -417,5 +425,5 @@ const StatusButton = styled.button`
     }
   }};
 
-  cursor: ${({ $status }) => ($status === "DECLINED" ? "not-allowed" : "pointer")};
+  cursor: pointer;
 `;

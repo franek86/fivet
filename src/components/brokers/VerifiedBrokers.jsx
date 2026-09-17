@@ -50,7 +50,7 @@ const VerifiedBrokers = () => {
 
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
-    mutationFn: ({ brokerId, status }) => updateBrokerRequestToUser({ brokerId, status }),
+    mutationFn: ({ brokerId, id, status }) => updateBrokerRequestToUser({ brokerId, id, status }),
     onSuccess: (data) => {
       toast.success(data);
       queryClient.invalidateQueries(["brokers"]);
@@ -71,6 +71,14 @@ const VerifiedBrokers = () => {
     mutate({
       brokerId: broker.id,
       status: "ACCEPTED",
+    });
+  };
+  const handleCancelRequest = (broker) => {
+    //console.log(broker.brokerRequestsSent[0].id);
+    mutate({
+      brokerId: broker.id,
+      id: broker.brokerRequestsSent[0].id,
+      status: "CANCELLED",
     });
   };
 
@@ -127,6 +135,7 @@ const VerifiedBrokers = () => {
                 </Status>
 
                 {status.type === "default" && <ContactButton onClick={() => handleContact(broker)}>Contact Broker</ContactButton>}
+                {status.type === "rejected" && <ContactButton onClick={() => handleContact(broker)}>Contact Broker</ContactButton>}
 
                 {status.type === "pending" && (
                   <div className='btn-group'>
@@ -138,12 +147,17 @@ const VerifiedBrokers = () => {
                 )}
 
                 {status.type === "accepted" && (
-                  <ChatButton onClick={() => handleContact(broker)}>
-                    <MessageCircleMore size={16} /> Chat
-                  </ChatButton>
+                  <div className='btn-group'>
+                    <ChatButton onClick={() => handleContact(broker)}>
+                      <MessageCircleMore size={16} /> Chat
+                    </ChatButton>
+                    <ContactButton $secondary onClick={() => handleCancelRequest(broker)}>
+                      Delete
+                    </ContactButton>
+                  </div>
                 )}
 
-                {status.type === "cancelled" && <ContactButton onClick={() => handleContact(broker)}>Send Again</ContactButton>}
+                {status.type === "cancelled" && <ContactButton onClick={() => handleContact(broker)}>Contact broker</ContactButton>}
               </CardBottom>
             </BrokerCard>
           );
@@ -332,14 +346,14 @@ const ContactButton = styled.button`
   border: none;
   border-radius: 9px;
   padding: 9px 13px;
-  background: ${({ $secondary }) => ($secondary ? "var(--color-accent)" : "var(--color-text)")};
-  color: ${({ $secondary }) => ($secondary ? "var(--color-text)" : "var(--color-white)")};
+  background: ${({ $secondary }) => ($secondary ? "var(--color-danger-600)" : "var(--color-text)")};
+  color: var(--color-white);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
 
   &:hover {
-    opacity: 0.9;
+    opacity: 0.8;
   }
 `;
 

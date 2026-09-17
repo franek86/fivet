@@ -10,6 +10,10 @@ const StyledAvatar = styled.div`
   flex-direction: row;
   align-items: center;
   cursor: pointer;
+
+  :hover {
+    background-color: var(--color-border);
+  }
 `;
 
 const StyledNoAvatar = styled.div`
@@ -38,7 +42,7 @@ function Avatar() {
 
   if (isLoading) return <Spinner />;
 
-  const { fullName, avatar } = data;
+  const { avatar } = data;
 
   return (
     <StyledAvatar>

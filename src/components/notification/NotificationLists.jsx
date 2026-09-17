@@ -14,9 +14,7 @@ import {
   useNotificationList,
   useUpdateReadNotification,
 } from "../../hooks/useNotification.js";
-import { useDispatch, useSelector } from "react-redux";
-import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
-import { createSelector } from "@reduxjs/toolkit";
+
 import { BellPlus } from "lucide-react";
 
 const Wrapper = styled.section`
@@ -67,8 +65,6 @@ const SwitchWrapper = styled.div`
 `;
 
 function NotificationLists() {
-  const dispatch = useDispatch();
-
   const { data: notifications, isLoading, isError } = useNotificationList();
   const { mutate: updateRead } = useUpdateReadNotification();
   const { mutate: deleteNotification } = useDeleteNotification();
@@ -104,18 +100,11 @@ function NotificationLists() {
                 <p>Mark as read</p>
                 <ToggleSwitch checked={item.isRead} onChange={(e) => handleToggleRead(item.id, e.target.checked)} />
               </SwitchWrapper>
-              <Button $size='small' $variation='danger' onClick={() => dispatch(openModalByName(item.id))}>
+              <Button $size='small' $variation='danger' onClick={() => deleteNotification(item.id)}>
                 Delete
               </Button>
             </Buttons>
           </Card>
-          <Modal name={item.id} onClose={() => dispatch(closeModalByName(item.id))}>
-            <ConfirmDialog
-              itemName={item.id}
-              onConfirm={() => deleteNotification(item.id)}
-              onCloseModal={() => dispatch(closeModalByName(item.id))}
-            />
-          </Modal>
         </div>
       ))}
     </Wrapper>

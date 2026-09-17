@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import styled, { css } from "styled-components";
 
@@ -10,6 +10,7 @@ import { Link } from "react-router";
 import { UserPen } from "lucide-react";
 import SubscriptionStatus from "../SubscriptionStatus.jsx";
 import { useUser } from "../../hooks/useAuth.js";
+import { useClickOutSide } from "../../hooks/useClickOutside.js";
 
 const HeaderWrap = styled.header`
   display: flex;
@@ -32,16 +33,17 @@ const HeaderRight = styled.div`
   z-index: 1;
 `;
 
-const DropDownBox = styled.div`
+const Dropdown = styled.div`
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 200px;
   transform: translateY(0);
   padding: 1rem 1.2rem;
-  position: absolute;
-  right: 0;
-  ${({ fromTop }) =>
+  /* ${({ fromTop }) =>
     fromTop
       ? css`
           transform: translateY(66px);
@@ -52,12 +54,14 @@ const DropDownBox = styled.div`
           transform: translateY(0);
           opacity: 0;
           visibility: hidden;
-        `}
+        `} */
   background-color: var(--color-white);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
   transition: all 0.3s ease;
 `;
+
+const AvatarButton = styled.div``;
 
 const HeaderLink = styled(Link)`
   display: flex;
@@ -71,12 +75,11 @@ const P = styled.p`
 `;
 
 const Header = () => {
-  const [toggle, setToggle] = useState(false);
+  const dropDownRef = useRef(false);
+  const [isOpen, setIsOpen] = useState(false);
   const { data } = useUser();
 
-  const handleToggle = () => {
-    setToggle(!toggle);
-  };
+  useClickOutSide(dropDownRef, () => setIsOpen(false));
 
   return (
     <HeaderWrap>
@@ -84,16 +87,21 @@ const Header = () => {
         <NotificationIcon />
         {data.role !== "ADMIN" && <SubscriptionStatus subscription={data?.subscription} />}
       </HeaderLeft>
-      <HeaderRight onClick={() => handleToggle()}>
-        <Avatar />
-        <DropDownBox fromTop={toggle}>
-          <Theme />
-          <HeaderLink to='/profile'>
-            <UserPen size={18} />
-            <P>Profile</P>
-          </HeaderLink>
-          <Logout />
-        </DropDownBox>
+
+      <HeaderRight ref={dropDownRef}>
+        <AvatarButton onClick={() => setIsOpen((prev) => !prev)}>
+          <Avatar />
+        </AvatarButton>
+        {isOpen && (
+          <Dropdown>
+            <Theme />
+            <HeaderLink to='/profile'>
+              <UserPen size={18} />
+              <P>Profile</P>
+            </HeaderLink>
+            <Logout />
+          </Dropdown>
+        )}
       </HeaderRight>
     </HeaderWrap>
   );

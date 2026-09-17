@@ -40,7 +40,6 @@ export default function Chat() {
   /* Handle real time messages */
   useEffect(() => {
     const handleNewMessage = (newMessage) => {
-      console.log("new message ==== ", newMessage);
       if (newMessage.conversationId !== selectedConversation?.id) {
         return;
       }
@@ -68,7 +67,7 @@ export default function Chat() {
     if (!message.trim() || !selectedConversation) {
       return;
     }
-    console.log("message send ===== ");
+
     socket.emit("message:send", { conversationId: selectedConversation.id, content: message.trim() });
     setMessage("");
   };

@@ -9,7 +9,6 @@ import SingleShip from "../pages/broker/SingleShip.jsx";
 import Vessels from "../pages/broker/Vessels.jsx";
 
 import Documents from "../pages/broker/Documents.jsx";
-import Verification from "../pages/broker/Verification.jsx";
 import CompanyProfile from "../pages/broker/CompanyProfile.jsx";
 import BrokerChat from "../pages/broker/BrokerChat.jsx";
 
@@ -23,7 +22,6 @@ export const BrokerRoutes = (
 
     <Route path='/broker/chat' element={<BrokerChat />} />
     <Route path='/broker/documents' element={<Documents />} />
-    <Route path='/broker/verification' element={<Verification />} />
     <Route path='/broker/profile' element={<CompanyProfile />} />
   </Route>
 );

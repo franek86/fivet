@@ -13,7 +13,7 @@ function CreateShip() {
   return (
     <>
       <FlexWrap>
-        <Title tag='h1'>Create ship</Title>
+        <Title tag='h1'>Create Vessel</Title>
         <BackBtn />
       </FlexWrap>
       <CreateShipForm />

@@ -134,6 +134,24 @@ const GlobalStyles = styled.createGlobalStyle`
     color: inherit;
   }
 
+  textarea::-webkit-input-placeholder {
+    color: #fff;
+  }
+
+  textarea:-moz-placeholder {
+    /* Firefox 18- */
+    color: #fff;
+  }
+
+  textarea::-moz-placeholder {
+    /* Firefox 19+ */
+    color: #fff;
+  }
+
+  textarea:-ms-input-placeholder {
+    color: #fff;
+  }
+
   /* Hide number input arrows for Chrome, Safari, Edge, Opera */
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
@@ -440,7 +458,7 @@ const GlobalStyles = styled.createGlobalStyle`
   .custom-calendar .react-datepicker-time__header,
   .custom-calendar .react-datepicker-year-header {
     font-size: 14px;
-    color: var(--color-text);
+    color: var(--color-white);
     font-weight: 600;
   }
   .custom-calendar .react-datepicker__day-name,
@@ -498,7 +516,7 @@ const GlobalStyles = styled.createGlobalStyle`
   .react-datepicker__year-read-view--down-arrow,
   .react-datepicker__month-read-view--down-arrow,
   .react-datepicker__month-year-read-view--down-arrow {
-    border-color: var(--color-text);
+    border-color: var(--color-white);
   }
 
   /* Range react */

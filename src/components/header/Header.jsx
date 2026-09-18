@@ -7,7 +7,7 @@ import Avatar from "../Avatar.jsx";
 import Logout from "../Logout.jsx";
 import NotificationIcon from "../notification/NotificationIcon.jsx";
 import { Link } from "react-router";
-import { UserPen } from "lucide-react";
+import { Settings } from "lucide-react";
 import SubscriptionStatus from "../SubscriptionStatus.jsx";
 import { useUser } from "../../hooks/useAuth.js";
 import { useClickOutSide } from "../../hooks/useClickOutside.js";
@@ -95,9 +95,9 @@ const Header = () => {
         {isOpen && (
           <Dropdown>
             <Theme />
-            <HeaderLink to='/profile'>
-              <UserPen size={18} />
-              <P>Profile</P>
+            <HeaderLink to='/settings'>
+              <Settings size={18} />
+              <P>Settings</P>
             </HeaderLink>
             <Logout />
           </Dropdown>

@@ -16,12 +16,14 @@ const variations = {
   primary: css`
     color: var(--color-white);
     background-color: var(--color-accent);
+    border: 1px solid transparent;
     font-weight: 600;
     box-shadow: var(--shadow-md);
     transition: all 0.3s ease-in-out;
     &:hover {
-      background: var(--color-accent-600);
-      color: var(--color-white);
+      border: 1px solid var(--color-accent-600);
+      background-color: var(--color-bg);
+      color: var(--color-accent-600);
     }
   `,
   secondary: css`

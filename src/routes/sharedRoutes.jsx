@@ -5,6 +5,7 @@ import Events from "../pages/shared/Events.jsx";
 import Notifications from "../pages/shared/Notifications.jsx";
 import ProtectedRoute from "../pages/ProtectedRoute.jsx";
 import AddressBook from "../pages/shared/AddressBook.jsx";
+import Settings from "../pages/shared/Settings.jsx";
 
 export const SharedRoutes = (
   <Route element={<ProtectedRoute allowedRoles={["ADMIN", "BROKER", "OWNER"]} />}>
@@ -14,5 +15,6 @@ export const SharedRoutes = (
     <Route path='/address-book' element={<AddressBook />} />
     <Route path='/events' element={<Events />} />
     <Route path='/notifications' element={<Notifications />} />
+    <Route path='/settings' element={<Settings />} />
   </Route>
 );

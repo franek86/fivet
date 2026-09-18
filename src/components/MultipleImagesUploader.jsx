@@ -56,7 +56,7 @@ const RemoveButton = styled.button`
   height: 26px;
   border-radius: 50%;
   border: none;
-  background: rgba(15, 23, 42, 0.7);
+  background: var(--colot-text);
   color: var(--color-white);
   font-size: 13px;
   line-height: 1;
@@ -84,7 +84,7 @@ const UploadZone = styled.div`
 
   &:hover {
     border-color: var(--color-accent);
-    background-color: var(--color-accent);
+    background-color: var(--color-bg);
     color: var(--color-text);
   }
 

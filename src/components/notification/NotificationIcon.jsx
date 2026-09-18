@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { Link } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 
@@ -172,7 +173,10 @@ const NotificationMessage = styled.p`
   -webkit-box-orient: vertical;
   overflow: hidden;
 `;
-const SeeMoreButton = styled.button`
+const SeeMoreButton = styled(Link)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   padding: 13px 16px;
   border: none;
@@ -185,12 +189,19 @@ const SeeMoreButton = styled.button`
   &:hover {
     background: var(--color-bg);
   }
+  &:focus {
+    outline: none;
+  }
 `;
 
 const EmptyState = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
   padding: 40px 20px;
   text-align: center;
-  color: var(--color-gray-200);
+  color: var(--color-text);
   font-size: 14px;
 `;
 
@@ -253,7 +264,7 @@ export default function NotificationIcon() {
             </NotificationList>
           )}
 
-          <SeeMoreButton type='button'>See more notifications</SeeMoreButton>
+          <SeeMoreButton to={"/notifications"}>See more notifications</SeeMoreButton>
         </Dropdown>
       )}
     </Container>

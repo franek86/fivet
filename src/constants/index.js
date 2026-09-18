@@ -1,4 +1,4 @@
-import { Grid2X2, Image, Pilcrow } from "lucide-react";
+import { Euro, Grid2X2, Image, Pilcrow } from "lucide-react";
 
 export const PAGE_SIZE = 10;
 export const MAX_PAGE_BUTTONS = 2;
@@ -75,4 +75,20 @@ export const BLOCK_ICON = { text: Pilcrow, image: Image, columns: Grid2X2 };
 export const COL_BLOCK_TYPES = [
   { type: "text", label: "Text", icon: Pilcrow },
   { type: "image", label: "Image", icon: Grid2X2 },
+];
+
+/* Fuel type options */
+export const FUEL_TYPE = [
+  { value: "HT", name: "Heavy Fuel Oil" },
+  { value: "MGO", name: "Marine Gas Oil" },
+  { value: "LNG", name: "LNG" },
+  { value: "DUAL_FUEL", name: "Dual fuel" },
+];
+
+/* Fuel type options */
+export const CURRENCY = [
+  { value: "EUR", name: "Euro" },
+  { value: "USD", name: "US dollar" },
+  { value: "GBP", name: "British pound" },
+  { value: "CNY", name: "Chinese Yuan" },
 ];

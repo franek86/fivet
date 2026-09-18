@@ -5,23 +5,14 @@ import { ToastContainer } from "react-toastify";
 
 import MainLayout from "./layouts/MainLayout.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
-import PaymentProtectedRoute from "./pages/PaymentProtectedRoute.jsx";
+
 import DashboardRedirect from "./pages/DashboardRedirect.jsx";
 import NotFound from "./pages/NotFound.jsx";
 
-import CreateShip from "./pages/CreateShip.jsx";
-import EditShip from "./pages/EditShip.jsx";
-
-import AddressBook from "./pages/shared/AddressBook.jsx";
-import Events from "./pages/shared//Events.jsx";
-import Notifications from "./pages/shared/Notifications.jsx";
-
 import Billing from "./pages/admin/Billing.jsx";
-import PremiumRoute from "./pages/PremiumRoute.jsx";
 
 import PaymentSuccess from "./pages/PaymentSuccess.jsx";
 import PaymentError from "./pages/PaymentError.jsx";
-import Settings from "./pages/Settings.jsx";
 
 import { AuthRoutes } from "./routes/authRoutes.jsx";
 import { AdminRoutes } from "./routes/adminRoutes.jsx";

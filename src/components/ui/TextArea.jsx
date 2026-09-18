@@ -21,11 +21,18 @@ const StyledTextArea = styled.textarea`
   }
 `;
 
-const TextArea = forwardRef(({ directions, register, label, name }, ref) => {
+const TextArea = forwardRef(({ directions, placeholder, register, label, name }, ref) => {
   return (
     <Wrap $directions={directions}>
       {label && <Label>{label}</Label>}
-      <StyledTextArea ref={ref} rows='5' cols='15' id={name} {...(register ? register(name) : {})}></StyledTextArea>
+      <StyledTextArea
+        ref={ref}
+        placeholder={placeholder}
+        rows='5'
+        cols='15'
+        id={name}
+        {...(register ? register(name) : {})}
+      ></StyledTextArea>
     </Wrap>
   );
 });

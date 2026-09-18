@@ -46,6 +46,8 @@ const Select = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-size: ${(props) => (props.$isSelected ? "inherit" : "1.2rem")};
+  color: ${(props) => (props.$isSelected ? "inherit" : "var(--color-text-muted)")};
 
   ${(props) => sizes[props.$size || ""]};
   ${(props) => variations[props.$variation || ""]};
@@ -70,7 +72,7 @@ const SelectOption = styled.div`
   padding: 1.2rem;
   border-radius: var(--border-radius-lg);
   background-color: ${(props) => (props.$selected ? "var(--color-accent)" : "var(--color-grey-100)")};
-  color: ${(props) => (props.$selected ? "var(--color-text)" : "var(--color-grey-700)")};
+  color: ${(props) => (props.$selected ? "var(--color-white)" : "var(--color-grey-700)")};
 
   cursor: pointer;
 
@@ -101,6 +103,7 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, directio
 
   const selectedOption = options?.find((option) => option[valueKey] === field.value) || null;
   const openedSelect = isOpen === name;
+  const isSelected = Boolean(selectedOption);
 
   const handleSelect = (option) => {
     field.onChange(option[valueKey]);
@@ -133,7 +136,13 @@ const CustomSelect = forwardRef(({ name, control, options, label, size, directio
     <Wrap $directions={directions}>
       <Label htmlFor={field.value}>{label}</Label>
 
-      <Select ref={triggerRef} onClick={() => dispatch(toggleDropdownByName(name))} $size={size} $variation={variation}>
+      <Select
+        ref={triggerRef}
+        onClick={() => dispatch(toggleDropdownByName(name))}
+        $isSelected={isSelected}
+        $size={size}
+        $variation={variation}
+      >
         {selectedOption ? selectedOption.name : "Select item"}
         {openedSelect ? <ChevronUp /> : <ChevronDown />}
       </Select>

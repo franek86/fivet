@@ -11,7 +11,7 @@ const ApprovalList = () => {
   const { data, isLoading } = usePendingShips();
   const queryClient = useQueryClient();
 
-  const { mutate, isPending } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: ({ shipId, status, rejectionReason }) => updateShipListsingStatus({ shipId, status, rejectionReason }),
     onSuccess: (data) => {
       toast.success("Your approved ship");
@@ -64,10 +64,10 @@ const ApprovalList = () => {
   );
 };
 
-const ApprovalCard = ({ vessel, onApprove, onReject, mutate }) => {
+const ApprovalCard = ({ vessel, onApprove, onReject }) => {
   const [showReject, setShowReject] = useState(false);
   const [reason, setReason] = useState("");
-
+  console.log(vessel);
   const handleReject = () => {
     if (!reason.trim()) return;
 

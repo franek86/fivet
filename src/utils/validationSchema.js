@@ -55,31 +55,36 @@ export const createShipSchema = z.object({
   slug: z.string().min(1, "Slug is required"),
   typeId: z.string().min(1, "Ship type is required"),
   imo: z.coerce.number({ invalid_type_error: "IMO must be a number" }).int().min(1, "IMO is required"),
-  buildYear: z.coerce.number().optional(),
+  buildYear: z.coerce.number(),
   buildCountry: z.string().optional(),
-  price: z.coerce.number({ invalid_type_error: "Price must be a number" }).int().min(1, "Price is required"),
-  mainEngine: z.string().optional(),
-  lengthOverall: z.coerce.number().optional(),
-  beam: z.coerce.number().optional(),
-  draft: z.coerce.number().optional(),
+  flag: z.string().optional(),
 
+  price: z.coerce.number({ invalid_type_error: "Price must be a number" }).int().min(1, "Price is required"),
+  currency: z.string().optional(),
+
+  mainEngine: z.string().optional(),
   enginePower: z.string().optional(),
-  dwt: z.coerce.number().optional(),
+  dwt: z.coerce.number(),
+  lengthOverall: z.coerce.number(),
   netTonnage: z.coerce.number().optional(),
   grossTonnage: z.coerce.number().optional(),
+  beam: z.coerce.number(),
+  draft: z.coerce.number(),
   cargoCapacity: z.string().optional(),
+
   fuelType: z.string().optional(),
   cruisingSpeed: z.coerce.number().optional(),
+
   classNotation: z.string().optional(),
-  ssDueDate: z.string().optional(),
-  ddDueDate: z.string().optional(),
-  currency: z.string().optional(),
+  ssDueDate: z.coerce.date().optional(),
+  ddDueDate: z.coerce.date().optional(),
   currentPort: z.string().optional(),
+  nextPort: z.string().optional(),
 
   description: z.string().optional(),
   images: z.array(ShipImageSchema).optional(),
   mainImage: z
-    .instanceof(File, { message: "An image file is required" })
+    .instanceof(File, { message: "A main image is required." })
     .refine((file) => file.size <= 5 * 1024 * 1024, {
       message: "File size should not exceed 5MB",
     })

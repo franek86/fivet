@@ -1,7 +1,10 @@
 import styled from "styled-components";
+import { formatedPrice } from "../../utils/formattedPrice.js";
+import { MapPin } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const VesselsCard = ({ vessel }) => {
-  console.log(vessel);
+  const navigate = useNavigate();
 
   return (
     <VesselCard key={vessel.id}>
@@ -24,8 +27,6 @@ const VesselsCard = ({ vessel }) => {
 
             <VesselType>{vessel.type}</VesselType>
           </div>
-
-          <MoreButton>•••</MoreButton>
         </CardHeader>
 
         <Details>
@@ -35,20 +36,34 @@ const VesselsCard = ({ vessel }) => {
           </div>
 
           <div>
-            <DetailLabel>Built</DetailLabel>
+            <DetailLabel>Built year</DetailLabel>
             <DetailValue>{vessel.buildYear}</DetailValue>
+          </div>
+
+          <div>
+            <DetailLabel>LOA</DetailLabel>
+            <DetailValue>{vessel.lengthOverall} m</DetailValue>
+          </div>
+
+          <div>
+            <DetailLabel>DWT</DetailLabel>
+            <DetailValue>{vessel.dwt}</DetailValue>
           </div>
         </Details>
 
-        <Location>
-          <LocationIcon>⌖</LocationIcon>
-          {vessel.location}
-        </Location>
+        {vessel.currentPort && (
+          <Location>
+            <LocationIcon>
+              <MapPin size={14} />
+            </LocationIcon>
+            {vessel.currentPort}
+          </Location>
+        )}
 
         <PriceRow>
           <div>
             <PriceLabel>Asking price</PriceLabel>
-            <Price>{vessel.price}</Price>
+            <Price>{formatedPrice(vessel.price, vessel.currency)}</Price>
           </div>
 
           {vessel.listingStatus === "VERIFIED" && (
@@ -60,7 +75,7 @@ const VesselsCard = ({ vessel }) => {
         </PriceRow>
 
         <Actions>
-          <SecondaryButton onClick={() => console.log("View vessel", vessel.id)}>View Details</SecondaryButton>
+          <SecondaryButton onClick={() => navigate(`${vessel.id}`)}>View Details</SecondaryButton>
 
           {vessel.status === "VERIFIED" && <IconButton title='Share'>↗</IconButton>}
 
@@ -161,14 +176,6 @@ const VesselType = styled.div`
   font-size: 12px;
 `;
 
-const MoreButton = styled.button`
-  border: none;
-  background: transparent;
-  color: var(--color-text);
-  cursor: pointer;
-  letter-spacing: 2px;
-`;
-
 const Details = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -246,14 +253,16 @@ const SecondaryButton = styled.button`
   height: 36px;
   border-radius: 8px;
   background: var(--color-accent);
-  border: none;
-  color: var(--color-text);
+  border: 1px solid transparent;
+  color: var(--color-white);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
 
   &:hover {
-    background: var(--color-accent-600);
+    border: 1px solid var(--color-accent-600);
+    background: transparent;
+    color: var(--color-accent-600);
   }
 `;
 

@@ -11,7 +11,7 @@ export const useCreateShip = () => {
     onSuccess: (data) => {
       toast.success(data.message);
       clientQuery.invalidateQueries(["ships", "statistic"]);
-      navigate("/vessels");
+      navigate("vessels");
     },
     onError: (error) => {
       toast.error(error.message);

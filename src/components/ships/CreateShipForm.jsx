@@ -55,7 +55,7 @@ const ShipsForm = () => {
   const schema = isEditSession ? editShipSchema : createShipSchema;
 
   /* Required fields */
-  const requiredFields = ["shipName", "imo", "typeId", "slug", "price", "mainImage"];
+  const requiredFields = ["shipName", "imo", "typeId", "slug", "price", "mainImage", "buildYear", "dwt", "lengthOverall", "beam", "draft"];
 
   const {
     register,
@@ -329,11 +329,11 @@ const ShipsForm = () => {
               <Column>
                 <Input
                   type='number'
-                  label='Build year'
+                  label='Build year *'
                   directions='column'
                   placeholder='e.g. 1997'
                   register={register}
-                  {...register("buildYear")}
+                  {...register("buildYear", { required: "Build year are required!" })}
                 />
                 <InputErrorMessage message={errors.buildYear?.message} />
               </Column>
@@ -369,7 +369,7 @@ const ShipsForm = () => {
                   directions='column'
                   placeholder='e.g. 28,240'
                   register={register}
-                  {...register("dwt", { require: true })}
+                  {...register("dwt", { required: "DWT are requierd" })}
                 />
                 <InputErrorMessage message={errors.dwt?.message} />
               </Column>
@@ -378,11 +378,11 @@ const ShipsForm = () => {
               <Column>
                 <Input
                   type='number'
-                  label='Gross tonnage *'
+                  label='Gross tonnage'
                   directions='column'
                   placeholder='e.g. 17,019'
                   register={register}
-                  {...register("grossTonnage", { require: true })}
+                  {...register("grossTonnage")}
                 />
                 <InputErrorMessage message={errors.grossTonnage?.message} />
               </Column>
@@ -391,11 +391,11 @@ const ShipsForm = () => {
               <Column>
                 <Input
                   type='number'
-                  label='Net tonnage *'
+                  label='Net tonnage'
                   directions='column'
                   placeholder='e.g. 10,108'
                   register={register}
-                  {...register("netTonnage", { require: true })}
+                  {...register("netTonnage")}
                 />
                 <InputErrorMessage message={errors.netTonnage?.message} />
               </Column>
@@ -429,7 +429,7 @@ const ShipsForm = () => {
                   directions='column'
                   placeholder='e.g. 27.24'
                   register={register}
-                  {...register("beam", { require: "Beam is required" })}
+                  {...register("beam", { required: "Beam is required" })}
                 />
                 <InputErrorMessage message={errors.beam?.message} />
               </Column>
@@ -443,7 +443,7 @@ const ShipsForm = () => {
                   directions='column'
                   placeholder='e.g. 9.29'
                   register={register}
-                  {...register("draft", { require: "Draft is required" })}
+                  {...register("draft", { required: "Draft is required" })}
                 />
                 <InputErrorMessage message={errors.draft?.message} />
               </Column>
@@ -611,12 +611,12 @@ const ShipsForm = () => {
                       directions='column'
                       placeholder='e.g. 25000'
                       register={register}
-                      value={formatPrice(field.value)}
+                      /*value={formatPrice(field.value)}
                       onChange={(event) => {
-                        const rawValue = event.target.value.replace(/\D/g, "");
+                        const rawValue = event.target.value?.replace(/\D/g, "");
 
                         field.onChange(rawValue === "" ? null : Number(rawValue));
-                      }}
+                      }}  */
                       onBlur={field.onBlur}
                       {...register("price")}
                     />
@@ -638,6 +638,7 @@ const ShipsForm = () => {
                       label='Currency'
                       size='medium'
                       variation='transparent'
+                      valueKey='value'
                       {...register("currency")}
                     />
                   )}
@@ -704,7 +705,7 @@ const ShipsForm = () => {
               </Column>
 
               <Column>
-                <Label htmlFor='mainImage'>Main image</Label>
+                <Label htmlFor='mainImage'>Main image *</Label>
                 <ImageUploader
                   name='mainImage'
                   value={watch("mainImage")}

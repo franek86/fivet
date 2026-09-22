@@ -4,7 +4,7 @@ import Button from "../ui/Button.jsx";
 function AddShip() {
   return (
     <>
-      <Link to='/ships/create'>
+      <Link to='/vessels/create'>
         <Button>Add vessel</Button>
       </Link>
     </>

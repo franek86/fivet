@@ -52,6 +52,7 @@ const ShipsForm = () => {
   });
   const [activeSection, setActiveSection] = useState("basic");
 
+  /* Zod validation for edit and create ship */
   const schema = isEditSession ? editShipSchema : createShipSchema;
 
   /* Required fields */
@@ -210,6 +211,7 @@ const ShipsForm = () => {
     return new Intl.NumberFormat("en-US").format(number);
   };
 
+  console.log(errors);
   if (isLoading) return <Spinner />;
   if (isError) return <div>Error</div>;
 

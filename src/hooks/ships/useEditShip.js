@@ -9,9 +9,15 @@ export const useEditShip = () => {
   const { mutate, isPending, isError } = useMutation({
     mutationFn: ({ newData, id }) => createEditShip(newData, id),
     onSuccess: () => {
-      queryClient.invalidateQueries(["ships", "ship"]);
+      queryClient.invalidateQueries({
+        queryKey: ["ships"],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["ship"],
+      });
       toast.success("Succesfully edited");
-      navigate("/ships");
+      navigate(-1);
     },
     onError: (error) => {
       toast.success(error);

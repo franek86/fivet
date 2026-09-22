@@ -3,7 +3,18 @@ import apiClient from "./axiosConfig.js";
 /* 
     Get all ships depend if is user or admin with pagination
 */
-export const getShips = async (params) => {
+export const getShips = async (filters) => {
+  const params = {
+    search: filters.search || undefined,
+    shipType: filters.shipType.length > 0 ? filters.shipType.join(",") : undefined,
+    minPrice: filters.minPrice,
+    maxPrice: filters.maxPrice,
+    page: filters.page,
+    limit: filters.limit,
+    sortBy: filters.sortBy,
+    order: filters.order,
+  };
+
   try {
     const res = await apiClient.get("/ships", { params });
     return res.data;

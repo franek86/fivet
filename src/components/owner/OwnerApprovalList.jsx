@@ -1,9 +1,9 @@
 import React from "react";
+import { useSearchParams } from "react-router";
 import styled from "styled-components";
 import VesselsCard from "../ui/VessselsCard.jsx";
 import Spinner from "../Spinner.jsx";
 import { useShips } from "../../hooks/ships/useShips.js";
-import { useSearchParams } from "react-router";
 
 const tabs = [
   { label: "All Vessels", value: "ALL" },
@@ -63,7 +63,7 @@ const OwnerApprovalList = () => {
       ) : (
         <VesselGrid>
           {filteredVessels.map((vessel) => (
-            <VesselsCard vessel={vessel} />
+            <VesselsCard key={vessel.id} vessel={vessel} />
           ))}
         </VesselGrid>
       )}

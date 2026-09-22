@@ -1,9 +1,8 @@
 import { useParams } from "react-router";
 import styled from "styled-components";
-
-import BackBtn from "../components/BackBtn.jsx";
-import Title from "../components/ui/Title.jsx";
-import CreateShipForm from "../components/ships/CreateShipForm.jsx";
+import Title from "../../components/ui/Title.jsx";
+import BackBtn from "../../components/BackBtn.jsx";
+import CreateShipForm from "../../components/ships/CreateShipForm.jsx";
 
 const FlexWrap = styled.div`
   display: flex;
@@ -11,7 +10,7 @@ const FlexWrap = styled.div`
   justify-content: space-between;
 `;
 
-function EditShip() {
+function OwnerEditShip() {
   const { id } = useParams();
 
   return (
@@ -25,4 +24,4 @@ function EditShip() {
   );
 }
 
-export default EditShip;
+export default OwnerEditShip;

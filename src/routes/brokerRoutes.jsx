@@ -11,6 +11,7 @@ import Vessels from "../pages/broker/Vessels.jsx";
 import Documents from "../pages/broker/Documents.jsx";
 import CompanyProfile from "../pages/broker/CompanyProfile.jsx";
 import BrokerChat from "../pages/broker/BrokerChat.jsx";
+import BrokerEditShip from "../pages/broker/BrokerEditShip.jsx";
 
 export const BrokerRoutes = (
   <Route element={<ProtectedRoute allowedRoles={["BROKER"]} />}>
@@ -18,6 +19,7 @@ export const BrokerRoutes = (
     <Route path='/broker/enquiries' element={<Enquiries />} />
     <Route path='/broker/vessels' element={<Vessels />} />
     <Route path='/broker/vessels/:id' element={<SingleShip />} />
+    <Route path='/broker/vessels/edit/:id' element={<BrokerEditShip />} />
     <Route path='/broker/find-owners' element={<SearchOwner />} />
 
     <Route path='/broker/chat' element={<BrokerChat />} />

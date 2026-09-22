@@ -1,10 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router";
-import { Range } from "react-range";
 import styled from "styled-components";
 import Checkbox from "../ui/Checkbox.jsx";
-import DatePicker from "react-datepicker";
-import { customFormatDate } from "../../utils/formatDate.js";
 
 /* ================= styles ================= */
 
@@ -29,31 +24,12 @@ const CheckboxGrid = styled.div`
   gap: 1rem;
 `;
 
-const RangeLabel = styled.div`
-  display: flex;
-  flex-direction: column;
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin-bottom: 0.8rem;
-
-  span {
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-`;
-
 const ButtonWrap = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 2rem;
   gap: 1rem;
   align-items: center;
-`;
-
-const DateWrap = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
 `;
 
 const ButtonStyle = styled.div`
@@ -68,15 +44,6 @@ const ButtonStyle = styled.div`
   cursor: pointer;
 `;
 
-const FilterButton = styled(ButtonStyle)`
-  background: var(--color-accent-600);
-  color: var(--color-white);
-  &:hover {
-    background: var(--color-accent);
-    color: var(--color-text);
-  }
-`;
-
 const ResetButton = styled(ButtonStyle)`
   background-color: var(--color-grey-200);
   &:hover {
@@ -84,79 +51,18 @@ const ResetButton = styled(ButtonStyle)`
   }
 `;
 
-const ShipFilters = ({ data, shipTypes, onApply, onReset }) => {
-  const [searchParams] = useSearchParams();
-  const today = new Date();
-  const formatToday = customFormatDate(today);
+const ShipFilters = ({ shipTypes, filterState, setFilterState }) => {
+  //Handle checkboxes
+  const handleCheckbox = (name, value) => {
+    setFilterState((current) => {
+      const currentValue = current[name];
 
-  /* Get values from url query params  */
-  const currentIsPublished = searchParams.get("isPublished") ?? false;
-  const currentShipType = searchParams.get("shipType")?.split(",") ?? "";
-
-  /*  Set local state */
-  const [isPublished, setIsPublished] = useState(currentIsPublished);
-  const [selectedShipType, setSelectedShipType] = useState(currentShipType);
-  const [minDate, setMinDate] = useState("");
-  const [maxDate, setMaxDate] = useState("");
-
-  // Calculate dynamic min/max price from fetched ships
-  const { minPrice, maxPrice } = useMemo(() => {
-    if (!data.length) return { minPrice: 0, maxPrice: 1000 };
-    const prices = data.map((s) => s.price);
-    return {
-      minPrice: Math.min(...prices),
-      maxPrice: Math.max(...prices),
-    };
-  }, [data]);
-
-  const [priceRange, setPriceRange] = useState(() => [minPrice, maxPrice]);
-
-  useEffect(() => {
-    setPriceRange([minPrice, maxPrice]);
-  }, [minPrice, maxPrice]);
-
-  /* Handle chechbox change */
-  const handleCheckbox = (type) => {
-    setSelectedShipType((prev) => (prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]));
-  };
-
-  /* Handle oogle published */
-  const togglePublishFilter = () => {
-    setIsPublished((prev) => !prev);
-  };
-
-  /* Handle change price range */
-  const onChangePriceFilter = (newRange) => {
-    setPriceRange(newRange);
-  };
-
-  /*  Apply filter values to URL and trigger data reload */
-  const applyFilter = () => {
-    onApply?.({
-      isPublished,
-      priceRange: priceRange ? priceRange.join("-") : null,
-      shipType: selectedShipType ? selectedShipType.join(",") : null,
-      dateFrom: minDate ? minDate : null,
-      dateTo: maxDate ? maxDate : null,
+      return {
+        ...current,
+        [name]: currentValue.includes(value) ? currentValue.filter((item) => item !== value) : [...currentValue, value],
+      };
     });
   };
-
-  /* Reset filters and search term, update URL */
-  const resetFilter = () => {
-    setIsPublished(false);
-    setPriceRange([minPrice, maxPrice]);
-    setSelectedShipType([]);
-    setMinDate();
-    setMaxDate();
-    onReset?.();
-  };
-
-  /* Range helpers  */
-  const safeRange = Math.max(maxPrice - minPrice, 1);
-  const [min, max] = priceRange;
-
-  const leftPercent = ((min - minPrice) / safeRange) * 100;
-  const rightPercent = ((max - minPrice) / safeRange) * 100;
 
   return (
     <ShipFiltersSection>
@@ -171,36 +77,12 @@ const ShipFilters = ({ data, shipTypes, onApply, onReset }) => {
               id={t}
               label={t.name}
               position='left'
-              checked={selectedShipType?.includes(t.name)}
-              onChange={() => handleCheckbox(t.name)}
+              checked={filterState.shipTypes.includes(t.name)}
+              onChange={() => handleCheckbox("shipType", t.name)}
             />
           ))}
         </CheckboxGrid>
       </div>
-
-      {/* Date filter */}
-      <DateWrap>
-        <div>
-          <P>Date from</P>
-          <DatePicker
-            selected={minDate}
-            dateFormat='dd.MM.yyyy'
-            onChange={(date) => setMinDate(date)}
-            placeholderText={formatToday}
-            calendarClassName='custom-calendar'
-          />
-        </div>
-        <div>
-          <P>Date to</P>
-          <DatePicker
-            selected={maxDate}
-            dateFormat='dd.MM.yyyy'
-            onChange={(date) => setMaxDate(date)}
-            placeholderText={formatToday}
-            calendarClassName='custom-calendar'
-          />
-        </div>
-      </DateWrap>
 
       {/* Publish checkbox */}
       <div>
@@ -208,47 +90,7 @@ const ShipFilters = ({ data, shipTypes, onApply, onReset }) => {
         <Checkbox checked={isPublished} label='Published' position='left' onChange={togglePublishFilter} />
       </div>
 
-      {/* range */}
-      <div>
-        <RangeLabel>
-          Price filter:
-          <span>
-            ${min} - ${max}
-          </span>
-        </RangeLabel>
-        <Range
-          step={1}
-          min={minPrice}
-          max={maxPrice}
-          values={priceRange}
-          onChange={onChangePriceFilter}
-          renderTrack={({ props, children }) => {
-            return (
-              <div
-                {...props}
-                style={{
-                  ...props.style,
-                  height: "6px",
-                  width: "100%",
-                  background: `linear-gradient(to right,#ccc ${leftPercent}%,
-                                #548BF4 ${leftPercent}%,
-                                #548BF4 ${rightPercent}%,
-                                #ccc ${rightPercent}%)`,
-                }}
-                className='range-wrapper'
-              >
-                {children}
-              </div>
-            );
-          }}
-          renderThumb={({ props, index }) => {
-            return <div {...props} key={index} style={props.style} className='range-thumb'></div>;
-          }}
-        />
-      </div>
-
       <ButtonWrap>
-        <FilterButton onClick={applyFilter}>Filter</FilterButton>
         <ResetButton onClick={resetFilter}>Clear filters</ResetButton>
       </ButtonWrap>
     </ShipFiltersSection>

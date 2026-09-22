@@ -14,7 +14,6 @@ const OwnerSingleVessels = () => {
   return (
     <>
       <FlexWrap>
-        <Title tag='h1'>Single ship</Title>
         <BackBtn />
       </FlexWrap>
       <SingleShipData />

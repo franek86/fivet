@@ -1,10 +1,17 @@
 import styled from "styled-components";
 import { formatedPrice } from "../../utils/formattedPrice.js";
-import { MapPin } from "lucide-react";
-import { useNavigate } from "react-router";
+import { Edit, MapPin, Trash2 } from "lucide-react";
+import { Link, useNavigate } from "react-router";
+import { openModalByName } from "../../slices/modalSlice.js";
+import { useDispatch } from "react-redux";
+import Modal from "../Modal.jsx";
+import ConfirmDialog from "../ConfirmDialog.jsx";
+import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 
 const VesselsCard = ({ vessel }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { mutate } = useDeleteShip();
 
   return (
     <VesselCard key={vessel.id}>
@@ -22,11 +29,18 @@ const VesselsCard = ({ vessel }) => {
 
       <CardContent>
         <CardHeader>
-          <div>
-            <VesselName>{vessel.shipName}</VesselName>
+          <VesselName>{vessel.shipName}</VesselName>
 
-            <VesselType>{vessel.type}</VesselType>
-          </div>
+          <ActionsBtn>
+            <Link to={`edit/${vessel.id}`}>
+              <ActionIcon>
+                <Edit size={18} />
+              </ActionIcon>
+            </Link>
+            <ActionIcon onClick={() => dispatch(openModalByName(vessel.id))}>
+              <Trash2 size={18} />
+            </ActionIcon>
+          </ActionsBtn>
         </CardHeader>
 
         <Details>
@@ -82,6 +96,14 @@ const VesselsCard = ({ vessel }) => {
           {vessel.status === "PENDING" && <SecondaryButton onClick={() => console.log("Edit vessel", vessel.id)}>Edit</SecondaryButton>}
         </Actions>
       </CardContent>
+
+      <Modal name={vessel.id} onClose={() => dispatch(closeModalByName())}>
+        <ConfirmDialog
+          itemName={vessel.shipName}
+          onConfirm={() => mutate(vessel.id)}
+          onCloseModal={() => dispatch(closeModalByName(vessel.id))}
+        />
+      </Modal>
     </VesselCard>
   );
 };
@@ -246,6 +268,26 @@ const Actions = styled.div`
   display: flex;
   gap: 8px;
   margin-top: 18px;
+`;
+
+const ActionsBtn = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+`;
+
+const ActionIcon = styled.div`
+  background-color: var(--color-border);
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  &:hover {
+    background-color: var(--color-bg);
+  }
 `;
 
 const SecondaryButton = styled.button`

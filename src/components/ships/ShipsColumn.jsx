@@ -139,7 +139,7 @@ function ShipsColumn({ ship, selectedShip, onCheckboxChange }) {
             </Link>
           </Button>
           <Button $variation='icon'>
-            <Link to={`edit/${shipId}`}>
+            <Link to={`/vessel/edit/${shipId}`}>
               <ButtonInner>
                 <Pencil size={16} />
                 <P>Edit</P>

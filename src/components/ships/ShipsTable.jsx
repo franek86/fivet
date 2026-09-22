@@ -1,8 +1,9 @@
-import { useSearchParams } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Ship, SlidersHorizontal, Trash2 } from "lucide-react";
+import styled from "styled-components";
 
 import Pagination from "../Pagination.jsx";
-import Spinner from "../Spinner.jsx";
 import ShipsColumn from "./ShipsColumn.jsx";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import CustomTable from "../ui/CustomTable.jsx";
@@ -13,17 +14,15 @@ import Button from "../ui/Button.jsx";
 import Modal from "../Modal.jsx";
 import ShipFilters from "./ShipFilters.jsx";
 import AppShip from "./AddShip.jsx";
-import styled from "styled-components";
 
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useShips } from "../../hooks/ships/useShips.js";
-import { setSearchTerm } from "../../slices/searchSlice.js";
 import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
-import { Ship, SlidersHorizontal, Trash2 } from "lucide-react";
 import { useAllShipType } from "../../hooks/useShipType.js";
-import { urlFormatDate } from "../../utils/formatDate.js";
 import { useUser } from "../../hooks/useAuth.js";
+import { SORT_VESSEL } from "../../constants/index.js";
+import ShipList from "./ship-table/ShipList.jsx";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -57,112 +56,56 @@ const FilterState = styled.section`
   gap: 1rem;
 `;
 
+/* Defulat filters */
+const DEFAULT_FILTERS = {
+  search: "",
+  shipType: [],
+  minPrice: undefined,
+  maxPrice: undefined,
+  page: 1,
+  limit: 12,
+  sortBy: "createdAt",
+  order: "desc",
+};
+
 function ShipsTable() {
   //Dispatch and actions
   const dispatch = useDispatch();
+
+  //Get user
   const { data: user } = useUser();
 
-  const searchTerm = useSelector((state) => state.search.term);
+  //Filter state
+  const [filterState, setFilterState] = useState(DEFAULT_FILTERS);
 
-  // React Hooks
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  //Read query params from URL
-  const page = Number(searchParams.get("page") ?? 1);
-  const sortBy = searchParams.get("sortBy") ?? "createdAt-desc";
-
-  //fetch ship types
+  //fetch ships type
   const { allShipType: shipTypes } = useAllShipType();
 
   //Fetch ships data using custom hook
-  const { ships, count, isLoading, isFetching } = useShips({
-    page,
-    sortBy,
-    filters: {
-      isPublished: searchParams.get("isPublished"),
-      price: searchParams.get("price"),
-      search: searchTerm?.trim() || undefined,
-      shipType: searchParams.get("shipType"),
-      dateFrom: searchParams.get("dateFrom"),
-      dateTo: searchParams.get("dateTo"),
-    },
-  });
+  const { ships = [], count = 0, isLoading, isFetching } = useShips(filterState);
 
   // Custom hook for selection and deletion
-  const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(ships, useDeleteShip().mutate);
+  const { mutate: deleteShip } = useDeleteShip();
+  const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(ships, deleteShip);
 
-  // Sorting options
-  const sortItems = [
-    { value: "shipName-asc", name: "Ship name (A-Z)" },
-    { value: "shipName-desc", name: "Ship name (Z-A)" },
-    { value: "price-asc", name: "Cheapest" },
-    { value: "price-desc", name: "Expensive" },
-    { value: "createdAt-desc", name: "Newest first" },
-    { value: "createdAt-asc", name: "Oldest first" },
-  ];
+  /* current filters  */
+  const hasFilters =
+    Boolean(filterState.search) ||
+    filterState.shipType.length > 0 ||
+    filterState.minPrice !== undefined ||
+    filterState.maxPrice !== undefined;
 
-  // Table columns configuration
-  const tableColumns = [
-    {
-      header: (
-        <Checkbox checked={selected?.length > 0 && selected?.length === ships?.length} onChange={(checked) => handleSelectAll(checked)} />
-      ),
-      accessor: "delete row",
-      style: "hidden-table-sm",
-    },
-    { header: "Image", accessor: "image", style: "hidden-table-sm" },
-    ...(user?.role === "ADMIN" ? [{ header: "Publish on web", accessor: "published", style: "hidden-table-sm" }] : []),
-    ...(user?.role !== "ADMIN" ? [{ header: "Status", accessor: "publish-status" }] : []),
-
-    { header: `${user?.role !== "ADMIN" ? "Ship type" : "User"}`, accessor: "ship-type-user", style: "hidden-table-sm" },
-    { header: "Ship Name", accessor: "ship name" },
-    { header: "IMO no.", accessor: "imo" },
-    { header: "Price", accessor: "price" },
-    { header: "Actions", accessor: "actions" },
-  ];
-
-  // Function to update URL query parameters
-  const updatedQueryParams = (params) => {
-    const newParams = new URLSearchParams(searchParams);
-    Object.entries(params).forEach(([key, value]) => ((value ?? "") ? newParams.set(key, value) : newParams.delete(key)));
-    setSearchParams(newParams);
+  /* Reset filter to default */
+  const resetFilters = () => {
+    setFilterState(DEFAULT_FILTERS);
   };
-
-  // Apply filter values to URL and trigger data reload
-  const handleApplyFilters = ({ isPublished, priceRange, shipType, dateFrom, dateTo }) => {
-    updatedQueryParams({
-      isPublished: isPublished ? "true" : null,
-      price: priceRange ? priceRange : null,
-      shipType: shipType ? shipType : null,
-      dateFrom: dateFrom ? urlFormatDate(dateFrom) : null,
-      dateTo: dateTo ? urlFormatDate(dateTo) : null,
-    });
-    /* dispatch(closeModalByName("ship-filter")); */
-  };
-
-  // Reset filters and search term, update URL
-  const handleResetFilter = () => {
-    dispatch(setSearchTerm(""));
-    updatedQueryParams({
-      isPublished: null,
-      price: null,
-      search: null,
-      shipType: null,
-      dateFrom: null,
-      dateTo: null,
-    });
-    dispatch(closeModalByName("ship-filter"));
-  };
-
-  // Render single row
-  const renderRow = (item) => <ShipsColumn key={item.id} ship={item} selectedShip={selected} onCheckboxChange={handleCheckboxChange} />;
-
-  // check if filter exists in url params
-  const hasFilters = [...searchParams.keys()].length > 0;
 
   // Loading, error, and empty states
-  if (isLoading) return <Spinner />;
-  if (!isLoading && ships?.length === 0) {
+  if (isLoading) {
+    return <TablePlaceholder count={filterState.limit} />;
+  }
+
+  if (ships?.length === 0) {
     if (!hasFilters) {
       return (
         <EmptyState message='No vessels yet' icon={<Ship />}>
@@ -178,7 +121,7 @@ function ShipsTable() {
       <FilterState>
         <h2>No ships match your filters</h2>
         <p>Please clear filters or adjust your search.</p>
-        <Button onClick={() => setSearchParams({})}>Clear filters</Button>
+        <Button onClick={() => resetFilters()}>Clear filters</Button>
       </FilterState>
     );
   }
@@ -186,14 +129,17 @@ function ShipsTable() {
   return (
     <>
       <Modal name='ship-filter' onClose={() => dispatch(closeModalByName("ship-filter"))}>
-        <ShipFilters data={ships} shipTypes={shipTypes} onApply={handleApplyFilters} onReset={handleResetFilter} />
+        <ShipFilters shipTypes={shipTypes} filterState={filterState} setFilterState={setFilterState} />
       </Modal>
+
       <FlexWrapper>
         <ShipFilterWrap onClick={() => dispatch(openModalByName("ship-filter"))}>
           <SlidersHorizontal size={25} />
           <div>Filters</div>
         </ShipFilterWrap>
-        <Sort items={sortItems} label='Sort by:' />
+
+        <Sort items={SORT_VESSEL} label='Sort by:' />
+
         {selected.length > 0 && (
           <div>
             <Button $variation='danger' onClick={handleDeleteSelected}>
@@ -206,9 +152,13 @@ function ShipsTable() {
           </div>
         )}
       </FlexWrapper>
-      <div>
-        {isFetching ? <TablePlaceholder count={ships.length} /> : <CustomTable columns={tableColumns} renderRow={renderRow} data={ships} />}
-      </div>
+
+      {isFetching ? (
+        <TablePlaceholder count={ships.length} />
+      ) : (
+        <ShipList ships={ships} selected={selected} user={user} onSelectAll={handleSelectAll} onSelect={handleCheckboxChange} />
+      )}
+
       <Pagination count={count} />
     </>
   );

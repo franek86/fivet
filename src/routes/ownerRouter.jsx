@@ -7,6 +7,7 @@ import OwnerVessels from "../pages/owner/OwnerVessels.jsx";
 import OwnerSingleVessels from "../pages/owner/OwnerSingleVessels.jsx";
 import VerifiedBrokerList from "../pages/owner/VerifiedBrokerLIst.jsx";
 import OwnerChat from "../pages/owner/OwnerChat.jsx";
+import OwnerEditShip from "../pages/owner/OwnerEditShip.jsx";
 
 export const OwnerRoutes = (
   <Route element={<ProtectedRoute allowedRoles={["OWNER"]} />}>
@@ -15,6 +16,7 @@ export const OwnerRoutes = (
     <Route path='/owner/chat' element={<OwnerChat />} />
     <Route path='/owner/vessels' element={<OwnerVessels />} />
     <Route path='/owner/vessels/:id' element={<OwnerSingleVessels />} />
+    <Route path='/owner/vessels/edit/:id' element={<OwnerEditShip />} />
     <Route path='/owner/brokers' element={<VerifiedBrokerList />} />
   </Route>
 );

@@ -70,16 +70,16 @@ export const createShipSchema = z.object({
   grossTonnage: z.coerce.number().optional(),
   beam: z.coerce.number(),
   draft: z.coerce.number(),
-  cargoCapacity: z.string().optional(),
+  cargoCapacity: z.coerce.string().optional(),
 
-  fuelType: z.string().optional(),
+  fuelType: z.coerce.string().optional(),
   cruisingSpeed: z.coerce.number().optional(),
 
   classNotation: z.string().optional(),
   ssDueDate: z.coerce.date().optional(),
   ddDueDate: z.coerce.date().optional(),
-  currentPort: z.string().optional(),
-  nextPort: z.string().optional(),
+  currentPort: z.coerce.string().optional(),
+  nextPort: z.coerce.string().optional(),
 
   description: z.string().optional(),
   images: z.array(ShipImageSchema).optional(),
@@ -101,7 +101,6 @@ export const createShipSchema = z.object({
  * Edit Ship validation schema - partial
  */
 export const editShipSchema = createShipSchema.partial().extend({
-  images: z.array(ShipImageSchema).optional(),
   mainImage: z.union([z.instanceof(File), z.string().url("Must be a valid image URL")]).refine((value) => {
     if (typeof value === "string") return true;
     return value instanceof File && value.type.startsWith("image/");

@@ -92,3 +92,14 @@ export const CURRENCY = [
   { value: "GBP", name: "British pound" },
   { value: "CNY", name: "Chinese Yuan" },
 ];
+
+/* Sort filters vessel */
+// Sorting options
+export const SORT_VESSEL = [
+  { value: "shipNameAsc", name: "Ship name (A-Z)" },
+  { value: "shipNameDesc", name: "Ship name (Z-A)" },
+  { value: "priceAsc", name: "Price: low to high" },
+  { value: "priceDesc", name: "Price: hight to low" },
+  { value: "newest", name: "Newest" },
+  { value: "oldest", name: "Oldest" },
+];

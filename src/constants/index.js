@@ -103,3 +103,15 @@ export const SORT_VESSEL = [
   { value: "newest", name: "Newest" },
   { value: "oldest", name: "Oldest" },
 ];
+
+/* Defulat filters */
+export const DEFAULT_FILTERS = {
+  search: "",
+  shipType: [],
+  minPrice: undefined,
+  maxPrice: undefined,
+  page: 1,
+  limit: 12,
+  sortBy: "createdAt",
+  order: "desc",
+};

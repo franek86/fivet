@@ -1,17 +1,10 @@
-import { useSearchParams } from "react-router";
 import { useShips } from "../../../hooks/ships/useShips.js";
 import UserStatisticCard from "../../ui/UserStatisticCard.jsx";
 import Spinner from "../../Spinner.jsx";
 
 const OwnerDahsboardStatistic = () => {
-  // React Hooks
-  const [searchParams, setSearchParams] = useSearchParams();
-
   //Read query params from URL
-  const page = Number(searchParams.get("page") ?? 1);
-  const { ships, isLoading } = useShips({
-    page,
-  });
+  const { ships = [], isLoading } = useShips();
 
   if (isLoading) return <Spinner />;
 

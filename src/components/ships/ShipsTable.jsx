@@ -4,16 +4,16 @@ import { Ship, SlidersHorizontal, Trash2 } from "lucide-react";
 import styled from "styled-components";
 
 import Pagination from "../Pagination.jsx";
-import ShipsColumn from "./ShipsColumn.jsx";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
-import CustomTable from "../ui/CustomTable.jsx";
+
 import EmptyState from "../EmptyState.jsx";
-import Checkbox from "../ui/Checkbox.jsx";
+
 import Sort from "../ui/Sort.jsx";
 import Button from "../ui/Button.jsx";
 import Modal from "../Modal.jsx";
 import ShipFilters from "./ShipFilters.jsx";
 import AppShip from "./AddShip.jsx";
+import ShipList from "./ship-table/ShipList.jsx";
 
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useShips } from "../../hooks/ships/useShips.js";
@@ -21,8 +21,7 @@ import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
 import { useAllShipType } from "../../hooks/useShipType.js";
 import { useUser } from "../../hooks/useAuth.js";
-import { SORT_VESSEL } from "../../constants/index.js";
-import ShipList from "./ship-table/ShipList.jsx";
+import { DEFAULT_FILTERS, SORT_VESSEL } from "../../constants/index.js";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -55,18 +54,6 @@ const FilterState = styled.section`
   justify-content: center;
   gap: 1rem;
 `;
-
-/* Defulat filters */
-const DEFAULT_FILTERS = {
-  search: "",
-  shipType: [],
-  minPrice: undefined,
-  maxPrice: undefined,
-  page: 1,
-  limit: 12,
-  sortBy: "createdAt",
-  order: "desc",
-};
 
 function ShipsTable() {
   //Dispatch and actions

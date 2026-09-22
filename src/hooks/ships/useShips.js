@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { getShips } from "../../services/apiShips.js";
-import { PAGE_SIZE } from "../../constants/index.js";
 
 export const useShips = (filters) => {
   const { data, isLoading, error, isFetching } = useQuery({

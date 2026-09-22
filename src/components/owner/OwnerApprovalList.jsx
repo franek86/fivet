@@ -13,14 +13,7 @@ const tabs = [
 ];
 
 const OwnerApprovalList = () => {
-  // React Hooks
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  //Read query params from URL
-  const page = Number(searchParams.get("page") ?? 1);
-  const { ships: vessels, isLoading } = useShips({
-    page,
-  });
+  const { ships: vessels = [], isLoading } = useShips();
 
   const [activeTab, setActiveTab] = React.useState("ALL");
 

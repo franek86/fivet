@@ -1,26 +1,9 @@
 import styled from "styled-components";
 import Checkbox from "../../ui/Checkbox.jsx";
 import ShipRow from "./ShipRow.jsx";
-import { usePublishShip } from "../../../hooks/ships/usePublishShip.js";
-import { useState } from "react";
 
 const ShipList = ({ ships = [], selected = [], user, onSelectAll, onSelect }) => {
-  const { mutate } = usePublishShip();
-
   const allSelected = ships.length > 0 && selected.length === ships.length;
-
-  const [isPublish, setIsPublish] = useState(ships.isPublish);
-
-  const handleTogglePublish = (id, userId) => {
-    mutate(
-      { id, isPublished: !isPublish, userId },
-      {
-        onSuccess: () => {
-          setIsPublish((prev) => !prev);
-        },
-      },
-    );
-  };
 
   return (
     <ListWrapper>
@@ -40,15 +23,7 @@ const ShipList = ({ ships = [], selected = [], user, onSelectAll, onSelect }) =>
 
       <ListBody>
         {ships.map((ship) => (
-          <ShipRow
-            key={ship.id}
-            ship={ship}
-            selected={selected.includes(ship.id)}
-            user={user}
-            onSelect={onSelect}
-            isPublish={isPublish}
-            onHandleIsPublish={() => handleTogglePublish(ship.id, user.id)}
-          />
+          <ShipRow key={ship.id} ship={ship} selected={selected.includes(ship.id)} user={user} onSelect={onSelect} />
         ))}
       </ListBody>
     </ListWrapper>
@@ -59,7 +34,6 @@ export default ShipList;
 
 const ListWrapper = styled.div`
   width: 100%;
-  overflow: hidden;
   margin: 4rem 0;
   border: 1px solid var(--color-grey-200);
   border-radius: var(--border-radius-md);

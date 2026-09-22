@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Checkbox from "../ui/Checkbox.jsx";
+import { DEFAULT_FILTERS } from "../../constants/index.js";
 
 /* ================= styles ================= */
 
@@ -64,6 +65,10 @@ const ShipFilters = ({ shipTypes, filterState, setFilterState }) => {
     });
   };
 
+  const resetFilters = () => {
+    setFilterState(DEFAULT_FILTERS);
+  };
+
   return (
     <ShipFiltersSection>
       {/* Ship type checkboxes */}
@@ -77,7 +82,7 @@ const ShipFilters = ({ shipTypes, filterState, setFilterState }) => {
               id={t}
               label={t.name}
               position='left'
-              checked={filterState.shipTypes.includes(t.name)}
+              checked={filterState.shipTypes?.includes(t.name)}
               onChange={() => handleCheckbox("shipType", t.name)}
             />
           ))}
@@ -87,11 +92,16 @@ const ShipFilters = ({ shipTypes, filterState, setFilterState }) => {
       {/* Publish checkbox */}
       <div>
         <P>Publish filter</P>
-        <Checkbox checked={isPublished} label='Published' position='left' onChange={togglePublishFilter} />
+        <Checkbox
+          checked={filterState.isPublished}
+          label='Published'
+          position='left'
+          onChange={() => handleCheckbox("isPublished", filterState.isPublished)}
+        />
       </div>
 
       <ButtonWrap>
-        <ResetButton onClick={resetFilter}>Clear filters</ResetButton>
+        <ResetButton onClick={resetFilters}>Clear filters</ResetButton>
       </ButtonWrap>
     </ShipFiltersSection>
   );

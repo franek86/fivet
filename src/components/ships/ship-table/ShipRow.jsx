@@ -1,11 +1,39 @@
-import { formatedPrice } from "../../../utils/formattedPrice.js";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router";
 import styled from "styled-components";
-import { MoreHorizontal } from "lucide-react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 import Checkbox from "../../ui/Checkbox.jsx";
 import ToggleSwitch from "../../ui/ToggleSwitch.jsx";
+import Modal from "../../Modal.jsx";
+import ConfirmDialog from "../../ConfirmDialog.jsx";
+import Button from "../../ui/Button.jsx";
+import Dropdown from "../../ui/Dropdown.jsx";
 
-const ShipRow = ({ ship, selected, onSelect, user, isPublish, onHandleIsPublish }) => {
+import { formatedPrice } from "../../../utils/formattedPrice.js";
+import { closeModalByName, openModalByName } from "../../../slices/modalSlice.js";
+import { useDeleteShip } from "../../../hooks/ships/useDeleteShip.js";
+import { usePublishShip } from "../../../hooks/ships/usePublishShip.js";
+
+const ShipRow = ({ ship, selected, onSelect, user }) => {
+  const dispatch = useDispatch();
+  const { mutate } = useDeleteShip();
+  const { mutate: mutatePublishShip } = usePublishShip();
+
+  const [isPublish, setIsPublish] = useState(ship.isPublished);
+
+  const handleTogglePublish = (id, userId) => {
+    mutatePublishShip(
+      { id, isPublished: !isPublish, userId },
+      {
+        onSuccess: () => {
+          setIsPublish((prev) => !prev);
+        },
+      },
+    );
+  };
+
   const handleSelect = () => {
     onSelect(ship.id);
   };
@@ -30,7 +58,7 @@ const ShipRow = ({ ship, selected, onSelect, user, isPublish, onHandleIsPublish 
       {/* Publish switch button */}
       {user?.role === "ADMIN" && (
         <Cell>
-          <ToggleSwitch checked={isPublish} onChange={onHandleIsPublish} />
+          <ToggleSwitch checked={isPublish} onChange={() => handleTogglePublish(ship.id, user.id)} />
         </Cell>
       )}
 
@@ -60,10 +88,35 @@ const ShipRow = ({ ship, selected, onSelect, user, isPublish, onHandleIsPublish 
 
       {/* Actions */}
       <Actions>
-        <ActionButton type='button' aria-label={`Actions for ${ship.shipName}`}>
-          <MoreHorizontal size={18} />
-        </ActionButton>
+        <Dropdown>
+          <Button $variation='icon'>
+            <Link to={`${ship.id}`}>
+              <ButtonInner>
+                <Eye size={16} />
+                <p>View</p>
+              </ButtonInner>
+            </Link>
+          </Button>
+          <Button $variation='icon'>
+            <Link to={`edit/${ship.id}`}>
+              <ButtonInner>
+                <Pencil size={16} />
+                <p>Edit</p>
+              </ButtonInner>
+            </Link>
+          </Button>
+          <Button $variation='icon' onClick={() => dispatch(openModalByName(ship.id))}>
+            <ButtonInner>
+              <Trash2 size={16} />
+              <p>Delete</p>
+            </ButtonInner>
+          </Button>
+        </Dropdown>
       </Actions>
+
+      <Modal name={ship.id} onClose={() => dispatch(closeModalByName())}>
+        <ConfirmDialog itemName={ship.name} onConfirm={() => mutate(ship.id)} onCloseModal={() => dispatch(closeModalByName(ship.id))} />
+      </Modal>
     </Row>
   );
 };
@@ -225,24 +278,14 @@ const Actions = styled.div`
   justify-content: flex-end;
 `;
 
-const ActionButton = styled.button`
+const ButtonInner = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 1rem;
 
-  width: 3.5rem;
-  height: 3.5rem;
-
-  border: none;
-  border-radius: 50%;
-
-  background: transparent;
-  color: var(--color-text);
-
-  cursor: pointer;
-
-  &:hover {
-    background: var(--color-grey-200);
-    color: var(--color-text);
+  p {
+    text-align: start;
+    width: max-content;
   }
 `;

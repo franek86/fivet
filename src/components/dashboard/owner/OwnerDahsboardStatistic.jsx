@@ -1,10 +1,10 @@
 import { useShips } from "../../../hooks/ships/useShips.js";
 import UserStatisticCard from "../../ui/UserStatisticCard.jsx";
 import Spinner from "../../Spinner.jsx";
+import { DEFAULT_FILTERS } from "../../../constants/index.js";
 
 const OwnerDahsboardStatistic = () => {
-  //Read query params from URL
-  const { ships = [], isLoading } = useShips();
+  const { ships, isLoading } = useShips(DEFAULT_FILTERS);
 
   if (isLoading) return <Spinner />;
 

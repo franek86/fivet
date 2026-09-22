@@ -21,7 +21,9 @@ import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
 import { useAllShipType } from "../../hooks/useShipType.js";
 import { useUser } from "../../hooks/useAuth.js";
-import { DEFAULT_FILTERS, SORT_VESSEL } from "../../constants/index.js";
+import { DEFAULT_FILTERS } from "../../constants/index.js";
+import ShipToolbar from "./ship-table/ShipToolbar.jsx";
+import ShipSelectedFilters from "./ship-table/ShipSelectedFilters.jsx";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -87,6 +89,11 @@ function ShipsTable() {
     setFilterState(DEFAULT_FILTERS);
   };
 
+  /* Open filter */
+  const handleOpenFilters = () => {
+    dispatch(openModalByName("ship-filter"));
+  };
+
   // Loading, error, and empty states
   if (isLoading) {
     return <TablePlaceholder count={filterState.limit} />;
@@ -119,26 +126,15 @@ function ShipsTable() {
         <ShipFilters shipTypes={shipTypes} filterState={filterState} setFilterState={setFilterState} />
       </Modal>
 
-      <FlexWrapper>
-        <ShipFilterWrap onClick={() => dispatch(openModalByName("ship-filter"))}>
-          <SlidersHorizontal size={25} />
-          <div>Filters</div>
-        </ShipFilterWrap>
+      <ShipToolbar
+        filterState={filterState}
+        setFilterState={setFilterState}
+        selectedCount={selected.length}
+        onOpenFilters={handleOpenFilters}
+        onDeleteSelected={handleDeleteSelected}
+      />
 
-        <Sort items={SORT_VESSEL} label='Sort by:' />
-
-        {selected.length > 0 && (
-          <div>
-            <Button $variation='danger' onClick={handleDeleteSelected}>
-              <Trash2 size={14} />
-              <div>
-                Delete {selected.length} item
-                {selected.length > 1 ? "s" : ""}
-              </div>
-            </Button>
-          </div>
-        )}
-      </FlexWrapper>
+      <ShipSelectedFilters filters={filterState} />
 
       {isFetching ? (
         <TablePlaceholder count={ships.length} />

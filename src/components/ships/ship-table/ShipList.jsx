@@ -34,7 +34,6 @@ export default ShipList;
 
 const ListWrapper = styled.div`
   width: 100%;
-  margin: 4rem 0;
   border: 1px solid var(--color-grey-200);
   border-radius: var(--border-radius-md);
   background: var(--color-white);

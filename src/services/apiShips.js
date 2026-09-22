@@ -17,6 +17,7 @@ export const getShips = async (filters) => {
 
   try {
     const res = await apiClient.get("/ships", { params });
+
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

@@ -1,9 +1,11 @@
 import React from "react";
-import { useSearchParams } from "react-router";
 import styled from "styled-components";
+
 import VesselsCard from "../ui/VessselsCard.jsx";
 import Spinner from "../Spinner.jsx";
+
 import { useShips } from "../../hooks/ships/useShips.js";
+import { DEFAULT_FILTERS } from "../../constants/index.js";
 
 const tabs = [
   { label: "All Vessels", value: "ALL" },
@@ -13,21 +15,20 @@ const tabs = [
 ];
 
 const OwnerApprovalList = () => {
-  const { ships: vessels = [], isLoading } = useShips();
+  const { ships, isLoading } = useShips(DEFAULT_FILTERS);
 
   const [activeTab, setActiveTab] = React.useState("ALL");
 
-  if (isLoading) return <Spinner />;
-
-  const filteredVessels = vessels.filter((vessel) => {
+  const filteredVessels = ships?.filter((vessel) => {
     const matchesTab = activeTab === "ALL" || vessel.listingStatus === activeTab;
 
     return matchesTab;
   });
 
-  const liveCount = vessels.filter((vessel) => vessel.listingStatus === "VERIFIED").length;
+  const liveCount = ships?.filter((vessel) => vessel.listingStatus === "VERIFIED").length;
 
-  const pendingCount = vessels.filter((vessel) => vessel.listingStatus === "PENDING").length;
+  const pendingCount = ships?.filter((vessel) => vessel.listingStatus === "PENDING").length;
+  if (isLoading) return <Spinner />;
 
   return (
     <>
@@ -45,7 +46,7 @@ const OwnerApprovalList = () => {
         </Tabs>
       </Toolbar>
 
-      {filteredVessels.length === 0 ? (
+      {filteredVessels?.length === 0 ? (
         <EmptyState>
           <EmptyIcon>⚓</EmptyIcon>
 
@@ -55,7 +56,7 @@ const OwnerApprovalList = () => {
         </EmptyState>
       ) : (
         <VesselGrid>
-          {filteredVessels.map((vessel) => (
+          {filteredVessels?.map((vessel) => (
             <VesselsCard key={vessel.id} vessel={vessel} />
           ))}
         </VesselGrid>

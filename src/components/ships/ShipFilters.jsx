@@ -4,24 +4,31 @@ import { DEFAULT_FILTERS } from "../../constants/index.js";
 
 /* ================= styles ================= */
 
-const ShipFiltersSection = styled.section`
+const ShipFiltersSection = styled.aside`
+  overflow: hidden;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  width: 30rem;
   gap: 3rem;
-  padding: 2rem;
+  background-color: var(--color-white);
+  box-shadow: var(--shadow-sm);
+
+  transform: ${({ $toggleFilter }) => ($toggleFilter ? "translateX(0)" : "translateX(-100%)")};
+  padding: ${({ $toggleFilter }) => ($toggleFilter ? "2rem" : "0")};
+  border: ${({ $toggleFilter }) => ($toggleFilter ? "1px solid var(--color-border)" : "none")};
+  transition: transform 0.3s ease;
 `;
 
 const P = styled.p`
   font-size: 1.4rem;
   font-weight: 600;
   margin-right: 1rem;
-  margin-bottom: 0.7rem;
+  margin-bottom: 1.2rem;
 `;
 
 const CheckboxGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
 `;
 
@@ -52,12 +59,11 @@ const ResetButton = styled(ButtonStyle)`
   }
 `;
 
-const ShipFilters = ({ shipTypes, filterState, setFilterState }) => {
+const ShipFilters = ({ shipTypes, filterState, setFilterState, toggleFilter }) => {
   //Handle checkboxes
   const handleCheckbox = (name, value) => {
     setFilterState((current) => {
       const currentValue = current[name];
-
       return {
         ...current,
         [name]: currentValue.includes(value) ? currentValue.filter((item) => item !== value) : [...currentValue, value],
@@ -70,33 +76,35 @@ const ShipFilters = ({ shipTypes, filterState, setFilterState }) => {
   };
 
   return (
-    <ShipFiltersSection>
+    <ShipFiltersSection $toggleFilter={toggleFilter}>
       {/* Ship type checkboxes */}
 
       <div>
         <P>Ship types</P>
         <CheckboxGrid>
-          {shipTypes?.map((t) => (
-            <Checkbox
-              key={t.id}
-              id={t}
-              label={t.name}
-              position='left'
-              checked={filterState.shipTypes?.includes(t.name)}
-              onChange={() => handleCheckbox("shipType", t.name)}
-            />
-          ))}
+          {shipTypes?.map((t) => {
+            return (
+              <Checkbox
+                key={t.id}
+                id={t}
+                checked={filterState.shipType?.includes(t.name)}
+                onChange={() => handleCheckbox("shipType", t.name)}
+                label={t.name}
+                position='left'
+              />
+            );
+          })}
         </CheckboxGrid>
       </div>
 
       {/* Publish checkbox */}
       <div>
-        <P>Publish filter</P>
+        <P>Publish status</P>
         <Checkbox
           checked={filterState.isPublished}
           label='Published'
           position='left'
-          onChange={() => handleCheckbox("isPublished", filterState.isPublished)}
+          onChange={(value) => setFilterState((current) => ({ ...current, isPublished: value }))}
         />
       </div>
 

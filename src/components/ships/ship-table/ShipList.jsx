@@ -32,7 +32,7 @@ const ShipList = ({ ships = [], selected = [], user, onSelectAll, onSelect }) =>
 
 export default ShipList;
 
-const ListWrapper = styled.div`
+const ListWrapper = styled.section`
   width: 100%;
   border: 1px solid var(--color-grey-200);
   border-radius: var(--border-radius-md);

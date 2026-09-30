@@ -1,6 +1,6 @@
 import { Euro, Grid2X2, Image, Pilcrow } from "lucide-react";
 
-export const PAGE_SIZE = 10;
+export const PAGE_SIZE = 12;
 export const MAX_PAGE_BUTTONS = 2;
 export const EVENT_STATUS = [
   { value: "PLANNED", name: "Planned" },
@@ -108,10 +108,17 @@ export const SORT_VESSEL = [
 export const DEFAULT_FILTERS = {
   search: "",
   shipType: [],
+  isPublished: undefined,
   minPrice: undefined,
   maxPrice: undefined,
   page: 1,
   limit: 12,
   sortBy: "createdAt",
   order: "desc",
+};
+
+/* DEFAULT PAGINATION FILTERS */
+export const DEFAULT_PAGINATION_FILTER = {
+  page: 1,
+  limit: 12,
 };

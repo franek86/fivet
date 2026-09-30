@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 import { useUser } from "../../hooks/useAuth.js";
@@ -7,6 +6,7 @@ import NavItem from "./NavItem.jsx";
 import { useAdminSocket } from "../../hooks/useAdminSocket.js";
 import { useGetUserProfile } from "../../hooks/useProfile.js";
 import { getNavigationForRole } from "../../config/nav/index.js";
+import { DEFAULT_PAGINATION_FILTER } from "../../constants/index.js";
 
 const StyledNav = styled.nav`
   display: flex;
@@ -16,7 +16,7 @@ const StyledNav = styled.nav`
 
 function Nav() {
   const { data: user } = useUser();
-  const { data: usersData } = useGetUserProfile();
+  const { data: usersData } = useGetUserProfile(DEFAULT_PAGINATION_FILTER);
   const navLinks = getNavigationForRole(user.role);
 
   if (user.role === "ADMIN") {

@@ -20,7 +20,7 @@ const StyledCheckmark = styled.div`
   height: 2rem;
   border: 1px solid var(--color-accent-600);
   border-radius: var(--border-radius-sm);
-  background-color: ${(props) => (props.$checked ? "var(--color-accent-600)" : "transparent")};
+  background-color: ${(props) => (props.$checked ? "var(--color-accent)" : "transparent")};
   display: flex;
   align-items: center;
   justify-content: center;

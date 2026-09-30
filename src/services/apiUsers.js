@@ -1,8 +1,8 @@
 import apiClient from "./axiosConfig.js";
 
-export const getUserApi = async ({ params }) => {
+export const getUserApi = async ({ page, limit }) => {
   try {
-    const res = await apiClient.get("/users", { params });
+    const res = await apiClient.get("/users", { page, limit });
 
     return res.data;
   } catch (error) {

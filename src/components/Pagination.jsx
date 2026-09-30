@@ -1,4 +1,3 @@
-import { useSearchParams } from "react-router";
 import styled from "styled-components";
 import { MAX_PAGE_BUTTONS, PAGE_SIZE } from "../constants/index.js";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -15,16 +14,15 @@ const SytledButton = styled.button`
   align-items: center;
   justify-content: center;
   border: none;
-  background-color: var(--color-accent-600);
-  font-size: 12px;
+  background-color: var(--color-accent);
+  font-size: 1.25rem;
   font-weight: 600;
   padding: 10px 12px;
   color: var(--color-white);
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-sm);
 
   &:hover {
-    background-color: var(--color-accent);
-    color: var(--color-text);
+    background-color: var(--color-accent-600);
   }
 
   &:disabled {
@@ -34,13 +32,17 @@ const SytledButton = styled.button`
 `;
 
 const StyledNumber = styled.button`
-  background-color: ${($active) => ($active ? "var(--color-accent)" : "var(--color-accent-600)")};
+  background-color: ${({ $active }) => ($active ? "var(--color-accent-600)" : "var(--color-accent)")};
   font-size: 1.25rem;
   line-height: 1.2;
-  color: ${($active) => ($active ? "var(--color-text)" : "var(--color-text)")};
+  color: var(--color-white);
   padding: 10px 12px;
-  border-radius: var(--border-radius-lg);
+  border-radius: var(--border-radius-sm);
   border: none;
+
+  &:hover {
+    background-color: var(--color-accent-600);
+  }
 `;
 
 const P = styled.p`
@@ -50,33 +52,29 @@ const P = styled.p`
   }
 `;
 
-function Pagination({ count }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  const currentPage = !searchParams.get("page") ? 1 : Number(searchParams.get("page"));
+function Pagination({ count, page, limit, onPageChange }) {
   const pageCount = Math.ceil(count / PAGE_SIZE);
 
   const nextPage = () => {
-    const next = currentPage === pageCount ? currentPage : currentPage + 1;
-    searchParams.set("page", next);
-    setSearchParams(searchParams);
+    if (page < pageCount) {
+      onPageChange(page + 1);
+    }
   };
 
   const prevPage = () => {
-    const prev = currentPage === 1 ? currentPage : currentPage - 1;
-    searchParams.set("page", prev);
-    setSearchParams(searchParams);
+    if (page > 1) {
+      onPageChange(page - 1);
+    }
   };
 
-  function handlePageChange(page) {
-    searchParams.set("page", page);
-    setSearchParams(searchParams);
+  function handlePageChange(newPage) {
+    onPageChange(newPage);
   }
 
   const generatePageNumbers = () => {
     const pages = [];
     const half = Math.floor(MAX_PAGE_BUTTONS / 2);
-    let start = Math.max(1, currentPage - half);
+    let start = Math.max(1, page - half);
     let end = Math.min(pageCount, start + MAX_PAGE_BUTTONS - 1);
 
     if (end - start < MAX_PAGE_BUTTONS - 1) {
@@ -98,13 +96,15 @@ function Pagination({ count }) {
 
   if (count <= PAGE_SIZE) return null;
 
+  const from = (page - 1) * limit + 1;
+  const to = Math.min(page * limit, count);
+
   return (
     <SytledSection>
       <P>
-        Showing <span>{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
-        <span>{currentPage === pageCount ? count : currentPage * PAGE_SIZE}</span> of <span>{count}</span>
+        Showing <span>{from}</span> to <span>{to}</span> of <span>{count}</span>
       </P>
-      <SytledButton onClick={prevPage} disabled={currentPage === 1}>
+      <SytledButton onClick={prevPage} disabled={page === 1}>
         <ChevronLeft size={16} />
         Previous
       </SytledButton>
@@ -115,13 +115,13 @@ function Pagination({ count }) {
             ...
           </span>
         ) : (
-          <StyledNumber key={num} onClick={() => handlePageChange(num)} $active={num === currentPage}>
+          <StyledNumber key={num} onClick={() => handlePageChange(num)} $active={num === page}>
             {num}
           </StyledNumber>
         ),
       )}
 
-      <SytledButton onClick={nextPage} disabled={currentPage === pageCount}>
+      <SytledButton onClick={nextPage} disabled={page === pageCount}>
         Next
         <ChevronRight size={16} />
       </SytledButton>

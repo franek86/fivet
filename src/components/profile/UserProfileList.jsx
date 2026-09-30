@@ -1,27 +1,24 @@
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
-import { Calendar, Calendar1Icon, CalendarClock, Eye, Pencil, Trash2, TrashIcon, User, UserRound } from "lucide-react";
+import { CalendarClock, Eye, Pencil, Trash2, UserRound } from "lucide-react";
 
 import Spinner from "../Spinner.jsx";
 import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
-import TablePlaceholder from "../ui/TablePlaceholder.jsx";
-import Pagination from "../Pagination.jsx";
 import Button from "../ui/Button.jsx";
 import Dropdown from "../ui/Dropdown.jsx";
 import VerificationSelect from "./VerificationSelect.jsx";
 
 import { customFormatDate } from "../../utils/formatDate.js";
 
-import { getUserApi } from "../../services/apiUsers.js";
 import { useDeleteUserProfile, useGetUserProfile, useUpdateUserProfileVerification } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useAdminSocket } from "../../hooks/useAdminSocket.js";
+import { DEFAULT_PAGINATION_FILTER } from "../../constants/index.js";
 
 function UserProfileList() {
-  const { data, isLoading } = useGetUserProfile();
+  const { data, isLoading } = useGetUserProfile(DEFAULT_PAGINATION_FILTER);
 
   const { mutate: updateVerification } = useUpdateUserProfileVerification();
   const { mutate } = useDeleteUserProfile();

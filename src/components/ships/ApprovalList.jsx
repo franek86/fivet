@@ -6,14 +6,15 @@ import BackBtn from "../BackBtn.jsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateShipListsingStatus } from "../../services/apiShips.js";
 import { toast } from "react-toastify";
+import { DEFAULT_PAGINATION_FILTER } from "../../constants/index.js";
 
 const ApprovalList = () => {
-  const { data, isLoading } = usePendingShips();
+  const { data, isLoading } = usePendingShips(DEFAULT_PAGINATION_FILTER);
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
     mutationFn: ({ shipId, status, rejectionReason }) => updateShipListsingStatus({ shipId, status, rejectionReason }),
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Your approved ship");
       queryClient.invalidateQueries(["pending-ship"]);
     },

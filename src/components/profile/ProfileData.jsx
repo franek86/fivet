@@ -10,6 +10,7 @@ import ProfileImageUploader from "./ProfileImageUploader.jsx";
 import styled from "styled-components";
 
 import { useGetUserProfile, useUpdateProfile } from "../../hooks/useProfile.js";
+import { DEFAULT_PAGINATION_FILTER } from "../../constants/index.js";
 
 const StyledForm = styled.form`
   .profile-header {
@@ -46,7 +47,7 @@ const StyledForm = styled.form`
 `;
 
 function ProfileData() {
-  const { data, isLoading } = useGetUserProfile();
+  const { data, isLoading } = useGetUserProfile(DEFAULT_PAGINATION_FILTER);
   const { mutate: updateProfile, isPending: loadUpdateProfile } = useUpdateProfile(data);
 
   const { register, handleSubmit, setValue, watch, reset } = useForm({

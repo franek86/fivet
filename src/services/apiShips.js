@@ -9,6 +9,7 @@ export const getShips = async (filters) => {
     shipType: filters.shipType.length > 0 ? filters.shipType.join(",") : undefined,
     minPrice: filters.minPrice,
     maxPrice: filters.maxPrice,
+    isPublished: filters.isPublished,
     page: filters.page,
     limit: filters.limit,
     sortBy: filters.sortBy,
@@ -28,9 +29,14 @@ export const getShips = async (filters) => {
 /* 
   Get all pending ship wating approval
 */
-export const getPendingShips = async () => {
+export const getPendingShips = async (filters) => {
+  const params = {
+    page: filters.page,
+    limit: filters.limit,
+  };
+
   try {
-    const res = await apiClient.get("/ships/pending-ships");
+    const res = await apiClient.get("/ships/pending-ships", { params });
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

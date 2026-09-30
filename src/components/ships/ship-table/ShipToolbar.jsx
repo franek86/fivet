@@ -94,7 +94,6 @@ const Toolbar = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  margin-top: 4rem;
   margin-bottom: 1.5rem;
   min-height: 4.5rem;
 

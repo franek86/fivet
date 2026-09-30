@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 const ShipSelectedFilters = ({ filters }) => {
   const selectedFilterCount =
@@ -8,10 +9,14 @@ const ShipSelectedFilters = ({ filters }) => {
     (filters.search ? 1 : 0);
 
   return (
-    <div>
+    <SelectedFilterWrap>
       <strong>Filters ({selectedFilterCount})</strong>
-    </div>
+    </SelectedFilterWrap>
   );
 };
 
 export default ShipSelectedFilters;
+
+const SelectedFilterWrap = styled.div`
+  margin: 4rem 0 1.5rem 0;
+`;

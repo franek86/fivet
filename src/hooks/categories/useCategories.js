@@ -2,20 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { getCategories } from "../../services/apiCategories.js";
 import { PAGE_SIZE } from "../../constants/index.js";
 
-export const useCategories = ({ page = 1, limit = PAGE_SIZE, sortBy = "createdAt-desc", search }) => {
-  const [field, direction] = sortBy.split("-");
-  const sort = `${field}-${direction}`;
-
-  const queryParams = {
-    page,
-    limit,
-    sortBy: sort,
-    search,
-  };
-
+export const useCategories = (filters) => {
   const { data, isLoading, error, isFetching } = useQuery({
-    queryKey: ["categories", queryParams],
-    queryFn: () => getCategories(queryParams),
+    queryKey: ["categories", filters],
+    queryFn: () => getCategories(filters),
     keepPreviousData: true,
     staleTime: 30 * 60 * 1000,
   });

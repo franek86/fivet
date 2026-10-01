@@ -6,12 +6,13 @@ import Spinner from "../Spinner.jsx";
 import { usePendingShips } from "../../hooks/ships/usePendingShips.js";
 import { useNavigate } from "react-router";
 import { Anchor } from "lucide-react";
+import { DEFAULT_PAGINATION_FILTER } from "../../constants/index.js";
 
 const ApprovalCard = () => {
   const navigate = useNavigate();
-  const { data, isLoading } = usePendingShips();
+  const { data, isLoading } = usePendingShips(DEFAULT_PAGINATION_FILTER);
 
-  if (data?.meta?.total === 0) return;
+  //if (data?.meta?.total === 0) return;
 
   if (isLoading) return <Spinner />;
 

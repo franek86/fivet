@@ -1,5 +1,6 @@
+import { useState } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { CalendarClock, Eye, Pencil, Trash2, UserRound } from "lucide-react";
 
@@ -8,6 +9,7 @@ import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 import Button from "../ui/Button.jsx";
 import Dropdown from "../ui/Dropdown.jsx";
+import Pagination from "../Pagination.jsx";
 import VerificationSelect from "./VerificationSelect.jsx";
 
 import { customFormatDate } from "../../utils/formatDate.js";
@@ -15,10 +17,16 @@ import { customFormatDate } from "../../utils/formatDate.js";
 import { useDeleteUserProfile, useGetUserProfile, useUpdateUserProfileVerification } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useAdminSocket } from "../../hooks/useAdminSocket.js";
-import { DEFAULT_PAGINATION_FILTER } from "../../constants/index.js";
+import { DEFAULT_PAGINATION_FILTER, PAGE_SIZE } from "../../constants/index.js";
 
 function UserProfileList() {
-  const { data, isLoading } = useGetUserProfile(DEFAULT_PAGINATION_FILTER);
+  /* global search user state */
+  const searchUsers = useSelector((state) => state.search.users);
+
+  /* local pagination */
+  const [pagination, setPagination] = useState(DEFAULT_PAGINATION_FILTER);
+
+  const { data, isLoading } = useGetUserProfile({ search: searchUsers, page: 1, limit: PAGE_SIZE });
 
   const { mutate: updateVerification } = useUpdateUserProfileVerification();
   const { mutate } = useDeleteUserProfile();
@@ -147,6 +155,18 @@ function UserProfileList() {
           })}
         </UserRows>
       </TableCard>
+
+      <Pagination
+        count={data.meta?.total}
+        page={pagination.page}
+        limit={pagination.limit}
+        onPageChange={(page) =>
+          setPagination((prev) => ({
+            ...prev,
+            page,
+          }))
+        }
+      />
     </Page>
   );
 }
@@ -249,9 +269,7 @@ const HeaderCell = styled.div`
   text-transform: uppercase;
 `;
 
-const UserRows = styled.div`
-  height: 100vh;
-`;
+const UserRows = styled.div``;
 
 const UserRow = styled.div`
   display: grid;

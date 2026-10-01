@@ -112,7 +112,7 @@ export const DEFAULT_FILTERS = {
   minPrice: undefined,
   maxPrice: undefined,
   page: 1,
-  limit: 12,
+  limit: PAGE_SIZE,
   sortBy: "createdAt",
   order: "desc",
 };
@@ -120,5 +120,5 @@ export const DEFAULT_FILTERS = {
 /* DEFAULT PAGINATION FILTERS */
 export const DEFAULT_PAGINATION_FILTER = {
   page: 1,
-  limit: 12,
+  limit: PAGE_SIZE,
 };

@@ -14,7 +14,15 @@ export const getAllShipTypes = async () => {
 /* 
     Get all categories with pagination
 */
-export const getCategories = async (params = {}) => {
+export const getCategories = async (filters) => {
+  const params = {
+    search: filters.search || undefined,
+    page: filters.page,
+    limit: filters.limit,
+    sortBy: filters.sortBy,
+    order: filters.order,
+  };
+
   try {
     const res = await apiClient.get("shipType", { params });
     return res.data;

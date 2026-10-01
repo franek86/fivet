@@ -3,9 +3,10 @@ import { useSelector } from "react-redux";
 import UserProfileList from "../../components/profile/UserProfileList.jsx";
 import Title from "../../components/ui/Title.jsx";
 import Unauthorized from "../Unauthorized.jsx";
-import SearchBar from "../../components/SearchBar.jsx";
+
 import styled from "styled-components";
 import { useUser } from "../../hooks/useAuth.js";
+import UsersSearch from "../../components/profile/UsersSearch.jsx";
 
 const Flex = styled.div`
   display: flex;
@@ -29,7 +30,7 @@ function Users() {
       <div className='search-container'>
         <Title tag='h1'>Users</Title>
         <div className='search-container-right'>
-          <SearchBar />
+          <UsersSearch />
         </div>
       </div>
       <UserProfileList />

@@ -1,5 +1,4 @@
 import Title from "../../components/ui/Title.jsx";
-import SearchBar from "../../components/SearchBar.jsx";
 import NotificationLists from "../../components/notification/NotificationLists.jsx";
 
 function Notifications() {
@@ -7,10 +6,6 @@ function Notifications() {
     <>
       <div className='search-container'>
         <Title tag='h1'>Notifications</Title>
-        <div className='search-container-right'>
-          <div></div>
-          <SearchBar />
-        </div>
       </div>
       <NotificationLists />
     </>

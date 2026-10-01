@@ -1,4 +1,5 @@
 import { useState } from "react";
+import styled from "styled-components";
 import { Ship } from "lucide-react";
 
 import Pagination from "../Pagination.jsx";
@@ -8,6 +9,7 @@ import ShipToolbar from "./ship-table/ShipToolbar.jsx";
 import ShipSelectedFilters from "./ship-table/ShipSelectedFilters.jsx";
 import ShipFilters from "./ShipFilters.jsx";
 import AppShip from "./AddShip.jsx";
+import Button from "../ui/Button.jsx";
 import ShipList from "./ship-table/ShipList.jsx";
 
 import { useShips } from "../../hooks/ships/useShips.js";
@@ -17,10 +19,12 @@ import { useAllShipType } from "../../hooks/useShipType.js";
 import { useUser } from "../../hooks/useAuth.js";
 
 import { DEFAULT_FILTERS } from "../../constants/index.js";
-import styled from "styled-components";
-import Button from "../ui/Button.jsx";
+import { useSelector } from "react-redux";
 
 function ShipsTable() {
+  //Gloabal state search vessels
+  const searchVessels = useSelector((state) => state.search.vessels);
+
   //Get user
   const { data: user } = useUser();
 
@@ -33,7 +37,7 @@ function ShipsTable() {
   const { allShipType: shipTypes } = useAllShipType();
 
   //Fetch ships data using custom hook
-  const { ships = [], count = 0, isLoading } = useShips(filterState);
+  const { ships = [], count = 0, isLoading } = useShips({ ...filterState, search: searchVessels });
 
   // Custom hook for selection and deletion
   const { mutate: deleteShip } = useDeleteShip();

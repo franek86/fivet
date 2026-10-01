@@ -1,21 +1,39 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  term: "",
+  vessels: "",
+  users: "",
+  payments: "",
+  addressBook: "",
+  events: "",
+  blogs: "",
 };
 
 const searchSlice = createSlice({
   name: "search",
   initialState,
   reducers: {
-    setSearchTerm: (state, action) => {
-      state.term = action.payload;
+    setVesselsSearch: (state, action) => {
+      state.vessels = action.payload;
     },
-    clearSearchTerm: (state) => {
-      state.term = "";
+    setPaymentsSearch: (state, action) => {
+      state.payments = action.payload;
+    },
+    setAddressBookSearch: (state, action) => {
+      state.addressBook = action.payload;
+    },
+    setEventsSearch: (state, action) => {
+      state.events = action.payload;
+    },
+    setBlogsSearch: (state, action) => {
+      state.blogs = action.payload;
+    },
+    setUsersSearch: (state, action) => {
+      state.users = action.payload;
     },
   },
 });
 
-export const { setSearchTerm, clearSearchTerm } = searchSlice.actions;
+export const { setVesselsSearch, setPaymentsSearch, setAddressBookSearch, setEventsSearch, setBlogsSearch, setUsersSearch } =
+  searchSlice.actions;
 export default searchSlice.reducer;

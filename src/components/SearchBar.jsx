@@ -1,18 +1,15 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setSearchTerm } from "../slices/searchSlice.js";
-import { useLocation, useNavigate } from "react-router";
 import { Search } from "lucide-react";
+import { useDebounce } from "../hooks/useDebounce.js";
 
 const SearchWrap = styled.div`
   background-color: var(--color-white);
-  border: 1px solid var(--color-grey-200);
+  border: 1px solid var(--color-border);
   width: 100%;
   position: relative;
-  border-radius: 20px;
+  border-radius: var(--border-radius-sm);
 
   @media screen and (min-width: 640px) {
     width: 23rem;
@@ -31,76 +28,25 @@ const SearchIcon = styled(Search)`
 `;
 
 const SearchInput = styled.input`
-  font-size: 14px;
   padding: 10px 12px;
   border: none;
   width: 100%;
-  border-radius: 20px;
   background-color: transparent;
+  border-radius: var(--border-radius-sm);
 `;
 
-function SearchBar({ paramKey = "search" }) {
-  const lastKey = useRef(null);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const searchTerm = useSelector((state) => state.search.term);
-  const [inputValue, setInputValue] = useState(searchTerm || "");
+function SearchBar({ value, onChange, placeholder = "Search ..." }) {
+  const [inputValue, setInputValue] = useState(value || "");
+
+  const debouncedValue = useDebounce(inputValue);
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const query = params.get(paramKey);
-    if (query && query !== searchTerm) {
-      dispatch(setSearchTerm(query));
-      setInputValue(query);
-    }
-  }, [location.search, paramKey, dispatch, searchTerm]);
-
-  const updateSearch = useCallback(() => {
-    const params = new URLSearchParams(location.search);
-    if (inputValue) {
-      params.set(paramKey, inputValue);
-    } else {
-      params.delete(paramKey);
-    }
-    navigate({ search: params.toString() }, { replace: true });
-    dispatch(setSearchTerm(inputValue));
-  }, [inputValue, paramKey, location.search, navigate, dispatch]);
-
-  const handleKeyDown = (e) => {
-    lastKey.current = e.key;
-
-    if (e.key === "Enter") updateSearch();
-  };
-
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setInputValue(value);
-    if (lastKey.current === "Backspace") {
-      const params = new URLSearchParams(location.search);
-
-      if (value) {
-        params.set(paramKey, value);
-      } else {
-        params.delete(paramKey);
-      }
-
-      navigate({ search: params.toString() }, { replace: true });
-      dispatch(setSearchTerm(value));
-    }
-  };
+    onChange(debouncedValue);
+  }, [debouncedValue, onChange]);
 
   return (
     <SearchWrap>
-      <SearchInput
-        type='text'
-        name='search'
-        placeholder='Search ...'
-        value={inputValue}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-      />
-      <SearchIcon onClick={updateSearch} />
+      <SearchInput type='text' name='search' placeholder={placeholder} value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
     </SearchWrap>
   );
 }

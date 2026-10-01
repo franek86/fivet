@@ -1,8 +1,8 @@
 import Title from "../../components/ui/Title.jsx";
 import ShipsTable from "../../components/ships/ShipsTable.jsx";
 import AddShip from "../../components/ships/AddShip.jsx";
-import SearchBar from "../../components/SearchBar.jsx";
 import ApprovalCard from "../../components/ships/ApprovalCard.jsx";
+import VesselsSearch from "../../components/ships/VesselsSearch.jsx";
 
 function Vessels() {
   return (
@@ -10,7 +10,7 @@ function Vessels() {
       <div className='search-container'>
         <Title tag='h1'>Vessels</Title>
         <div className='search-container-right'>
-          <SearchBar />
+          <VesselsSearch />
           <AddShip />
         </div>
       </div>

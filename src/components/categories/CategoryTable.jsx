@@ -25,6 +25,7 @@ import CategoryColumn from "./CategoryColumn.jsx";
 import Button from "../ui/Button.jsx";
 import EmptyState from "../EmptyState.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
+import { useState } from "react";
 
 const Header = styled.div`
   display: flex;
@@ -34,21 +35,19 @@ const Header = styled.div`
 `;
 
 function CategoryTable() {
-  const searchTerm = useSelector((state) => state.search.term);
+  const DEFAULT_FILTERS = {
+    search: "",
+    page: 1,
+    limit: 12,
+    sortBy: "createdAt",
+    order: "desc",
+  };
 
-  // React Hooks
-  const [searchParams] = useSearchParams();
-
-  // Read params from URL
-  const page = Number(searchParams.get("pageNumber") ?? 1);
-  const sortBy = searchParams.get("sortBy") ?? "createdAt-desc";
+  //Filter state with pagination and sort
+  const [filterState, setFilterState] = useState(DEFAULT_FILTERS);
 
   // Fetch  data using custom hook
-  const { categories, count, isLoading, error, isFetching } = useCategories({
-    page,
-    sortBy,
-    search: searchTerm?.trim() || undefined,
-  });
+  const { categories, count, isLoading, error, isFetching } = useCategories(filterState);
 
   // Custom hook for selection and deletion
   const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(
@@ -58,10 +57,10 @@ function CategoryTable() {
 
   // Sort options
   const items = [
-    { value: "name-asc", name: "Sort by name (A-Z)" },
-    { value: "name-desc", name: "Sort by name (Z-A)" },
-    { value: "createdAt-desc", name: "Newest first" },
-    { value: "createdAt-asc", name: "Oldest first" },
+    { value: "nameAsc", name: "Sort by name (A-Z)" },
+    { value: "nameDesc", name: "Sort by name (Z-A)" },
+    { value: "newest", name: "Newest" },
+    { value: "oldest", name: "Oldest" },
   ];
 
   // Table columns configuration
@@ -87,10 +86,53 @@ function CategoryTable() {
 
   const renderRow = (item) => <CategoryColumn category={item} selectedCat={selected} onCheckboxChange={handleCheckboxChange} />;
 
+  const handleSortChange = (value) => {
+    let sortBy = "createdAt";
+    let order = "desc";
+
+    switch (value) {
+      case "nameAsc":
+        sortBy = "name";
+        order = "asc";
+        break;
+
+      case "nameDesc":
+        sortBy = "name";
+        order = "desc";
+        break;
+
+      case "oldest":
+        sortBy = "createdAt";
+        order = "asc";
+        break;
+
+      case "newest":
+      default:
+        sortBy = "createdAt";
+        order = "desc";
+    }
+
+    setFilterState((current) => ({
+      ...current,
+      sortBy,
+      order,
+      page: 1,
+    }));
+  };
+
+  const currentSort =
+    filterState.sortBy === "name" && filterState.order === "asc"
+      ? "nameAsc"
+      : filterState.sortBy === "name" && filterState.order === "desc"
+        ? "nameDesc"
+        : filterState.order === "asc"
+          ? "oldest"
+          : "newest";
+
   return (
     <>
       <Header>
-        <Sort items={items} label='Sort by:' />
+        <Sort items={items} value={currentSort} onChange={handleSortChange} />
         {selected.length > 0 && (
           <div>
             <Button $variation='danger' onClick={handleDeleteSelected} className='flex items-center gap-2'>
@@ -110,7 +152,17 @@ function CategoryTable() {
           <CustomTable columns={tableColumns} renderRow={renderRow} data={categories} />
         </>
       )}
-      <Pagination count={count} />
+      <Pagination
+        count={count}
+        page={filterState.page}
+        limit={filterState.limit}
+        onPageChange={(page) =>
+          setFilterState((prev) => ({
+            ...prev,
+            page,
+          }))
+        }
+      />
     </>
   );
 }

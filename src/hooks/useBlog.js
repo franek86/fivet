@@ -25,8 +25,7 @@ export const useGetBlogs = (params) => {
   const { data, isFetching, isLoading } = useQuery({
     queryKey: ["blogs", params],
     queryFn: () => getBlogsApi(params),
-    keepPreviousData: true,
-    staleTime: 5 * 60 * 1000,
+    placeholderData: (previousData) => previousData,
   });
 
   return { data, isLoading, isFetching };

@@ -47,6 +47,7 @@ function SearchBar({ value, onChange, placeholder = "Search ..." }) {
   return (
     <SearchWrap>
       <SearchInput type='text' name='search' placeholder={placeholder} value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+      <SearchIcon />
     </SearchWrap>
   );
 }

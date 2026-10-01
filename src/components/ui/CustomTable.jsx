@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 const StyledTable = styled.table`
   font-size: 1.3rem;
-  margin-top: 2.4rem;
   width: 100%;
   margin-bottom: 3rem;
 `;

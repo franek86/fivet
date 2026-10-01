@@ -1,166 +1,141 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { Globe, SlidersHorizontal, Trash2 } from "lucide-react";
 
 import BlogColumn from "./BlogColumn.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 import CustomTable from "../ui/CustomTable.jsx";
-import Spinner from "../Spinner.jsx";
 import Button from "../ui/Button.jsx";
 import TablePlaceholder from "../../components/ui/TablePlaceholder.jsx";
 import Pagination from "../Pagination.jsx";
+import BlogFilters from "./BlogFilters.jsx";
+import Sort from "../ui/Sort.jsx";
+import EmptyState from "../EmptyState.jsx";
 
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
 import { useDeleteBlog, useGetBlogs } from "../../hooks/useBlog.js";
-import { SlidersHorizontal, Trash2 } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "react-router";
 
-import BlogFilters from "./BlogFilters.jsx";
-import Sort from "../ui/Sort.jsx";
-
-const Container = styled.main`
-  position: relative;
-`;
-
-const RightBox = styled.div`
-  margin-left: ${({ $toggleBox }) => ($toggleBox ? "clamp(220px, 20vw, 320px)" : "0px")};
-`;
-
-const FlexWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 3rem;
-`;
-
-const ShipFilterWrap = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  cursor: pointer;
-  background: var(--color-accent-600);
-  color: var(--color-white);
-  border-radius: var(--border-radius-sm);
-  padding: 0.5rem 0.75rem;
-  font-size: 1.25rem;
-`;
+import { PAGE_SIZE } from "../../constants/index.js";
 
 const BlogList = () => {
-  const dispatch = useDispatch();
+  const DEFAULT_FILTERS = {
+    search: "",
+    categories: [],
+    tags: [],
+    dateFrom: undefined,
+    dateTo: undefined,
+    status: undefined,
+    page: 1,
+    limit: PAGE_SIZE,
+    sortBy: "createdAt",
+    order: "desc",
+  };
+
+  const searchBlogs = useSelector((state) => state.search.blogs);
+
   // React Hooks
-  const [searchParams, setSearchParams] = useSearchParams();
   const [filterToggle, setFilterToggle] = useState(false);
-
-  const searchTerm = useSelector((state) => state.search.term);
-
-  /* Read params from url */
-  const page = Number(searchParams.get("page") ?? 1);
-  const sortBy = searchParams.get("sortBy") ?? "createdAt-desc";
-
-  /* Checkboxe filters */
-  const checkboxFilterKeys = ["categories", "tags"];
-
-  const selectedFilters = useMemo(() => {
-    return checkboxFilterKeys.reduce((acc, key) => {
-      acc[key] = searchParams.get(key)?.split(",").filter(Boolean) || [];
-
-      return acc;
-    }, {});
-  }, [searchParams]);
-
-  // Stable filters object
-  const filters = useMemo(
-    () => ({
-      status: searchParams.get("status"),
-      categories: searchParams.get("categories"),
-      search: searchTerm?.trim() || undefined,
-      tags: searchParams.get("tags"),
-      dateFrom: searchParams.get("dateFrom"),
-      dateTo: searchParams.get("dateTo"),
-    }),
-    [searchParams, searchTerm],
-  );
+  const [filterState, setFilterState] = useState(DEFAULT_FILTERS);
 
   /* API */
   const { mutate } = useDeleteBlog();
-  const { data, isLoading, isFetching } = useGetBlogs({
-    page,
-    sortBy,
-    filters,
-  });
+  const { data, isLoading, isFetching } = useGetBlogs({ ...filterState, search: searchBlogs });
 
   /* Handle delete items */
-
   const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(
     data?.blogs,
     useDeleteBlog().mutate,
   );
 
-  /* sort item mock  */
+  //Sort
   const sortItems = [
-    { value: "title-asc", name: "Title (A-Z)" },
-    { value: "title-desc", name: "Title (Z-A)" },
-    { value: "views-asc", name: "Lowest" },
-    { value: "views-desc", name: "Most" },
-    { value: "createdAt-desc", name: "Newest first" },
-    { value: "createdAt-asc", name: "Oldest first" },
+    { value: "titleAsc", name: "Title (A-Z)" },
+    { value: "titleDesc", name: "Title (Z-A)" },
+    { value: "viewsAsc", name: "Lowest views" },
+    { value: "viewsDesc", name: "Most views" },
+    { value: "newest", name: "Newest" },
+    { value: "oldest", name: "Oldest" },
   ];
 
-  /* Handle filter checkbox */
-  const handleFilterCheckboxChange = (type, value) => {
-    const params = new URLSearchParams(searchParams);
+  //Handle sort
+  const handleSortChange = (value) => {
+    let sortBy = "createdAt";
+    let order = "desc";
 
-    const current = selectedFilters[type] || [];
+    switch (value) {
+      case "titleAsc":
+        sortBy = "title";
+        order = "asc";
+        break;
 
-    const updated = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
+      case "titleDesc":
+        sortBy = "title";
+        order = "desc";
+        break;
 
-    if (updated.length) {
-      params.set(type, updated.join(","));
-    } else {
-      params.delete(type);
+      case "viewsAsc":
+        sortBy = "view";
+        order = "asc";
+        break;
+
+      case "viewsDesc":
+        sortBy = "view";
+        order = "desc";
+        break;
+
+      case "oldest":
+        sortBy = "createdAt";
+        order = "asc";
+        break;
+
+      case "newest":
+      default:
+        sortBy = "createdAt";
+        order = "desc";
     }
 
-    if (params.toString() !== searchParams.toString()) {
-      setSearchParams(params);
-    }
+    setFilterState((current) => ({
+      ...current,
+      sortBy,
+      order,
+      page: 1,
+    }));
   };
 
-  // Function to update URL query parameters
-  const updatedQueryParams = (params) => {
-    const newParams = new URLSearchParams(searchParams);
-    Object.entries(params).forEach(([key, value]) => ((value ?? "") ? newParams.set(key, value) : newParams.delete(key)));
-    if (params.toString() !== searchParams.toString()) {
-      setSearchParams(newParams);
-    }
-  };
-
-  /*  // Apply filter values to URL and trigger data reload
-  const handleApplyFilters = ({ status, categories, tags, dateFrom, dateTo }) => {
-    updatedQueryParams({
-      status: status ? "true" : null,
-      price: priceRange ? priceRange : null,
-      shipType: shipType ? shipType : null,
-      dateFrom: dateFrom ? urlFormatDate(dateFrom) : null,
-      dateTo: dateTo ? urlFormatDate(dateTo) : null,
-    });
-  }; */
+  //Current sort
+  const currentSort =
+    filterState.sortBy === "title" && filterState.order === "asc"
+      ? "titleAsc"
+      : filterState.sortBy === "title" && filterState.order === "desc"
+        ? "titleDesc"
+        : filterState.sortBy === "views" && filterState.order === "asc"
+          ? "viewsAsc"
+          : filterState.sortBy === "views" && filterState.order === "desc"
+            ? "viewsDesc"
+            : filterState.order === "asc"
+              ? "oldest"
+              : "newest";
 
   // Reset filters and search term, update URL
   const handleResetFilter = () => {
-    dispatch(setSearchTerm(""));
-    updatedQueryParams({
-      status: null,
-      categories: null,
-      tags: null,
-      dateFrom: null,
-      dateTo: null,
-    });
+    setFilterState(DEFAULT_FILTERS);
   };
 
   /* Handle toggle filter */
   const handleFilterToggle = () => {
     setFilterToggle((prev) => !prev);
   };
+
+  //Current filters
+  /* current filters  */
+  const hasFilters =
+    Boolean(filterState.search) ||
+    filterState.categories.length > 0 ||
+    filterState.tags.length > 0 ||
+    filterState.dateFrom !== undefined ||
+    filterState.status !== undefined ||
+    filterState.dateTo !== undefined;
 
   // Table columns configuration
   const tableColumns = [
@@ -182,51 +157,140 @@ const BlogList = () => {
     { header: "Actions", accessor: "actions" },
   ];
 
-  if (isLoading && !data) {
-    return <Spinner />;
+  if (isLoading) {
+    return <TablePlaceholder count={6} />;
+  }
+
+  if (!isLoading && data?.blogs?.length === 0) {
+    if (!hasFilters) {
+      return (
+        <FilterState>
+          <h2>No blogs match in your filters</h2>
+          <p>Please clear filters or adjust your search.</p>
+          <Button onClick={() => resetFilters()}>Clear filters</Button>
+        </FilterState>
+      );
+    }
+
+    return (
+      <EmptyState message='No blogs' icon={<Globe />}>
+        <p>
+          There are no blogs to display right now. <br /> Create a blog to get started.
+        </p>
+      </EmptyState>
+    );
   }
 
   const renderRow = (item) => <BlogColumn key={item.id} data={item} selectedBlog={selected} onCheckboxChange={handleCheckboxChange} />;
 
   return (
-    <Container>
-      <BlogFilters
-        filterToggle={filterToggle}
-        selectedFilters={selectedFilters}
-        onCheckboxChange={handleFilterCheckboxChange}
-        onResetFilter={handleResetFilter}
-      />
+    <>
+      <BlogHeader>
+        <ShipFilterWrap onClick={() => handleFilterToggle()}>
+          <SlidersHorizontal size={18} />
+          <div>Filters</div>
+        </ShipFilterWrap>
 
-      <RightBox $toggleBox={filterToggle}>
-        <FlexWrapper>
-          <ShipFilterWrap onClick={() => handleFilterToggle()}>
-            <SlidersHorizontal size={25} />
-            <div>Filters</div>
-          </ShipFilterWrap>
-          <Sort items={sortItems} label='Sort by:' />
-          {selected.length > 0 && (
-            <div>
-              <Button $variation='danger' onClick={handleDeleteSelected}>
-                <Trash2 size={14} />
-                <div>
-                  Delete {selected.length} item
-                  {selected.length > 1 ? "s" : ""}
-                </div>
-              </Button>
-            </div>
-          )}
-        </FlexWrapper>
-        <div>
-          {isFetching ? (
-            <TablePlaceholder count={data.blogs.length} />
-          ) : (
-            <CustomTable columns={tableColumns} renderRow={renderRow} data={data?.blogs} />
-          )}
-        </div>
-        <Pagination count={data?.meta?.total} />
-      </RightBox>
-    </Container>
+        <Sort items={sortItems} value={currentSort} onChange={handleSortChange} />
+      </BlogHeader>
+
+      <Container $filterToggle={filterToggle}>
+        <BlogFilters
+          filterState={filterState}
+          setFilterState={setFilterState}
+          filterToggle={filterToggle}
+          onResetFilter={handleResetFilter}
+        />
+
+        <RightBox $filterToggle={filterToggle}>
+          <FlexWrapper>
+            {selected.length > 0 && (
+              <div>
+                <Button $variation='danger' onClick={handleDeleteSelected}>
+                  <Trash2 size={14} />
+                  <div>
+                    Delete {selected.length} item
+                    {selected.length > 1 ? "s" : ""}
+                  </div>
+                </Button>
+              </div>
+            )}
+          </FlexWrapper>
+          <div>
+            {isFetching ? (
+              <TablePlaceholder count={data.blogs.length} />
+            ) : (
+              <CustomTable columns={tableColumns} renderRow={renderRow} data={data?.blogs} />
+            )}
+          </div>
+          <Pagination
+            count={data?.meta?.total}
+            page={filterState.page}
+            limit={filterState.limit}
+            onPageChange={(page) =>
+              setFilterState((prev) => ({
+                ...prev,
+                page,
+              }))
+            }
+          />
+        </RightBox>
+      </Container>
+    </>
   );
 };
 
 export default BlogList;
+
+const Container = styled.main`
+  position: relative;
+  display: grid;
+  grid-template-columns: ${({ $filterToggle }) => ($filterToggle ? "30rem 1fr" : "0 1fr")};
+  gap: ${({ $filterToggle }) => ($filterToggle ? "2rem" : "0")};
+`;
+
+const BlogHeader = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 4.5rem;
+  margin-bottom: 1.5rem;
+`;
+
+const RightBox = styled.section``;
+
+const FlexWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 3rem;
+`;
+
+const ShipFilterWrap = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  height: 4rem;
+  padding: 0 1.4rem;
+  border: 1px solid var(--color-grey-300);
+  border-radius: var(--border-radius-sm);
+  background: var(--color-white);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-grey-700);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+`;
+
+const FilterState = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 4rem;
+`;

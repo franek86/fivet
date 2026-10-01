@@ -3,7 +3,7 @@
  */
 
 import styled from "styled-components";
-import { Trash2 } from "lucide-react";
+import { LucideSortAsc, Trash2 } from "lucide-react";
 
 /**
  * Custom Hooks
@@ -63,7 +63,12 @@ function CategoryTable() {
 
   if (isLoading) return <Spinner />;
   if (error) return <div>Error something went wrong</div>;
-  if (data.length < 1) return <EmptyState message='No categories for now. Please create category' />;
+  if (data.length < 1)
+    return (
+      <EmptyState message='No blog categories' icon={<LucideSortAsc />}>
+        <p>Please add blog categories</p>
+      </EmptyState>
+    );
 
   const renderRow = (item) => (
     <CategoryColumn key={item.id} category={item} selectedCat={selected} onCheckboxChange={handleCheckboxChange} />

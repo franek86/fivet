@@ -12,6 +12,8 @@ import Button from "../ui/Button.jsx";
 import { useGetPayments } from "../../hooks/usePayments.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
 import { CreditCard, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { PAGE_SIZE } from "../../constants/index.js";
 
 const Header = styled.div`
   display: flex;
@@ -21,8 +23,21 @@ const Header = styled.div`
 `;
 
 function PaymentTable() {
+  const DEFAULT_FILTERS = {
+    search: "",
+    status: "",
+    dateFrom: undefined,
+    dateTo: undefined,
+    page: 1,
+    limit: PAGE_SIZE,
+    sortBy: "createdAt",
+    order: "desc",
+  };
+
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+
   // Fetch payments data from api
-  const { data, count, isLoading, isError, isFetching } = useGetPayments();
+  const { data, count, isLoading, isError, isFetching } = useGetPayments(filters);
 
   // Custom hook for selection and deletion
   const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(data);

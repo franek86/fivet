@@ -12,7 +12,20 @@ export const createBlogApi = async (data) => {
   }
 };
 
-export const getBlogsApi = async (params) => {
+export const getBlogsApi = async (filters) => {
+  const params = {
+    categories: filters.categories.length > 0 ? filters.categories.join(",") : undefined,
+    tags: filters.tags.length > 0 ? filters.tags.join(",") : undefined,
+    dateFrom: filters.dateFrom,
+    dateTo: filters.dateTo,
+    status: filters.status,
+    search: filters.search || undefined,
+    page: filters.page,
+    limit: filters.limit,
+    sortBy: filters.sortBy,
+    order: filters.order,
+  };
+
   try {
     const res = await apiClient.get("/posts", { params });
 

@@ -1,13 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { deletePayment, getPayments, getPaymentSession } from "../services/apiPayments.js";
+import { deletePayment, getPayments } from "../services/apiPayments.js";
 import { toast } from "react-toastify";
 
-export const useGetPayments = () => {
-  const queryParams = {};
-
+export const useGetPayments = (params) => {
   const { data, isLoading, isError, isFetching } = useQuery({
-    queryKey: ["payments", queryParams],
-    queryFn: () => getPayments(queryParams),
+    queryKey: ["payments", params],
+    queryFn: () => getPayments(params),
     keepPreviousData: true,
   });
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
@@ -7,16 +7,18 @@ import { toast } from "react-toastify";
 import { Anchor, MessageCircleMore, ShieldCheck } from "lucide-react";
 
 import OwnerListHeader from "./OwnerListHeader.jsx";
-import Spinner from "../Spinner.jsx";
 import EmptyState from "../EmptyState.jsx";
+import Pagination from "../Pagination.jsx";
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
+import EmtpyFilterState from "../ui/EmtpyFilterState.jsx";
 
+import { setClearSearch } from "../../slices/searchSlice.js";
 import { getOwnerLists } from "../../services/apiUsers.js";
 import { sendRequestToOwner } from "../../services/apiBrokerAssignment.js";
 import { PAGE_SIZE } from "../../constants/index.js";
 
 const OwnerList = () => {
   const DEFAULT_FILTERS = {
-    search: "",
     page: 1,
     limit: PAGE_SIZE,
     sortBy: "createdAt",
@@ -25,6 +27,7 @@ const OwnerList = () => {
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const dispatch = useDispatch();
   const searchOwners = useSelector((state) => state.search.owners);
 
   //Local state
@@ -33,8 +36,10 @@ const OwnerList = () => {
 
   /* get all owners */
   const { data, isLoading } = useQuery({
-    queryKey: ["owners", filters],
+    queryKey: ["owners", { ...filters, search: searchOwners }],
     queryFn: () => getOwnerLists({ ...filters, search: searchOwners }),
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
   });
 
   const sendRequestMutation = useMutation({
@@ -61,14 +66,28 @@ const OwnerList = () => {
     navigate("/broker/chat");
   };
 
-  if (isLoading) return <Spinner />;
+  /* Current filters */
+  const hasFilters = Boolean(filters.search);
 
-  if (data.owners?.length < 1)
+  /* Reset filters */
+  const resetFilters = () => {
+    dispatch(setClearSearch("owners"));
+    setFilters(DEFAULT_FILTERS);
+  };
+
+  if (isLoading) return <TablePlaceholder count={filters.limit} />;
+
+  if (!isLoading && data.owners?.length < 1) {
+    if (!hasFilters) {
+      return <EmtpyFilterState title='No owners match in your filters' onHandleReset={resetFilters} />;
+    }
+
     return (
       <EmptyState message='No verified owner' icon={<Anchor />}>
         <p>Owners must by verifed by admin.</p>
       </EmptyState>
     );
+  }
 
   return (
     <Container>
@@ -168,6 +187,18 @@ const OwnerList = () => {
           );
         })}
       </OwnerListWrapper>
+
+      <Pagination
+        count={data.meta?.total}
+        page={filters.page}
+        limit={filters.limit}
+        onPageChange={(page) =>
+          setFilters((prev) => ({
+            ...prev,
+            page,
+          }))
+        }
+      />
     </Container>
   );
 };

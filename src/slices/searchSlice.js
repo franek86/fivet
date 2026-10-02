@@ -28,12 +28,26 @@ const searchSlice = createSlice({
     setBlogsSearch: (state, action) => {
       state.blogs = action.payload;
     },
-    setUsersSearch: (state, action) => {
-      state.users = action.payload;
+
+    setSearch: (state, action) => {
+      const { key, value } = action.payload;
+      state[key] = value;
+    },
+
+    setClearSearch: (state, action) => {
+      state[action.payload] = "";
     },
   },
 });
 
-export const { setVesselsSearch, setPaymentsSearch, setAddressBookSearch, setOwnersSearch, setBlogsSearch, setUsersSearch } =
-  searchSlice.actions;
+export const {
+  setSearch,
+  setVesselsSearch,
+  setPaymentsSearch,
+  setAddressBookSearch,
+  setOwnersSearch,
+  setBlogsSearch,
+  setUsersSearch,
+  setClearSearch,
+} = searchSlice.actions;
 export default searchSlice.reducer;

@@ -211,7 +211,6 @@ const ShipsForm = () => {
     return new Intl.NumberFormat("en-US").format(number);
   };
 
-  console.log(errors);
   if (isLoading) return <Spinner />;
   if (isError) return <div>Error</div>;
 

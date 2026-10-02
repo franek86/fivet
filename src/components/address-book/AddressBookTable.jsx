@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 /**
  * Third-party libraries
@@ -16,7 +17,7 @@ import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
  * UI Components
  */
 import Sort from "../ui/Sort.jsx";
-import Spinner from "../Spinner.jsx";
+import EmptyFilterState from "../ui/EmtpyFilterState.jsx";
 import AddressBookColumn from "./AddressBookColumn.jsx";
 import CustomTable from "../ui/CustomTable.jsx";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
@@ -24,24 +25,24 @@ import EmptyState from "../EmptyState.jsx";
 import Button from "../ui/Button.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 
+import { setClearSearch } from "../../slices/searchSlice.js";
 import { PAGE_SIZE } from "../../constants/index.js";
-import { useSelector } from "react-redux";
 
 function AddressBookTable() {
   const DEFAULT_FILTERS = {
-    search: "",
     page: 1,
     limit: PAGE_SIZE,
     sortBy: "createdAt",
     order: "desc",
   };
 
-  const searchAddressBook = useSelector((state) => state.search.addressBook);
+  const dispatch = useDispatch();
+  const searchFilter = useSelector((state) => state.search.addressBook);
 
   //Lolcal state
   const [filterState, setFilterState] = useState(DEFAULT_FILTERS);
 
-  const { data, isLoading, isFetching } = useGetAddressBook({ ...filterState, search: searchAddressBook });
+  const { data, isLoading, isFetching } = useGetAddressBook({ ...filterState, search: searchFilter });
   const { mutate } = useDeleteAddressBook();
   const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(data, mutate);
 
@@ -85,6 +86,7 @@ function AddressBookTable() {
   // Reset filters
   const resetFilters = () => {
     setFilterState(DEFAULT_FILTERS);
+    dispatch(setClearSearch("addressBook"));
   };
 
   const tableColumns = [
@@ -111,15 +113,9 @@ function AddressBookTable() {
     <AddressBookColumn key={item.id} addressBook={item} selectedAddress={selected} onCheckboxChange={handleCheckboxChange} />
   );
 
-  if (!isLoading && data.address.length === 0) {
+  if (!isLoading && data.address?.length === 0) {
     if (!hasFilters) {
-      return (
-        <FilterState>
-          <h2>No address book match in your filters</h2>
-          <p>Please clear filters or adjust your search.</p>
-          <Button onClick={() => resetFilters()}>Clear filters</Button>
-        </FilterState>
-      );
+      return <EmptyFilterState title='No address book match in your filters' onHandleReset={resetFilters} />;
     }
 
     return (

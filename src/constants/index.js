@@ -106,7 +106,6 @@ export const SORT_VESSEL = [
 
 /* Defulat filters */
 export const DEFAULT_FILTERS = {
-  search: "",
   shipType: [],
   isPublished: undefined,
   minPrice: undefined,

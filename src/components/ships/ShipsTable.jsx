@@ -9,7 +9,6 @@ import ShipToolbar from "./ship-table/ShipToolbar.jsx";
 import ShipSelectedFilters from "./ship-table/ShipSelectedFilters.jsx";
 import ShipFilters from "./ShipFilters.jsx";
 import AppShip from "./AddShip.jsx";
-import Button from "../ui/Button.jsx";
 import ShipList from "./ship-table/ShipList.jsx";
 
 import { useShips } from "../../hooks/ships/useShips.js";
@@ -19,10 +18,13 @@ import { useAllShipType } from "../../hooks/useShipType.js";
 import { useUser } from "../../hooks/useAuth.js";
 
 import { DEFAULT_FILTERS } from "../../constants/index.js";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import EmtpyFilterState from "../ui/EmtpyFilterState.jsx";
+import { setClearSearch } from "../../slices/searchSlice.js";
 
 function ShipsTable() {
   //Gloabal state search vessels
+  const dispatch = useDispatch();
   const searchVessels = useSelector((state) => state.search.vessels);
 
   //Get user
@@ -53,6 +55,7 @@ function ShipsTable() {
   /* Reset filter to default */
   const resetFilters = () => {
     setFilterState(DEFAULT_FILTERS);
+    dispatch(setClearSearch("vessels"));
   };
 
   /* Open filter */
@@ -67,13 +70,7 @@ function ShipsTable() {
 
   if (!isLoading && ships?.length === 0) {
     if (!hasFilters) {
-      return (
-        <FilterState>
-          <h2>No vessels match in your filters</h2>
-          <p>Please clear filters or adjust your search.</p>
-          <Button onClick={() => resetFilters()}>Clear filters</Button>
-        </FilterState>
-      );
+      return <EmtpyFilterState title='No vessels match in your filters' onHandleReset={resetFilters} />;
     }
 
     return (

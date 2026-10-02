@@ -51,13 +51,17 @@ export const editAddressBookPriorityApi = async (id, newPriority) => {
 };
 
 /* Get address book list */
-export const fecthAddressBookApi = async (search = "") => {
-  const params = new URLSearchParams();
-
-  if (search) params.append("search", search);
+export const fecthAddressBookApi = async (filters) => {
+  const params = {
+    search: filters.search || undefined,
+    page: filters.page,
+    limit: filters.limit,
+    sortBy: filters.sortBy,
+    order: filters.order,
+  };
 
   try {
-    const res = await apiClient.get(`/address-book?${params.toString()}`);
+    const res = await apiClient.get("/address-book", { params });
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

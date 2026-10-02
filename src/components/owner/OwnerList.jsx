@@ -1,24 +1,40 @@
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
 import styled from "styled-components";
-import Spinner from "../Spinner.jsx";
-import { getOwnerLists } from "../../services/apiUsers.js";
-import { sendRequestToOwner } from "../../services/apiBrokerAssignment.js";
 import { toast } from "react-toastify";
 import { Anchor, MessageCircleMore, ShieldCheck } from "lucide-react";
+
+import OwnerListHeader from "./OwnerListHeader.jsx";
+import Spinner from "../Spinner.jsx";
 import EmptyState from "../EmptyState.jsx";
-import { useState } from "react";
-import { useNavigate } from "react-router";
+
+import { getOwnerLists } from "../../services/apiUsers.js";
+import { sendRequestToOwner } from "../../services/apiBrokerAssignment.js";
+import { PAGE_SIZE } from "../../constants/index.js";
 
 const OwnerList = () => {
+  const DEFAULT_FILTERS = {
+    search: "",
+    page: 1,
+    limit: PAGE_SIZE,
+    sortBy: "createdAt",
+    order: "desc",
+  };
+
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const searchOwners = useSelector((state) => state.search.owners);
+
+  //Local state
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [loadingOwnerId, setLoadingOwnerId] = useState(null);
 
   /* get all owners */
   const { data, isLoading } = useQuery({
-    queryKey: ["owners"],
-    queryFn: getOwnerLists,
+    queryKey: ["owners", filters],
+    queryFn: () => getOwnerLists({ ...filters, search: searchOwners }),
   });
 
   const sendRequestMutation = useMutation({
@@ -30,7 +46,6 @@ const OwnerList = () => {
       setLoadingOwnerId(null);
     },
     onError: (error) => {
-      console.error(error.message);
       setLoadingOwnerId(null);
     },
   });
@@ -38,7 +53,6 @@ const OwnerList = () => {
   /* Get status of requests */
   const getStatus = (owner) => {
     if (!owner.ownerRequestsReceived[0]?.status) return "NOT_CONNECTED";
-
     return owner.ownerRequestsReceived[0]?.status;
   };
 
@@ -58,14 +72,7 @@ const OwnerList = () => {
 
   return (
     <Container>
-      <Header>
-        <div>
-          <Title>Owners</Title>
-          <Subtitle>Find verified owners and connect with them.</Subtitle>
-        </div>
-
-        <Count>{data.owners?.length} owners</Count>
-      </Header>
+      <OwnerListHeader data={data} />
 
       <OwnerListWrapper>
         {data.owners.map((owner) => {
@@ -169,35 +176,6 @@ export default OwnerList;
 
 const Container = styled.div`
   width: 100%;
-`;
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-`;
-
-const Title = styled.h2`
-  margin: 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--color-text);
-`;
-
-const Subtitle = styled.p`
-  margin: 5px 0 0;
-  font-size: 14px;
-  color: var(--color-text-muted);
-`;
-
-const Count = styled.span`
-  padding: 6px 10px;
-  border-radius: 8px;
-  background: var(--color-grey-200);
-  color: var(--color-text);
-  font-size: 13px;
-  font-weight: 600;
 `;
 
 const OwnerListWrapper = styled.div`

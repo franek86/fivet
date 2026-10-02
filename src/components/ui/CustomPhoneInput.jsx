@@ -14,8 +14,6 @@ const CustomPhoneInput = forwardRef(({ control, name, label, defaultValue }, ref
     staleTime: 1000 * 60 * 60 * 24 * 7,
   });
 
-  console.log(data);
-
   useEffect(() => {
     fetch("http://ip-api.com/json")
       .then((res) => res.json())

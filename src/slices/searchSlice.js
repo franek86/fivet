@@ -5,7 +5,7 @@ const initialState = {
   users: "",
   payments: "",
   addressBook: "",
-  events: "",
+  owners: "",
   blogs: "",
 };
 
@@ -22,8 +22,8 @@ const searchSlice = createSlice({
     setAddressBookSearch: (state, action) => {
       state.addressBook = action.payload;
     },
-    setEventsSearch: (state, action) => {
-      state.events = action.payload;
+    setOwnersSearch: (state, action) => {
+      state.owners = action.payload;
     },
     setBlogsSearch: (state, action) => {
       state.blogs = action.payload;
@@ -34,6 +34,6 @@ const searchSlice = createSlice({
   },
 });
 
-export const { setVesselsSearch, setPaymentsSearch, setAddressBookSearch, setEventsSearch, setBlogsSearch, setUsersSearch } =
+export const { setVesselsSearch, setPaymentsSearch, setAddressBookSearch, setOwnersSearch, setBlogsSearch, setUsersSearch } =
   searchSlice.actions;
 export default searchSlice.reducer;

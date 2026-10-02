@@ -10,6 +10,7 @@ import {
 } from "../services/apiAddressBook.js";
 import { toast } from "react-toastify";
 import { closeModalByName } from "../slices/modalSlice.js";
+import { useParams } from "react-router";
 
 export const useCreateAddressBook = () => {
   const dispatch = useDispatch();
@@ -29,16 +30,11 @@ export const useCreateAddressBook = () => {
   return { mutate, isPending, isSuccess };
 };
 
-export const useGetAddressBook = () => {
-  const searchTerm = useSelector((state) => state.search.term);
-
-  const search = searchTerm?.trim() || undefined;
-
+export const useGetAddressBook = (params) => {
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["address-book", search],
-    queryFn: () => fecthAddressBookApi(search),
-    keepPreviousData: true,
-    staleTime: 30 * 60 * 1000,
+    queryKey: ["address-book", params],
+    queryFn: () => fecthAddressBookApi(params),
+    placeholderData: (previousData) => previousData,
   });
 
   return { data, isLoading, isFetching };

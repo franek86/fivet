@@ -40,129 +40,11 @@ import AddBlockDropdown from "./blog-dnd/AddBlockDropdown.jsx";
 import TextArea from "../ui/TextArea.jsx";
 import Label from "../ui/Label.jsx";
 
-/**
- * Styled component
- */
-const Container = styled.div`
-  display: grid;
-  gap: 1rem;
-
-  @media screen and (min-width: 640px) {
-    grid-template-columns: 1fr 360px;
-  }
-`;
-const FormHeader = styled.header`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 2rem;
-  margin-bottom: 4rem;
-
-  @media screen and (min-width: 640px) {
-    flex-direction: row;
-    gap: 4rem;
-  }
-`;
-
-const Row = styled.div`
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  width: 100%;
-`;
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-basis: 100%;
-  flex: 1;
-`;
-
-const ImageBannerRow = styled(Row)`
-  flex-direction: column;
-  @media screen and (min-width: 640px) {
-    flex-direction: row;
-  }
-`;
-
-const Field = styled.div`
-  margin-bottom: 2rem;
-`;
-
-const FullInput = styled.div`
-  flex: 1;
-`;
-const HeaderInput = styled(FullInput)`
-  order: 2;
-  @media screen and (min-width: 640px) {
-    order: 1;
-  }
-`;
-
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  order: 1;
-
-  @media screen and (min-width: 640px) {
-    order: 2;
-  }
-`;
-
-const FixedButton = styled(Button)`
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 1000;
-`;
-
-const AccordioWrapper = styled.div`
-  background-color: var(--color-white);
-  padding: 2rem;
-`;
-
-/* ── Sidebar ── */
-const Sidebar = styled.aside`
-  border-left: 1px solid var(--color-border);
-  background: var(--color-white);
-  overflow-y: auto;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-`;
-
-const BlockFiled = styled.div`
-  .blocks {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 8px;
-    border: 1px solid var(--color-border);
-    font-size: 12px;
-    color: var(--colot-text);
-    margin-top: 8px;
-
-    .blocks-icon {
-      display: flex;
-      align-items: center;
-    }
-
-    .blocks-text {
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  }
-`;
-
 const CreateBlog = () => {
   const btnRef = useRef(null);
   const [isFixed, setIsFixed] = useState(false);
   const { mutate, isPending } = useCreateBlog();
-  const { data: categories, isLoading, error, isFetching } = useGetBlogCategories();
+  const { data: categories } = useGetBlogCategories();
 
   const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
@@ -451,3 +333,121 @@ const CreateBlog = () => {
 };
 
 export default CreateBlog;
+
+/**
+ * Styled component
+ */
+const Container = styled.div`
+  display: grid;
+  gap: 1rem;
+
+  @media screen and (min-width: 640px) {
+    grid-template-columns: 1fr 360px;
+  }
+`;
+const FormHeader = styled.header`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 4rem;
+
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+    gap: 4rem;
+  }
+`;
+
+const Row = styled.div`
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: 100%;
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+`;
+
+const ImageBannerRow = styled(Row)`
+  flex-direction: column;
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+  }
+`;
+
+const Field = styled.div`
+  margin-bottom: 2rem;
+`;
+
+const FullInput = styled.div`
+  flex: 1;
+`;
+const HeaderInput = styled(FullInput)`
+  order: 2;
+  @media screen and (min-width: 640px) {
+    order: 1;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  order: 1;
+
+  @media screen and (min-width: 640px) {
+    order: 2;
+  }
+`;
+
+const FixedButton = styled(Button)`
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+`;
+
+const AccordioWrapper = styled.div`
+  background-color: var(--color-white);
+  padding: 2rem;
+`;
+
+/* ── Sidebar ── */
+const Sidebar = styled.aside`
+  border-left: 1px solid var(--color-border);
+  background: var(--color-white);
+  overflow-y: auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+`;
+
+const BlockFiled = styled.div`
+  .blocks {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border: 1px solid var(--color-border);
+    font-size: 12px;
+    color: var(--colot-text);
+    margin-top: 8px;
+
+    .blocks-icon {
+      display: flex;
+      align-items: center;
+    }
+
+    .blocks-text {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+`;

@@ -128,7 +128,6 @@ const BlogList = () => {
   };
 
   //Current filters
-  /* current filters  */
   const hasFilters =
     Boolean(filterState.search) ||
     filterState.categories.length > 0 ||
@@ -136,6 +135,11 @@ const BlogList = () => {
     filterState.dateFrom !== undefined ||
     filterState.status !== undefined ||
     filterState.dateTo !== undefined;
+
+  const resetFilters = () => {
+    console.log(DEFAULT_FILTERS);
+    setFilterState(DEFAULT_FILTERS);
+  };
 
   // Table columns configuration
   const tableColumns = [
@@ -162,7 +166,7 @@ const BlogList = () => {
   }
 
   if (!isLoading && data?.blogs?.length === 0) {
-    if (!hasFilters) {
+    /*  if (!hasFilters) {
       return (
         <FilterState>
           <h2>No blogs match in your filters</h2>
@@ -170,7 +174,7 @@ const BlogList = () => {
           <Button onClick={() => resetFilters()}>Clear filters</Button>
         </FilterState>
       );
-    }
+    } */
 
     return (
       <EmptyState message='No blogs' icon={<Globe />}>

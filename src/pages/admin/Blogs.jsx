@@ -12,7 +12,7 @@ const Blogs = () => {
         <Title tag='h1'>Blogs</Title>
         <div className='search-container-right'>
           <BlogSearch />
-          <Link to='/blogs/create'>
+          <Link to='create'>
             <Button>Create</Button>
           </Link>
         </div>

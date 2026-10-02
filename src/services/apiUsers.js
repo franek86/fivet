@@ -26,9 +26,16 @@ export const getSingleUserProfileApi = async (id) => {
   }
 };
 
-export const getOwnerLists = async () => {
+export const getOwnerLists = async (filters) => {
+  const params = {
+    search: filters.search,
+    page: filters.page,
+    limit: filters.limit,
+    sortBy: filters.sortBy,
+    order: filters.order,
+  };
   try {
-    const res = await apiClient.get("/users/verify-owners");
+    const res = await apiClient.get("/users/verify-owners", { params });
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

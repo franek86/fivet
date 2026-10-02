@@ -1,7 +1,7 @@
 import AddAddressBook from "../../components/address-book/AddAddressBook.jsx";
+import AddressBookSearch from "../../components/address-book/AddressBookSearch.jsx";
 import AddressBookTable from "../../components/address-book/AddressBookTable.jsx";
 import Title from "../../components/ui/Title.jsx";
-import SearchBar from "../../components/SearchBar.jsx";
 
 function AddressBook() {
   return (
@@ -9,7 +9,7 @@ function AddressBook() {
       <div className='search-container'>
         <Title tag='h1'>Address book</Title>
         <div className='search-container-right'>
-          <SearchBar />
+          <AddressBookSearch />
           <AddAddressBook />
         </div>
       </div>

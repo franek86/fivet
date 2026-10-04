@@ -12,6 +12,7 @@ import Pagination from "../Pagination.jsx";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import EmtpyFilterState from "../ui/EmtpyFilterState.jsx";
 
+import { useDebounce } from "../../hooks/useDebounce.js";
 import { setClearSearch } from "../../slices/searchSlice.js";
 import { getOwnerLists } from "../../services/apiUsers.js";
 import { sendRequestToOwner } from "../../services/apiBrokerAssignment.js";
@@ -29,6 +30,7 @@ const OwnerList = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
   const searchOwners = useSelector((state) => state.search.owners);
+  const debouncedSearch = useDebounce(searchOwners, 500);
 
   //Local state
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
@@ -36,10 +38,8 @@ const OwnerList = () => {
 
   /* get all owners */
   const { data, isLoading } = useQuery({
-    queryKey: ["owners", { ...filters, search: searchOwners }],
-    queryFn: () => getOwnerLists({ ...filters, search: searchOwners }),
-    staleTime: 0,
-    gcTime: 5 * 60 * 1000,
+    queryKey: ["owners", { ...filters, search: debouncedSearch }],
+    queryFn: () => getOwnerLists({ ...filters, search: debouncedSearch }),
   });
 
   const sendRequestMutation = useMutation({

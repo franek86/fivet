@@ -7,6 +7,7 @@ const initialState = {
   addressBook: "",
   owners: "",
   blogs: "",
+  verifiedBrokers: "",
 };
 
 const searchSlice = createSlice({

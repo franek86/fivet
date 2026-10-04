@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   createAddressBoookContactApi,
   deleteSingleAddressBookApi,
@@ -10,7 +10,7 @@ import {
 } from "../services/apiAddressBook.js";
 import { toast } from "react-toastify";
 import { closeModalByName } from "../slices/modalSlice.js";
-import { useParams } from "react-router";
+import { useDebounce } from "./useDebounce.js";
 
 export const useCreateAddressBook = () => {
   const dispatch = useDispatch();
@@ -31,9 +31,16 @@ export const useCreateAddressBook = () => {
 };
 
 export const useGetAddressBook = (params) => {
+  const debouncedSearch = useDebounce(params.search, 500);
+
+  const queryParams = {
+    ...params,
+    search: debouncedSearch,
+  };
+
   const { data, isLoading, isFetching } = useQuery({
-    queryKey: ["address-book", params],
-    queryFn: () => fecthAddressBookApi(params),
+    queryKey: ["address-book", queryParams],
+    queryFn: () => fecthAddressBookApi(queryParams),
     placeholderData: (previousData) => previousData,
   });
 

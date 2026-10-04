@@ -1,11 +1,21 @@
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
-import Spinner from "../Spinner.jsx";
+import { toast } from "react-toastify";
+import { Anchor, MessageCircleMore } from "lucide-react";
+
 import { getVerifedBrokerLists } from "../../services/apiUsers.js";
 import { updateBrokerRequestToUser } from "../../services/apiBrokerAssignment.js";
-import { toast } from "react-toastify";
-import { MessageCircleMore } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useDebounce } from "../../hooks/useDebounce.js";
+
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
+import EmtpyFilterState from "../ui/EmtpyFilterState.jsx";
+import EmptyState from "../EmptyState.jsx";
+import Pagination from "../Pagination.jsx";
+import { PAGE_SIZE } from "../../constants/index.js";
+import VerifiedBrokersHeader from "./VerifiedBrokersHeader.jsx";
 
 const getStatus = (status) => {
   switch (status) {
@@ -40,15 +50,31 @@ const getStatus = (status) => {
   }
 };
 
+const DEFAULT_FILTERS = {
+  page: 1,
+  limit: PAGE_SIZE,
+  sortBy: "createdAt",
+  order: "desc",
+};
+
 const VerifiedBrokers = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const searchBrokers = useSelector((state) => state.search.verifiedBrokers);
+  const debouncedSearch = useDebounce(searchBrokers, 500);
 
+  console.log(searchBrokers);
+
+  //Local state
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+
+  //Get verified broker
   const { data, isLoading } = useQuery({
-    queryKey: ["brokers"],
-    queryFn: getVerifedBrokerLists,
+    queryKey: ["brokers", { ...filters, search: debouncedSearch }],
+    queryFn: () => getVerifedBrokerLists({ ...filters, search: debouncedSearch }),
   });
 
-  const queryClient = useQueryClient();
+  //Update broker request
   const { mutate, isPending } = useMutation({
     mutationFn: ({ brokerId, id, status }) => updateBrokerRequestToUser({ brokerId, id, status }),
     onSuccess: (data) => {
@@ -60,8 +86,6 @@ const VerifiedBrokers = () => {
       toast.error(error.message);
     },
   });
-
-  if (isLoading) return <Spinner />;
 
   const handleContact = () => {
     navigate("/owner/chat");
@@ -89,17 +113,32 @@ const VerifiedBrokers = () => {
     });
   };
 
+  /* Current filters */
+  const hasFilters = Boolean(filters.search);
+
+  /* Reset filters */
+  const resetFilters = () => {
+    dispatch(setClearSearch("verifiedBrokers"));
+    setFilters(DEFAULT_FILTERS);
+  };
+
+  if (isLoading) return <TablePlaceholder count={filters.limit} />;
+
+  if (!isLoading && data.owners?.length < 1) {
+    if (!hasFilters) {
+      return <EmtpyFilterState title='No verified brokers match in your filters' onHandleReset={resetFilters} />;
+    }
+
+    return (
+      <EmptyState message='No verified brokers' icon={<Anchor />}>
+        <p>Brokres must by verifed by admin.</p>
+      </EmptyState>
+    );
+  }
+
   return (
     <div>
-      <Header>
-        <div>
-          <Title>Verified Brokers</Title>
-          <Subtitle>Connect with verified brokers to help sell or manage your vessel.</Subtitle>
-        </div>
-
-        <SearchInput type='text' placeholder='Search brokers...' />
-      </Header>
-
+      <VerifiedBrokersHeader />
       <BrokerGrid>
         {data?.brokers.map((broker) => {
           const dataStatus = broker?.brokerRequestsSent?.[0]?.status;
@@ -163,55 +202,22 @@ const VerifiedBrokers = () => {
           );
         })}
       </BrokerGrid>
+      <Pagination
+        count={data.meta?.total}
+        page={filters.page}
+        limit={filters.limit}
+        onPageChange={(page) =>
+          setFilters((prev) => ({
+            ...prev,
+            page,
+          }))
+        }
+      />
     </div>
   );
 };
 
 export default VerifiedBrokers;
-
-const Header = styled.div`
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 24px;
-
-  @media (max-width: 700px) {
-    flex-direction: column;
-    align-items: stretch;
-  }
-`;
-
-const Title = styled.h1`
-  margin: 0 0 6px;
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--color-text);
-`;
-
-const Subtitle = styled.p`
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: 14px;
-`;
-
-const SearchInput = styled.input`
-  width: 260px;
-  height: 42px;
-  padding: 0 14px;
-  border: 1px solid var(--color-border);
-  border-radius: 10px;
-  outline: none;
-  font-size: 14px;
-
-  &:focus {
-    border-color: var(--color-grey-200);
-  }
-
-  @media (max-width: 700px) {
-    width: 100%;
-  }
-`;
 
 const BrokerGrid = styled.div`
   display: grid;

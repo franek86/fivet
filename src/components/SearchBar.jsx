@@ -36,17 +36,9 @@ const SearchInput = styled.input`
 `;
 
 function SearchBar({ value, onChange, placeholder = "Search ..." }) {
-  const [inputValue, setInputValue] = useState(value || "");
-
-  const debouncedValue = useDebounce(inputValue);
-
-  useEffect(() => {
-    onChange(debouncedValue);
-  }, [debouncedValue, onChange]);
-
   return (
     <SearchWrap>
-      <SearchInput type='text' name='search' placeholder={placeholder} value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+      <SearchInput type='text' name='search' placeholder={placeholder} value={value} onChange={(e) => onChange(e.target.value)} />
       <SearchIcon />
     </SearchWrap>
   );

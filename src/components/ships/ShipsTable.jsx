@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { Ship } from "lucide-react";
 
@@ -10,6 +11,7 @@ import ShipSelectedFilters from "./ship-table/ShipSelectedFilters.jsx";
 import ShipFilters from "./ShipFilters.jsx";
 import AppShip from "./AddShip.jsx";
 import ShipList from "./ship-table/ShipList.jsx";
+import EmtpyFilterState from "../ui/EmtpyFilterState.jsx";
 
 import { useShips } from "../../hooks/ships/useShips.js";
 import { useDeleteShip } from "../../hooks/ships/useDeleteShip.js";
@@ -18,8 +20,6 @@ import { useAllShipType } from "../../hooks/useShipType.js";
 import { useUser } from "../../hooks/useAuth.js";
 
 import { DEFAULT_FILTERS } from "../../constants/index.js";
-import { useDispatch, useSelector } from "react-redux";
-import EmtpyFilterState from "../ui/EmtpyFilterState.jsx";
 import { setClearSearch } from "../../slices/searchSlice.js";
 
 function ShipsTable() {

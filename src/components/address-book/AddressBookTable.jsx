@@ -25,7 +25,7 @@ import EmptyState from "../EmptyState.jsx";
 import Button from "../ui/Button.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 
-import { setClearSearch } from "../../slices/searchSlice.js";
+import { setSearch } from "../../slices/searchSlice.js";
 import { PAGE_SIZE } from "../../constants/index.js";
 
 function AddressBookTable() {
@@ -45,7 +45,8 @@ function AddressBookTable() {
   const { data, isLoading, isFetching } = useGetAddressBook({ ...filterState, search: searchFilter });
   const { mutate } = useDeleteAddressBook();
   const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(data, mutate);
-
+  const addresses = data?.address ?? [];
+  const totalCount = data?.meta?.total ?? 0;
   //Sort
   const sortItems = [
     { value: "newest", name: "Newest" },
@@ -81,19 +82,19 @@ function AddressBookTable() {
   const currentSort = filterState.order === "asc" ? "oldest" : "newest";
 
   // Current filters
-  const hasFilters = Boolean(filterState.search);
+  const hasFilters = Boolean(filterState.search?.trim());
 
   // Reset filters
   const resetFilters = () => {
-    setFilterState(DEFAULT_FILTERS);
-    dispatch(setClearSearch("addressBook"));
+    setFilterState({ ...DEFAULT_FILTERS });
+    dispatch(setSearch({ key: "addressBook", value: "" }));
   };
 
   const tableColumns = [
     {
       header: (
         <Checkbox
-          checked={selected?.length > 0 && selected?.length === data.address?.length}
+          checked={selected?.length > 0 && selected?.length === addresses?.length}
           onChange={(checked) => handleSelectAll(checked)}
         />
       ),
@@ -107,22 +108,24 @@ function AddressBookTable() {
     { header: "Actions", accessor: "actions" },
   ];
 
-  if (isLoading) return <TablePlaceholder count={data?.address?.length} />;
+  if (isLoading) return <TablePlaceholder count={6} />;
 
   const renderRow = (item) => (
     <AddressBookColumn key={item.id} addressBook={item} selectedAddress={selected} onCheckboxChange={handleCheckboxChange} />
   );
 
-  if (!isLoading && data.address?.length === 0) {
+  if (!isLoading && addresses.length === 0) {
+    if (totalCount === 0 && !hasFilters) {
+      return (
+        <EmptyState message='Your address book is empty.' icon={<Contact />}>
+          <p>Save trusted owners, brokers, and business contacts here for quick access and easier communication.</p>
+        </EmptyState>
+      );
+    }
+
     if (!hasFilters) {
       return <EmptyFilterState title='No address book match in your filters' onHandleReset={resetFilters} />;
     }
-
-    return (
-      <EmptyState message='Your address book is empty.' icon={<Contact />}>
-        <p>Save trusted owners, brokers, and business contacts here for quick access and easier communication.</p>
-      </EmptyState>
-    );
   }
   return (
     <>
@@ -142,9 +145,9 @@ function AddressBookTable() {
           </div>
         )}
         {isFetching ? (
-          <TablePlaceholder count={data.meta?.total} />
+          <TablePlaceholder count={totalCount} />
         ) : (
-          <CustomTable columns={tableColumns} renderRow={renderRow} data={data.address} />
+          <CustomTable columns={tableColumns} renderRow={renderRow} data={addresses} />
         )}
       </Container>
     </>

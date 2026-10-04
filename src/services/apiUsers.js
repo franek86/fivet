@@ -44,9 +44,17 @@ export const getOwnerLists = async (filters) => {
 };
 
 /* Get verified broker list */
-export const getVerifedBrokerLists = async () => {
+export const getVerifedBrokerLists = async (filters) => {
+  const params = {
+    search: filters.search,
+    page: filters.page,
+    limit: filters.limit,
+    sortBy: filters.sortBy,
+    order: filters.order,
+  };
+
   try {
-    const res = await apiClient.get("/users/verified-brokers");
+    const res = await apiClient.get("/users/verified-brokers", { params });
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

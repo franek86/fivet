@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { getShips } from "../../services/apiShips.js";
-import { useSelector } from "react-redux";
+import { useDebounce } from "../useDebounce.js";
 
 export const useShips = (filters) => {
-  const searchVessels = useSelector((state) => state.search.vessels);
+  const debouncedSearch = useDebounce(filters.search, 500);
   const params = {
     ...filters,
-    search: searchVessels,
+    search: debouncedSearch,
   };
 
   const { data, isLoading, error, isFetching } = useQuery({
     queryKey: ["ships", params],
-    queryFn: () => getShips(filters),
+    queryFn: () => getShips(params),
     placeholderData: (previousData) => previousData,
     staleTime: 0,
     gcTime: 5 * 60 * 1000,

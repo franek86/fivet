@@ -58,10 +58,10 @@ export const verifyOtpForgetPasswordApi = async ({ email, otp }) => {
 };
 
 /* RESET PASSWORD */
-export const resetPasswordApi = async ({ email, password }) => {
+export const resetPasswordApi = async ({ resetToken, password }) => {
   try {
     const res = await apiClient.post("/auth/reset-password", {
-      email,
+      resetToken,
       newPassword: password,
     });
 

@@ -25,52 +25,11 @@ import Title from "../ui/Title.jsx";
 import BackBtn from "../BackBtn.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import ResetPasswordForm from "./ResetPasswordForm.jsx";
-
-const Form = styled.form`
-  display: grid;
-  gap: 1.5rem;
-  margin: 2rem 0;
-`;
-
-const ShowOtpWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  width: 100%;
-`;
-
-const OtpInput = styled.input`
-  width: 4.5rem;
-  height: 4.5rem;
-  border-radius: var(--border-radius-sm);
-  border: 1px solidvar(--color-text-muted);
-  text-align: center;
-  font-size: 2rem;
-`;
-
-const ResendOtp = styled.p`
-  font-weight: 600;
-  color: var(--color-accent-600);
-  cursor: pointer;
-  &:hover {
-    color: var(--color-accent);
-  }
-`;
-
-const Message = styled.p`
-  font-size: 13px;
-  color: var(--color-text);
-  margin: 8px 0;
-`;
-
-const ButtonWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 2rem 0;
-`;
+import { useDispatch } from "react-redux";
+import { setResetToken } from "../../slices/authSlice.js";
 
 function ForgotPasswordForm() {
+  const dispatch = useDispatch();
   const [step, setStep] = useState("emailStep");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [userEmail, setUserEmail] = useState(null);
@@ -109,8 +68,10 @@ function ForgotPasswordForm() {
 
   const { mutate: verifyOtpMutation, isPending: verifyOtpPending } = useMutation({
     mutationFn: verifyOtpForgetPasswordApi,
-    onSuccess: () => {
+    onSuccess: (data) => {
       setStep("resetStep");
+      console.log(data);
+      dispatch(setResetToken(data.resetToken));
     },
     onError: (error) => {
       toast.error(error.message);
@@ -210,9 +171,53 @@ function ForgotPasswordForm() {
         </>
       )}
 
-      {step === "resetStep" && <ResetPasswordForm email={userEmail} />}
+      {step === "resetStep" && <ResetPasswordForm />}
     </>
   );
 }
 
 export default ForgotPasswordForm;
+
+const Form = styled.form`
+  display: grid;
+  gap: 1.5rem;
+  margin: 2rem 0;
+`;
+
+const ShowOtpWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+`;
+
+const OtpInput = styled.input`
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: var(--border-radius-sm);
+  border: 1px solidvar(--color-text-muted);
+  text-align: center;
+  font-size: 2rem;
+`;
+
+const ResendOtp = styled.p`
+  font-weight: 600;
+  color: var(--color-accent-600);
+  cursor: pointer;
+  &:hover {
+    color: var(--color-accent);
+  }
+`;
+
+const Message = styled.p`
+  font-size: 13px;
+  color: var(--color-text);
+  margin: 8px 0;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 0;
+`;

@@ -24,28 +24,12 @@ import { resetPasswordApi } from "../../services/apiAuth.js";
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
+import { useSelector } from "react-redux";
 
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Column = styled(Form)`
-  margin-bottom: 2rem;
-`;
-const PasswordWrap = styled.div`
-  position: relative;
-`;
-
-const PasswordIcon = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 4rem;
-  cursor: pointer;
-`;
-
-function ResetPasswordForm({ email }) {
+function ResetPasswordForm() {
+  const resetToken = useSelector((state) => state.auth.resetToken);
   const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const { mutate, isPending } = useMutation({
@@ -67,7 +51,7 @@ function ResetPasswordForm({ email }) {
   } = useForm({});
 
   const onSubmitPassword = ({ password }) => {
-    mutate({ email, password });
+    mutate({ resetToken, password });
   };
   return (
     <Form onSubmit={handleSubmit(onSubmitPassword)}>
@@ -110,3 +94,24 @@ function ResetPasswordForm({ email }) {
 }
 
 export default ResetPasswordForm;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Column = styled.div`
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+`;
+const PasswordWrap = styled.div`
+  position: relative;
+`;
+
+const PasswordIcon = styled.div`
+  position: absolute;
+  right: 1rem;
+  top: 4rem;
+  cursor: pointer;
+`;

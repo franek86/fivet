@@ -5,6 +5,7 @@ const initialState = {
   role: "",
   isAuthenticated: false,
   subscription: "STANDARD",
+  resetToken: null,
 };
 
 const authSlice = createSlice({
@@ -17,8 +18,11 @@ const authSlice = createSlice({
       state.subscription = action.payload?.subscription;
       state.isAuthenticated = true;
     },
+    setResetToken: (state, action) => {
+      state.resetToken = action.payload;
+    },
   },
 });
 
-export const { setUser } = authSlice.actions;
+export const { setUser, setResetToken } = authSlice.actions;
 export default authSlice.reducer;

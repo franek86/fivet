@@ -2,15 +2,10 @@ import apiClient, { setAccessToken } from "./axiosConfig.js";
 
 /* Register user */
 export const registerUser = async (data) => {
-  try {
-    const res = await apiClient.post("/auth/register", {
-      ...data,
-    });
-    return res.data;
-  } catch (error) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-  }
+  const res = await apiClient.post("/auth/register", {
+    ...data,
+  });
+  return res.data;
 };
 
 /* Verify OTP */
@@ -30,51 +25,41 @@ export const verifyOtpApi = async ({ data, subscription, otp }) => {
 
 /* FORGET PASSWORD */
 export const forgetPasswordApi = async ({ email }) => {
-  try {
-    const res = await apiClient.post("/auth/forgot-password", {
-      email,
-    });
+  const res = await apiClient.post("/auth/forgot-password", {
+    email,
+  });
 
-    return res.data;
-  } catch (error) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-  }
+  return res.data;
 };
 
 /* VERIFY OTP FORGET PASSWORD */
 export const verifyOtpForgetPasswordApi = async ({ email, otp }) => {
-  try {
-    const res = await apiClient.post("/auth/verify-forgot-password", {
-      email,
-      otp: otp.join(""),
-    });
+  const res = await apiClient.post("/auth/verify-forgot-password", {
+    email,
+    otp: otp.join(""),
+  });
 
-    return res.data;
-  } catch (error) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-  }
+  return res.data;
 };
 
 /* RESET PASSWORD */
 export const resetPasswordApi = async ({ resetToken, password }) => {
-  try {
-    const res = await apiClient.post("/auth/reset-password", {
-      resetToken,
-      newPassword: password,
-    });
+  const res = await apiClient.post("/auth/reset-password", {
+    resetToken,
+    newPassword: password,
+  });
 
-    return res.data;
-  } catch (error) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-  }
+  return res.data;
 };
 
 /* LOGIN USER */
 export const loginApi = async ({ email, password, rememberMe }) => {
-  const res = await apiClient.post("/auth/login", { email, password, rememberMe });
+  const res = await apiClient.post("/auth/login", {
+    email,
+    password,
+    rememberMe,
+  });
+
   return res.data;
 };
 

@@ -62,7 +62,8 @@ function ForgotPasswordForm() {
       startResendTimer();
     },
     onError: (error) => {
-      toast.error(error.message);
+      const message = error.response?.data?.message || "Forget password failed. Please try again.";
+      toast.error(message);
     },
   });
 
@@ -74,7 +75,8 @@ function ForgotPasswordForm() {
       dispatch(setResetToken(data.resetToken));
     },
     onError: (error) => {
-      toast.error(error.message);
+      const message = error.response?.data?.message || "Verify OTP failed. Please try again.";
+      toast.error(message);
     },
   });
 

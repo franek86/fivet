@@ -34,37 +34,6 @@ import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 
-const Form = styled.form`
-  display: grid;
-  gap: 1.5rem;
-`;
-
-const PasswordWrap = styled.div`
-  position: relative;
-`;
-
-const PasswordIcon = styled.div`
-  display: flex;
-  position: absolute;
-  right: 1rem;
-  top: 37px;
-  cursor: pointer;
-`;
-
-const RemberMeWrap = styled.div`
-  display: flex;
-  gap: 1rem;
-`;
-
-const ForgotPassword = styled(Link)`
-  font-size: 14px;
-  color: var(--color-text-muted);
-
-  &:hover {
-    color: var(--color-text);
-  }
-`;
-
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -82,7 +51,8 @@ function LoginForm() {
       navigate("/dashboard");
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message);
+      const message = error.response?.data?.message || "Login failed. Please try again.";
+      toast.error(message);
     },
   });
 
@@ -149,3 +119,34 @@ function LoginForm() {
 }
 
 export default LoginForm;
+
+const Form = styled.form`
+  display: grid;
+  gap: 1.5rem;
+`;
+
+const PasswordWrap = styled.div`
+  position: relative;
+`;
+
+const PasswordIcon = styled.div`
+  display: flex;
+  position: absolute;
+  right: 1rem;
+  top: 37px;
+  cursor: pointer;
+`;
+
+const RemberMeWrap = styled.div`
+  display: flex;
+  gap: 1rem;
+`;
+
+const ForgotPassword = styled(Link)`
+  font-size: 14px;
+  color: var(--color-text-muted);
+
+  &:hover {
+    color: var(--color-text);
+  }
+`;

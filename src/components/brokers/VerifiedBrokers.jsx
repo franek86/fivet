@@ -14,8 +14,10 @@ import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 import EmtpyFilterState from "../ui/EmtpyFilterState.jsx";
 import EmptyState from "../EmptyState.jsx";
 import Pagination from "../Pagination.jsx";
-import { PAGE_SIZE } from "../../constants/index.js";
 import VerifiedBrokersHeader from "./VerifiedBrokersHeader.jsx";
+
+import { PAGE_SIZE } from "../../constants/index.js";
+import { useUser } from "../../hooks/useAuth.js";
 
 const getStatus = (status) => {
   switch (status) {
@@ -63,10 +65,12 @@ const VerifiedBrokers = () => {
   const searchBrokers = useSelector((state) => state.search.verifiedBrokers);
   const debouncedSearch = useDebounce(searchBrokers, 500);
 
-  console.log(searchBrokers);
-
   //Local state
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
+
+  //Get current user(owner)
+  const { data: owner } = useUser();
+  const ownerId = owner?.id;
 
   //Get verified broker
   const { data, isLoading } = useQuery({
@@ -76,7 +80,7 @@ const VerifiedBrokers = () => {
 
   //Update broker request
   const { mutate, isPending } = useMutation({
-    mutationFn: ({ brokerId, id, status }) => updateBrokerRequestToUser({ brokerId, id, status }),
+    mutationFn: ({ id, brokerId, ownerId, status }) => updateBrokerRequestToUser({ id, brokerId, ownerId, status }),
     onSuccess: (data) => {
       toast.success(data);
       queryClient.invalidateQueries(["brokers"]);
@@ -93,22 +97,27 @@ const VerifiedBrokers = () => {
 
   const handleAcceptRequest = (broker) => {
     mutate({
+      id: broker.brokerRequestsSent[0].id,
       brokerId: broker.id,
+      ownerId,
       status: "ACCEPTED",
     });
   };
   const handleCancelRequest = (broker) => {
-    //console.log(broker.brokerRequestsSent[0].id);
     mutate({
-      brokerId: broker.id,
       id: broker.brokerRequestsSent[0].id,
+      brokerId: broker.id,
+      ownerId,
       status: "CANCELLED",
     });
   };
 
   const handleRejectRequest = (broker) => {
+    const id = broker.brokerRequestsSent[0].id;
     mutate({
+      id,
       brokerId: broker.id,
+      ownerId,
       status: "REJECTED",
     });
   };

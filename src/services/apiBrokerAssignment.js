@@ -11,9 +11,9 @@ export const sendRequestToOwner = async (ownerId) => {
 };
 
 /* Update broker request to user */
-export const updateBrokerRequestToUser = async ({ brokerId, id, status }) => {
+export const updateBrokerRequestToUser = async ({ id, brokerId, ownerId, status }) => {
   try {
-    const res = await apiClient.put("/broker-assignments/edit-broker-request", { brokerId, id, status });
+    const res = await apiClient.put("/broker-assignments/edit-broker-request", { id, brokerId, ownerId, status });
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

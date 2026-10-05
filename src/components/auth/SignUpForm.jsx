@@ -191,7 +191,8 @@ function SignUpForm() {
       startResendTimer();
     },
     onError: (error) => {
-      toast.error(error.message);
+      const message = error.response?.data?.message || "Register failed. Please try again.";
+      toast.error(message);
     },
   });
 

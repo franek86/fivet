@@ -39,7 +39,8 @@ function ResetPasswordForm() {
       navigate("/");
     },
     onError: (error) => {
-      toast.error(error.message);
+      const message = error.response?.data?.message || "Reset password failed. Please try again.";
+      toast.error(message);
     },
   });
 

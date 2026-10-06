@@ -1,36 +1,61 @@
-import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
-
 import { Send, Search, Paperclip } from "lucide-react";
 
-import socket from "../../shared/socket.js";
-import { fetchChatConversationApi, fetchChatMessagesApi } from "../../services/apiChat.js";
 import Spinner from "../Spinner.jsx";
+
+import { fetchChatConversationApi, fetchChatMessagesApi } from "../../services/apiChat.js";
+
+import socket from "../../shared/socket.js";
 import { useUser } from "../../hooks/useAuth.js";
 
 export default function Chat() {
   const { data: user } = useUser();
+  const queryClient = useQueryClient();
+
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
 
+  const scrollToBottomRef = useRef(null);
+
   /* get conversation */
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["conversations"],
     queryFn: () => fetchChatConversationApi(),
   });
 
+  const conversations = data?.conversations ?? [];
+
+  /* get online user from socket */
+  const { data: onlineUsersIds = [] } = useQuery({
+    queryKey: ["online-users"],
+    queryFn: () => [],
+    staleTime: Infinity,
+  });
+  const onlineUsers = new Set(onlineUsersIds);
+
   /* Get messages */
   useEffect(() => {
-    if (!selectedConversation) return;
+    if (!selectedConversation?.id) {
+      setMessages([]);
+      return;
+    }
+
+    let cancelled = false;
 
     const loadMessages = async () => {
       try {
-        const messages = await fetchChatMessagesApi(selectedConversation.id);
-        setMessages(messages);
+        setMessages([]);
+        const result = await fetchChatMessagesApi(selectedConversation.id);
+        if (!cancelled) {
+          setMessages(result);
+        }
       } catch (error) {
-        console.log(error);
+        if (!cancelled) {
+          console.error("Failed to load chat messages:", error);
+        }
       }
     };
 
@@ -54,25 +79,77 @@ export default function Chat() {
     };
   }, [selectedConversation]);
 
-  /* Join room */
+  /* Join or leave conversation */
   useEffect(() => {
-    if (!selectedConversation) return;
-
-    socket.emit("conversation:join", selectedConversation.id);
-  }, [selectedConversation]);
-
-  /* Handle new message */
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (!message.trim() || !selectedConversation) {
+    const conversationId = selectedConversation?.id;
+    if (!conversationId) {
       return;
     }
 
-    socket.emit("message:send", { conversationId: selectedConversation.id, content: message.trim() });
+    socket.emit("conversation:join", conversationId);
+
+    return () => {
+      socket.emit("conversation:leave", conversationId);
+    };
+  }, [selectedConversation?.id]);
+
+  /* Handle new message */
+  useEffect(() => {
+    const handleNewMessage = (newMessage) => {
+      if (newMessage.conversationId !== selectedConversation?.id) {
+        return;
+      }
+      setMessages((previousMessages) => {
+        const exists = previousMessages.some((item) => item.id === newMessage.id);
+        if (exists) {
+          return previousMessages;
+        }
+        return [...previousMessages, newMessage];
+      });
+    };
+    socket.on("message:new", handleNewMessage);
+    return () => {
+      socket.off("message:new", handleNewMessage);
+    };
+  }, [selectedConversation?.id]);
+
+  /* Select conversation */
+  const handleSelectConversation = (conversation) => {
+    setSelectedConversation(conversation);
+    setMessage("");
+    socket.emit("conversation:read", conversation.id);
+    queryClient.invalidateQueries({
+      queryKey: ["conversations"],
+    });
+  };
+
+  /* Handle send message */
+  const handleSendMessage = (event) => {
+    event.preventDefault();
+    const content = message.trim();
+    if (!content || !selectedConversation?.id) {
+      return;
+    }
+    socket.emit("message:send", { conversationId: selectedConversation.id, content });
     setMessage("");
   };
 
+  /* Auto scroll */
+  useEffect(() => {
+    scrollToBottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   if (isLoading) return <Spinner />;
+
+  if (isError) {
+    return (
+      <ChatWrapper>
+        <EmptyChat>
+          <h3>Unable to load conversations</h3> <p> Please try again later. </p>
+        </EmptyChat>
+      </ChatWrapper>
+    );
+  }
 
   return (
     <ChatWrapper>
@@ -88,11 +165,11 @@ export default function Chat() {
         </SearchWrapper>
 
         <ConversationList>
-          {data.conversations?.map((conversation) => (
+          {conversations.map((conversation) => (
             <Conversation
               key={conversation.id}
               $active={selectedConversation?.id === conversation.id}
-              onClick={() => setSelectedConversation(conversation)}
+              onClick={() => handleSelectConversation(conversation)}
             >
               <Avatar>
                 {conversation.user.avatar ? (
@@ -103,7 +180,8 @@ export default function Chat() {
                     .map((name) => name[0])
                     .join("")
                 )}
-                <OnlineDot />
+
+                {onlineUsers.has(conversation.user.id) && <OnlineDot />}
               </Avatar>
 
               <ConversationContent>
@@ -143,18 +221,21 @@ export default function Chat() {
           <ChatHeader>
             <UserInfo>
               <Avatar>
-                {selectedConversation.user?.avatar ? selectedConversation.user?.avatar : <div>A</div>}
-
-                {/* {selectedConversation.online && <OnlineDot />} */}
+                {selectedConversation.user?.avatar ? (
+                  selectedConversation.user?.avatar
+                ) : (
+                  <div>
+                    {}
+                    {selectedConversation.user?.name
+                      .split(" ")
+                      .map((name) => name[0])
+                      .join("")}
+                  </div>
+                )}
               </Avatar>
 
               <div>
                 <ChatName>{selectedConversation.user?.name}</ChatName>
-                {/* 
-                <Status>
-                  <StatusDot />
-                  {selectedConversation.online ? "Online" : "Offline"}
-                </Status> */}
               </div>
             </UserInfo>
           </ChatHeader>
@@ -165,14 +246,32 @@ export default function Chat() {
 
               return (
                 <MessageRow key={msg.id} $mine={isMine}>
-                  <MessageBubble $mine={isMine}>
-                    <MessageText>{msg.content}</MessageText>
+                  <MessageAvatar $mine={isMine}>
+                    <Avatar>
+                      {msg.sender?.avatar ? (
+                        <img src={conversation.user.avatar} alt={conversation.user.name} />
+                      ) : (
+                        msg.sender?.fullName
+                          .split(" ")
+                          .map((name) => name[0])
+                          .join("")
+                      )}
+                    </Avatar>
+                  </MessageAvatar>
 
-                    <MessageTime>{msg.time}</MessageTime>
-                  </MessageBubble>
+                  <MessageContent $mine={isMine}>
+                    <MessageBubble $mine={isMine}>
+                      <MessageText>{msg.content}</MessageText>
+                    </MessageBubble>
+                    <MessageTime $mine={isMine}>
+                      {msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ""}{" "}
+                    </MessageTime>
+                  </MessageContent>
                 </MessageRow>
               );
             })}
+
+            <div ref={scrollToBottomRef} />
           </Messages>
 
           <MessageForm onSubmit={handleSendMessage}>
@@ -217,6 +316,7 @@ const ChatWrapper = styled.div`
 
 const EmptyChat = styled.div`
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -433,39 +533,15 @@ const ChatName = styled.div`
   color: var(--color-text);
 `;
 
-const Status = styled.div`
-  margin-top: 3px;
-
-  display: flex;
-  align-items: center;
-  gap: 5px;
-
-  font-size: 12px;
-  color: var(--color-text-muted);
-`;
-
-const StatusDot = styled.span`
-  width: 7px;
-  height: 7px;
-
-  border-radius: 50%;
-
-  background: var(--color-success-600);
-`;
-
 /* =========================
    Messages
 ========================= */
 
 const Messages = styled.div`
   flex: 1;
-
   padding: 24px;
-
   overflow-y: auto;
-
   background: var(--color-bg);
-
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -473,21 +549,24 @@ const Messages = styled.div`
 
 const MessageRow = styled.div`
   display: flex;
-
   justify-content: ${({ $mine }) => ($mine ? "flex-end" : "flex-start")};
+  gap: 1rem;
+`;
+
+const MessageAvatar = styled.div`
+  order: ${({ $mine }) => ($mine ? "2" : "1")};
+`;
+
+const MessageContent = styled.div`
+  order: ${({ $mine }) => ($mine ? "1" : "2")};
 `;
 
 const MessageBubble = styled.div`
-  max-width: 65%;
-
+  min-width: 10rem;
   padding: 10px 13px;
-
   border-radius: ${({ $mine }) => ($mine ? "14px 14px 3px 14px" : "14px 14px 14px 3px")};
-
   background: ${({ $mine }) => ($mine ? "var(--color-accent)" : "var(--color-white)")};
-
   color: ${({ $mine }) => ($mine ? "var(--color-white)" : "var(--color-text)")};
-
   box-shadow: ${({ $mine }) => ($mine ? "none" : "var(--shadow-md)")};
 `;
 
@@ -498,12 +577,9 @@ const MessageText = styled.div`
 
 const MessageTime = styled.div`
   margin-top: 4px;
-
-  text-align: right;
-
+  text-align: center;
   font-size: 10px;
-
-  color: var(--color-white);
+  color: var(--color-text);
 `;
 
 /* =========================

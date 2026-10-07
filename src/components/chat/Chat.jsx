@@ -9,21 +9,26 @@ import { fetchChatConversationApi, fetchChatMessagesApi } from "../../services/a
 
 import socket from "../../shared/socket.js";
 import { useUser } from "../../hooks/useAuth.js";
+import { useDebounce } from "../../hooks/useDebounce.js";
 
 export default function Chat() {
   const { data: user } = useUser();
   const queryClient = useQueryClient();
 
+  const [search, setSearch] = useState("");
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
 
   const scrollToBottomRef = useRef(null);
+  const debouncedSearch = useDebounce(search.trim(), 500);
 
   /* get conversation */
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["conversations"],
-    queryFn: () => fetchChatConversationApi(),
+    queryKey: ["conversations", debouncedSearch],
+    queryFn: () => fetchChatConversationApi({ search: debouncedSearch }),
+    placeholderData: (previousData) => previousData,
+    staleTime: 30_000,
   });
 
   const conversations = data?.conversations ?? [];
@@ -161,7 +166,7 @@ export default function Chat() {
 
         <SearchWrapper>
           <Search size={18} />
-          <SearchInput placeholder='Search conversations...' />
+          <SearchInput placeholder='Search conversations...' value={search} onChange={(e) => setSearch(e.target.value)} />
         </SearchWrapper>
 
         <ConversationList>

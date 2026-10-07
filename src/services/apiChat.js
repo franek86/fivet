@@ -11,9 +11,12 @@ export const fetchChatMessagesApi = async (conversationId) => {
   }
 };
 
-export const fetchChatConversationApi = async () => {
+export const fetchChatConversationApi = async (filters) => {
+  const params = {
+    search: filters.search || undefined,
+  };
   try {
-    const response = await apiClient.get("/chat/conversations");
+    const response = await apiClient.get("/chat/conversations", { params });
     return response.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

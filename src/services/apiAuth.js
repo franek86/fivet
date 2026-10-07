@@ -66,7 +66,6 @@ export const loginApi = async ({ email, password, rememberMe }) => {
 /* Refresh token api */
 export const refreshTokenApi = async () => {
   const res = await apiClient.post("/auth/refresh-token");
-  console.log(res.data);
   setAccessToken(res.data.accessToken);
 
   return res.data;

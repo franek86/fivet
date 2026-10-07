@@ -65,18 +65,11 @@ export const loginApi = async ({ email, password, rememberMe }) => {
 
 /* Refresh token api */
 export const refreshTokenApi = async () => {
-  try {
-    const res = await apiClient.post("/auth/refresh-token");
+  const res = await apiClient.post("/auth/refresh-token");
+  console.log(res.data);
+  setAccessToken(res.data.accessToken);
 
-    if (res.data.accessToken) {
-      setAccessToken(res.data.accessToken);
-    }
-    return res.data;
-  } catch (error) {
-    setAccessToken(null);
-    const message = error.response?.data?.message || error.message || "Something went wrong";
-    throw new Error(message);
-  }
+  return res.data;
 };
 
 export const getCurrentUser = async () => {

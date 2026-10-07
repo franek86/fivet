@@ -11,9 +11,9 @@ const FullPage = styled.div`
 `;
 
 function ProtectedRoute({ allowedRoles }) {
-  const { isLoading, data: user, isError } = useUser();
+  const { isLoading, data: user, isError, isAuthenticated } = useUser();
 
-  if (!isLoading && (!user || isError)) {
+  if (!isLoading && (!isAuthenticated || isError)) {
     return <Navigate to='/' replace />;
   }
   if (user && !allowedRoles.includes(user.role)) {

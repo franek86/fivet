@@ -2,14 +2,14 @@
  * React & Hooks
  */
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, replace, useNavigate } from "react-router";
 
 /**
  * Third-party libraries
  */
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import { Eye, EyeOff } from "lucide-react";
@@ -23,7 +23,6 @@ import { loginSchema } from "../../utils/validationSchema.js";
  * Features - api,redux slices
  */
 import { loginApi } from "../../services/apiAuth.js";
-import { setUser } from "../../slices/authSlice.js";
 import { setAccessToken } from "../../services/axiosConfig.js";
 
 /**
@@ -37,18 +36,20 @@ import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const { mutate, isPending } = useMutation({
     mutationFn: ({ email, password, rememberMe }) => loginApi({ email, password, rememberMe }),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setAccessToken(data.accessToken);
-      setUser({
-        isAuthenticated: true,
+
+      await queryClient.invalidateQueries({
+        queryKey: ["user"],
       });
 
+      navigate("/dashboard", { replace: true });
       toast.success("Your are logged in");
-      navigate("/dashboard");
     },
     onError: (error) => {
       const message = error.response?.data?.message || "Login failed. Please try again.";

@@ -4,31 +4,31 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 import { getCurrentUser, logoutUserApi } from "../services/apiAuth.js";
-import { setUser } from "../slices/authSlice.js";
-import { useDispatch } from "react-redux";
+
 import { disconnectSocket } from "../shared/socket.js";
+import { setAccessToken } from "../services/axiosConfig.js";
 
 export const useUser = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["user"],
     queryFn: getCurrentUser,
     retry: false,
-    staleTime: Infinity,
+    staleTime: 5 * 60 * 1000,
     gcTime: Infinity,
   });
 
-  return { data, isLoading, isError };
+  return { data, isLoading, isError, isAuthenticated: !!data };
 };
 
 export const useLogout = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: logoutUserApi,
     onSuccess: () => {
-      dispatch(setUser({ isAuthenticated: false, user: null }));
+      setAccessToken(null);
+
       queryClient.removeQueries({ queryKey: ["user"] });
       queryClient.clear();
 

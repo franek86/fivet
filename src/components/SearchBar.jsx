@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { Search } from "lucide-react";
-import { useDebounce } from "../hooks/useDebounce.js";
 
 const SearchWrap = styled.div`
   background-color: var(--color-white);

@@ -25,11 +25,8 @@ import Title from "../ui/Title.jsx";
 import BackBtn from "../BackBtn.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import ResetPasswordForm from "./ResetPasswordForm.jsx";
-import { useDispatch } from "react-redux";
-import { setResetToken } from "../../slices/authSlice.js";
 
 function ForgotPasswordForm() {
-  const dispatch = useDispatch();
   const [step, setStep] = useState("emailStep");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [userEmail, setUserEmail] = useState(null);
@@ -71,8 +68,7 @@ function ForgotPasswordForm() {
     mutationFn: verifyOtpForgetPasswordApi,
     onSuccess: (data) => {
       setStep("resetStep");
-      console.log(data);
-      dispatch(setResetToken(data.resetToken));
+      //dispatch(setResetToken(data.resetToken));
     },
     onError: (error) => {
       const message = error.response?.data?.message || "Verify OTP failed. Please try again.";

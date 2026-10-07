@@ -7,7 +7,7 @@ import { useNavigate, useSearchParams } from "react-router";
 /**
  * Third-party libraries
  */
-import { useDispatch } from "react-redux";
+
 import { useForm, Controller } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import styled from "styled-components";
@@ -18,7 +18,7 @@ import { Eye, EyeClosed, EyeOff } from "lucide-react";
  * Features
  */
 import { registerUser, verifyOtpApi } from "../../services/apiAuth.js";
-import { setUser } from "../../slices/authSlice.js";
+
 import { countriesJson } from "../../utils/countriesJson.js";
 
 /**
@@ -26,128 +26,12 @@ import { countriesJson } from "../../utils/countriesJson.js";
  */
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
-import TextArea from "../ui/TextArea.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import Title from "../ui/Title.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
 import RolesSection from "./RolesSection.jsx";
 
-const FormWrapper = styled.form`
-  display: grid;
-  p {
-    font-size: 12px;
-    color: var(--color-text);
-    margin: 10px 0;
-  }
-`;
-
-const FormContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-
-  @media screen and (min-width: 640px) {
-    gap: 20px;
-  }
-`;
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-`;
-
-const Row = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
-
-const PasswordWrap = styled.div`
-  position: relative;
-`;
-
-const PasswordIcon = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 4rem;
-  cursor: pointer;
-`;
-
-const ShowOtpWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  width: 100%;
-`;
-
-const OtpInput = styled.input`
-  width: 4.5rem;
-  height: 4.5rem;
-  border-radius: var(--border-radius-sm);
-  border: 1px solid var(--color-border);
-  text-align: center;
-  font-size: 2rem;
-`;
-
-const ResendOtp = styled.p`
-  font-weight: 600;
-  color: var(--color-text);
-  cursor: pointer;
-  &:hover {
-    color: var(--color-text-muted);
-  }
-`;
-
-const StepIndicator = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 3rem;
-`;
-
-const StepItem = styled.div`
-  position: relative;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-
-  span {
-    display: flex;
-  }
-`;
-
-const StepCircle = styled.div`
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: ${({ $active }) => ($active ? "var(--color-accent)" : "var(--color-border)")};
-
-  color: ${({ $active }) => ($active ? "var(--color-white)" : "var(--color-text)")};
-  z-index: 2;
-`;
-
-const StepLine = styled.div`
-  position: absolute;
-  top: 18px;
-  left: 50%;
-
-  width: 100%;
-  height: 2px;
-
-  z-index: 1;
-
-  background: var(--color-border);
-`;
-
 function SignUpForm() {
-  const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
   const plan = searchParams.get("plan");
 
@@ -179,12 +63,7 @@ function SignUpForm() {
     mutationFn: registerUser,
     onSuccess: (_, formData) => {
       setUserData(formData);
-      dispatch(
-        setUser({
-          formData,
-          subscription: plan,
-        }),
-      );
+
       setShowOtp(true);
       setResend(false);
       setTimer(60);
@@ -543,3 +422,117 @@ function SignUpForm() {
 }
 
 export default SignUpForm;
+
+const FormWrapper = styled.form`
+  display: grid;
+  p {
+    font-size: 12px;
+    color: var(--color-text);
+    margin: 10px 0;
+  }
+`;
+
+const FormContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+
+  @media screen and (min-width: 640px) {
+    gap: 20px;
+  }
+`;
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+const PasswordWrap = styled.div`
+  position: relative;
+`;
+
+const PasswordIcon = styled.div`
+  position: absolute;
+  right: 1rem;
+  top: 4rem;
+  cursor: pointer;
+`;
+
+const ShowOtpWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+`;
+
+const OtpInput = styled.input`
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--color-border);
+  text-align: center;
+  font-size: 2rem;
+`;
+
+const ResendOtp = styled.p`
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  &:hover {
+    color: var(--color-text-muted);
+  }
+`;
+
+const StepIndicator = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+`;
+
+const StepItem = styled.div`
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  span {
+    display: flex;
+  }
+`;
+
+const StepCircle = styled.div`
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: ${({ $active }) => ($active ? "var(--color-accent)" : "var(--color-border)")};
+
+  color: ${({ $active }) => ($active ? "var(--color-white)" : "var(--color-text)")};
+  z-index: 2;
+`;
+
+const StepLine = styled.div`
+  position: absolute;
+  top: 18px;
+  left: 50%;
+
+  width: 100%;
+  height: 2px;
+
+  z-index: 1;
+
+  background: var(--color-border);
+`;

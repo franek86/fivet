@@ -10,6 +10,7 @@ import { fetchChatConversationApi, fetchChatMessagesApi } from "../../services/a
 import socket from "../../shared/socket.js";
 import { useUser } from "../../hooks/useAuth.js";
 import { useDebounce } from "../../hooks/useDebounce.js";
+import { useUserSocket } from "../../hooks/useUserSocket.js";
 
 export default function Chat() {
   const { data: user } = useUser();
@@ -39,11 +40,29 @@ export default function Chat() {
     queryFn: () => [],
     staleTime: Infinity,
   });
+
   const onlineUsers = new Set(onlineUsersIds);
+
+  /* Join/leave conversation */
+  useEffect(() => {
+    if (!selectedConversation?.id) {
+      return;
+    }
+
+    const conversationId = selectedConversation.id;
+
+    socket.emit("conversation:join", conversationId);
+
+    return () => {
+      socket.emit("conversation:leave", conversationId);
+    };
+  }, [selectedConversation?.id]);
 
   /* Get messages */
   useEffect(() => {
-    if (!selectedConversation?.id) {
+    const conversationId = selectedConversation?.id;
+
+    if (!conversationId) {
       setMessages([]);
       return;
     }
@@ -53,7 +72,7 @@ export default function Chat() {
     const loadMessages = async () => {
       try {
         setMessages([]);
-        const result = await fetchChatMessagesApi(selectedConversation.id);
+        const result = await fetchChatMessagesApi(conversationId);
         if (!cancelled) {
           setMessages(result);
         }
@@ -65,43 +84,22 @@ export default function Chat() {
     };
 
     loadMessages();
-  }, [selectedConversation]);
-
-  /* Handle real time messages */
-  useEffect(() => {
-    const handleNewMessage = (newMessage) => {
-      if (newMessage.conversationId !== selectedConversation?.id) {
-        return;
-      }
-
-      setMessages((prev) => [...prev, newMessage]);
-    };
-
-    socket.on("message:new", handleNewMessage);
 
     return () => {
-      socket.off("message:new", handleNewMessage);
+      cancelled = true;
     };
-  }, [selectedConversation]);
+  }, [selectedConversation?.id]);
 
-  /* Join or leave conversation */
+  /* Handle new message  in real-time*/
   useEffect(() => {
     const conversationId = selectedConversation?.id;
+
     if (!conversationId) {
       return;
     }
 
-    socket.emit("conversation:join", conversationId);
-
-    return () => {
-      socket.emit("conversation:leave", conversationId);
-    };
-  }, [selectedConversation?.id]);
-
-  /* Handle new message */
-  useEffect(() => {
     const handleNewMessage = (newMessage) => {
-      if (newMessage.conversationId !== selectedConversation?.id) {
+      if (newMessage?.conversationId !== conversationId) {
         return;
       }
       setMessages((previousMessages) => {
@@ -112,20 +110,34 @@ export default function Chat() {
         return [...previousMessages, newMessage];
       });
     };
+
+    //console.log("New message ", newMessage);
+
+    socket.emit("conversation:red", conversationId);
+    /*  if (newMessage?.senderId !== user?.id) {
+    } */
     socket.on("message:new", handleNewMessage);
+
     return () => {
       socket.off("message:new", handleNewMessage);
     };
-  }, [selectedConversation?.id]);
+  }, [selectedConversation?.id, user?.id]);
 
   /* Select conversation */
   const handleSelectConversation = (conversation) => {
     setSelectedConversation(conversation);
     setMessage("");
-    socket.emit("conversation:read", conversation.id);
-    queryClient.invalidateQueries({
-      queryKey: ["conversations"],
+
+    queryClient.setQueryData({ queryKey: ["conversations"] }, (oldData) => {
+      if (!oldData) return oldData;
+
+      return {
+        ...oldData,
+        conversations: oldData.conversations.map((item) => (item.id === conversation.id ? { ...item, unreadCount: 0 } : item)),
+      };
     });
+
+    socket.emit("conversation:read", conversation.id);
   };
 
   /* Handle send message */
@@ -188,7 +200,6 @@ export default function Chat() {
 
                 {onlineUsers.has(conversation.user.id) && <OnlineDot />}
               </Avatar>
-
               <ConversationContent>
                 <ConversationTop>
                   <Name>{conversation.user?.name}</Name>

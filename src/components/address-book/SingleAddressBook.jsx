@@ -16,83 +16,6 @@ import Title from "../ui/Title.jsx";
 import Spinner from "../Spinner.jsx";
 import { AppWindow, Building2, Earth, Mail, MapPinCheck, Phone } from "lucide-react";
 
-const FlexWrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-`;
-
-const StyledGrid = styled.div`
-  display: grid;
-  gap: 3rem;
-  padding: 20px;
-
-  @media screen and (min-width: 640px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-`;
-
-const StyledList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-const Priority = styled.div`
-  background-color: ${({ $props }) => ($props === "REGULAR" ? "var(--color-accent-600)" : "var(--color-success-600)")};
-  color: var(--color-white);
-  padding: 0.5rem 0.85rem;
-  font-size: 12px;
-  border-radius: var(--border-radius-md);
-`;
-
-const StyledItem = styled.div`
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  background-color: var(--color-grey-200);
-  border-radius: var(--border-radius-md);
-  p {
-    color: var(--color-text-muted);
-  }
-  a {
-    color: var(--color-text);
-    &:hover {
-      color: var(--color-text-muted);
-    }
-  }
-`;
-
-const StyledIcons = styled.div`
-  display: flex;
-  gap: 1rem;
-  background: var(--color-white);
-  border-radius: var(--border-radius-md);
-  box-sizing: border-box;
-  padding: 0.8rem 1.25rem;
-`;
-
-const StyledIconLink = styled.a`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    opacity: 0.6;
-  }
-`;
-
-const StyledBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-white);
-  border-radius: var(--border-radius-md);
-  box-shadow: var(--box-shadow-md);
-`;
-
 function SingleAddressBook({ id }) {
   const { data, isError, isPending } = useGetAddressBookById(id);
 
@@ -119,7 +42,7 @@ function SingleAddressBook({ id }) {
   //const [noteValue, setNoteValue] = useState(note || "");
 
   return (
-    <>
+    <StyledModalContent>
       <FlexWrap>
         <div>
           <Priority $props={priority}>{priority}</Priority>
@@ -222,8 +145,239 @@ function SingleAddressBook({ id }) {
           )}
         </StyledList>
       </StyledGrid>
-    </>
+    </StyledModalContent>
   );
 }
 
 export default SingleAddressBook;
+
+const StyledModalContent = styled.div`
+  width: 100%;
+  padding: 28px 30px 30px;
+  background: var(--color-background);
+  color: var(--color-text);
+
+  @media screen and (max-width: 640px) {
+    padding: 22px 18px 24px;
+  }
+`;
+
+/* =========================================================
+   Header
+========================================================= */
+
+const FlexWrap = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--color-border);
+
+  > div:first-child {
+    min-width: 0;
+  }
+
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+    gap: 16px;
+  }
+`;
+
+const Priority = styled.span`
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-bottom: 9px;
+  padding: 5px 9px;
+  border-radius: 999px;
+
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+
+  color: ${({ $props }) => {
+    switch ($props?.toLowerCase()) {
+      case "important":
+        return "var(--color-success)";
+      case "regular":
+        return "var(--color-white)";
+
+      default:
+        return "var(--color-text-muted)";
+    }
+  }};
+
+  background: ${({ $props }) => {
+    switch ($props?.toLowerCase()) {
+      case "important":
+        return "var(--color-success-600)";
+      case "regular":
+        return "var(--color-accent-600)";
+
+      default:
+        return "var(--color-background-muted)";
+    }
+  }};
+`;
+
+/* =========================================================
+   Social links
+========================================================= */
+
+const StyledIcons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+
+  @media screen and (max-width: 600px) {
+    width: 100%;
+  }
+`;
+
+const StyledIconLink = styled.a`
+  width: 38px;
+  height: 38px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+
+  color: var(--color-text-muted);
+  background: var(--color-background);
+
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    color: var(--color-primary);
+    background: var(--color-background-muted);
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+  }
+
+  @media screen and (max-width: 600px) {
+    width: 40px;
+    height: 40px;
+  }
+`;
+
+/* =========================================================
+   Main information
+========================================================= */
+
+const StyledGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+
+  padding-top: 26px;
+
+  @media screen and (max-width: 700px) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+`;
+
+const StyledList = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (max-width: 700px) {
+    &:not(:last-child) {
+      margin-bottom: 0;
+    }
+  }
+`;
+
+/* =========================================================
+   Individual information row
+========================================================= */
+
+const StyledItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-height: 52px;
+  padding: 10px 0;
+
+  border-bottom: 1px solid var(--color-border);
+
+  svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--color-text-muted);
+    stroke-width: 1.8;
+  }
+
+  strong {
+    display: block;
+    min-width: 0;
+
+    color: var(--color-text);
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 600;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+  }
+
+  a {
+    min-width: 0;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover strong {
+      color: var(--color-primary);
+    }
+  }
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  @media screen and (max-width: 700px) {
+    min-height: 50px;
+  }
+`;
+
+/* =========================================================
+   Note
+========================================================= */
+
+const StyledBox = styled.div`
+  margin-top: 20px;
+  padding: 16px 18px;
+
+  border: 1px solid var(--color-border);
+  border-radius: 11px;
+
+  background: var(--color-background-muted);
+
+  color: var(--color-text);
+  font-size: 13px;
+  line-height: 1.6;
+`;

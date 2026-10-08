@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 import socket from "../shared/socket.js";
 
-export function useUserSocket(userId) {
+export function useUserSocket(userId, selectedConversationId) {
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -37,42 +37,69 @@ export function useUserSocket(userId) {
 
     // Chat notification
     const handleMessageNotification = (message) => {
-      queryClient.setQueryData(["conversations"], (oldData) => {
+      const { conversationId, messageId, senderId, content, createdAt } = message;
+      const isSelected = selectedConversationId === conversationId;
+
+      queryClient.setQueriesData({ queryKey: ["conversations"] }, (oldData) => {
         if (!oldData) return oldData;
+
         return {
           ...oldData,
           conversations: oldData.conversations.map((conversation) => {
-            if (conversation.id !== message.conversationId) {
+            if (conversation.id !== conversationId) {
               return conversation;
             }
+
             return {
               ...conversation,
+
               lastMessage: {
-                id: message.messageId,
-                content: message.content,
-                senderId: message.senderId,
-                isRead: false,
-                createdAt: message.createdAt,
+                id: messageId,
+                content: content,
+                senderId: senderId,
+                isRead: isSelected,
+                createdAt: createdAt,
               },
-              lastMessageAt: message.createdAt,
-              unreadCount: conversation.unreadCount + 1,
+              lastMessageAt: createdAt,
+              unreadCount: isSelected ? 0 : (conversation.unreadCount ?? 0) + 1,
             };
           }),
         };
       });
+
+      if (isSelected) {
+        socket.emit("conversation:read", conversationId);
+      }
     };
 
     // Conversation read
     const handleConversationRead = ({ conversationId }) => {
-      queryClient.setQueryData(["conversations"], (oldData) => {
+      queryClient.setQueriesData({ queryKey: ["conversations"] }, (oldData) => {
         if (!oldData) return oldData;
+
         return {
           ...oldData,
           conversations: oldData.conversations.map((conversation) =>
-            conversation.id === conversationId ? { ...conversation, unreadCount: 0 } : conversation,
+            conversation.id === conversationId
+              ? {
+                  ...conversation,
+                  unreadCount: 0,
+                  lastMessage: conversation.lastMessage
+                    ? {
+                        ...conversation.lastMessage,
+                        isRead: conversation.lastMessage.senderId === userId ? conversation.lastMessage.isRead : true,
+                      }
+                    : null,
+                }
+              : conversation,
           ),
         };
       });
+    };
+
+    //Handle users online
+    const handleUsersOnline = ({ userIds }) => {
+      queryClient.setQueryData(["online-users"], userIds);
     };
 
     // Handle user offline/online
@@ -94,8 +121,11 @@ export function useUserSocket(userId) {
 
     socket.on("ship:published", handlePublishedShipNotify);
     socket.on("user:notification:new", handleNewNotification);
+
     socket.on("message:notification", handleMessageNotification);
     socket.on("conversation:read", handleConversationRead);
+
+    socket.on("users:online", handleUsersOnline);
     socket.on("user:online", handleUserOnline);
     socket.on("user:offline", handleUserOffline);
     /*  socket.on("user:notification:count", handleNotificationCount); */
@@ -103,11 +133,14 @@ export function useUserSocket(userId) {
     return () => {
       socket.off("ship:published", handlePublishedShipNotify);
       socket.off("user:notification:new", handleNewNotification);
+
       socket.off("message:notification", handleMessageNotification);
       socket.off("conversation:read", handleConversationRead);
+
+      socket.off("users:online", handleUserOnline);
       socket.off("user:online", handleUserOnline);
       socket.off("user:offline", handleUserOffline);
       /* socket.off("user:notification:count", handleNotificationCount); */
     };
-  }, [queryClient]);
+  }, [userId, selectedConversationId, queryClient]);
 }

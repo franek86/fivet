@@ -44,7 +44,7 @@ function AddressBookTable() {
 
   const { data, isLoading, isFetching } = useGetAddressBook({ ...filterState, search: searchFilter });
   const { mutate } = useDeleteAddressBook();
-  const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(data, mutate);
+  const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(data?.address, mutate);
   const addresses = data?.address ?? [];
   const totalCount = data?.meta?.total ?? 0;
   //Sort

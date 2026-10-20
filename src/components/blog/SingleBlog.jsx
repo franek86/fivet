@@ -59,8 +59,6 @@ const Meta = styled.div`
   color: var(--color-text-muted);
 `;
 
-const Author = styled.span``;
-
 const Date = styled.span``;
 
 const Tags = styled.div`
@@ -73,13 +71,6 @@ const Tags = styled.div`
     padding: 0.3rem 1.4rem;
     border-radius: var(--border-radius-md);
   }
-`;
-
-const Dot = styled.span`
-  width: 4px;
-  height: 4px;
-  background: var(--color-text-muted);
-  border-radius: 50%;
 `;
 
 const HeroImage = styled.img`
@@ -130,11 +121,6 @@ const GalleryImage = styled.img`
   border-radius: 12px;
 `;
 
-const SectionTitle = styled.h3`
-  font-size: 16px;
-  margin-bottom: 10px;
-`;
-
 const Button = styled.button`
   padding: 10px 14px;
   border-radius: 10px;
@@ -145,6 +131,7 @@ const Button = styled.button`
 
   &:hover {
     background: var(--color-accent);
+    color: var(--color-white);
   }
 `;
 
@@ -152,9 +139,9 @@ const Status = styled(Button)`
   background-color: ${({ $status }) => {
     switch ($status) {
       case "DRAFT":
-        return "var(--color-danger)";
+        return "var(--color-danger-600)";
       case "PUBLISHED":
-        return "var(--color-success)";
+        return "var(--color-success-600)";
       case "ARCHIVED":
         return "var(--color-text-muted)";
       default:
@@ -166,11 +153,11 @@ const Status = styled(Button)`
 
 const Category = styled.div`
   width: max-content;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  background-color: var(--color-text-muted);
+  background-color: var(--color-accent);
   color: var(--color-white);
-  padding: 0.6rem 1.8rem;
+  padding: 0.6rem 1.5rem;
   border-radius: var(--border-radius-lg);
 `;
 
@@ -192,9 +179,10 @@ const SingleBlog = () => {
           <BackBtn />
           <div className='header-top-left'>
             <Status $status={data.status}>{data.status}</Status>
-            <Link to={`/blogs/edit/${data.slug}`}>
-              <Button>Edit</Button>
-            </Link>
+
+            <Button>
+              <Link to={`/blogs/edit/${data.slug}`}>Edit</Link>
+            </Button>
           </div>
         </div>
         <Title>{data.title}</Title>

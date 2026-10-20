@@ -3,9 +3,7 @@ import apiClient from "./axiosConfig.js";
 /* Create contact in address boook */
 export const createAddressBoookContactApi = async (newData) => {
   try {
-    const res = await apiClient.post("/address-book/create", {
-      ...newData,
-    });
+    const res = await apiClient.post("/address-book/create", newData);
     return res;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

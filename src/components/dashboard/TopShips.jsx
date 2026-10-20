@@ -19,6 +19,46 @@ import { formatedPrice } from "../../utils/formattedPrice.js";
  */
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
+function TopShips({ data, isLoading }) {
+  if (isLoading) {
+    return <TablePlaceholder count={6} />;
+  }
+
+  return (
+    <Container className='card-container'>
+      <div className='card-header'>
+        <h3>Popular ships</h3>
+      </div>
+
+      {data?.topShips?.map((ship) => (
+        <ListRow key={ship.id}>
+          {ship.mainImage ? (
+            <img className='thumb' src={ship.mainImage} alt={ship.shipName} />
+          ) : (
+            <ImagePlaceholder>
+              <Ship />
+            </ImagePlaceholder>
+          )}
+          <div className='body'>
+            <div className='name'>{ship.shipName}</div>
+            <div className='price'>{formatedPrice(ship.price)}</div>
+          </div>
+
+          <div className='right'>
+            <div className='imo'>IMO: {ship.imo}</div>
+            <Views to={`/ships/${ship.id}`}>
+              <Eye size={16} />
+              {ship.clicks}
+            </Views>
+          </div>
+        </ListRow>
+      ))}
+    </Container>
+  );
+}
+
+export default TopShips;
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -89,43 +129,3 @@ const Views = styled(Link)`
   align-items: center;
   gap: 4px;
 `;
-
-function TopShips({ data, isLoading }) {
-  if (isLoading) {
-    return <TablePlaceholder count={6} />;
-  }
-
-  return (
-    <Container className='card-container'>
-      <div className='card-header'>
-        <h3>Popular ships</h3>
-      </div>
-
-      {data?.topShips?.map((ship) => (
-        <ListRow key={ship.id}>
-          {ship.mainImage ? (
-            <img className='thumb' src={ship.mainImage} alt={ship.shipName} />
-          ) : (
-            <ImagePlaceholder>
-              <Ship />
-            </ImagePlaceholder>
-          )}
-          <div className='body'>
-            <div className='name'>{ship.shipName}</div>
-            <div className='price'>{formatedPrice(ship.price)}</div>
-          </div>
-
-          <div className='right'>
-            <div className='imo'>IMO: {ship.imo}</div>
-            <Views to={`/ships/${ship.id}`}>
-              <Eye size={16} />
-              {ship.clicks}
-            </Views>
-          </div>
-        </ListRow>
-      ))}
-    </Container>
-  );
-}
-
-export default TopShips;

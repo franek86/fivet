@@ -1,4 +1,3 @@
-import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import styled from "styled-components";
 
 const Box = styled.div`
@@ -50,46 +49,23 @@ const BoxNumber = styled.div`
   }
 `;
 
-const IconStyle = styled.span`
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+const Description = styled.p`
+  margin: 10px 0 0;
   font-size: 12px;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: var(--color-grey-200);
+  color: var(--color-text-muted);
 `;
 
-const P = styled.div`
-  font-size: 12px;
-  font-weight: 600;
-  color: ${(props) =>
-    props.trend === "up" ? "var(--color-success-600)" : props.trend === "down" ? "var(--color-success-600)" : "var(--color-text)"};
-`;
-
-const IconStyleUp = styled(ArrowUpRight)`
-  color: var(--color-bg);
-`;
-
-const IconStyleDown = styled(ArrowDownRight)`
-  color: var(--color-danger-600);
-`;
-
-function StatisticCard({ text, icon, data, trend, trendChange }) {
+function StatisticCard({ text, icon, data, description }) {
   return (
     <Box>
       <BoxContent>
         <BoxIcon>{icon && icon}</BoxIcon>
-        <IconStyle>
-          {trend === "up" ? <IconStyleUp size={12} /> : <IconStyleDown size={12} />}
-          <P trend={trend}>{trendChange}</P>
-        </IconStyle>
+        {description && <Description>{description}</Description>}
       </BoxContent>
       <BoxNumber>
         <div>
-          <p className='label'> {text && text}</p>
-          <div className='value'> {data && data}</div>
+          <p className='label'> {text}</p>
+          <div className='value'> {data}</div>
         </div>
       </BoxNumber>
     </Box>

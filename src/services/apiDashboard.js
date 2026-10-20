@@ -5,8 +5,8 @@ import apiClient from "./axiosConfig.js";
 */
 export const getAdminDashboardStatistic = async () => {
   try {
-    const res = await apiClient.get("/dashboard/admin-statistic");
-    return res.data;
+    const res = await apiClient.get("/statistics/admin");
+    return res.data.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";
     throw new Error(message);
@@ -20,7 +20,6 @@ Get dashboard earnings
 export const getAdminDashboardEarnings = async () => {
   try {
     const res = await apiClient.get("/dashboard/admin-earnings");
-
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";
@@ -28,12 +27,13 @@ export const getAdminDashboardEarnings = async () => {
   }
 };
 
-/* 
-Get geo world countires
+/*
+Get users by country 
 */
-export const getGeoWorld = async () => {
+export const getUsersByCountry = async () => {
   try {
-    const res = await apiClient.get("/geo/world.json");
+    const res = await apiClient.get("statistics/admin/users-by-country");
+
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

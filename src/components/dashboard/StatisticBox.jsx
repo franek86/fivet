@@ -12,14 +12,16 @@ import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 const StatisticBoxWrap = styled.section`
   display: grid;
-  gap: 20px;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
 
-  @media screen and (min-width: 640px) {
-    grid-template-columns: repeat(2, 1fr);
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(4, 1fr);
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -30,37 +32,14 @@ function StatisticBox({ data, isLoading }) {
 
   return (
     <StatisticBoxWrap>
-      <StatisticCard
-        icon={<Ship />}
-        text='Total ships'
-        data={data?.totalShips}
-        trend={data?.shipsTrend?.trend}
-        trendChange={data?.shipsTrend?.change}
-      />
+      <StatisticCard icon={<Ship size={21} />} text='Total ships' data={data?.ships} description={`${data?.publishedShips} published`} />
 
-      <StatisticCard
-        icon={<Users />}
-        text='Total users'
-        data={data?.totalUsers}
-        trend={data?.usersTrend?.trend}
-        trendChange={data?.usersTrend?.change}
-      />
+      <StatisticCard icon={<Users size={21} />} text='Total users' data={data?.users} description={`${data?.activeUsers} verified`} />
 
-      <StatisticCard
-        icon={<CalendarDays />}
-        text='Events'
-        data={data?.totalEvents}
-        trend={data?.eventsTrend?.trend}
-        trendChange={data?.eventsTrend?.change}
-      />
+      <StatisticCard icon={<CalendarDays size={21} />} text='Events' data={data?.adminEvents} />
 
-      <StatisticCard
-        icon={<BookOpenCheck />}
-        text='Blogs'
-        data={data?.totalBlogs}
-        trend={data?.blogsTrend?.trend}
-        trendChange={data?.blogsTrend?.change}
-      />
+      <StatisticCard icon={<BookOpenCheck size={21} />} text='Blogs' data={data?.blogs} description={`${data?.publishedBlogs} published`} />
+      <StatisticCard icon={<Ship size={21} />} text='Pending ships' data={data?.pendingShips} description='Awaiting review' />
     </StatisticBoxWrap>
   );
 }

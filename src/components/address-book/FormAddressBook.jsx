@@ -84,6 +84,8 @@ function FormAddressBook({ addressBookToEdit = {} }) {
     { name: "Regular", value: "REGULAR" },
   ];
 
+  console.log(errors);
+
   return (
     <StyledForm onSubmit={handleSubmit(onHandleSubmit)}>
       <Grid>

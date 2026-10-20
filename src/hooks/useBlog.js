@@ -11,7 +11,7 @@ export const useCreateBlog = () => {
     onSuccess: () => {
       toast.success("Blog successfully created");
       queryClient.invalidateQueries(["blogs"]);
-      navigate("/blogs");
+      navigate("/admin/blogs");
     },
     onError: (error) => {
       toast.error(error.message);
@@ -48,7 +48,7 @@ export const useUpdateBlog = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["blog", "blogs"]);
       toast.success("Blog successfully updated");
-      navigate("/blogs");
+      navigate("/admin/blogs");
     },
     onError: (error) => {
       toast.error(error);

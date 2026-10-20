@@ -58,6 +58,33 @@ export const DEFAULT_BLOCK = {
   columns: { type: "columns", cols: 2, columns: [[], [], [], []] },
 };
 
+export const DEFAULT_BLOCK_OPTIONS = (type) => {
+  switch (type) {
+    case "text":
+      return {
+        type: "text",
+        text: "",
+      };
+
+    case "image":
+      return {
+        type: "image",
+        imageUrl: null,
+        imageAlt: "",
+      };
+
+    case "columns":
+      return {
+        type: "columns",
+        cols: 2,
+        columns: [[], []],
+      };
+
+    default:
+      throw new Error(`Unknown block type: ${type}`);
+  }
+};
+
 export const BLOCK_OPTIONS = [
   { type: "text", label: "Text", icon: Pilcrow },
   { type: "image", label: "Image", icon: Image },

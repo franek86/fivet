@@ -34,7 +34,7 @@ const AccordionHeader = styled.header`
   transition: all 0.2s ease-in-out;
 
   p {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     color: var(--color-text);
   }
 
@@ -42,7 +42,7 @@ const AccordionHeader = styled.header`
     background-color: var(--color-accent);
     p,
     svg {
-      color: var(--color-text);
+      color: var(--color-white);
     }
   }
 `;

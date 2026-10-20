@@ -71,7 +71,7 @@ const SaveBtn = styled.button`
   border-radius: 8px;
   border: none;
   background: var(--color-accent);
-  color: var(--color-text);
+  color: var(--color-white);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;

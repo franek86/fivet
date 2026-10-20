@@ -1,41 +1,31 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
-import { getAdminDashboardEarnings, getAdminDashboardStatistic, getGeoWorld, getUserDashboardStatistic } from "../services/apiDashboard.js";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getAdminDashboardEarnings,
+  getAdminDashboardStatistic,
+  getUserDashboardStatistic,
+  getUsersByCountry,
+} from "../services/apiDashboard.js";
 
 export const useAdminDashboardData = () => {
-  const results = useQueries({
-    queries: [
-      {
-        queryKey: ["statistic"],
-        queryFn: getAdminDashboardStatistic,
-        /* staleTime: 30 * 60 * 1000,
-        gcTime: 5 * 60 * 1000, */
-      },
-      {
-        queryKey: ["earnings"],
-        queryFn: getAdminDashboardEarnings,
-        staleTime: 30 * 60 * 1000,
-        gcTime: 5 * 60 * 1000,
-      },
-    ],
+  const { data, isLoading } = useQuery({
+    queryKey: ["statistic"],
+    queryFn: getAdminDashboardStatistic,
   });
-  const [statistic, earnings] = results;
-
-  return {
-    data: {
-      statistic: statistic.data,
-      earnings: earnings.data,
-    },
-    isStatisticLoading: statistic.isLoading,
-    isEarningsLoading: earnings.isLoading,
-  };
+  return { data, isLoading };
 };
 
-export const useGeoWorldData = () => {
+export const useUserByCountryData = () => {
   const { data, isLoading } = useQuery({
-    queryKey: ["geoUrl"],
-    queryFn: getGeoWorld,
-    staleTime: 1000 * 60 * 60 * 24 * 7,
-    gcTime: 1000 * 60 * 60 * 24 * 7,
+    queryKey: ["country-data"],
+    queryFn: getUsersByCountry,
+  });
+  return { data, isLoading };
+};
+
+export const useAdminEarningsData = () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["statistic"],
+    queryFn: getAdminDashboardEarnings,
   });
   return { data, isLoading };
 };
@@ -44,7 +34,6 @@ export const useUserDashboardData = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["user-statistic"],
     queryFn: getUserDashboardStatistic,
-    staleTime: 30 * 60 * 1000,
   });
   return { data, isLoading };
 };

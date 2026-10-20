@@ -77,7 +77,7 @@ const CreateBlog = () => {
     watch,
     formState: { errors },
   } = useForm({
-    defaultValues: { gallery: [] },
+    defaultValues: { gallery: [], blocks: [], tags: "" },
     resolver: zodResolver(blogSchema),
   });
 
@@ -120,21 +120,50 @@ const CreateBlog = () => {
 
     formData.append("galleryMeta", JSON.stringify(newGalleryMeta));
 
-    data.blocks.forEach((block, i) => {
+    /*  data.blocks.forEach((block, i) => {
       formData.append(`blocks[${i}][text]`, block.text);
       formData.append(`blocks[${i}][imageAlt]`, block.imageAlt || "");
       formData.append(`blocks[${i}][order]`, i);
       if (block.imageUrl) {
         formData.append("blockImages", block.imageUrl);
       }
-      /* if (block.type === "columns") {
+      if (block.type === "columns") {
         formData.append(`blocks[${i}][columns]`, JSON.stringify(block.columns));
-      } */
+      }
+    }); */
+
+    data.blocks.forEach((block, i) => {
+      console.log(`Blok ${i}:`, block);
+
+      formData.append(`blocks[${i}][type]`, block.type || "");
+
+      formData.append(`blocks[${i}][order]`, String(i));
+
+      if (block.type === "text") {
+        formData.append(`blocks[${i}][text]`, block.text || "");
+      }
+
+      if (block.type === "image") {
+        formData.append(`blocks[${i}][imageAlt]`, block.imageAlt || "");
+
+        if (block.imageUrl instanceof File) {
+          formData.append(`blockImages`, block.imageUrl);
+        }
+      }
+
+      if (block.type === "columns") {
+        formData.append(`blocks[${i}][cols]`, String(block.cols));
+
+        formData.append(`blocks[${i}][columns]`, JSON.stringify(block.columns));
+      }
     });
 
     if (data.categoryId) formData.append("categoryId", String(data.categoryId));
     if (data.status) formData.append("status", String(data.status));
 
+    formData.forEach((value, key) => {
+      console.log(key, value instanceof File ? value.name : value);
+    });
     mutate(formData);
   };
 

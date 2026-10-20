@@ -1,7 +1,46 @@
-import { Plus } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { BLOCK_OPTIONS, DEFAULT_BLOCK } from "../../../constants/index.js";
+import { Plus } from "lucide-react";
+
+import { BLOCK_OPTIONS, DEFAULT_BLOCK_OPTIONS } from "../../../constants/index.js";
+
+const AddBlockDropdown = ({ append }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleAdd = (type) => {
+    append(DEFAULT_BLOCK_OPTIONS(type));
+    setOpen(false);
+  };
+
+  return (
+    <Wrapper>
+      <TriggerBtn type='button' onClick={() => setOpen((prev) => !prev)}>
+        <span>
+          <Plus size={14} />
+        </span>
+        Add block
+      </TriggerBtn>
+
+      {open && (
+        <Menu>
+          {BLOCK_OPTIONS.map(({ type, label, icon }) => {
+            const Icon = icon;
+            return (
+              <MenuItem key={type} type='button' onClick={() => handleAdd(type)}>
+                <span className='icon'>
+                  <Icon size={14} />
+                </span>
+                {label}
+              </MenuItem>
+            );
+          })}
+        </Menu>
+      )}
+    </Wrapper>
+  );
+};
+
+export default AddBlockDropdown;
 
 /* ── styled ── */
 const Wrapper = styled.div`
@@ -72,53 +111,3 @@ const MenuItem = styled.button`
     text-align: center;
   }
 `;
-
-/* ── component ── */
-const AddBlockDropdown = ({ append }) => {
-  const [open, setOpen] = useState(false);
-  const menuRef = useRef(null);
-
-  useEffect(() => {
-    const handler = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  const handleAdd = (type) => {
-    append({ ...DEFAULT_BLOCK[type] });
-    setOpen(false);
-  };
-
-  return (
-    <Wrapper ref={menuRef}>
-      <TriggerBtn type='button' onClick={() => setOpen((o) => !o)}>
-        <span>
-          <Plus size={14} />
-        </span>
-        Add block
-      </TriggerBtn>
-
-      {open && (
-        <Menu>
-          {BLOCK_OPTIONS.map(({ type, label, icon }) => {
-            const Icon = icon;
-            return (
-              <MenuItem key={type} type='button' onClick={() => handleAdd(type)}>
-                <span className='icon'>
-                  <Icon size={14} />
-                </span>
-                {label}
-              </MenuItem>
-            );
-          })}
-        </Menu>
-      )}
-    </Wrapper>
-  );
-};
-
-export default AddBlockDropdown;

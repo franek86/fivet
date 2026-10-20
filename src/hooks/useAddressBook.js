@@ -16,7 +16,7 @@ export const useCreateAddressBook = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const { mutate, isPending, isSuccess } = useMutation({
-    mutationFn: (data) => createAddressBoookContactApi(data),
+    mutationFn: createAddressBoookContactApi,
     onSuccess: () => {
       toast.success("Contact successfully added");
       dispatch(closeModalByName("address-book"));

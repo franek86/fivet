@@ -1,11 +1,165 @@
 import { useState } from "react";
+import styled from "styled-components";
+import { GripVertical } from "lucide-react";
+
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, closestCenter } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import styled from "styled-components";
+
 import BlogBlocks from "./BlogEditorDnd.jsx";
-import { BLOCK_ICON, DEFAULT_BLOCK, PALETTE_BLOCKS } from "../../../constants/index.js";
-import { GripVertical } from "lucide-react";
+import { BLOCK_ICON, DEFAULT_BLOCK, DEFAULT_BLOCK_OPTIONS, PALETTE_BLOCKS } from "../../../constants/index.js";
+
+/* ─────────────────────────────────────────────
+   Single sortable canvas block
+───────────────────────────────────────────── */
+function SortableItem({ isSeeded, field, index, register, control, remove }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: field.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : 1,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      <SortableRow>
+        <DragHandle className='drag-handle' {...listeners} {...attributes} title='Drag to reorder'>
+          <GripVertical size={16} />
+        </DragHandle>
+        <BlogBlocks isSeeded={isSeeded} type={field.type} index={index} register={register} control={control} remove={remove} />
+      </SortableRow>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Main SortableBlocks
+───────────────────────────────────────────── */
+const SortableBlocks = ({ isSeeded, fields, register, control, remove, move, append }) => {
+  const [activeId, setActiveId] = useState(null);
+  const [activePalette, setActivePalette] = useState(null);
+  const [canvasOver, setCanvasOver] = useState(false);
+
+  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
+
+  const activeField = fields.find((f) => f.id === activeId);
+
+  /* ── dnd-kit: reorder existing blocks ── */
+  const handleDragStart = ({ active }) => setActiveId(active.id);
+
+  const handleDragEnd = ({ active, over }) => {
+    setActiveId(null);
+
+    if (!over || active.id === over.id) return;
+
+    const from = fields.findIndex((f) => f.id === active.id);
+    const to = fields.findIndex((f) => f.id === over.id);
+
+    if (from !== -1 && to !== -1) {
+      move(from, to);
+    }
+  };
+
+  /* ── Native HTML drag: palette → canvas ── */
+  const handlePaletteDragStart = (type) => setActivePalette(type);
+  const handlePaletteDragEnd = () => setActivePalette(null);
+
+  const handleCanvasDragOver = (e) => {
+    if (!activePalette) return;
+    e.preventDefault();
+    setCanvasOver(true);
+  };
+  const handleCanvasDragLeave = () => setCanvasOver(false);
+
+  const handleCanvasDrop = (e) => {
+    e.preventDefault();
+    setCanvasOver(false);
+    const type = e.dataTransfer.getData("paletteType") || activePalette;
+
+    if (type) {
+      append(DEFAULT_BLOCK_OPTIONS(type));
+    }
+
+    setActivePalette(null);
+  };
+
+  return (
+    <Layout>
+      {/* ── LEFT SIDEBAR PALETTE ── */}
+      <Header>
+        <HeaderLabel>Blocks</HeaderLabel>
+        {PALETTE_BLOCKS.map(({ type, label, icon }) => {
+          const Icon = icon;
+          return (
+            <PaletteItem
+              key={type}
+              draggable
+              title={`Drag to add ${label}`}
+              onDragStart={(e) => {
+                e.dataTransfer.effectAllowed = "copy";
+                e.dataTransfer.setData("paletteType", type);
+                handlePaletteDragStart(type);
+              }}
+              onDragEnd={handlePaletteDragEnd}
+            >
+              <PaletteIcon>
+                <Icon size={14} />
+              </PaletteIcon>
+              <PaletteLabel>{label}</PaletteLabel>
+            </PaletteItem>
+          );
+        })}
+      </Header>
+
+      {/* ── RIGHT CANVAS ── */}
+      <Canvas onDragOver={handleCanvasDragOver} onDragLeave={handleCanvasDragLeave} onDrop={handleCanvasDrop}>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+          <SortableContext items={fields.map((f) => f.id)} strategy={verticalListSortingStrategy}>
+            {fields.length === 0 ? (
+              <DropZone $over={canvasOver}>{canvasOver ? "Release to add block" : "← Drag a block from the left to get started"}</DropZone>
+            ) : (
+              <>
+                {fields.map((field, index) => (
+                  <SortableItem
+                    isSeeded={isSeeded}
+                    key={field.id}
+                    field={field}
+                    index={index}
+                    register={register}
+                    control={control}
+                    remove={remove}
+                  />
+                ))}
+                {/* drop zone at bottom when canvas already has blocks */}
+                {activePalette && (
+                  <DropZone $over={canvasOver} style={{ marginTop: 10 }}>
+                    Release to add {activePalette} block
+                  </DropZone>
+                )}
+              </>
+            )}
+          </SortableContext>
+
+          {/* floating ghost while reordering */}
+          <DragOverlay>
+            {activeField ? (
+              <OverlayCard>
+                {(() => {
+                  const Icon = BLOCK_ICON[activeField.type];
+                  return Icon ? <Icon size={18} style={{ opacity: 0.6 }} /> : <span>□</span>;
+                })()}
+                <span style={{ fontWeight: 500, textTransform: "capitalize" }}>{activeField.type} block</span>
+              </OverlayCard>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
+      </Canvas>
+    </Layout>
+  );
+};
+
+export default SortableBlocks;
 
 /* ─────────────────────────────────────────────
    Styled
@@ -60,6 +214,9 @@ const PaletteItem = styled.div`
     transform 0.1s;
 
   &:hover {
+    span {
+      color: var(--color-white);
+    }
     border-color: var(--color-text-muted);
     background: var(--color-accent);
     transform: scale(1.04);
@@ -149,145 +306,3 @@ const OverlayCard = styled.div`
   opacity: 0.95;
   pointer-events: none;
 `;
-
-/* ─────────────────────────────────────────────
-   Single sortable canvas block
-───────────────────────────────────────────── */
-function SortableItem({ isSeeded, field, index, register, control, remove }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: field.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.3 : 1,
-  };
-
-  return (
-    <div ref={setNodeRef} style={style}>
-      <SortableRow>
-        <DragHandle className='drag-handle' {...listeners} {...attributes} title='Drag to reorder'>
-          <GripVertical size={16} />
-        </DragHandle>
-        <BlogBlocks isSeeded={isSeeded} type={field.type} index={index} register={register} control={control} remove={remove} />
-      </SortableRow>
-    </div>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   Main SortableBlocks
-───────────────────────────────────────────── */
-const SortableBlocks = ({ isSeeded, fields, register, control, remove, move, append }) => {
-  const [activeId, setActiveId] = useState(null);
-  const [activePalette, setActivePalette] = useState(null);
-  const [canvasOver, setCanvasOver] = useState(false);
-
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }));
-
-  const activeField = fields.find((f) => f.id === activeId);
-
-  /* ── dnd-kit: reorder existing blocks ── */
-  const handleDragStart = ({ active }) => setActiveId(active.id);
-
-  const handleDragEnd = ({ active, over }) => {
-    setActiveId(null);
-    if (!over || active.id === over.id) return;
-    const from = fields.findIndex((f) => f.id === active.id);
-    const to = fields.findIndex((f) => f.id === over.id);
-    move(from, to);
-  };
-
-  /* ── Native HTML drag: palette → canvas ── */
-  const handlePaletteDragStart = (type) => setActivePalette(type);
-  const handlePaletteDragEnd = () => setActivePalette(null);
-
-  const handleCanvasDragOver = (e) => {
-    if (!activePalette) return;
-    e.preventDefault();
-    setCanvasOver(true);
-  };
-  const handleCanvasDragLeave = () => setCanvasOver(false);
-  const handleCanvasDrop = (e) => {
-    e.preventDefault();
-    setCanvasOver(false);
-    const type = e.dataTransfer.getData("paletteType") || activePalette;
-    if (type) append({ ...DEFAULT_BLOCK[type] });
-    setActivePalette(null);
-  };
-
-  return (
-    <Layout>
-      {/* ── LEFT SIDEBAR PALETTE ── */}
-      <Header>
-        <HeaderLabel>Blocks</HeaderLabel>
-        {PALETTE_BLOCKS.map(({ type, label, icon }) => {
-          const Icon = icon;
-          return (
-            <PaletteItem
-              key={type}
-              draggable
-              title={`Drag to add ${label}`}
-              onDragStart={(e) => {
-                e.dataTransfer.effectAllowed = "copy";
-                e.dataTransfer.setData("paletteType", type);
-                handlePaletteDragStart(type);
-              }}
-              onDragEnd={handlePaletteDragEnd}
-            >
-              <PaletteIcon>
-                <Icon size={14} />
-              </PaletteIcon>
-              <PaletteLabel>{label}</PaletteLabel>
-            </PaletteItem>
-          );
-        })}
-      </Header>
-
-      {/* ── RIGHT CANVAS ── */}
-      <Canvas onDragOver={handleCanvasDragOver} onDragLeave={handleCanvasDragLeave} onDrop={handleCanvasDrop}>
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <SortableContext items={fields.map((f) => f.id)} strategy={verticalListSortingStrategy}>
-            {fields.length === 0 ? (
-              <DropZone $over={canvasOver}>{canvasOver ? "Release to add block" : "← Drag a block from the left to get started"}</DropZone>
-            ) : (
-              <>
-                {fields.map((field, index) => (
-                  <SortableItem
-                    isSeeded={isSeeded}
-                    key={field.id}
-                    field={field}
-                    index={index}
-                    register={register}
-                    control={control}
-                    remove={remove}
-                  />
-                ))}
-                {/* drop zone at bottom when canvas already has blocks */}
-                {activePalette && (
-                  <DropZone $over={canvasOver} style={{ marginTop: 10 }}>
-                    Release to add {activePalette} block
-                  </DropZone>
-                )}
-              </>
-            )}
-          </SortableContext>
-
-          {/* floating ghost while reordering */}
-          <DragOverlay>
-            {activeField ? (
-              <OverlayCard>
-                {(() => {
-                  const Icon = BLOCK_ICON[activeField.type];
-                  return Icon ? <Icon size={18} style={{ opacity: 0.6 }} /> : <span>□</span>;
-                })()}
-                <span style={{ fontWeight: 500, textTransform: "capitalize" }}>{activeField.type} block</span>
-              </OverlayCard>
-            ) : null}
-          </DragOverlay>
-        </DndContext>
-      </Canvas>
-    </Layout>
-  );
-};
-
-export default SortableBlocks;

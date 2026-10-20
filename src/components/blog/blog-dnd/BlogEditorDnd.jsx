@@ -6,6 +6,231 @@ import { COL_BLOCK_TYPES } from "../../../constants/index.js";
 import TextEditor from "../../text-editor/index.jsx";
 
 /* ─────────────────────────────────────────────
+   Text block
+───────────────────────────────────────────── */
+function TextBlock({ index, control, remove }) {
+  return (
+    <BlockWrapper>
+      <BlockHeader>
+        <BlockLabel>Text</BlockLabel>
+        <RemoveBtn type='button' onClick={() => remove(index)} aria-label='remove block'>
+          <Trash2 size={16} />
+        </RemoveBtn>
+      </BlockHeader>
+
+      <Controller
+        control={control}
+        name={`blocks.${index}.text`}
+        render={({ field }) => <TextEditor content={field.value ?? ""} onChange={field.onChange} />}
+      />
+    </BlockWrapper>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Image block
+───────────────────────────────────────────── */
+function ImageBlock({ index, register, control, remove }) {
+  return (
+    <BlockWrapper>
+      <BlockHeader>
+        <BlockLabel>Image</BlockLabel>
+        <RemoveBtn type='button' onClick={() => remove(index)} aria-label='remove block'>
+          <Trash2 size={16} />
+        </RemoveBtn>
+      </BlockHeader>
+      <Controller
+        name={`blocks.${index}.imageUrl`}
+        control={control}
+        render={({ field }) => (
+          <ImageUploader name={`blocks.${index}.imageUrl`} value={field.value} onChange={(file) => field.onChange(file)} />
+        )}
+      />
+      <AltInput type='text' placeholder='Image alt text / description' {...register(`blocks.${index}.imageAlt`)} />
+    </BlockWrapper>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Columns block
+───────────────────────────────────────────── */
+function ColumnsBlock({ index, control, remove }) {
+  return (
+    <Controller
+      name={`blocks.${index}`}
+      control={control}
+      render={({ field }) => {
+        const block = field.value;
+
+        const updateColumns = (columns) => field.onChange({ ...block, columns });
+
+        const addToCol = (colIdx, type) => {
+          const newItem = {
+            id: crypto.randomUUID(),
+            type,
+            text: "",
+            imageUrl: null,
+            imageAlt: "",
+          };
+
+          const columns = block.columns.map((col, i) => (i === colIdx ? [...col, newItem] : col));
+
+          updateColumns(columns);
+        };
+
+        const updateItem = (colIdx, itemIdx, updates) => {
+          const columns = block.columns.map((col, i) =>
+            i !== colIdx ? col : col.map((item, j) => (j === itemIdx ? { ...item, ...updates } : item)),
+          );
+
+          updateColumns(columns);
+        };
+
+        const removeItem = (colIdx, itemIdx) => {
+          const columns = block.columns.map((col, i) => (i === colIdx ? col.filter((_, j) => j !== itemIdx) : col));
+
+          updateColumns(columns);
+        };
+
+        const setCols = (count) => {
+          const columns = Array.from({ length: count }, (_, i) => block.columns[i] ?? []);
+
+          field.onChange({
+            ...block,
+            cols: count,
+            columns,
+          });
+        };
+
+        return (
+          <BlockWrapper>
+            <BlockHeader>
+              <BlockLabel>Columns</BlockLabel>
+              <RemoveBtn type='button' onClick={() => remove(index)} aria-label='remove block'>
+                <Trash2 size={16} />
+              </RemoveBtn>
+            </BlockHeader>
+
+            <ColCountRow>
+              <ColCountLabel>Columns:</ColCountLabel>
+              {[2, 3, 4].map((count) => (
+                <ColCountBtn
+                  key={count}
+                  type='button'
+                  $active={block.cols === count}
+                  onClick={() => setCols(count)}
+                  /* aria-label={`${n} columns`} */
+                >
+                  {count}
+                </ColCountBtn>
+              ))}
+            </ColCountRow>
+
+            <ColsGrid $cols={block.cols}>
+              {block.columns.map((items, colIdx) => (
+                <ColCell key={colIdx}>
+                  {items.map((item, itemIdx) => (
+                    <ColItem key={item.id}>
+                      <BlockHeader>
+                        <BlockLabel>{item.type === "text" ? "Text" : "Image"}</BlockLabel>
+
+                        <ColItemRemove type='button' onClick={() => removeItem(colIdx, itemIdx)} aria-label='Remove column item'>
+                          <Trash2 size={14} />
+                        </ColItemRemove>
+                      </BlockHeader>
+
+                      {item.type === "text" && (
+                        <TextEditor content={item.text ?? ""} onChange={(text) => updateItem(colIdx, itemIdx, { text })} />
+                      )}
+
+                      {item.type === "image" && (
+                        <>
+                          <ImageUploader
+                            name={`blocks.${index}.columns.${colIdx}.${itemIdx}.imageUrl`}
+                            value={item.imageUrl}
+                            onChange={(imageUrl) => updateItem(colIdx, itemIdx, { imageUrl })}
+                          />
+
+                          <AltInput
+                            type='text'
+                            placeholder='Image alt text'
+                            value={item.imageAlt ?? ""}
+                            onChange={(e) =>
+                              updateItem(colIdx, itemIdx, {
+                                imageAlt: e.target.value,
+                              })
+                            }
+                          />
+                        </>
+                      )}
+                    </ColItem>
+                  ))}
+
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: 4,
+                      flexWrap: "wrap",
+                      marginTop: "auto",
+                    }}
+                  >
+                    {COL_BLOCK_TYPES.map(({ type, label, icon: Icon }) => (
+                      <ColAddBtn key={type} type='button' onClick={() => addToCol(colIdx, type)}>
+                        <Icon size={14} />
+                        {label}
+                      </ColAddBtn>
+                    ))}
+                  </div>
+                </ColCell>
+              ))}
+            </ColsGrid>
+          </BlockWrapper>
+        );
+      }}
+    />
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Main switch
+───────────────────────────────────────────── */
+const BlogBlocks = ({ type, index, register, control, remove }) => {
+  switch (type) {
+    case "text":
+      return <TextBlock index={index} control={control} remove={remove} />;
+
+    case "image":
+      return <ImageBlock index={index} register={register} control={control} remove={remove} />;
+
+    case "columns":
+      return <ColumnsBlock index={index} control={control} remove={remove} />;
+    default:
+      return null;
+  }
+
+  /* const blockText = useWatch({ control, name: `blocks.${index}.text` });
+  const blockImageUrl = useWatch({ control, name: `blocks.${index}.imageUrl` });
+  const blockType = useWatch({ control, name: `blocks.${index}.type` });
+
+  const resolvedType = type || blockType;
+
+  
+  if (!resolvedType) {
+    if (blockText) return <TextBlock index={index} register={register} remove={remove} control={control} />;
+    if (blockImageUrl) return <ImageBlock index={index} register={register} control={control} remove={remove} />;
+    return null; 
+  }
+
+  if (resolvedType === "text") return <TextBlock index={index} register={register} remove={remove} control={control} />;
+  if (resolvedType === "image") return <ImageBlock index={index} register={register} control={control} remove={remove} />;
+  if (resolvedType === "columns") return <ColumnsBlock index={index} control={control} remove={remove} />;
+
+  return null; */
+};
+
+export default BlogBlocks;
+
+/* ─────────────────────────────────────────────
    Shared styled components
 ───────────────────────────────────────────── */
 const BlockWrapper = styled.div`
@@ -147,166 +372,3 @@ const ColAddBtn = styled.button`
     color: var(--color-text);
   }
 `;
-
-/* ─────────────────────────────────────────────
-   Text block
-───────────────────────────────────────────── */
-function TextBlock({ isSeeded, index, control, remove }) {
-  return (
-    <BlockWrapper>
-      <BlockHeader>
-        <BlockLabel>Text</BlockLabel>
-        <RemoveBtn type='button' onClick={() => remove(index)} aria-label='remove block'>
-          <Trash2 size={16} />
-        </RemoveBtn>
-      </BlockHeader>
-      <Controller
-        control={control}
-        name={`blocks.${index}.text`}
-        render={({ field }) => <TextEditor key={isSeeded ? "seeded" : "empty"} content={field.value} onChange={field.onChange} />}
-      />
-    </BlockWrapper>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   Image block
-───────────────────────────────────────────── */
-function ImageBlock({ index, register, control, remove }) {
-  return (
-    <BlockWrapper>
-      <BlockHeader>
-        <BlockLabel>Image</BlockLabel>
-        <RemoveBtn type='button' onClick={() => remove(index)} aria-label='remove block'>
-          <Trash2 size={16} />
-        </RemoveBtn>
-      </BlockHeader>
-      <Controller
-        name={`blocks.${index}.imageUrl`}
-        control={control}
-        render={({ field }) => (
-          <ImageUploader name={`blocks.${index}.imageUrl`} value={field.value} onChange={(file) => field.onChange(file)} />
-        )}
-      />
-      <AltInput type='text' placeholder='Image alt text / description' {...register(`blocks.${index}.imageAlt`)} />
-    </BlockWrapper>
-  );
-}
-
-/* ─────────────────────────────────────────────
-   Columns block
-───────────────────────────────────────────── */
-function ColumnsBlock({ index, control, remove }) {
-  return (
-    <Controller
-      name={`blocks.${index}`}
-      control={control}
-      render={({ field }) => {
-        const block = field.value;
-
-        const setCols = (n) => field.onChange({ ...block, cols: n });
-
-        const addToCol = (colIdx, type) => {
-          const newCols = block.columns.map((c, i) => (i === colIdx ? [...c, { type, id: `ci_${Date.now()}` }] : c));
-          field.onChange({ ...block, columns: newCols });
-        };
-
-        const removeFromCol = (colIdx, itemIdx) => {
-          const newCols = block.columns.map((c, i) => (i === colIdx ? c.filter((_, j) => j !== itemIdx) : c));
-          field.onChange({ ...block, columns: newCols });
-        };
-
-        return (
-          <BlockWrapper>
-            <BlockHeader>
-              <BlockLabel>Columns</BlockLabel>
-              <RemoveBtn type='button' onClick={() => remove(index)} aria-label='remove block'>
-                <Trash2 size={16} />
-              </RemoveBtn>
-            </BlockHeader>
-
-            <ColCountRow>
-              <ColCountLabel>Columns:</ColCountLabel>
-              {[2, 3, 4].map((n) => (
-                <ColCountBtn key={n} type='button' $active={block.cols === n} onClick={() => setCols(n)} aria-label={`${n} columns`}>
-                  {n}
-                </ColCountBtn>
-              ))}
-            </ColCountRow>
-
-            <ColsGrid $cols={block.cols}>
-              {Array.from({ length: block.cols }, (_, colIdx) => (
-                <ColCell key={colIdx}>
-                  {(block.columns[colIdx] || []).map((item, itemIdx) => (
-                    <ColItem key={item.id || itemIdx}>
-                      <span style={{ opacity: 0.5 }}>{item.type === "image" ? "🖼" : "T"}</span>
-                      {/* TO DO: Add text input and image */}
-                      {item.type}
-                      <ColItemRemove type='button' onClick={() => removeFromCol(colIdx, itemIdx)} aria-label='remove item'>
-                        <Trash2 size={14} />
-                      </ColItemRemove>
-                    </ColItem>
-                  ))}
-                  <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginTop: "auto" }}>
-                    {COL_BLOCK_TYPES.map(({ type, label, icon }) => {
-                      const Icon = icon;
-                      return (
-                        <ColAddBtn
-                          key={type}
-                          type='button'
-                          onClick={() => addToCol(colIdx, type)}
-                          aria-label={`add ${label} to column ${colIdx + 1}`}
-                        >
-                          <Icon size={14} /> {label}
-                        </ColAddBtn>
-                      );
-                    })}
-                  </div>
-                </ColCell>
-              ))}
-            </ColsGrid>
-          </BlockWrapper>
-        );
-      }}
-    />
-  );
-}
-
-/* ─────────────────────────────────────────────
-   Main switch
-───────────────────────────────────────────── */
-/* const BlogBlocks = ({ isSeeded, type, index, register, control, remove }) => {
-  const blockText = useWatch({ control, name: `blocks.${index}.text` });
-  console.log(blockText);
-  if (type === "text") return <TextBlock isSeeded={isSeeded} index={index} register={register} remove={remove} control={control} />;
-  if (type === "image") return <ImageBlock index={index} register={register} control={control} remove={remove} />;
-  if (type === "columns") return <ColumnsBlock index={index} control={control} remove={remove} />;
-  return (
-    <>
-      <TextBlock isSeeded={isSeeded} index={index} register={register} remove={remove} control={control} />;
-    </>
-  );
-}; */
-
-const BlogBlocks = ({ isSeeded, type, index, register, control, remove }) => {
-  const blockText = useWatch({ control, name: `blocks.${index}.text` });
-  const blockImageUrl = useWatch({ control, name: `blocks.${index}.imageUrl` });
-  const blockType = useWatch({ control, name: `blocks.${index}.type` });
-
-  const resolvedType = type || blockType;
-
-  // on edit: block has content but no type saved in DB yet
-  if (!resolvedType) {
-    if (blockText) return <TextBlock index={index} register={register} remove={remove} control={control} />;
-    if (blockImageUrl) return <ImageBlock index={index} register={register} control={control} remove={remove} />;
-    return null; // empty block with no type — don't render
-  }
-
-  if (resolvedType === "text") return <TextBlock index={index} register={register} remove={remove} control={control} />;
-  if (resolvedType === "image") return <ImageBlock index={index} register={register} control={control} remove={remove} />;
-  if (resolvedType === "columns") return <ColumnsBlock index={index} control={control} remove={remove} />;
-
-  return null;
-};
-
-export default BlogBlocks;

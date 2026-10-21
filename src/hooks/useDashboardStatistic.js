@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getAdminDashboardEarnings,
   getAdminDashboardStatistic,
+  getAdminRevenueApi,
   getUserDashboardStatistic,
   getUsersByCountry,
 } from "../services/apiDashboard.js";
@@ -27,6 +28,15 @@ export const useAdminEarningsData = () => {
     queryKey: ["statistic"],
     queryFn: getAdminDashboardEarnings,
   });
+  return { data, isLoading };
+};
+
+export const useAdminRevenueData = (period) => {
+  const { data, isLoading } = useQuery({
+    queryKey: ["revenue", period],
+    queryFn: () => getAdminRevenueApi(period),
+  });
+
   return { data, isLoading };
 };
 

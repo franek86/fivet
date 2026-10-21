@@ -1,11 +1,13 @@
 import { useState } from "react";
-import styled from "styled-components";
-import { usePendingShips } from "../../hooks/ships/usePendingShips.js";
-import Spinner from "../Spinner.jsx";
-import BackBtn from "../BackBtn.jsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateShipListsingStatus } from "../../services/apiShips.js";
+import styled from "styled-components";
 import { toast } from "react-toastify";
+
+import BackBtn from "../BackBtn.jsx";
+import TablePlacehoder from "../ui/TablePlaceholder.jsx";
+
+import { updateShipListsingStatus } from "../../services/apiShips.js";
+import { usePendingShips } from "../../hooks/ships/usePendingShips.js";
 import { DEFAULT_PAGINATION_FILTER } from "../../constants/index.js";
 
 const ApprovalList = () => {
@@ -23,7 +25,7 @@ const ApprovalList = () => {
     },
   });
 
-  if (isLoading) return <Spinner />;
+  if (isLoading) return <TablePlacehoder count={6} />;
 
   const vessels = data?.data;
 
@@ -68,7 +70,7 @@ const ApprovalList = () => {
 const ApprovalCard = ({ vessel, onApprove, onReject }) => {
   const [showReject, setShowReject] = useState(false);
   const [reason, setReason] = useState("");
-  console.log(vessel);
+
   const handleReject = () => {
     if (!reason.trim()) return;
 

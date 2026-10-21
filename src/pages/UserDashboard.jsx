@@ -1,33 +1,12 @@
-import StatisticBox from "../components/dashboard/StatisticBox.jsx";
+import styled from "styled-components";
+import { CalendarDays, CheckCheck, Ship } from "lucide-react";
+
 import TopShips from "../components/dashboard/TopShips.jsx";
 import Title from "../components/ui/Title.jsx";
-import styled from "styled-components";
-import { useUserDashboardData } from "../hooks/useDashboardStatistic.js";
 import StatisticCard from "../components/ui/StatisticCard.jsx";
-import { CalendarDays, CheckCheck, Ship } from "lucide-react";
 import TablePlaceholder from "../components/ui/TablePlaceholder.jsx";
 
-const StatisticBoxWrap = styled.section`
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 2rem;
-  margin-top: 2.8rem;
-
-  @media screen and (min-width: 640px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-`;
-
-const TwoColumnsRole = styled.section`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-  margin: 2rem 0;
-
-  @media screen and (min-width: 1200px) {
-    grid-template-columns: "1fr";
-  }
-`;
+import { useUserDashboardData } from "../hooks/useDashboardStatistic.js";
 
 function UserDashboard() {
   const { data, isLoading } = useUserDashboardData();
@@ -71,3 +50,25 @@ function UserDashboard() {
 }
 
 export default UserDashboard;
+
+const StatisticBoxWrap = styled.section`
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
+  margin-top: 2.8rem;
+
+  @media screen and (min-width: 640px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`;
+
+const TwoColumnsRole = styled.section`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin: 2rem 0;
+
+  @media screen and (min-width: 1200px) {
+    grid-template-columns: "1fr";
+  }
+`;

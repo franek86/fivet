@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router";
 import GlobalStyles from "./GlobalStyles.js";
 import { ToastContainer } from "react-toastify";
 
-import Spinner from "./components/Spinner.jsx";
 import MainLayout from "./layouts/MainLayout.jsx";
 import ProtectedRoute from "./pages/ProtectedRoute.jsx";
 
@@ -26,11 +25,7 @@ import { useRestoreSession } from "./hooks/useRestoreSession.js";
 const ALL_ROLES = ["ADMIN", "BROKER", "OWNER", "BUYER"];
 
 function App() {
-  const { isLoading } = useRestoreSession();
-
-  if (isLoading) {
-    return <Spinner />;
-  }
+  useRestoreSession();
 
   return (
     <>

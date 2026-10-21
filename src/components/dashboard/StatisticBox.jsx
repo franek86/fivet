@@ -13,8 +13,8 @@ import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 const StatisticBoxWrap = styled.section`
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
+  gap: 2rem;
+  margin-bottom: 2rem;
 
   @media (max-width: 1200px) {
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -37,7 +37,7 @@ export default function MapChart() {
     <MapGrid>
       <MapArea>
         <Header>
-          <Title tag='h3'>Users around the world</Title>
+          <Title tag='h5'>Users around the world</Title>
           <ZoomBtn>
             <button onClick={() => setZoom((z) => Math.min(z * 1.5, 8))}>+</button>
             <button onClick={() => setZoom((z) => Math.max(z / 1.5, 1))}>-</button>
@@ -89,7 +89,7 @@ export default function MapChart() {
       </MapArea>
 
       <Details>
-        <strong>{selectedCountry?.country ?? "Select a country"}</strong>
+        <Title tag='h5'>{selectedCountry?.country ?? "Select a country"}</Title>
 
         {selectedCountry ? (
           <RoleStats>
@@ -121,7 +121,7 @@ export default function MapChart() {
 const MapGrid = styled.section`
   display: grid;
   grid-template-columns: 1fr minmax(150px, 300px);
-  gap: 1rem;
+  gap: 2rem;
   margin-bottom: 2rem;
 `;
 

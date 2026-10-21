@@ -42,6 +42,19 @@ export const getUsersByCountry = async () => {
 };
 
 /* 
+Get admin revenue
+*/
+export const getAdminRevenueApi = async (period) => {
+  try {
+    const res = await apiClient.get("statistics/admin/revenue", { params: { period } });
+    return res.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.message || "Something went wrong";
+    throw new Error(message);
+  }
+};
+
+/* 
 Get user dashboard statistic
 */
 export const getUserDashboardStatistic = async () => {

@@ -10,16 +10,13 @@ import LastBlogs from "../../components/dashboard/LastBlogs.jsx";
 
 const MapChart = lazy(() => import("../../components/dashboard/MapChart.jsx"));
 
-import { useAdminDashboardData, useAdminEarningsData } from "../../hooks/useDashboardStatistic.js";
+import { useAdminDashboardData } from "../../hooks/useDashboardStatistic.js";
 import { useUser } from "../../hooks/useAuth.js";
 
 function AdminDashboard() {
   const { data: statistics, isLoading: isStatisticLoading } = useAdminDashboardData();
-  const { data: earnings, isLoading: isEarningsLoading } = useAdminEarningsData();
 
   const { data: user } = useUser();
-
-  console.log(statistics);
 
   return (
     <>
@@ -31,14 +28,13 @@ function AdminDashboard() {
         <StatisticBox data={statistics?.totals} isLoading={isStatisticLoading} />
 
         <TwoColumnGrid>
-          {/* 
-          <Earnings data={earnings} isLoading={isEarningsLoading} /> */}
+          <Earnings />
         </TwoColumnGrid>
 
         <ThreeColumnGrid>
           <TopShips data={statistics?.popularShips} isLoading={isStatisticLoading} />
-          <LastUsers data={statistics?.recentUsers} isLoading={isStatisticLoading} />
           <LastBlogs data={statistics?.recentBlogs} isLoading={isStatisticLoading} />
+          <LastUsers data={statistics?.recentUsers} isLoading={isStatisticLoading} />
         </ThreeColumnGrid>
 
         <Suspense fallback={<div></div>}>
@@ -54,8 +50,8 @@ export default AdminDashboard;
 export const TwoColumnGrid = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-  gap: 20px;
-  margin-bottom: 24px;
+  gap: 2rem;
+  margin-bottom: 2rem;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
@@ -64,11 +60,19 @@ export const TwoColumnGrid = styled.div`
 
 export const ThreeColumnGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 20px;
-  margin-bottom: 24px;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
 
-  @media (max-width: 1100px) {
-    grid-template-columns: 1fr;
+  &:nth-last-of-type() {
+    background-color: red;
+  }
+
+  @media (min-width: 968px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1400px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 `;

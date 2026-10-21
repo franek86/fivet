@@ -1,25 +1,6 @@
 import styled from "styled-components";
 import Title from "./ui/Title.jsx";
 import Button from "./ui/Button.jsx";
-import Spinner from "./Spinner.jsx";
-
-const StyledConfirmDialog = styled.div`
-  width: 40rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-
-  & p {
-    color: var(--color-text);
-    margin-bottom: 1.2rem;
-  }
-
-  & div {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1.2rem;
-  }
-`;
 
 function ConfirmDialog({ itemName, onConfirm, onCloseModal, isDeleting }) {
   return (
@@ -40,3 +21,21 @@ function ConfirmDialog({ itemName, onConfirm, onCloseModal, isDeleting }) {
 }
 
 export default ConfirmDialog;
+
+const StyledConfirmDialog = styled.div`
+  width: 40rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  & p {
+    color: var(--color-text);
+    margin-bottom: 1.2rem;
+  }
+
+  & div {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.2rem;
+  }
+`;

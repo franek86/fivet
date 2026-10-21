@@ -1,18 +1,81 @@
 import { useRef, useState } from "react";
 import { Link } from "react-router";
-import { useDispatch, useSelector } from "react-redux";
-import { createSelector } from "@reduxjs/toolkit";
 
 import styled from "styled-components";
 import { Bell, CheckCheck } from "lucide-react";
 
-import { markNotificationRead } from "../../slices/realtimeSlice.js";
-import { toggleDropdown } from "../../slices/uiSlice.js";
 import { customFormatDate } from "../../utils/formatDate.js";
 import { useAllUnreadNotification, useUpdateReadNotification } from "../../hooks/useNotification.js";
 import { useClickOutSide } from "../../hooks/useClickOutside.js";
 
 import Spinner from "../Spinner.jsx";
+import TablePlaceholder from "../ui/TablePlaceholder.jsx";
+
+export default function NotificationIcon() {
+  const dropdownRef = useRef(null);
+  const [open, setOpen] = useState(false);
+
+  const { data, isLoading } = useAllUnreadNotification();
+  const { mutate: markAsRead } = useUpdateReadNotification();
+
+  const notifications = data?.notifications ?? [];
+  const count = data?.unreadCount ?? 0;
+
+  useClickOutSide(dropdownRef, () => setOpen(false));
+
+  if (isLoading) return <TablePlaceholder count={1} />;
+
+  return (
+    <Container ref={dropdownRef}>
+      <BellButton onClick={() => setOpen((prev) => !prev)}>
+        <Bell size={22} />
+        {count > 0 && <UnreadBadge> {count > 99 ? "99+" : count} </UnreadBadge>}
+      </BellButton>
+
+      {open && (
+        <Dropdown>
+          <DropdownHeader>
+            <HeaderTitle>
+              Notifications
+              {count > 0 && <UnreadCount>{count}</UnreadCount>}
+            </HeaderTitle>
+
+            {count > 0 && (
+              <MarkAllButton type='button'>
+                <CheckCheck size={14} /> Mark all as read
+              </MarkAllButton>
+            )}
+          </DropdownHeader>
+
+          {notifications.length === 0 ? (
+            <EmptyState>
+              <Bell size={28} /> <span>No notifications</span>
+            </EmptyState>
+          ) : (
+            <NotificationList>
+              {notifications.map((n) => (
+                <NotificationItem key={n.id} $isRead={n.isRead} onClick={() => markAsRead({ id: n.id, data: true })}>
+                  {!n.isRead && <UnreadDot />}
+                  <NotificationContent>
+                    <NotificationTop>
+                      <NotificationTitle>Hello</NotificationTitle>
+
+                      <NotificationDate>{customFormatDate(n.createdAt)}</NotificationDate>
+                    </NotificationTop>
+
+                    <NotificationMessage>{n.message}</NotificationMessage>
+                  </NotificationContent>
+                </NotificationItem>
+              ))}
+            </NotificationList>
+          )}
+
+          <SeeMoreButton to={"/notifications"}>See more notifications</SeeMoreButton>
+        </Dropdown>
+      )}
+    </Container>
+  );
+}
 
 const Container = styled.div`
   position: relative;
@@ -204,69 +267,3 @@ const EmptyState = styled.div`
   color: var(--color-text);
   font-size: 14px;
 `;
-
-export default function NotificationIcon() {
-  const dropdownRef = useRef(null);
-  const [open, setOpen] = useState(false);
-
-  const { data, isLoading } = useAllUnreadNotification();
-  const { mutate: markAsRead } = useUpdateReadNotification();
-
-  const notifications = data?.notifications ?? [];
-  const count = data?.unreadCount ?? 0;
-
-  useClickOutSide(dropdownRef, () => setOpen(false));
-
-  if (isLoading) return <Spinner />;
-
-  return (
-    <Container ref={dropdownRef}>
-      <BellButton onClick={() => setOpen((prev) => !prev)}>
-        <Bell size={22} />
-        {count > 0 && <UnreadBadge> {count > 99 ? "99+" : count} </UnreadBadge>}
-      </BellButton>
-
-      {open && (
-        <Dropdown>
-          <DropdownHeader>
-            <HeaderTitle>
-              Notifications
-              {count > 0 && <UnreadCount>{count}</UnreadCount>}
-            </HeaderTitle>
-
-            {count > 0 && (
-              <MarkAllButton type='button'>
-                <CheckCheck size={14} /> Mark all as read
-              </MarkAllButton>
-            )}
-          </DropdownHeader>
-
-          {notifications.length === 0 ? (
-            <EmptyState>
-              <Bell size={28} /> <span>No notifications</span>
-            </EmptyState>
-          ) : (
-            <NotificationList>
-              {notifications.map((n) => (
-                <NotificationItem key={n.id} $isRead={n.isRead} onClick={() => markAsRead({ id: n.id, data: true })}>
-                  {!n.isRead && <UnreadDot />}
-                  <NotificationContent>
-                    <NotificationTop>
-                      <NotificationTitle>Hello</NotificationTitle>
-
-                      <NotificationDate>{customFormatDate(n.createdAt)}</NotificationDate>
-                    </NotificationTop>
-
-                    <NotificationMessage>{n.message}</NotificationMessage>
-                  </NotificationContent>
-                </NotificationItem>
-              ))}
-            </NotificationList>
-          )}
-
-          <SeeMoreButton to={"/notifications"}>See more notifications</SeeMoreButton>
-        </Dropdown>
-      )}
-    </Container>
-  );
-}

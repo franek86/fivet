@@ -1,20 +1,19 @@
 import React from "react";
 
+import { useNavigate } from "react-router";
 import styled from "styled-components";
+import { Anchor } from "lucide-react";
 
 import Spinner from "../Spinner.jsx";
-import { usePendingShips } from "../../hooks/ships/usePendingShips.js";
-import { useNavigate } from "react-router";
-import { Anchor } from "lucide-react";
-import { DEFAULT_PAGINATION_FILTER } from "../../constants/index.js";
+
+/* import { usePendingShips } from "../../hooks/ships/usePendingShips.js";
+import { DEFAULT_PAGINATION_FILTER } from "../../constants/index.js"; */
 
 const ApprovalCard = () => {
   const navigate = useNavigate();
-  const { data, isLoading } = usePendingShips(DEFAULT_PAGINATION_FILTER);
 
-  //if (data?.meta?.total === 0) return;
-
-  if (isLoading) return <Spinner />;
+  /* const { data, isLoading } = usePendingShips(DEFAULT_PAGINATION_FILTER);
+  if (isLoading) return <TablePlaceholder count={6} />; */
 
   return (
     <Card>
@@ -23,7 +22,7 @@ const ApprovalCard = () => {
       </Icon>
 
       <Content>
-        <Title>{data?.meta?.total} vessels waiting for your approval</Title>
+        <Title>Vessels waiting for your approval</Title>
 
         <Description>Review submitted vessels before they go live on the website.</Description>
 

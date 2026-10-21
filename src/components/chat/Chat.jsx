@@ -10,7 +10,6 @@ import { fetchChatConversationApi, fetchChatMessagesApi } from "../../services/a
 import socket from "../../shared/socket.js";
 import { useUser } from "../../hooks/useAuth.js";
 import { useDebounce } from "../../hooks/useDebounce.js";
-import { useUserSocket } from "../../hooks/useUserSocket.js";
 
 export default function Chat() {
   const { data: user } = useUser();

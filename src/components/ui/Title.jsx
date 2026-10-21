@@ -12,14 +12,16 @@ const StyledTitle = styled.div`
       case "h4":
         return "calc(1.8rem + 0.2vw)";
       case "h5":
-        return "calc(1.6rem + 0.2vw)";
+        return "calc(1.5rem + 0.2vw)";
       case "h6":
         return "calc(1rem + 0.1vw)";
       default:
         return "calc(1rem + 0.2vw)";
     }
   }};
-  font-weight: 700;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 0.8rem;
 `;
 
 function Title({ tag = "h1", children }) {

@@ -5,7 +5,7 @@ import ProtectedRoute from "../pages/ProtectedRoute.jsx";
 import CompanyOwnerProfile from "../pages/owner/CompanyOwnerProfile.jsx";
 import OwnerVessels from "../pages/owner/OwnerVessels.jsx";
 import OwnerSingleVessels from "../pages/owner/OwnerSingleVessels.jsx";
-import VerifiedBrokerList from "../pages/owner/VerifiedBrokerLIst.jsx";
+import VerifiedBrokerList from "../pages/owner/VerifiedBrokerList.jsx";
 import OwnerChat from "../pages/owner/OwnerChat.jsx";
 import OwnerEditShip from "../pages/owner/OwnerEditShip.jsx";
 

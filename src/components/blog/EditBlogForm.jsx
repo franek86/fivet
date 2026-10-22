@@ -1,8 +1,8 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import styled, { createGlobalStyle, keyframes } from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 import { useGetBlog, useUpdateBlog } from "../../hooks/useBlog.js";
 

@@ -1,4 +1,3 @@
-import React from "react";
 import SearchBar from "../SearchBar.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearch } from "../../slices/searchSlice.js";

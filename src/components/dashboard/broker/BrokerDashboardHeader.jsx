@@ -1,4 +1,3 @@
-import React from "react";
 import DashboardWelcome from "../DashboardWelcome.jsx";
 import { useUser } from "../../../hooks/useAuth.js";
 

@@ -1,7 +1,6 @@
-import React from "react";
 import BackBtn from "../../components/BackBtn.jsx";
 import SingleShipData from "../../components/ships/SingleShipData.jsx";
-import Title from "../../components/ui/Title.jsx";
+
 import styled from "styled-components";
 
 const FlexWrap = styled.div`

@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import styled from "styled-components";
 
 import VesselsCard from "../ui/VessselsCard.jsx";
@@ -17,7 +17,7 @@ const tabs = [
 const OwnerApprovalList = () => {
   const { ships, isLoading } = useShips(DEFAULT_FILTERS);
 
-  const [activeTab, setActiveTab] = React.useState("ALL");
+  const [activeTab, setActiveTab] = useState("ALL");
 
   const filteredVessels = ships?.filter((vessel) => {
     const matchesTab = activeTab === "ALL" || vessel.listingStatus === activeTab;

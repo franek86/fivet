@@ -1,4 +1,3 @@
-import React from "react";
 import CompanyProfileData from "../../components/company/CompanyProfile.jsx";
 
 const CompanyOwnerProfile = () => {

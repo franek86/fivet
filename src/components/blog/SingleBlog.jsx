@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useParams } from "react-router";
 import DOMPurify from "dompurify";
 import styled from "styled-components";

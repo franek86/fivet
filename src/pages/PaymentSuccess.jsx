@@ -1,4 +1,3 @@
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useSearchParams } from "react-router";
 import styled, { keyframes } from "styled-components";

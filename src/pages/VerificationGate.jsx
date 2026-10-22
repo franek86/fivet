@@ -1,8 +1,6 @@
-import React from "react";
 import { Link } from "react-router";
 import styled from "styled-components";
 
-import { useUser } from "../hooks/useAuth.js";
 import { Clock, ShieldAlert, XCircle } from "lucide-react";
 import { useVerificationStatus } from "../hooks/useVerificationStatus.js";
 

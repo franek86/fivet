@@ -1,4 +1,3 @@
-import React from "react";
 import { getEventPosition } from "../../helpers/getPositionEventCalendar.js";
 import { format, isSameDay, setHours } from "date-fns";
 import { ClockIcon } from "lucide-react";

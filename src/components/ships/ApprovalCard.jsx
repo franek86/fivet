@@ -1,19 +1,9 @@
-import React from "react";
-
 import { useNavigate } from "react-router";
 import styled from "styled-components";
 import { Anchor } from "lucide-react";
 
-import Spinner from "../Spinner.jsx";
-
-/* import { usePendingShips } from "../../hooks/ships/usePendingShips.js";
-import { DEFAULT_PAGINATION_FILTER } from "../../constants/index.js"; */
-
 const ApprovalCard = () => {
   const navigate = useNavigate();
-
-  /* const { data, isLoading } = usePendingShips(DEFAULT_PAGINATION_FILTER);
-  if (isLoading) return <TablePlaceholder count={6} />; */
 
   return (
     <Card>

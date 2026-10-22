@@ -1,4 +1,24 @@
+import { BadgeCheck, Clock, ShieldAlert, ShieldX } from "lucide-react";
 import styled from "styled-components";
+
+export const statusStyles = {
+  VERIFIED: {
+    label: "VERIFIED",
+    Icon: BadgeCheck,
+  },
+  PENDING: {
+    label: "PENDING",
+    Icon: Clock,
+  },
+  SUSPENDED: {
+    label: "SUSPENDED",
+    Icon: ShieldAlert,
+  },
+  REJECTED: {
+    label: "REJECTED",
+    Icon: ShieldX,
+  },
+};
 
 export const Container = styled.div`
   display: flex;

@@ -1,20 +1,6 @@
 import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import {
-  BadgeCheck,
-  Building2,
-  Clock,
-  FileText,
-  Globe,
-  Mail,
-  MapPin,
-  Phone,
-  Receipt,
-  ShieldAlert,
-  ShieldX,
-  Download,
-  Briefcase,
-} from "lucide-react";
+import { Building2, FileText, Globe, Mail, MapPin, Phone, Receipt, Download, Briefcase } from "lucide-react";
 
 import {
   Container,
@@ -50,79 +36,19 @@ import {
   DownloadIcon,
   VerificationList,
   VerificationLabel,
-  SectionWrapper,
-  SectionHeader,
-  SectionTitle,
-  SectionSubtitle,
-  SectionBody,
-  FieldWrapper,
-  FieldLabel,
-  FieldValue,
-  FieldLink,
-  Badge,
-} from "./SingleUserProfile.styles.js";
+  statusStyles,
+} from "../SingleUserProfile.styles.js";
+
 import BackBtn from "../../BackBtn.jsx";
 import Spinner from "../../Spinner.jsx";
+
+import SectionUserProfile from "./SectionUserProfile.jsx";
+import SectionUserField from "./SectionUserField.jsx";
+import StatusUserBadge from "./SectionUserBadge.jsx";
 
 import { getSingleUserProfileApi } from "../../../services/apiUsers.js";
 import { formatDateTime } from "../../../utils/formatDate.js";
 import { useUpdateUserProfileVerification } from "../../../hooks/useProfile.js";
-
-const statusStyles = {
-  VERIFIED: {
-    label: "VERIFIED",
-    Icon: BadgeCheck,
-  },
-  PENDING: {
-    label: "PENDING",
-    Icon: Clock,
-  },
-  SUSPENDED: {
-    label: "SUSPENDED",
-    Icon: ShieldAlert,
-  },
-  REJECTED: {
-    label: "REJECTED",
-    Icon: ShieldX,
-  },
-};
-
-function StatusBadge({ status = "PENDING" }) {
-  const { Icon, label } = statusStyles[status];
-  return (
-    <Badge $status={status}>
-      <Icon size={16} />
-      {label}
-    </Badge>
-  );
-}
-
-const Field = ({ icon: Icon, label, value, href }) => {
-  return (
-    <FieldWrapper>
-      <FieldLabel>{label}</FieldLabel>
-      <FieldValue>
-        {Icon ? <Icon className='size-4 shrink-0 text-accent-600' /> : null}
-        {href ? <FieldLink href={href}>{value}</FieldLink> : value}
-      </FieldValue>
-    </FieldWrapper>
-  );
-};
-
-const Section = ({ title, subtitle, action, children }) => {
-  return (
-    <SectionWrapper>
-      <SectionHeader>
-        <div>
-          <SectionTitle>{title}</SectionTitle>
-          {subtitle ? <SectionSubtitle>{subtitle}</SectionSubtitle> : null}
-        </div>
-        {action}
-      </SectionHeader>
-      <SectionBody>{children}</SectionBody>
-    </SectionWrapper>
-  );
-};
 
 const SingleProfileData = () => {
   const { id } = useParams();
@@ -136,7 +62,7 @@ const SingleProfileData = () => {
 
   if (isLoading) return <Spinner />;
   if (isPending) return <Spinner />;
-  console.log(data);
+
   return (
     <main>
       <Container>
@@ -152,8 +78,8 @@ const SingleProfileData = () => {
               <ProfileDetails>
                 <ProfileTitle>
                   <Title>{data.fullName}</Title>
-                  {data.role === "BROKER" && <StatusBadge status={data?.brokerProfile?.verificationStatus} />}
-                  {data.role === "OWNER" && <StatusBadge status={data?.ownerProfile?.verificationStatus} />}
+                  {data.role === "BROKER" && <StatusUserBadge status={data?.brokerProfile?.verificationStatus} />}
+                  {data.role === "OWNER" && <StatusUserBadge status={data?.ownerProfile?.verificationStatus} />}
                 </ProfileTitle>
 
                 <Email>
@@ -172,37 +98,37 @@ const SingleProfileData = () => {
 
         <MainGrid>
           <Column>
-            <Section
+            <SectionUserProfile
               title='Company'
               subtitle='Business entity linked to this account'
               action={<CompanyLogo>{data?.company?.logo}</CompanyLogo>}
             >
               <CompanyGrid>
-                <Field icon={Building2} label='Name' value={data?.company?.name} />
-                <Field label='Legal name' value={data?.company?.legalName} />
-                <Field icon={Receipt} label='VAT number' value={data?.company?.vat} />
-                <Field icon={Globe} label='Website' value={data?.company?.website} href={`https://${data?.company?.website}`} />
-                <Field icon={Mail} label='Business email' value={data?.company?.email} href={`mailto:${data?.company?.email}`} />
-                <Field icon={Phone} label='Phone' value={data?.company?.phone} />
-                <Field icon={MapPin} label='Address' value={data?.company?.address} />
-                <Field label='City' value={data?.company?.city} />
-                <Field label='Country' value={data?.company?.country} />
+                <SectionUserField icon={Building2} label='Name' value={data?.company?.name} />
+                <SectionUserField label='Legal name' value={data?.company?.legalName} />
+                <SectionUserField icon={Receipt} label='VAT number' value={data?.company?.vat} />
+                <SectionUserField icon={Globe} label='Website' value={data?.company?.website} href={`https://${data?.company?.website}`} />
+                <SectionUserField icon={Mail} label='Business email' value={data?.company?.email} href={`mailto:${data?.company?.email}`} />
+                <SectionUserField icon={Phone} label='Phone' value={data?.company?.phone} />
+                <SectionUserField icon={MapPin} label='Address' value={data?.company?.address} />
+                <SectionUserField label='City' value={data?.company?.city} />
+                <SectionUserField label='Country' value={data?.company?.country} />
               </CompanyGrid>
 
               <Description>
                 <Label>Description</Label>
                 <DescriptionText>{data?.company?.description}</DescriptionText>
               </Description>
-            </Section>
+            </SectionUserProfile>
           </Column>
 
           <Column>
             {data.role === "BROKER" ? (
-              <Section title='Broker profile' subtitle='Role-specific credentials'>
+              <SectionUserProfile title='Broker profile' subtitle='Role-specific credentials'>
                 <RoleContent>
                   <StatusRow>
                     <Label>Verification status</Label>
-                    <StatusBadge status={data?.brokerProfile?.verificationStatus} />
+                    <StatusUserBadge status={data?.brokerProfile?.verificationStatus} />
                   </StatusRow>
 
                   <ExperienceCard>
@@ -214,13 +140,13 @@ const SingleProfileData = () => {
                     <ExperienceValue>{data?.brokerProfile?.yearsExperience}</ExperienceValue>
                   </ExperienceCard>
                 </RoleContent>
-              </Section>
+              </SectionUserProfile>
             ) : (
-              <Section title='Owner profile' subtitle='Role-specific credentials'>
+              <SectionUserProfile title='Owner profile' subtitle='Role-specific credentials'>
                 <RoleContent>
                   <StatusRow>
                     <Label>Verification status</Label>
-                    <StatusBadge status={data?.ownerStatus?.verificationStatus} />
+                    <StatusUserBadge status={data?.ownerStatus?.verificationStatus} />
                   </StatusRow>
 
                   <div>
@@ -246,10 +172,10 @@ const SingleProfileData = () => {
                     </DocumentsList>
                   </div>
                 </RoleContent>
-              </Section>
+              </SectionUserProfile>
             )}
 
-            <Section title='Verification' subtitle='Reviewed by an administrator'>
+            <SectionUserProfile title='Verification' subtitle='Reviewed by an administrator'>
               <VerificationList>
                 {["PENDING", "VERIFIED", "SUSPENDED", "REJECTED"].map((s) => (
                   <StatusRow
@@ -262,11 +188,11 @@ const SingleProfileData = () => {
                       {s === data?.brokerProfile?.verificationStatus ? <span>Current status</span> : statusStyles[s].label}
                     </VerificationLabel>
 
-                    <StatusBadge status={s} />
+                    <StatusUserBadge status={s} />
                   </StatusRow>
                 ))}
               </VerificationList>
-            </Section>
+            </SectionUserProfile>
           </Column>
         </MainGrid>
       </Container>

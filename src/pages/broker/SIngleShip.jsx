@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import Title from "../../components/ui/Title.jsx";
 import BackBtn from "../../components/BackBtn.jsx";

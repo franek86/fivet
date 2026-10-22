@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { Search, MoreVertical, Send, Ship, Mail, Phone, User, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import { Search, Send, Ship, Mail, Phone, User, Clock, CheckCircle, AlertCircle } from "lucide-react";
 
 const enquiries = [
   {
@@ -725,29 +725,6 @@ const StatusSelect = styled.select`
 
   &:focus {
     border-color: var(--color-accent);
-  }
-`;
-
-const IconButton = styled.button`
-  width: 34px;
-  height: 34px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border: none;
-
-  background: transparent;
-
-  color: var(--color-text-muted);
-
-  border-radius: 6px;
-
-  cursor: pointer;
-
-  &:hover {
-    background: var(--color-bg);
   }
 `;
 

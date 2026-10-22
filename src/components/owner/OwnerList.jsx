@@ -50,7 +50,7 @@ const OwnerList = () => {
       toast.success("Request sent to owner successfully");
       setLoadingOwnerId(null);
     },
-    onError: (error) => {
+    onError: () => {
       setLoadingOwnerId(null);
     },
   });

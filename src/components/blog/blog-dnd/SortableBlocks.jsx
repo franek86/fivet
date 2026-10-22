@@ -7,7 +7,7 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-
 import { CSS } from "@dnd-kit/utilities";
 
 import BlogBlocks from "./BlogEditorDnd.jsx";
-import { BLOCK_ICON, DEFAULT_BLOCK, DEFAULT_BLOCK_OPTIONS, PALETTE_BLOCKS } from "../../../constants/index.js";
+import { BLOCK_ICON, DEFAULT_BLOCK_OPTIONS, PALETTE_BLOCKS } from "../../../constants/index.js";
 
 /* ─────────────────────────────────────────────
    Single sortable canvas block

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { setSearch, setVesselsSearch } from "../../slices/searchSlice.js";
+import { setSearch } from "../../slices/searchSlice.js";
 
 import SearchBar from "../SearchBar.jsx";
 

@@ -8,7 +8,6 @@ import { customFormatDate } from "../../utils/formatDate.js";
 import { useAllUnreadNotification, useUpdateReadNotification } from "../../hooks/useNotification.js";
 import { useClickOutSide } from "../../hooks/useClickOutside.js";
 
-import Spinner from "../Spinner.jsx";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 export default function NotificationIcon() {

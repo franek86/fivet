@@ -264,7 +264,7 @@ export default function Chat() {
                   <MessageAvatar $mine={isMine}>
                     <Avatar>
                       {msg.sender?.avatar ? (
-                        <img src={conversation.user.avatar} alt={conversation.user.name} />
+                        <img src={conversations.user.avatar} alt={conversations.user.name} />
                       ) : (
                         msg.sender?.fullName
                           .split(" ")

@@ -6,7 +6,6 @@ import { Link } from "react-router";
 /**
  * Third-party libraries
  */
-import styled from "styled-components";
 import { UserRound } from "lucide-react";
 
 /**

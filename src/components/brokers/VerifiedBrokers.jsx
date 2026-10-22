@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import styled from "styled-components";
@@ -18,6 +18,7 @@ import VerifiedBrokersHeader from "./VerifiedBrokersHeader.jsx";
 
 import { PAGE_SIZE } from "../../constants/index.js";
 import { useUser } from "../../hooks/useAuth.js";
+import { setClearSearch } from "../../slices/searchSlice.js";
 
 const getStatus = (status) => {
   switch (status) {
@@ -60,6 +61,7 @@ const DEFAULT_FILTERS = {
 };
 
 const VerifiedBrokers = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const searchBrokers = useSelector((state) => state.search.verifiedBrokers);

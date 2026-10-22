@@ -35,8 +35,8 @@ function LastBlogs({ data, isLoading }) {
       <ListHeaderTitle>Recent blogs</ListHeaderTitle>
 
       {data?.map((blog) => (
-        <ListLink to={`/admin/blogs/${blog.slug}`}>
-          <ListRow key={blog.id}>
+        <ListLink key={blog.id} to={`/admin/blogs/${blog.slug}`}>
+          <ListRow>
             <ListLeftContent>
               <ListTitle>{blog.title}</ListTitle>
               <Pill $status={blog.status}>{blog.status}</Pill>

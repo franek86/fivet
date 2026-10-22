@@ -8,6 +8,12 @@ const CustomBigCalendarHours = ({ events, day, openAdd }) => {
   const positionedEvents = groupOverlappingEvents(events);
   const allSegments = positionedEvents;
   const daySegments = allSegments.filter((seg) => isSameDay(seg.day, day));
+
+  const openView = () => {
+    //TO DO: set open view
+    console.log("oprn view");
+  };
+
   return (
     <div className='week-calendar'>
       <div className='body time'>

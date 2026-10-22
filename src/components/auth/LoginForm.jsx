@@ -2,7 +2,7 @@
  * React & Hooks
  */
 import { useState } from "react";
-import { Link, replace, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 /**
  * Third-party libraries

@@ -4,16 +4,9 @@ import ToggleSwitch from "../ui/ToggleSwitch.jsx";
 import EmptyState from "../EmptyState.jsx";
 import Spinner from "../Spinner.jsx";
 import Button from "../../components/ui/Button.jsx";
-import ConfirmDialog from "../ConfirmDialog.jsx";
-import Modal from "../Modal.jsx";
 
 import { customFormatDate } from "../../utils/formatDate.js";
-import {
-  useAllUnreadNotification,
-  useDeleteNotification,
-  useNotificationList,
-  useUpdateReadNotification,
-} from "../../hooks/useNotification.js";
+import { useDeleteNotification, useNotificationList, useUpdateReadNotification } from "../../hooks/useNotification.js";
 
 import { BellPlus } from "lucide-react";
 
@@ -86,7 +79,7 @@ function NotificationLists() {
 
   return (
     <Wrapper>
-      {notifications.length === 0 && <p>We'll you keep updated on any feature notifications</p>}
+      {notifications.length === 0 && <p>We&lsquo;ll you keep updated on any feature notifications</p>}
 
       {notifications.map((item) => (
         <div key={item.id}>

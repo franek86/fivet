@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useParams } from "react-router";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import styled, { keyframes } from "styled-components";
@@ -149,7 +149,7 @@ const SideInput = styled.input`
   }
 `;
 
-const SideTextarea = styled.textarea`
+/* const SideTextarea = styled.textarea`
   padding: 8px 10px;
   border: 1px solid var(--color-text);
   border-radius: 8px;
@@ -164,7 +164,7 @@ const SideTextarea = styled.textarea`
     border-color: var(--color-border);
     background: var(--color-white);
   }
-`;
+`; */
 
 const Divider = styled.hr`
   border: none;
@@ -214,8 +214,7 @@ const DescInput = styled.textarea`
 ───────────────────────────────────────────── */
 const EditBlogForm = () => {
   const { slug } = useParams();
-  const navigate = useNavigate();
-  const { data, isLoading } = useGetBlog(slug);
+  const { data } = useGetBlog(slug);
   const { data: categories } = useGetBlogCategories();
   const blogId = data?.id;
   const { mutate: updateBlog, isFetching: isSaving } = useUpdateBlog();
@@ -231,7 +230,7 @@ const EditBlogForm = () => {
     reset,
     watch,
     setValue,
-    formState: { isDirty, errors },
+    fromState: { isDirty },
   } = useForm({
     defaultValues: {
       title: "",
@@ -250,8 +249,6 @@ const EditBlogForm = () => {
     },
     resolver: zodResolver(editBlogSchema),
   });
-
-  console.log(isDirty);
 
   /* Get blog categores and map it  */
   const blogCategories = categories?.map((cat) => {

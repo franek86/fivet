@@ -33,7 +33,7 @@ export function useAdminSocket() {
       updateUserStatus(payload.userId, false);
     };
 
-    const handleNotificationNew = (payload) => {
+    const handleNotificationNew = ({ count }) => {
       queryClient.invalidateQueries({
         queryKey: ["notifications"],
       });

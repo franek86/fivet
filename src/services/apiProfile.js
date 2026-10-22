@@ -1,7 +1,5 @@
-import apiClient from "./axiosConfig.js";
-
 /* Get all user profile olny for admin*/
-export const getAllProfileApi = async ({ search = "" }) => {
+export const getAllProfileApi = async () => {
   try {
     console.log("Profile api test");
     /* const params = new URLSearchParams();
@@ -40,7 +38,7 @@ export const getLastFiveUsersApi = async () => {
 };
 
 /* update profile  */
-export const updateProfileApi = async (updatedData, userId) => {
+export const updateProfileApi = async (userId) => {
   if (!userId) throw new Error("User id does not exists.");
 
   try {

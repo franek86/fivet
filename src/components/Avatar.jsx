@@ -26,11 +26,6 @@ const StyledNoAvatar = styled.div`
   background-color: var(--color-white);
 `;
 
-const StyledName = styled.p`
-  font-weight: 600;
-  font-size: 1.5rem;
-`;
-
 const StyledImageAvatar = styled.img`
   width: 40px;
   height: 40px;

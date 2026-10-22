@@ -1,4 +1,4 @@
-import { CircleX, X } from "lucide-react";
+import { CircleX } from "lucide-react";
 import { createPortal } from "react-dom";
 
 import { useSelector } from "react-redux";

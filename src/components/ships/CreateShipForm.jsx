@@ -27,7 +27,7 @@ import { useUser } from "../../hooks/useAuth.js";
 import { useAllShipType } from "../../hooks/useShipType.js";
 import { FormHeader } from "./ship-form/FormHeader.jsx";
 import { countriesJson } from "../../utils/countriesJson.js";
-import { formatedPrice } from "../../utils/formattedPrice.js";
+
 import { CURRENCY, FUEL_TYPE } from "../../constants/index.js";
 
 const ShipsForm = () => {
@@ -50,7 +50,7 @@ const ShipsForm = () => {
   const [openSections, setOpenSections] = useState({
     basic: true,
   });
-  const [activeSection, setActiveSection] = useState("basic");
+  const [, setActiveSection] = useState("basic");
 
   /* Zod validation for edit and create ship */
   const schema = isEditSession ? editShipSchema : createShipSchema;
@@ -178,38 +178,11 @@ const ShipsForm = () => {
     setActiveSection(id);
   };
 
-  const openSection = (id) => {
-    setOpenSections((prev) => ({
-      ...prev,
-      [id]: true,
-    }));
-
-    setActiveSection(id);
-
-    setTimeout(() => {
-      document.getElementById(`section-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 50);
-  };
-
   /* Progress bar */
   const completedRequiredFields = requierdFiledsWatch.filter(
     (value) => value !== undefined && value !== null && String(value).trim() !== "",
   ).length;
   const progress = Math.round((completedRequiredFields / requiredFields.length) * 100);
-
-  const formatPrice = (value) => {
-    if (value === null || value === "") {
-      return "";
-    }
-
-    const number = typeof value === "number" ? value : Number(value.replace(/\D/g, ""));
-
-    if (Number.isNaN(number)) {
-      return "";
-    }
-
-    return new Intl.NumberFormat("en-US").format(number);
-  };
 
   if (isLoading) return <Spinner />;
   if (isError) return <div>Error</div>;

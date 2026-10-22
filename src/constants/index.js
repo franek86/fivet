@@ -1,4 +1,4 @@
-import { Euro, Grid2X2, Image, Pilcrow } from "lucide-react";
+import { Grid2X2, Image, Pilcrow } from "lucide-react";
 
 export const PAGE_SIZE = 12;
 export const MAX_PAGE_BUTTONS = 2;

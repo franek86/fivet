@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { formatedPrice } from "../../utils/formattedPrice.js";
 import { Edit, MapPin, Trash2 } from "lucide-react";
 import { Link, useNavigate } from "react-router";
-import { openModalByName } from "../../slices/modalSlice.js";
+import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useDispatch } from "react-redux";
 import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
@@ -190,12 +190,6 @@ const VesselName = styled.h3`
   color: var(--color-text);
   font-size: 18px;
   font-weight: 700;
-`;
-
-const VesselType = styled.div`
-  margin-top: 4px;
-  color: var(--color-text-muted);
-  font-size: 12px;
 `;
 
 const Details = styled.div`

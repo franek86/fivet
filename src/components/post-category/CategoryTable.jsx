@@ -8,14 +8,14 @@ import { LucideSortAsc, Trash2 } from "lucide-react";
 /**
  * Custom Hooks
  */
-import { useCategories } from "../../hooks/categories/useCategories.js";
+
 import { useDeleteCategory } from "../../hooks/categories/useDeleteCategory.js";
 import { useSelectDeleteItem } from "../../hooks/useSelectDeleteItem.js";
 
 /**
  * UI Components
  */
-import Pagination from "../Pagination.jsx";
+
 import Spinner from "../Spinner.jsx";
 import CustomTable from "../ui/CustomTable.jsx";
 import Sort from "../ui/Sort.jsx";

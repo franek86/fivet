@@ -37,7 +37,7 @@ const UploadImageBlock = ({ onChange, initialPreview = null }) => {
     if (initialPreview && !preview) {
       setPreview(initialPreview);
     }
-  }, [initialPreview]);
+  }, [initialPreview, preview]);
 
   const handleBoxClick = () => {
     fileInputRef.current.click();

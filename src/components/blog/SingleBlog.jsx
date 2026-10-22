@@ -200,7 +200,9 @@ const SingleBlog = () => {
       {data.tags.length > 0 && (
         <Tags>
           {data.tags.map((tag) => (
-            <div className='tag'>{tag}</div>
+            <div key={tag} className='tag'>
+              {tag}
+            </div>
           ))}
         </Tags>
       )}
@@ -212,7 +214,9 @@ const SingleBlog = () => {
         return (
           <Content>
             {(block?.text || block?.text !== undefined) && (
-              <div className='text-test-frane' key={block.id} dangerouslySetInnerHTML={sanitizedData()} />
+              <div key={block?.id}>
+                <div className='text-test-frane' dangerouslySetInnerHTML={sanitizedData()} />
+              </div>
             )}
             {block?.imageUrl && <img src={block.imageUrl} alt={block.imageAlt} />}
           </Content>

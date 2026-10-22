@@ -132,13 +132,13 @@ const PaymentSuccess = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get("session_id");
   /*  const { data, isLoading } = useGetPaymentSession(sessionId); */
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ["payment-session", sessionId],
     queryFn: () => getPaymentSession(sessionId),
     enabled: !!sessionId,
   });
 
-  const { amount_total, currency, invoice, status, presentment_details } = data;
+  const { amount_total, currency, invoice, status } = data;
   return (
     <Container>
       <BackgroundGlow />

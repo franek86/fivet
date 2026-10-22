@@ -1,8 +1,7 @@
 /**
  * Third-party libraries
  */
-import { useSearchParams } from "react-router";
-import { useSelector } from "react-redux";
+
 import styled from "styled-components";
 import { Trash2 } from "lucide-react";
 

@@ -32,7 +32,7 @@ function Nav() {
     <StyledNav>
       {navLinks.map((item) => {
         const badgeValue = item.badge ? badgeValues[item.badge] : undefined;
-        return <NavItem key={item.label} item={item} badgeMap={badgeValues} />;
+        return <NavItem key={item.label} item={item} badgeMap={badgeValue} />;
       })}
     </StyledNav>
   );

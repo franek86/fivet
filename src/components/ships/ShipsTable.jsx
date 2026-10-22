@@ -120,12 +120,3 @@ const Container = styled.div`
   grid-template-columns: ${({ $toggleFilter }) => ($toggleFilter ? "30rem 1fr" : "0 1fr")};
   gap: ${({ $toggleFilter }) => ($toggleFilter ? "2rem" : "0")};
 `;
-
-const FilterState = styled.section`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 4rem;
-`;

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Controller, useWatch } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import ImageUploader from "../../ImageUploader.jsx";
 import { Trash2 } from "lucide-react";
 import { COL_BLOCK_TYPES } from "../../../constants/index.js";

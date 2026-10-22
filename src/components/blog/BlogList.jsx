@@ -39,7 +39,6 @@ const BlogList = () => {
   const [filterState, setFilterState] = useState(DEFAULT_FILTERS);
 
   /* API */
-  const { mutate } = useDeleteBlog();
   const { data, isLoading, isFetching } = useGetBlogs({ ...filterState, search: searchBlogs });
 
   /* Handle delete items */
@@ -128,7 +127,7 @@ const BlogList = () => {
   };
 
   //Current filters
-  const hasFilters =
+  /*   const hasFilters =
     Boolean(filterState.search) ||
     filterState.categories.length > 0 ||
     filterState.tags.length > 0 ||
@@ -139,7 +138,7 @@ const BlogList = () => {
   const resetFilters = () => {
     console.log(DEFAULT_FILTERS);
     setFilterState(DEFAULT_FILTERS);
-  };
+  }; */
 
   // Table columns configuration
   const tableColumns = [
@@ -290,11 +289,11 @@ const ShipFilterWrap = styled.div`
     border-color 0.2s;
 `;
 
-const FilterState = styled.section`
+/* const FilterState = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 1rem;
   margin-top: 4rem;
-`;
+`; */

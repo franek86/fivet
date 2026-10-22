@@ -1,9 +1,4 @@
 /**
- * React & Hooks
- */
-import { Link } from "react-router";
-
-/**
  * Third-party libraries
  */
 import styled from "styled-components";
@@ -18,7 +13,7 @@ import { formatedPrice } from "../../utils/formattedPrice.js";
  * UI Components
  */
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
-import Title from "../ui/Title.jsx";
+
 import {
   ListContainer,
   ListLink,
@@ -42,8 +37,8 @@ function TopShips({ data, isLoading }) {
       <ListHeaderTitle>Popular ships</ListHeaderTitle>
 
       {data?.map((ship) => (
-        <ListLink to={`/admin/vessels/${ship.id}`}>
-          <ListRow key={ship.id}>
+        <ListLink key={ship.id} to={`/admin/vessels/${ship.id}`}>
+          <ListRow>
             {ship.mainImage ? (
               <ListThumbnail src={ship.mainImage} alt={ship.shipName} />
             ) : (

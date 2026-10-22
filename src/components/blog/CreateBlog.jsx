@@ -179,7 +179,7 @@ const CreateBlog = () => {
       .replace(/-+/g, "-");
 
     setValue("slug", slugify);
-  }, [blogTitleWatch]);
+  }, [blogTitleWatch, setValue]);
 
   if (isPending) return <Spinner />;
 
@@ -387,13 +387,6 @@ const FormHeader = styled.header`
   }
 `;
 
-const Row = styled.div`
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  width: 100%;
-`;
-
 const Column = styled.div`
   display: flex;
   flex-direction: column;
@@ -401,12 +394,12 @@ const Column = styled.div`
   flex: 1;
 `;
 
-const ImageBannerRow = styled(Row)`
+/* const ImageBannerRow = styled(Row)`
   flex-direction: column;
   @media screen and (min-width: 640px) {
     flex-direction: row;
   }
-`;
+`; */
 
 const Field = styled.div`
   margin-bottom: 2rem;

@@ -66,9 +66,8 @@ function ForgotPasswordForm() {
 
   const { mutate: verifyOtpMutation, isPending: verifyOtpPending } = useMutation({
     mutationFn: verifyOtpForgetPasswordApi,
-    onSuccess: (data) => {
+    onSuccess: () => {
       setStep("resetStep");
-      //dispatch(setResetToken(data.resetToken));
     },
     onError: (error) => {
       const message = error.response?.data?.message || "Verify OTP failed. Please try again.";

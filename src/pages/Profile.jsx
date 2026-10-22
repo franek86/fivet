@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import ProfileData from "../components/profile/ProfileData.jsx";
 import Title from "../components/ui/Title.jsx";
 

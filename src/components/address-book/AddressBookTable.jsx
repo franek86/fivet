@@ -166,12 +166,3 @@ const Container = styled.div`
 const Header = styled.header`
   display: flex;
 `;
-
-const FilterState = styled.section`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 4rem;
-`;

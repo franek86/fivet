@@ -40,12 +40,7 @@ const Eyebrow = styled.div`
   color: #6b7280;
   margin-bottom: 8px;
 `;
-const Title = styled.h1`
-  margin: 0;
-  font-size: 32px;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-`;
+
 const Subtitle = styled.p`
   margin: 10px 0 0;
   color: #697386;

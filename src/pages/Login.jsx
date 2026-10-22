@@ -1,4 +1,4 @@
-import { useNavigate, Link } from "react-router";
+import { Link } from "react-router";
 
 import styled from "styled-components";
 
@@ -26,7 +26,6 @@ const LinkText = styled(Link)`
 `;
 
 function Login() {
-  const navigate = useNavigate();
   return (
     <FormWrap>
       {/*  <ButtonTest className='btn bg-gradient' onClick={() => navigate("/sign-up?plan=STANDARD")}>
@@ -39,7 +38,7 @@ function Login() {
       <p>Please sign in to continue</p>
       <LoginForm />
       <div>
-        Don't have a Fivet account? Please <LinkText to='/sign-up'>Sign up</LinkText>.
+        Don&lsquo;t have a Fivet account? Please <LinkText to='/sign-up'>Sign up</LinkText>.
       </div>
     </FormWrap>
   );

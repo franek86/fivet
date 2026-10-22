@@ -20,7 +20,6 @@ import { useAdminSocket } from "../../hooks/useAdminSocket.js";
 import { DEFAULT_PAGINATION_FILTER, PAGE_SIZE } from "../../constants/index.js";
 
 function UserProfileList() {
-  /* global search user state */
   const searchUsers = useSelector((state) => state.search.users);
 
   /* local pagination */
@@ -34,7 +33,7 @@ function UserProfileList() {
 
   useAdminSocket();
 
-  const getVerificationProfile = (user) => {
+  /* const getVerificationProfile = (user) => {
     if (user.brokerProfile) {
       return {
         type: "BROKER",
@@ -50,7 +49,7 @@ function UserProfileList() {
     }
 
     return null;
-  };
+  }; */
 
   const handleVerificationChange = (userId, verificationStatus) => {
     updateVerification({
@@ -79,7 +78,7 @@ function UserProfileList() {
 
         <UserRows>
           {data.users?.map((user) => {
-            const verification = getVerificationProfile(user);
+            // const verification = getVerificationProfile(user);
 
             return (
               <UserRow key={user.id}>
@@ -194,19 +193,6 @@ const Header = styled.header`
     align-items: flex-start;
     margin-bottom: 18px;
   }
-`;
-
-const Title = styled.h1`
-  margin: 0;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.7px;
-`;
-
-const Subtitle = styled.p`
-  margin: 7px 0 0;
-  color: var(--color-text);
-  font-size: 14px;
 `;
 
 const UserCount = styled.div`
@@ -429,30 +415,6 @@ const StatusCell = styled.div`
   }
 `;
 
-const MobileEmail = styled.div`
-  display: none;
-
-  @media (max-width: 1200px) {
-    display: block;
-    max-width: min(55vw, 280px);
-    margin-top: 4px;
-    overflow: hidden;
-    color: var(--color-text);
-    font-size: 12px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-`;
-
-const MobileStatus = styled.div`
-  display: none;
-
-  @media (max-width: 760px) {
-    display: block;
-    margin-left: auto;
-  }
-`;
-
 const StatusBadge = styled.div`
   display: inline-flex;
   align-items: center;
@@ -473,87 +435,5 @@ const StatusIndicator = styled.span`
 `;
 
 const VerificationCell = styled.div``;
-
-const VerifiedBadge = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: ${({ $status }) => {
-    switch ($status) {
-      case "PENDING":
-        return "var(--color-accent-600)";
-      case "VERIFIED":
-        return "var(--color-success)";
-      case "REJECTED":
-        return "var(--color-danger)";
-      case "SUSPENDED":
-        return "var(--color-danger)";
-      default:
-        return "var(--color-text-muted)";
-    }
-  }};
-  font-size: 12px;
-  font-weight: 600;
-`;
-
-const CheckIcon = styled.span`
-  display: grid;
-  width: 18px;
-  height: 18px;
-  place-items: center;
-  border-radius: 50%;
-  background-color: ${({ $status }) => {
-    switch ($status) {
-      case "PENDING":
-        return "var(--color-accent-600)";
-      case "VERIFIED":
-        return "var(--color-success)";
-      case "REJECTED":
-        return "var(--color-danger)";
-      case "SUSPENDED":
-        return "var(--color-danger)";
-      default:
-        return "var(--color-text-muted)";
-    }
-  }};
-  font-size: 11px;
-`;
-
-const VerifyButton = styled.button`
-  border: 0;
-  padding: 6px 11px;
-  border-radius: 7px;
-  background: var(--color-accent);
-  color: var(--color-text-muted);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s ease;
-
-  &:hover {
-    background: var(--color-success);
-    color: var(--color-white);
-  }
-`;
-
-const UserTable = styled.section`
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  border-radius: 14px;
-  background: var(--color-white);
-  box-shadow: var(--box-shadow-md);
-`;
-
-const Column = styled.div`
-  color: var(--color-text);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-`;
-
-const UserListContainer = styled.div`
-  width: 100%;
-`;
 
 export default UserProfileList;

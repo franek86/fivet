@@ -169,7 +169,7 @@ const EVENT_COLORS = [
 ];
 
 const CustomBigCalendarEdit = ({ formState, setFormState }) => {
-  const { mutate, isPending } = useCreateEvent();
+  const { mutate } = useCreateEvent();
   const {
     register,
     control,
@@ -285,7 +285,7 @@ const CustomBigCalendarEdit = ({ formState, setFormState }) => {
                   render={({ field }) => (
                     <div className='color-picker'>
                       {EVENT_COLORS.map((c, i) => (
-                        <div className={`color-btn${field.value === c.priority ? " active" : ""}`}>
+                        <div key={i} className={`color-btn${field.value === c.priority ? " active" : ""}`}>
                           <p>{c.priority}</p>
                           <button
                             key={i}

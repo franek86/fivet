@@ -34,7 +34,7 @@ function PaymentTable() {
     order: "desc",
   };
 
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const filters = useState(DEFAULT_FILTERS);
 
   // Fetch payments data from api
   const { data, count, isLoading, isError, isFetching } = useGetPayments(filters);

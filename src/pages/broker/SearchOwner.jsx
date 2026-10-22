@@ -1,4 +1,4 @@
-import OwnerList from "../../components/owner/ownerlist.jsx";
+import OwnerList from "../../components/owner/OwnerList.jsx";
 
 const SearchOwner = () => {
   return <OwnerList />;

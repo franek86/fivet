@@ -1,4 +1,4 @@
-import Chat from "../../components/chat/chat.jsx";
+import Chat from "../../components/chat/Chat.jsx";
 
 const OwnerChat = () => {
   return <Chat />;

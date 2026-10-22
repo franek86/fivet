@@ -9,7 +9,7 @@ const FlexWrap = styled.div`
   justify-content: space-between;
 `;
 
-const SingleShip = () => {
+const BrokerSingleShip = () => {
   return (
     <>
       <FlexWrap>
@@ -21,4 +21,4 @@ const SingleShip = () => {
   );
 };
 
-export default SingleShip;
+export default BrokerSingleShip;

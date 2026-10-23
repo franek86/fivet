@@ -123,7 +123,7 @@ function SignUpForm() {
 
   const onHandleVerifyOtp = () => {
     const { repeatPassword, ...safeUserData } = userData;
-    verifyOtpMutation({ data: safeUserData, subscription: plan, otp: otp.join("") });
+    verifyOtpMutation({ data: safeUserData, subscription: plan, otp });
   };
 
   //Fill otp
@@ -139,12 +139,17 @@ function SignUpForm() {
   // Handle otp change
   const handleOtpChange = (index, value) => {
     const digits = value.replace(/\D/g, "");
-    if (digits.length > 1) return fillOtp(digits); // autofill / SMS suggestion
+    if (digits.length > 1) return fillOtp(digits);
+    //if (!/^[0-9]?$/.test(value)) return;
 
     const newOtp = [...otp];
     newOtp[index] = digits;
     setOtp(newOtp);
-    if (digits && index < 5) inputRefs.current[index + 1]?.focus();
+    //if (digits && index < 5) inputRefs.current[index + 1]?.focus();
+
+    if (digits && index < inputRefs.current.length - 1) {
+      inputRefs.current[index + 1]?.focus();
+    }
   };
 
   //handle Paste otp
@@ -437,6 +442,9 @@ function SignUpForm() {
                 onChange={(e) => handleOtpChange(index, e.target.value)}
                 onKeyDown={(e) => handleOtpKeyDown(index, e)}
                 onPaste={handleOtpPaste}
+                ref={(el) => {
+                  if (el) inputRefs.current[index] = el;
+                }}
               />
             ))}
           </ShowOtpWrapper>

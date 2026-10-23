@@ -1,7 +1,7 @@
 /**
  * React & Hooks
  */
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 
 /**

@@ -41,16 +41,22 @@ function SignUpForm() {
   const [timer, setTimer] = useState(60);
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [userData, setUserData] = useState(null);
-  const inputRefs = useRef([]);
   const [step, setStep] = useState(1);
+
+  const inputRefs = useRef([]);
+  const intervalRef = useRef(null);
 
   const navigate = useNavigate();
 
   const startResendTimer = () => {
-    const interval = setInterval(() => {
+    clearInterval(intervalRef.current);
+    setTimer(60);
+    setResend(false);
+
+    intervalRef.current = setInterval(() => {
       setTimer((prev) => {
         if (prev <= 1) {
-          clearInterval(interval);
+          clearInterval(intervalRef.current);
           setResend(true);
           return 0;
         }
@@ -59,14 +65,14 @@ function SignUpForm() {
     }, 1000);
   };
 
+  useEffect(() => () => clearInterval(intervalRef.current), []);
+
   const { mutate: signUp, isPending } = useMutation({
     mutationFn: registerUser,
     onSuccess: (_, formData) => {
       setUserData(formData);
-
       setShowOtp(true);
-      setResend(false);
-      setTimer(60);
+      setOtp(["", "", "", "", "", ""]);
       startResendTimer();
     },
     onError: (error) => {
@@ -82,7 +88,8 @@ function SignUpForm() {
       navigate(`/`);
     },
     onError: (error) => {
-      toast.error(error.message);
+      const message = error.response?.data?.message || "OTP failed. Please try again.";
+      toast.error(message);
     },
   });
 
@@ -116,31 +123,52 @@ function SignUpForm() {
 
   const onHandleVerifyOtp = () => {
     const { repeatPassword, ...safeUserData } = userData;
-    verifyOtpMutation({ data: safeUserData, subscription: plan, otp });
+    verifyOtpMutation({ data: safeUserData, subscription: plan, otp: otp.join("") });
   };
 
+  //Fill otp
+  const fillOtp = (digits) => {
+    const clean = digits.replace(/\D/g, "").slice(0, 6);
+    if (!clean) return;
+    const next = ["", "", "", "", "", ""];
+    clean.split("").forEach((d, i) => (next[i] = d));
+    setOtp(next);
+    inputRefs.current[Math.min(clean.length, 6) - 1]?.focus();
+  };
+
+  // Handle otp change
   const handleOtpChange = (index, value) => {
-    if (!/^[0-9]?$/.test(value)) return;
+    const digits = value.replace(/\D/g, "");
+    if (digits.length > 1) return fillOtp(digits); // autofill / SMS suggestion
 
     const newOtp = [...otp];
-    newOtp[index] = value;
+    newOtp[index] = digits;
     setOtp(newOtp);
-
-    if (value && index < inputRefs.current.length - 1) {
-      inputRefs.current[index + 1]?.focus();
-    }
+    if (digits && index < 5) inputRefs.current[index + 1]?.focus();
   };
 
+  //handle Paste otp
+  const handleOtpPaste = (e) => {
+    e.preventDefault();
+    fillOtp(e.clipboardData.getData("text"));
+  };
+
+  //Handle otp key press
   const handleOtpKeyDown = (index, e) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
 
+  // focus first box when OTP screen appears
+  useEffect(() => {
+    if (showOtp) inputRefs.current[0]?.focus();
+  }, [showOtp]);
+
+  //Resend otp
   const resendOtp = () => {
-    if (userData) {
-      signUp(userData);
-    }
+    if (!userData || isPending) return;
+    signUp(userData);
   };
 
   const nextStep = async () => {
@@ -232,7 +260,7 @@ function SignUpForm() {
                   placeholder='Enter full name'
                   register={register}
                   {...register("fullName", { required: "Full name is required" })}
-                  autoComplete='fullName'
+                  autoComplete='name'
                 />
 
                 <InputErrorMessage message={errors.fullName?.message} />
@@ -246,7 +274,7 @@ function SignUpForm() {
                   {...register("email", {
                     required: "Email is required",
                     pattern: {
-                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                       message: "Invalid email address",
                     },
                   })}
@@ -267,7 +295,7 @@ function SignUpForm() {
                       required: "Password is requierd",
                       minLength: { value: 8, message: "Minimun 8 characters" },
                     })}
-                    autoComplete='password'
+                    autoComplete='new-password'
                   />
 
                   <PasswordIcon onClick={() => setShowPassword(!showPassword)}>
@@ -287,7 +315,7 @@ function SignUpForm() {
                     required: "Please repeat password",
                     validate: (value) => value === watch("password") || "Passowords does not match",
                   })}
-                  autoComplete='repeatPassword'
+                  autoComplete='new-password'
                 />
                 <InputErrorMessage message={errors.repeatPassword?.message} />
               </Column>
@@ -313,6 +341,7 @@ function SignUpForm() {
                   register={register}
                   {...register("companyName", { required: "Company name required" })}
                 />
+                <InputErrorMessage message={errors.companyName?.message} />
               </Column>
 
               <Column>
@@ -388,7 +417,7 @@ function SignUpForm() {
 
               <p>Siging up I accept Fivet Terms and Conditions and I read Fivet Privacy Policy</p>
               <Button type='submit' disabled={isPending}>
-                {isPending ? "Signing up ..." : "Sign up"}
+                {isPending ? "Loading..." : "Sign up"}
               </Button>
             </FormContainer>
           )}
@@ -401,20 +430,29 @@ function SignUpForm() {
               <OtpInput
                 key={index}
                 type='text'
-                ref={(el) => {
-                  if (el) inputRefs.current[index] = el;
-                }}
-                maxLength={1}
+                inputMode='numeric'
+                autoComplete={index === 0 ? "one-time-code" : "off"}
+                maxLength={index === 0 ? 6 : 1}
                 value={digit}
                 onChange={(e) => handleOtpChange(index, e.target.value)}
                 onKeyDown={(e) => handleOtpKeyDown(index, e)}
+                onPaste={handleOtpPaste}
               />
             ))}
           </ShowOtpWrapper>
-          <Button disabled={verifyOtpPending} onClick={onHandleVerifyOtp}>
-            {verifyOtpPending ? "Verifing..." : "Verify OTP"}
+
+          <Button disabled={verifyOtpPending || otp.join("").length < 6} onClick={onHandleVerifyOtp}>
+            {verifyOtpPending ? "Loading..." : "Verify OTP"}
           </Button>
-          <>{resend ? <ResendOtp onClick={resendOtp}>Resend OTP</ResendOtp> : `Resend OTP in ${timer}`}</>
+          <>
+            {resend ? (
+              <ResendOtp onClick={resendOtp} disabled={isPending}>
+                {isPending ? "Sending..." : "Resend OTP"}
+              </ResendOtp>
+            ) : (
+              `Resend OTP in ${timer}`
+            )}
+          </>
         </>
       )}
     </>

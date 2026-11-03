@@ -6,10 +6,9 @@ import { useEffect, useRef, useState } from "react";
 /**
  * Third-party libraries
  */
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import styled from "styled-components";
-import { Grid2X2, Image, Pilcrow } from "lucide-react";
 
 /**
  * Validation Schema - Zod schema used to validate the blog form structure.
@@ -26,47 +25,83 @@ import { useGetBlogCategories } from "../../hooks/useBlogCategory.js";
 /**
  * UI Components
  */
+import BlogSeoBlock from "./blog-form/BlogSeoBlock.jsx";
+import BlogTags from "./blog-form/BlogTags.jsx";
+
 import Input from "../ui/Input.jsx";
 import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import CustomSelect from "../ui/CustomSelect.jsx";
-import Accordion from "../ui/Accordion.jsx";
 import ImageUploader from "../ImageUploader.jsx";
-import BlogSeoBlock from "./BlogSeoBlock.jsx";
 import MultipleImagesUploader from "../MultipleImagesUploader.jsx";
-import Spinner from "../Spinner.jsx";
-import SortableBlocks from "./blog-dnd/SortableBlocks.jsx";
-import AddBlockDropdown from "./blog-dnd/AddBlockDropdown.jsx";
 import TextArea from "../ui/TextArea.jsx";
+import TextEditor from "../text-editor/index.jsx";
+
+import Spinner from "../Spinner.jsx";
+import Title from "../ui/Title.jsx";
 import Label from "../ui/Label.jsx";
+
+const defaultValues = {
+  title: "",
+  slug: "",
+  subTitle: "",
+  shortDescription: "",
+  content: "",
+  bannerImage: null,
+  bannerImageAlt: "",
+  categoryId: [],
+  status: BLOG_STATUS[0]?.value ?? "",
+  tags: [],
+  metaDescription: "",
+  metaTitle: "",
+  metaKeywords: "",
+  gallery: [],
+};
+
+const slugify = (value = "") => {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+};
 
 const CreateBlog = () => {
   const btnRef = useRef(null);
+
   const [isFixed, setIsFixed] = useState(false);
+
   const { mutate, isPending } = useCreateBlog();
   const { data: categories } = useGetBlogCategories();
 
-  const [existingImages, setExistingImages] = useState([]);
-  const [newImages, setNewImages] = useState([]);
-  const [deleteImageIds, setDeleteImageIds] = useState([]);
-
-  /* Move button edit to bottom on scroll */
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      setIsFixed(!entry.isIntersecting);
-    });
-
-    if (btnRef.current) observer.observe(btnRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  /* blog categorry data  */
+  // Blog categories
   const blogCategoryData = categories?.map((cat) => {
     return {
       value: cat.id,
       name: cat.title,
     };
   });
+
+  //Gallery state
+  const [existingImages, setExistingImages] = useState([]);
+  const [newImages, setNewImages] = useState([]);
+  const [deleteImageIds, setDeleteImageIds] = useState([]);
+
+  /* Move button edit to bottom on scroll */
+  useEffect(() => {
+    const element = btnRef.current;
+
+    if (!element) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsFixed(!entry.isIntersecting);
+    });
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, []);
 
   /* RFH */
   const {
@@ -77,284 +112,270 @@ const CreateBlog = () => {
     watch,
     formState: { errors },
   } = useForm({
-    defaultValues: { gallery: [], blocks: [], tags: "" },
     resolver: zodResolver(blogSchema),
+    defaultValues: defaultValues,
   });
 
   const blogTitleWatch = watch("title", "");
 
-  /* blocks array */
-  const { fields, append, remove, move } = useFieldArray({
-    control,
-    name: "blocks",
-  });
+  // Automatically generate a URL-friendly slug whenever the blog title changes.
+  useEffect(() => {
+    setValue("slug", slugify(blogTitleWatch));
+  }, [blogTitleWatch, setValue]);
 
-  /* Handle submit form */
-  const handleOnSubmit = (data) => {
+  // Build form data
+  const buildFormData = (data) => {
     const formData = new FormData();
 
+    //Basic fields
     formData.append("title", data.title);
     formData.append("slug", data.slug);
-    formData.append("subTitle", data.subTitle);
-    formData.append("shortDescription", data.shortDescription);
-    formData.append("bannerImage", data.bannerImage);
-    formData.append("bannerImageAlt", data.bannerImageAlt);
-    formData.append("metaDescription", data.metaDescription);
-    formData.append("metaTitle", data.metaTitle);
-    formData.append("metaKeywords", data.metaKeywords);
+    formData.append("subTitle", data.subTitle || "");
+    formData.append("shortDescription", data.shortDescription || "");
+    formData.append("content", data.content || "");
 
-    //tags
+    //Banner image
+    if (data.bannerImage instanceof File) {
+      formData.append("bannerImage", data.bannerImage);
+    }
+    formData.append("bannerImageAlt", data.bannerImageAlt || "");
+
+    //Seo
+    formData.append("metaDescription", data.metaDescription || "");
+    formData.append("metaTitle", data.metaTitle || "");
+    formData.append("metaKeywords", data.metaKeywords || "");
+
+    //Tags
     const tagsArray = data.tags
       .split(",")
       .map((t) => t.trim())
       .filter(Boolean);
     tagsArray.forEach((tag) => formData.append("tags", tag));
 
-    newImages.forEach((img) => {
-      formData.append("gallery", img.file);
-    });
+    //Categories
+    formData.append("categoryId", String(data.categoryId));
 
-    const newGalleryMeta = newImages.map((img) => ({
-      alt: img.alt,
+    //Status
+    formData.append("status", data.status);
+
+    // Existing gallery images
+    const existingImagesMeta = existingImages.map((image, index) => ({
+      id: image.id,
+      url: image.url,
+      publicId: image.publicId,
+      alt: image.alt || "",
+      order: index,
     }));
 
-    formData.append("galleryMeta", JSON.stringify(newGalleryMeta));
+    // New gallery images
+    const galleryMeta = newImages.map((image, index) => ({
+      alt: image.alt || "",
+      order: existingImages.length + index,
+    }));
 
-    /*  data.blocks.forEach((block, i) => {
-      formData.append(`blocks[${i}][text]`, block.text);
-      formData.append(`blocks[${i}][imageAlt]`, block.imageAlt || "");
-      formData.append(`blocks[${i}][order]`, i);
-      if (block.imageUrl) {
-        formData.append("blockImages", block.imageUrl);
-      }
-      if (block.type === "columns") {
-        formData.append(`blocks[${i}][columns]`, JSON.stringify(block.columns));
-      }
-    }); */
-
-    data.blocks.forEach((block, i) => {
-      console.log(`Blok ${i}:`, block);
-
-      formData.append(`blocks[${i}][type]`, block.type || "");
-
-      formData.append(`blocks[${i}][order]`, String(i));
-
-      if (block.type === "text") {
-        formData.append(`blocks[${i}][text]`, block.text || "");
-      }
-
-      if (block.type === "image") {
-        formData.append(`blocks[${i}][imageAlt]`, block.imageAlt || "");
-
-        if (block.imageUrl instanceof File) {
-          formData.append(`blockImages`, block.imageUrl);
-        }
-      }
-
-      if (block.type === "columns") {
-        formData.append(`blocks[${i}][cols]`, String(block.cols));
-
-        formData.append(`blocks[${i}][columns]`, JSON.stringify(block.columns));
-      }
+    newImages.forEach((image) => {
+      formData.append("gallery", image.file);
     });
 
-    if (data.categoryId) formData.append("categoryId", String(data.categoryId));
-    if (data.status) formData.append("status", String(data.status));
+    formData.append("existingImagesMeta", JSON.stringify(existingImagesMeta));
 
-    formData.forEach((value, key) => {
-      console.log(key, value instanceof File ? value.name : value);
-    });
-    mutate(formData);
+    formData.append("galleryMeta", JSON.stringify(galleryMeta));
+
+    // Deleted existing images
+    formData.append("deleteImageIds", JSON.stringify(deleteImageIds));
+
+    return formData;
   };
 
-  /* 
-    Automatically generate a URL-friendly slug whenever the blog title changes.
-  */
-  useEffect(() => {
-    const slugify = blogTitleWatch
-      .toLowerCase()
-      .trim()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-");
-
-    setValue("slug", slugify);
-  }, [blogTitleWatch, setValue]);
+  /* Handle submit form */
+  const handleOnSubmit = (data) => {
+    const formData = buildFormData(data);
+    mutate(formData);
+  };
 
   if (isPending) return <Spinner />;
 
   return (
     <form onSubmit={handleSubmit(handleOnSubmit)}>
       <Container>
-        <div>
-          {/* HEADER */}
-          <FormHeader>
-            <HeaderInput>
-              <Column>
-                <Input
-                  directions='column'
-                  placeholder='Enter title *'
-                  register={register}
-                  {...register("title", { required: "Blog title is required" })}
-                />
-                <InputErrorMessage message={errors.title?.message} />
-              </Column>
-            </HeaderInput>
+        <Main>
+          <Section>
+            <FormHeader>
+              <Title tag='h5'>Basic</Title>
+            </FormHeader>
 
-            <ButtonGroup ref={btnRef}>
-              <Button $variation='third'>Preview</Button>
-              <Button>Save</Button>
-            </ButtonGroup>
-
-            {isFixed && (
-              <FixedButton>
-                <Button $variation='third'>Preview</Button>
-                <Button>Save</Button>
-              </FixedButton>
-            )}
-          </FormHeader>
-
-          <AccordioWrapper>
             {/* SLUG - SUBTITLE */}
-            <Accordion title='Main' defaultOpen>
-              <Column>
-                <Field>
-                  <Input
-                    directions='column'
-                    placeholder='Enter subtitle'
-                    label='Blog subtitle'
-                    register={register}
-                    {...register("subTitle")}
-                  />
-                </Field>
-              </Column>
 
-              <Column>
-                <Field>
-                  <TextArea
-                    directions='column'
-                    label='Short description'
-                    placeholder='Enter short description'
-                    register={register}
-                    {...register("shortDescription")}
-                  />
-                </Field>
-              </Column>
-            </Accordion>
-
-            {/* DRAG - DROP SECTION */}
-            <Accordion title='Section'>
-              <Column>
-                <SortableBlocks fields={fields} register={register} control={control} remove={remove} move={move} append={append} />
-                <AddBlockDropdown append={append} />
-              </Column>
-            </Accordion>
-
-            <Accordion title='Gallery'>
-              <MultipleImagesUploader
-                name='gallery'
-                existingImages={existingImages}
-                setExistingImages={setExistingImages}
-                onNewImagesChange={setNewImages}
-                newImages={newImages}
-                deleteImageIds={deleteImageIds}
-                onDeleteImageIdsChange={setDeleteImageIds}
+            <Field>
+              <Input
+                directions='column'
+                placeholder='Enter title'
+                register={register}
+                label='Blog title *'
+                {...register("title", { required: "Blog title is required" })}
               />
-            </Accordion>
+              <InputErrorMessage message={errors.title?.message} />
+            </Field>
 
-            <Accordion title='SEO'>
-              <BlogSeoBlock register={register} />
-            </Accordion>
-          </AccordioWrapper>
-        </div>
+            <Field>
+              <Input
+                directions='column'
+                label='Blog slug *'
+                placeholder='Enter slug'
+                register={register}
+                {...register("slug", { required: "Blog slug is required" })}
+              />
+              <InputErrorMessage message={errors.slug?.message} />
+            </Field>
+
+            <Field>
+              <Input directions='column' placeholder='Enter subtitle' label='Blog subtitle' register={register} {...register("subTitle")} />
+            </Field>
+
+            <Field>
+              <TextArea
+                directions='column'
+                label='Short description'
+                placeholder='Enter short description'
+                register={register}
+                {...register("shortDescription")}
+              />
+            </Field>
+          </Section>
+
+          <Section>
+            <FormHeader>
+              <Title tag='h5'>Content</Title>
+            </FormHeader>
+
+            <Field>
+              <Controller
+                name='content'
+                control={control}
+                render={({ field }) => <TextEditor content={field.value ?? ""} onChange={field.onChange} />}
+              />
+            </Field>
+          </Section>
+
+          <Section>
+            <FormHeader>
+              <Title tag='h5'>Gallery</Title>
+            </FormHeader>
+            <MultipleImagesUploader
+              name='gallery'
+              existingImages={existingImages}
+              setExistingImages={setExistingImages}
+              onNewImagesChange={setNewImages}
+              newImages={newImages}
+              deleteImageIds={deleteImageIds}
+              onDeleteImageIdsChange={setDeleteImageIds}
+            />
+          </Section>
+        </Main>
 
         <Sidebar>
-          <Field>
-            <Controller
-              name='status'
-              control={control}
-              render={({ field }) => (
-                <CustomSelect
-                  {...field}
-                  control={control}
-                  options={BLOG_STATUS}
-                  placeholder='Select blog status'
-                  label='Blog status'
-                  size='medium'
-                  variation='transparent'
-                  valueKey='value'
-                  {...register("status")}
-                />
-              )}
-            />
-          </Field>
-          <Field>
-            <Input
-              directions='column'
-              label='Blog slug *'
-              placeholder='Enter slug'
-              register={register}
-              {...register("slug", { required: "Blog slug is required" })}
-            />
-            <InputErrorMessage message={errors.slug?.message} />
-          </Field>
+          <ButtonGroup ref={btnRef}>
+            <Button $variation='third'>Preview</Button>
+            <Button>Save</Button>
+          </ButtonGroup>
 
-          {/* BANNER IMAGE - SLUG - CATEGORIES */}
+          {isFixed && (
+            <FixedButton>
+              <Button $variation='third'>Preview</Button>
+              <Button>Save</Button>
+            </FixedButton>
+          )}
 
-          <Field>
-            <Label>Banner image</Label>
-            <ImageUploader name='bannerImage' value={watch("bannerImage")} onChange={(file) => setValue("bannerImage", file)}>
+          <Section>
+            <Field>
+              <Controller
+                name='status'
+                control={control}
+                render={({ field }) => (
+                  <CustomSelect
+                    {...field}
+                    control={control}
+                    options={BLOG_STATUS}
+                    placeholder='Select blog status'
+                    label='Blog status'
+                    size='medium'
+                    variation='transparent'
+                    valueKey='value'
+                    {...register("status")}
+                  />
+                )}
+              />
+            </Field>
+
+            <Field>
+              <Controller
+                name='categoryId'
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <CustomSelect
+                      {...field}
+                      control={control}
+                      options={blogCategoryData}
+                      placeholder='Select categories'
+                      label='Categories'
+                      size='medium'
+                      variation='transparent'
+                      valueKey='value'
+                    />
+                  );
+                }}
+              />
+            </Field>
+
+            <Field>
+              <Label>Tags</Label>
+              <Controller
+                control={control}
+                name='tags'
+                render={({ field }) => (
+                  <BlogTags
+                    id='tags'
+                    value={field.value}
+                    onChange={field.onChange}
+                    max={15}
+                    invalid={!!errors.tags}
+                    placeholder='Write tag and hit Enter'
+                  />
+                )}
+              />
+            </Field>
+          </Section>
+
+          <Section>
+            <FormHeader>
+              <Title tag='h5'>Banner</Title>
+            </FormHeader>
+            <Field>
+              <ImageUploader
+                name='bannerImage'
+                value={watch("bannerImage")}
+                onChange={(file) => setValue("bannerImage", file)}
+              ></ImageUploader>
+            </Field>
+            <Field>
               <Input
                 name='bannerImageAlt'
-                placeholder='Enter banner image description'
+                directions='column'
+                label='Banner description'
+                placeholder='Enter banner description'
                 register={register}
                 {...register("bannerImageAlt")}
               />
-            </ImageUploader>
-          </Field>
+            </Field>
+          </Section>
 
-          <Field>
-            <Controller
-              name='categoryId'
-              control={control}
-              render={({ field }) => (
-                <CustomSelect
-                  {...field}
-                  control={control}
-                  options={blogCategoryData}
-                  placeholder='Select categories'
-                  label='Categories'
-                  size='medium'
-                  variation='transparent'
-                  valueKey='value'
-                  {...register("categoryId")}
-                />
-              )}
-            />
-          </Field>
-
-          <Field>
-            <Input directions='column' label='Tags' placeholder='Vessel, tanker' register={register} {...register("tags")} />
-            <span style={{ fontSize: 11, color: "#aaa" }}>Comma-separated</span>
-            <InputErrorMessage message={errors.slug?.message} />
-          </Field>
-
-          <BlockFiled>
-            <Label>{fields.length} blocks</Label>
-            {fields.map((f, i) => (
-              <div className='blocks' key={f.id}>
-                <div className='blocks-icon'>
-                  {f.type === "text" && <Pilcrow size={12} />}
-                  {f.type === "image" && <Image size={12} />}
-                  {f.type === "columns" && <Grid2X2 size={12} />}
-                </div>
-                <div className='blocks-text'>
-                  {f.type === "text" ? f.text?.replace(/<[^>]+>/g, "").slice(0, 30) || "Empty text block" : f.imageAlt || "Image block"}
-                </div>
-                <div className='blocks-count'>#{i + 1}</div>
-              </div>
-            ))}
-          </BlockFiled>
+          <Section>
+            <FormHeader>
+              <Title tag='h5'>Seo</Title>
+            </FormHeader>
+            <BlogSeoBlock register={register} />
+          </Section>
         </Sidebar>
       </Container>
     </form>
@@ -368,62 +389,47 @@ export default CreateBlog;
  */
 const Container = styled.div`
   display: grid;
-  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 1.8rem;
+  align-items: start;
 
-  @media screen and (min-width: 640px) {
-    grid-template-columns: 1fr 360px;
+  @media (max-width: 960px) {
+    grid-template-columns: minmax(0, 1fr);
   }
 `;
+
+const Main = styled.main`
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-lg);
+`;
+
+const Section = styled.section`
+  border-bottom: 1px solid var(--color-border);
+  padding: 2.4rem;
+`;
+
 const FormHeader = styled.header`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 2rem;
-  margin-bottom: 4rem;
+  margin-bottom: 1.8rem;
 
   @media screen and (min-width: 640px) {
     flex-direction: row;
-    gap: 4rem;
   }
 `;
-
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-basis: 100%;
-  flex: 1;
-`;
-
-/* const ImageBannerRow = styled(Row)`
-  flex-direction: column;
-  @media screen and (min-width: 640px) {
-    flex-direction: row;
-  }
-`; */
 
 const Field = styled.div`
   margin-bottom: 2rem;
 `;
 
-const FullInput = styled.div`
-  flex: 1;
-`;
-const HeaderInput = styled(FullInput)`
-  order: 2;
-  @media screen and (min-width: 640px) {
-    order: 1;
-  }
-`;
-
 const ButtonGroup = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   gap: 1rem;
-  order: 1;
 
-  @media screen and (min-width: 640px) {
-    order: 2;
-  }
+  padding: 2.4rem;
 `;
 
 const FixedButton = styled(Button)`
@@ -433,43 +439,11 @@ const FixedButton = styled(Button)`
   z-index: 1000;
 `;
 
-const AccordioWrapper = styled.div`
-  background-color: var(--color-white);
-  padding: 2rem;
-`;
-
 /* ── Sidebar ── */
 const Sidebar = styled.aside`
-  border-left: 1px solid var(--color-border);
-  background: var(--color-white);
-  overflow-y: auto;
-  padding: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-`;
-
-const BlockFiled = styled.div`
-  .blocks {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 8px;
-    border: 1px solid var(--color-border);
-    font-size: 12px;
-    color: var(--colot-text);
-    margin-top: 8px;
-
-    .blocks-icon {
-      display: flex;
-      align-items: center;
-    }
-
-    .blocks-text {
-      flex: 1;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  }
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  background-color: var(--color-white);
 `;

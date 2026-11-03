@@ -6,11 +6,12 @@ import { createBlogApi, getBlogsApi, deleteBlogApi, getBlogApi, updateBlogApi } 
 export const useCreateBlog = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   const { mutate, isPending } = useMutation({
     mutationFn: createBlogApi,
     onSuccess: () => {
-      toast.success("Blog successfully created");
       queryClient.invalidateQueries(["blogs"]);
+      toast.success("Blog successfully created");
       navigate("/admin/blogs");
     },
     onError: (error) => {

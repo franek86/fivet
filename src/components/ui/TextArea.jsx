@@ -15,9 +15,8 @@ const StyledTextArea = styled.textarea`
   border-radius: var(--border-radius-lg);
 
   &::placeholder {
-    color: var(--color-text);
-    font-size: 1.3rem;
-    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--color-text-muted);
   }
 `;
 

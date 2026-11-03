@@ -82,17 +82,19 @@ const NavDropdownInner = styled.div`
 `;
 
 const NavDropdownContent = styled.div`
-  background: var(--color-white);
-  box-shadow: var(--shadow-md);
-  border-radius: var(--border-radius-lg);
   display: flex;
   flex-direction: column;
   z-index: 1000;
+  margin-left: 3.2rem;
 
-  @media screen and (min-width: 640px) {
+  @media screen and (min-width: 640px) and (max-width: 1024px) {
+    background: var(--color-white);
+    box-shadow: var(--shadow-md);
+    border-radius: var(--border-radius-lg);
     position: absolute;
     top: ${({ top }) => top}px;
     left: 100%;
+    margin-left: 0;
     min-width: 180px;
   }
 `;

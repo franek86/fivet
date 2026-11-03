@@ -176,16 +176,20 @@ export const blogGallerySchema = z.object({
 });
 
 export const blogSchema = z.object({
-  title: z.string().min(1, "Blog title is required"),
-  shortDescription: z.string().optional(),
-  categoryId: z.coerce.number().optional(),
+  title: z.string().trim().min(1, "Blog title is required"),
   slug: z
     .string()
     .min(1, "Slug is required")
     .regex(/^[a-z0-9-]+$/, "Slug must contain only lowercase letters, numbers, and hyphens"),
+  subTitle: z.string().trim().max(200).optional(),
+  shortDescription: z.string().trim().max(300).optional(),
+  content: z.string().min(1, "Blog content is required"),
+
   status: blogStatusEnum.nullable().optional(),
-  subTitle: z.string().optional(),
+
+  categoryId: z.string().min(1),
   tags: z.string().default([]),
+
   bannerImage: z
     .any()
     .optional()
@@ -193,25 +197,11 @@ export const blogSchema = z.object({
     .refine((file) => !file || file.size <= 5_000_000, "Max file size is 5MB")
     .refine((file) => !file || ["image/jpeg", "image/png", "image/webp"].includes(file.type), "Only JPEG, PNG or WEBP images are allowed"),
   bannerImageAlt: z.string().optional(),
-  blocks: z.array(
-    z.object({
-      text: z.string().optional(),
-      imageUrl: z
-        .any()
-        .optional()
-        .refine((file) => !file || file instanceof File, "Invalid file")
-        .refine((file) => !file || file.size <= 5_000_000, "Max file size is 5MB")
-        .refine(
-          (file) => !file || ["image/jpeg", "image/png", "image/webp"].includes(file.type),
-          "Only JPEG, PNG or WEBP images are allowed",
-        ),
 
-      imageAlt: z.string().nullable().optional(),
-    }),
-  ),
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   metaKeywords: z.string().optional(),
+
   gallery: z.array(blogGallerySchema).optional(),
 });
 
@@ -231,4 +221,8 @@ export const editBlogSchema = blogSchema.partial().extend({
  */
 export const createBlogCategorySchema = z.object({
   title: z.string().min(1, { message: "Category name is required" }).max(50, { message: "Max 50 characters" }),
+  slug: z
+    .string()
+    .min(1, "Slug is required")
+    .regex(/^[a-z0-9-]+$/, "Slug must contain only lowercase letters, numbers, and hyphens"),
 });

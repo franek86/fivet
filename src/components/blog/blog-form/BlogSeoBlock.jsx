@@ -1,5 +1,5 @@
-import Input from "../ui/Input.jsx";
-import TextArea from "../ui/TextArea.jsx";
+import Input from "../../ui/Input.jsx";
+import TextArea from "../../ui/TextArea.jsx";
 import styled from "styled-components";
 
 const Wrapper = styled.div`

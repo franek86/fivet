@@ -1,7 +1,7 @@
 import Title from "../../components/ui/Title.jsx";
-import CategoryTable from "../../components/post-category/CategoryTable.jsx";
+import CategoryTable from "../../components/blog-category/CategoryTable.jsx";
 
-import AddBlogCategory from "../../components/post-category/AddBlogCategory.jsx";
+import AddBlogCategory from "../../components/blog-category/AddBlogCategory.jsx";
 
 function BlogCategory() {
   return (

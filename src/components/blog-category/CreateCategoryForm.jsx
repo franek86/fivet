@@ -71,7 +71,7 @@ function CreateCategoryForm({ categoryToEdit = {} }) {
       });
     }
   };
-  console.log(errors);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Column>
@@ -85,14 +85,23 @@ function CreateCategoryForm({ categoryToEdit = {} }) {
         <InputErrorMessage message={errors.title?.message} />
       </Column>
 
+      <Column>
+        <Input
+          label='Blog Category slug'
+          placeholder='e.g. slug'
+          directions='column'
+          register={register}
+          {...register("slug", { require: true })}
+        />
+        <InputErrorMessage message={errors.slug?.message} />
+      </Column>
+
       <Row>
         {isEditSession ? (
           <Button>{editIsPending ? "Editing..." : editIsSuccess ? "Success!" : "Edit category"}</Button>
         ) : (
           <Button>{isPending ? "Creating..." : isSuccess ? "Success!" : "Create new blog category"}</Button>
         )}
-        {/*  <Button $variation='third'>Draft</Button>
-        <Button $variation='secondary'>Cancel</Button> */}
       </Row>
     </form>
   );

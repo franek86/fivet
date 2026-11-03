@@ -1,8 +1,8 @@
 import apiClient from "./axiosConfig.js";
 
-export const createBlogApi = async (data) => {
+export const createBlogApi = async (formData) => {
   try {
-    const res = await apiClient.post("/posts", data, {
+    const res = await apiClient.post("/posts", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return res.data;

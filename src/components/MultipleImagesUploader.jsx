@@ -1,6 +1,7 @@
 import { useRef } from "react";
 
 import styled, { keyframes } from "styled-components";
+import Label from "./ui/Label.jsx";
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(6px); }
@@ -16,32 +17,30 @@ const UploadWrapper = styled.div`
 
 const PreviewContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 16px;
 `;
 
 const PreviewImage = styled.div`
-  /* position: relative;
-  width: 100%;
-  height: 15rem; */
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: var(--color-white);
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) auto;
+  gap: 1.4rem;
+  align-items: start;
+  padding: 12px;
+  border-radius: var(--border-radius-lg);
+
+  background-color: var(--color-grey-200);
   border: 1px solid var(--color-border);
   animation: ${fadeIn} 0.25s ease both;
-  display: flex;
-  flex-direction: column;
 `;
 
 const ImageThumb = styled.div`
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
+  aspect-ratio: 1;
 
   img {
     width: 100%;
+    border-radius: var(--border-radius-lg);
     height: 100%;
     object-fit: cover;
     display: block;
@@ -49,26 +48,16 @@ const ImageThumb = styled.div`
 `;
 
 const RemoveButton = styled.button`
-  position: absolute;
-  top: 7px;
-  right: 7px;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
   border: none;
-  background: var(--colot-text);
-  color: var(--color-white);
-  font-size: 13px;
-  line-height: 1;
+  background-color: transparent;
+  color: var(--color-text);
+  font-size: 1.3rem;
+  font-weight: 600;
+  padding: 6px 10px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(4px);
-  transition: background 0.15s;
 
   &:hover {
-    background: var(--color-danger);
+    color: var(--color-danger-600);
   }
 `;
 
@@ -114,6 +103,19 @@ const CardBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6px;
+
+  > input {
+    background-color: var(--color-white);
+    padding: 1.35rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    min-width: 100%;
+
+    &::placeholder {
+      font-size: 1.2rem;
+      color: var(--color-text-muted);
+    }
+  }
 `;
 
 const HiddenInput = styled.input`
@@ -182,9 +184,6 @@ const MultipleImagesUploader = ({
             <PreviewImage key={img.id}>
               <ImageThumb>
                 <img src={img.url} alt={img.alt} />
-                <RemoveButton type='button' onClick={() => handleRemoveExistingImage(img.id)}>
-                  X
-                </RemoveButton>
               </ImageThumb>
               <CardBody>
                 <input
@@ -198,6 +197,10 @@ const MultipleImagesUploader = ({
                   }}
                 />
               </CardBody>
+
+              <RemoveButton type='button' onClick={() => handleRemoveExistingImage(img.id)}>
+                Remove
+              </RemoveButton>
             </PreviewImage>
           ))}
         </PreviewContainer>
@@ -210,15 +213,12 @@ const MultipleImagesUploader = ({
             <PreviewImage key={index}>
               <ImageThumb>
                 <img src={img.url} alt={img.alt} />
-
-                <RemoveButton type='button' onClick={() => handleRemoveNewImage(index)}>
-                  X
-                </RemoveButton>
               </ImageThumb>
               <CardBody>
+                <Label>Image description</Label>
                 <input
                   type='text'
-                  placeholder='Alt text'
+                  placeholder='Enter image description'
                   value={img.alt}
                   onChange={(e) => {
                     const updated = [...newImages];
@@ -227,6 +227,10 @@ const MultipleImagesUploader = ({
                   }}
                 />
               </CardBody>
+
+              <RemoveButton type='button' onClick={() => handleRemoveNewImage(index)}>
+                Remove
+              </RemoveButton>
             </PreviewImage>
           ))}
         </PreviewContainer>

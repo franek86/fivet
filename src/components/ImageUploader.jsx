@@ -15,11 +15,10 @@ const ImageUploadContainer = styled.section`
   text-align: center;
   cursor: pointer;
   position: relative;
-
+  background-color: var(--color-grey-200);
   border: ${({ $hasPreview }) => ($hasPreview ? "none" : "2px dashed var(--color-border) ")};
   transition: all 0.2s ease;
   color: var(--color-text-muted);
-  background-color: var(--color-white);
   border-radius: var(--border-radius-sm);
 
   &:hover {
@@ -34,6 +33,7 @@ const StyledImageUpload = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  aspect-ratio: 16 / 9;
   padding: 1.25rem;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
@@ -43,16 +43,23 @@ const StyledImageUpload = styled.div`
   }
 `;
 
-const StyledIconClose = styled(CircleX)`
+const StyledIconClose = styled.button`
   position: absolute;
-  top: -20px;
-  right: -20px;
-  color: var(--color-danger-600);
-  height: 2rem;
-  width: 2rem;
+  top: 10px;
+  right: 10px;
+  padding: 6px 12px;
+  font: inherit;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-grey-200);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-lg);
+  cursor: pointer;
 `;
 
 const StyledPreviewImageWrap = styled.div`
+  position: relative;
   display: flex;
   height: 100%;
   width: 100%;
@@ -62,6 +69,7 @@ const StyledPreviewImageWrap = styled.div`
 
 const StyledPreviewImage = styled.img`
   object-fit: cover;
+  aspect-ratio: 16 / 9;
   /*  height: 16rem;
   width: 16rem;
   border-radius: 50%; */
@@ -135,7 +143,7 @@ const ImageUploader = ({ name, onChange, initialImage, title, children }) => {
 
       {previewImage && (
         <StyledPreviewImageWrap>
-          <StyledIconClose onClick={removeImage} />
+          <StyledIconClose onClick={removeImage}>Remove</StyledIconClose>
           <Column>
             {previewImage && <StyledPreviewImage src={previewImage} alt='' />}
             {title ? <P>Main image</P> : title}

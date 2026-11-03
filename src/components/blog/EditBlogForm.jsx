@@ -12,11 +12,12 @@ import BackBtn from "../BackBtn.jsx";
 import UploadImageBlock from "./UploadImageBlock.jsx";
 import SortableBlocks from "./blog-dnd/SortableBlocks.jsx";
 import AddBlockDropdown from "./blog-dnd/AddBlockDropdown.jsx";
+import Accordion from "../ui/Accordion.jsx";
+import BlogSeoBlock from "./blog-form/BlogSeoBlock.jsx";
+import MultipleImagesUploader from "../MultipleImagesUploader.jsx";
+
 import { editBlogSchema } from "../../utils/validationSchema.js";
 import { useGetBlogCategories } from "../../hooks/useBlogCategory.js";
-import Accordion from "../ui/Accordion.jsx";
-import BlogSeoBlock from "./BlogSeoBlock.jsx";
-import MultipleImagesUploader from "../MultipleImagesUploader.jsx";
 
 const pulse = keyframes`
   0%, 100% { opacity: 1; }

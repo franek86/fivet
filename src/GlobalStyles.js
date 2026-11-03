@@ -134,24 +134,6 @@ const GlobalStyles = styled.createGlobalStyle`
     color: inherit;
   }
 
-  textarea::-webkit-input-placeholder {
-    color: #fff;
-  }
-
-  textarea:-moz-placeholder {
-    /* Firefox 18- */
-    color: #fff;
-  }
-
-  textarea::-moz-placeholder {
-    /* Firefox 19+ */
-    color: #fff;
-  }
-
-  textarea:-ms-input-placeholder {
-    color: #fff;
-  }
-
   /* Hide number input arrows for Chrome, Safari, Edge, Opera */
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
@@ -215,9 +197,6 @@ const GlobalStyles = styled.createGlobalStyle`
 
   img {
     max-width: 100%;
-
-    /* For dark mode */
-    filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
   }
   tr:nth-child(even) {
     background-color: var(--color-grey-200);

@@ -1,5 +1,15 @@
 import styled from "styled-components";
 
+const ToggleMenuEditorIcon = ({ pressed, onPressedChange, children }) => {
+  return (
+    <StyledToggle $pressed={pressed} onClick={onPressedChange}>
+      {children}
+    </StyledToggle>
+  );
+};
+
+export default ToggleMenuEditorIcon;
+
 const StyledToggle = styled.div`
   display: inline-flex;
   align-items: center;
@@ -23,13 +33,3 @@ const StyledToggle = styled.div`
     background-color: var(--color-accent-600);
   }
 `;
-
-const ToggleMenuEditorIcon = ({ pressed, onPressedChange, children }) => {
-  return (
-    <StyledToggle $pressed={pressed} onClick={onPressedChange}>
-      {children}
-    </StyledToggle>
-  );
-};
-
-export default ToggleMenuEditorIcon;

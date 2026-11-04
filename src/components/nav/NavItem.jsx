@@ -184,6 +184,7 @@ const NavItem = ({ item, badgeMap }) => {
               <NavList
                 key={child.label}
                 to={child.href}
+                end
                 onClick={() => {
                   setOpen(false);
                   dispatch(closeNav());

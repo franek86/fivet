@@ -1,9 +1,9 @@
-import SingleBlog from "../../components/blog/SingleBlog.jsx";
+import BlogSingle from "../../components/blog/BlogSingle.jsx";
 
 const Blog = () => {
   return (
     <div>
-      <SingleBlog />
+      <BlogSingle />
     </div>
   );
 };

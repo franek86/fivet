@@ -44,20 +44,20 @@ const EditBlogForm = () => {
   } = useForm({
     resolver: zodResolver(editBlogSchema),
     defaultValues: {
-      title: data?.title ?? "",
-      subTitle: data?.subTitle ?? "",
-      slug: data?.slug ?? "",
-      shortDescription: data?.shortDescription ?? "",
-      status: data?.status ?? "",
-      content: data?.content ?? "",
-      categoryId: data?.categoryId ?? "",
-      tags: data?.tags || [],
+      title: "",
+      subTitle: "",
+      slug: "",
+      shortDescription: "",
+      status: "",
+      content: "",
+      categoryId: "",
+      tags: [],
       bannerImage: data?.bannerImage ?? null,
-      bannerImageAlt: data?.bannerImageAlt ?? "",
-      metaTitle: data?.metaTitle ?? "",
-      metaKeywords: data?.metaKeywords ?? "",
+      bannerImageAlt: "",
+      metaTitle: "",
+      metaKeywords: "",
       metaDescription: data?.metaDescription ?? "",
-      gallery: data?.gallery ?? [],
+      gallery: [],
     },
   });
 
@@ -83,7 +83,7 @@ const EditBlogForm = () => {
       bannerImage: data?.bannerImage ?? null,
       bannerImageAlt: data?.bannerImageAlt ?? "",
       metaTitle: data?.metaTitle ?? "",
-      metaKeywords: data?.metaKeywords ?? "",
+      metaKeywords: data.metaKeywords?.join(", ") ?? "",
       metaDescription: data?.metaDescription ?? "",
       gallery: data?.gallery ?? [],
     });
@@ -110,14 +110,25 @@ const EditBlogForm = () => {
     //SEO
     form.append("metaTitle", values.metaTitle);
     form.append("metaDescroption", values.metaDescroption);
-    form.append("metaKeywords", values.metaKeywords);
+
+    const keywordsArray =
+      values.metaKeywords
+        ?.split(",")
+        .map((item) => item.trim())
+        .filter(Boolean) || [];
+    keywordsArray.forEach((keyword) => {
+      form.append("metaKeywords", keyword);
+    });
 
     //Tags
-    const tagsArray = values.tags
+    /* const tagsArray = values.tags
       .split(",")
       .map((t) => t.trim())
       .filter(Boolean);
-    tagsArray.forEach((tag) => form.append("tags", tag));
+    tagsArray.forEach((tag) => form.append("tags", tag)); */
+    values.tags.forEach((tag) => {
+      form.append("tags", tag);
+    });
 
     //Categories
     form.append("categoryId", String(values.categoryId));

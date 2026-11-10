@@ -43,7 +43,7 @@ const tagsPreprocess = (val) => {
 export const ShipImageSchema = z.object({
   file: z.any().optional(),
   url: z.string().url(),
-  alt: z.string().optional(),
+  alt: z.string().optional().nullable().default(""),
   publicId: z.string().optional(),
 });
 
@@ -171,7 +171,10 @@ export const eventSchema = z
 export const blogGallerySchema = z.object({
   file: z.any().optional(),
   url: z.string().url(),
-  alt: z.string().optional(),
+  alt: z
+    .string()
+    .nullish()
+    .transform((value) => value ?? ""),
   publicId: z.string().optional(),
 });
 
@@ -188,7 +191,7 @@ export const blogSchema = z.object({
   status: blogStatusEnum.nullable().optional(),
 
   categoryId: z.string().min(1),
-  tags: z.string().default([]),
+  tags: z.array(z.string()).default([]),
 
   bannerImage: z
     .any()

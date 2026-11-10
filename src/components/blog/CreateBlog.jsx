@@ -146,11 +146,14 @@ const CreateBlog = () => {
     formData.append("metaKeywords", data.metaKeywords || "");
 
     //Tags
-    const tagsArray = data.tags
+    /* const tagsArray = data.tags
       .split(",")
       .map((t) => t.trim())
       .filter(Boolean);
-    tagsArray.forEach((tag) => formData.append("tags", tag));
+    tagsArray.forEach((tag) => formData.append("tags", tag)); */
+    data.tags.forEach((tag) => {
+      formData.append("tags", tag);
+    });
 
     //Categories
     formData.append("categoryId", String(data.categoryId));
@@ -192,6 +195,8 @@ const CreateBlog = () => {
     const formData = buildFormData(data);
     mutate(formData);
   };
+
+  console.log(errors);
 
   if (isPending) return <Spinner />;
 

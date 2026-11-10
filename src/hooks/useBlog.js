@@ -36,7 +36,6 @@ export const useGetBlog = (slug) => {
   const { data, isLoading } = useQuery({
     queryKey: ["blog", slug],
     queryFn: () => getBlogApi(slug),
-    staleTime: 5 * 60 * 1000,
   });
   return { data, isLoading };
 };

@@ -222,3 +222,42 @@ export const createBlogCategorySchema = z.object({
     .min(1, "Slug is required")
     .regex(/^[a-z0-9-]+$/, "Slug must contain only lowercase letters, numbers, and hyphens"),
 });
+
+const MAX_AVATAR_SIZE = 2 * 1024 * 1024; // 2 MB, matches multer limit on the backend
+const AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Enter your current password"),
+    newPassword: z.string().min(8, "Use at least 8 characters").max(72, "Use 72 characters or fewer"),
+    confirmPassword: z.string().min(1, "Confirm your new password"),
+  })
+  .refine((d) => d.newPassword === d.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords don’t match",
+  })
+  .refine((d) => d.newPassword !== d.currentPassword, {
+    path: ["newPassword"],
+    message: "Choose a password you haven’t used here before",
+  });
+
+export const requestEmailSchema = z.object({
+  newEmail: z.string().trim().toLowerCase().email("Enter a valid email address"),
+  password: z.string().min(1, "Enter your password"),
+});
+
+export const confirmEmailSchema = z.object({
+  otp: z.string().regex(/^\d{6}$/, "Enter the 6-digit code"),
+});
+
+export const avatarSchema = z.object({
+  avatar: z
+    .any()
+    .refine((files) => files?.length === 1, "Choose an image")
+    .refine((files) => !files?.[0] || AVATAR_TYPES.includes(files[0].type), "Use a JPG, PNG or WebP image")
+    .refine((files) => !files?.[0] || files[0].size <= MAX_AVATAR_SIZE, "Image must be 2 MB or smaller"),
+});
+
+export const freezeAccountSchema = z.object({
+  password: z.string().min(1, "Enter your password to continue"),
+});

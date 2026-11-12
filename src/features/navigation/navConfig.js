@@ -50,7 +50,6 @@ export const navLinks = [
   { href: "/broker/buyers", label: "Buyers", icon: Users, allowRoles: ["BROKER"] },
   { href: "/broker/find-owner", label: "Find owner", icon: SearchIcon, allowRoles: ["BROKER"] },
   { href: "/broker/messages", label: "Messages", icon: Bot, allowRoles: ["BROKER"] },
-  { href: "/broker/documents", label: "Documents", icon: File, allowRoles: ["BROKER"] },
   { href: "/broker/verification", label: "Verification", icon: BadgeCheck, allowRoles: ["BROKER"] },
   { href: "/broker/profile", label: "Profile", icon: UserPen, allowRoles: ["BROKER"] },
 

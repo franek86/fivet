@@ -71,15 +71,7 @@ function LoginForm() {
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <Input
-          directions='column'
-          placeholder='youremail@email.com'
-          label='Email *'
-          name='email'
-          register={register}
-          {...register("email")}
-          autoComplete='email'
-        />
+        <Input directions='column' placeholder='youremail@email.com' label='Email *' autoComplete='email' {...register("email")} />
         <InputErrorMessage message={errors.email?.message} />
       </div>
       <div>
@@ -89,8 +81,6 @@ function LoginForm() {
             type={showPassword ? "text" : "password"}
             placeholder='*********'
             label='Password *'
-            name='password'
-            register={register}
             {...register("password")}
           />
           <PasswordIcon onClick={() => setShowPassword(!showPassword)}>

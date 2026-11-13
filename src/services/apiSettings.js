@@ -35,7 +35,10 @@ export const changeAvatar = async (file) => {
     const formData = new FormData();
     formData.append("avatar", file);
 
-    const res = await apiClient.patch("/settings/avatar", formData);
+    const res = await apiClient.patch("/settings/avatar", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    console.log(res.data);
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

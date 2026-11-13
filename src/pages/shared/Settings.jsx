@@ -7,7 +7,7 @@ import DangerSection from "../../components/settings/DangerSection.jsx";
 const Settings = () => {
   return (
     <>
-      <div className='search-container'>
+      <div>
         <Title tag='h1'>Settings</Title>
         <p>Manage your profile photo and sign-in details.</p>
       </div>

@@ -234,15 +234,15 @@ export const changePasswordSchema = z
   })
   .refine((d) => d.newPassword === d.confirmPassword, {
     path: ["confirmPassword"],
-    message: "Passwords don’t match",
+    message: "Passwords don't match",
   })
   .refine((d) => d.newPassword !== d.currentPassword, {
     path: ["newPassword"],
-    message: "Choose a password you haven’t used here before",
+    message: "Choose a password you haven't used here before",
   });
 
 export const requestEmailSchema = z.object({
-  newEmail: z.string().trim().toLowerCase().email("Enter a valid email address"),
+  email: z.string().trim().toLowerCase().email("Enter a valid email address"),
   password: z.string().min(1, "Enter your password"),
 });
 

@@ -27,6 +27,7 @@ import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import ResetPasswordForm from "./ResetPasswordForm.jsx";
 
 function ForgotPasswordForm() {
+  const [resetToken, setResetToken] = useState(null);
   const [step, setStep] = useState("emailStep");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [userEmail, setUserEmail] = useState(null);
@@ -66,7 +67,8 @@ function ForgotPasswordForm() {
 
   const { mutate: verifyOtpMutation, isPending: verifyOtpPending } = useMutation({
     mutationFn: verifyOtpForgetPasswordApi,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setResetToken(data.resetToken);
       setStep("resetStep");
     },
     onError: (error) => {
@@ -123,8 +125,6 @@ function ForgotPasswordForm() {
               directions='column'
               placeholder='Email address'
               label='Email *'
-              name='email'
-              register={register}
               {...register("email", {
                 required: "Email is required",
                 pattern: {
@@ -168,7 +168,7 @@ function ForgotPasswordForm() {
         </>
       )}
 
-      {step === "resetStep" && <ResetPasswordForm />}
+      {step === "resetStep" && <ResetPasswordForm resetToken={resetToken} />}
     </>
   );
 }

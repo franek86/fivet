@@ -26,8 +26,8 @@ import Button from "../ui/Button.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 import { useSelector } from "react-redux";
 
-function ResetPasswordForm() {
-  const resetToken = useSelector((state) => state.auth.resetToken);
+function ResetPasswordForm({ resetToken }) {
+  /* const resetToken = useSelector((state) => state.auth.resetToken); */
   const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();

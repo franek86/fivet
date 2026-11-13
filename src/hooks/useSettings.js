@@ -1,32 +1,41 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { changeAvatar, changePassword, confirmEmailChange, freezeAccount, requestEmailChange } from "../services/apiSettings.js";
+import { toast } from "react-toastify";
 
-export function useChangePassword() {
-  return useMutation({ mutationFn: changePassword });
-}
+export const useChangePassword = () => {
+  return useMutation({
+    mutationFn: changePassword,
+    onSuccess: () => {
+      toast.success("Password changed successfully!");
+    },
+  });
+};
 
-export function useRequestEmailChange() {
+export const useRequestEmailChange = () => {
   return useMutation({ mutationFn: requestEmailChange });
-}
+};
 
-export function useConfirmEmailChange() {
+export const useConfirmEmailChange = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: confirmEmailChange,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: "user" }),
   });
-}
+};
 
-export function useChangeAvatar() {
+export const useChangeAvatar = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: changeAvatar,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: "user" }),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["user"]);
+      toast.success("Avatar changed!");
+    },
   });
-}
+};
 
-export function useFreezeAccount() {
+export const useFreezeAccount = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   return useMutation({
@@ -36,4 +45,4 @@ export function useFreezeAccount() {
       navigate("/", { replace: true });
     },
   });
-}
+};

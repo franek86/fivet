@@ -12,19 +12,19 @@ import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
  * UI Components
  */
 import Button from "../ui/Button.jsx";
-import Modal from "../Modal.jsx";
 import CreateCategoryForm from "./CreateCategoryForm.jsx";
+import Drawer from "../Drawer.jsx";
 
 function AddCategory() {
   const dispatch = useDispatch();
 
   return (
     <>
-      <Button onClick={() => dispatch(openModalByName("create"))}>Add category</Button>
+      <Button onClick={() => dispatch(openModalByName("create-cat"))}>Add category</Button>
 
-      <Modal name='create' onClose={() => dispatch(closeModalByName())}>
+      <Drawer name='create-cat' title='Create vessel category' onClose={() => dispatch(closeModalByName("create-cat"))}>
         <CreateCategoryForm />
-      </Modal>
+      </Drawer>
     </>
   );
 }

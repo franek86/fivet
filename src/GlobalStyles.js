@@ -33,7 +33,7 @@ const GlobalStyles = styled.createGlobalStyle`
     --dashboard-buyer-bg: #e0e2f2;
     --dashboard-buyer-accent: #6875a3;
 
-    --backdrop-color: rgba(255, 255, 255, 0.1);
+    --backdrop-color: rgba(97, 92, 92, 0.7);
     --linear-gradient: linear-gradient(90deg, #e0e0e0 25%, #ffffff 50%, #f0f0f0 75%);
 
     --shadow-sm: 0 1px 3px rgba(16, 24, 40, 0.04), 0 1px 2px rgba(16, 24, 40, 0.03);
@@ -115,7 +115,7 @@ const GlobalStyles = styled.createGlobalStyle`
 
   body {
     font-family: "Inter", serif;
-    font-size: 14px;
+    font-size: 16px;
     color: var(--color-text);
     background-color: var(--color-bg);
 
@@ -647,6 +647,16 @@ const GlobalStyles = styled.createGlobalStyle`
     }
     100% {
       background-position: 100% 0;
+    }
+  }
+
+  @keyframes drewer-slidein-animation {
+    from {
+      transform: translateX(100%);
+    }
+
+    to {
+      transform: translateX(0);
     }
   }
 

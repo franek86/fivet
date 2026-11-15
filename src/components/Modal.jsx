@@ -1,8 +1,30 @@
-import { CircleX } from "lucide-react";
+import { X } from "lucide-react";
 import { createPortal } from "react-dom";
 
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+
+const Modal = ({ children, onClose, name }) => {
+  const openName = useSelector((state) => state.modal.isOpenModalName);
+
+  if (name !== openName) return null;
+  return createPortal(
+    <div>
+      <StyledOverlay onClick={onClose}></StyledOverlay>
+      <StyledModal>
+        <div className='header'>
+          <Button onClick={onClose}>
+            <X size={32} />
+          </Button>
+        </div>
+        {children}
+      </StyledModal>
+    </div>,
+    document.body,
+  );
+};
+
+export default Modal;
 
 const StyledModal = styled.div`
   position: fixed;
@@ -21,6 +43,7 @@ const StyledModal = styled.div`
     display: flex;
     align-items: center;
     justify-content: end;
+    margin-bottom: 2rem;
   }
 
   @media screen and (min-width: 640px) {
@@ -55,25 +78,3 @@ const Button = styled.button`
     color: var(--color-text);
   }
 `;
-
-function Modal({ children, onClose, name }) {
-  const openName = useSelector((state) => state.modal.isOpenModalName);
-
-  if (name !== openName) return null;
-  return createPortal(
-    <div>
-      <StyledOverlay onClick={onClose}></StyledOverlay>
-      <StyledModal>
-        <div className='header'>
-          <Button onClick={onClose}>
-            <CircleX size={20} />
-          </Button>
-        </div>
-        {children}
-      </StyledModal>
-    </div>,
-    document.body,
-  );
-}
-
-export default Modal;

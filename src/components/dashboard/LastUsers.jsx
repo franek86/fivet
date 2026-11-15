@@ -35,8 +35,6 @@ function LastUsers({ data, isLoading }) {
     return <TablePlaceholder count={5} />;
   }
 
-  console.log(data);
-
   return (
     <ListContainer>
       <ListHeaderTitle>Recent users</ListHeaderTitle>

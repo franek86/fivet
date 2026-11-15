@@ -22,37 +22,7 @@ import Spinner from "../../components/Spinner.jsx";
 import CustomPhoneInput from "../ui/CustomPhoneInput.jsx";
 import InputErrorMessage from "../ui/InputErrorMessage.jsx";
 
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-`;
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-
-  @media screen and (min-width: 640px) {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @media screen and (min-width: 1024px) {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-`;
-
-const Row = styled.div`
-  display: flex;
-  gap: 15px;
-`;
-
-const Column = styled(Row)`
-  flex-direction: column;
-  gap: 0;
-`;
-
-function FormAddressBook({ addressBookToEdit = {} }) {
+const FormAddressBook = ({ addressBookToEdit = {} }) => {
   const { mutate: create, isPending, isSuccess } = useCreateAddressBook();
   const { mutate: edit, isPending: editIsPending, isSuccess: editIsSuccess } = useEditAddressBook();
 
@@ -83,8 +53,6 @@ function FormAddressBook({ addressBookToEdit = {} }) {
     { name: "Important", value: "IMPORTANT" },
     { name: "Regular", value: "REGULAR" },
   ];
-
-  console.log(errors);
 
   return (
     <StyledForm onSubmit={handleSubmit(onHandleSubmit)}>
@@ -197,11 +165,33 @@ function FormAddressBook({ addressBookToEdit = {} }) {
         {isEditSession ? (
           <Button>{editIsPending ? "Editing..." : editIsSuccess ? "Success!" : "Edit"}</Button>
         ) : (
-          <Button>{isPending ? "Creating..." : isSuccess ? "Success!" : "Save"}</Button>
+          <Button>{isPending ? "Creating..." : isSuccess ? "Success!" : "Create"}</Button>
         )}
       </Row>
     </StyledForm>
   );
-}
+};
 
 export default FormAddressBook;
+
+const StyledForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+`;
+
+const Row = styled.div`
+  display: flex;
+  gap: 15px;
+`;
+
+const Column = styled(Row)`
+  flex-direction: column;
+  gap: 0;
+`;

@@ -26,13 +26,6 @@ import EmptyState from "../EmptyState.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 import { useState } from "react";
 
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 2.8rem;
-`;
-
 function CategoryTable() {
   const DEFAULT_FILTERS = {
     search: "",
@@ -147,9 +140,9 @@ function CategoryTable() {
       {isFetching ? (
         <TablePlaceholder count={categories.length} />
       ) : (
-        <>
+        <Container>
           <CustomTable columns={tableColumns} renderRow={renderRow} data={categories} />
-        </>
+        </Container>
       )}
       <Pagination
         count={count}
@@ -167,3 +160,17 @@ function CategoryTable() {
 }
 
 export default CategoryTable;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2.8rem;
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  margin-top: 2.8rem;
+`;

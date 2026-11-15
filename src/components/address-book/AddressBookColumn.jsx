@@ -28,6 +28,7 @@ import ConfirmDialog from "../ConfirmDialog.jsx";
 import Dropdown from "../ui/Dropdown.jsx";
 import FormAddressBook from "./FormAddressBook.jsx";
 import Modal from "../Modal.jsx";
+import Drawer from "../Drawer.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
 import SingleAddressBook from "./SingleAddressBook.jsx";
 
@@ -145,13 +146,13 @@ function AddressBookColumn({ addressBook, selectedAddress, onCheckboxChange }) {
         </Dropdown>
       </td>
 
-      <Modal name={`edit-${id}`} onClose={() => dispatch(closeModalByName())}>
+      <Drawer name={`edit-${id}`} title={`Edit ${fullName}`} onClose={() => dispatch(closeModalByName(`edit-${id}`))}>
         <FormAddressBook addressBookToEdit={addressBook} />
-      </Modal>
+      </Drawer>
 
-      <Modal name={`view-${id}`} onClose={() => dispatch(closeModalByName())}>
+      <Drawer name={`view-${id}`} title={`${fullName} - Captain`} onClose={() => dispatch(closeModalByName())}>
         <SingleAddressBook id={id} />
-      </Modal>
+      </Drawer>
 
       <Modal name={id} onClose={() => dispatch(closeModalByName())}>
         <ConfirmDialog itemName={fullName} onConfirm={() => mutate(id)} onCloseModal={() => dispatch(closeModalByName())} />

@@ -60,7 +60,7 @@ const variations = {
     gap: 0.75rem;
     font-size: 1.3rem;
     background: transparent;
-    justify-content: space-between;
+    justify-content: flex-start;
 
     &:hover {
       background: var(--color-border);

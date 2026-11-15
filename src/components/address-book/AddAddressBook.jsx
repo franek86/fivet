@@ -1,28 +1,23 @@
-/**
- * Third-party libraries
- */
-import { useDispatch } from "react-redux";
-
-/**
- * Redux Actions
- */
-import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
+import { useState } from "react";
 
 /**
  * UI Components
  */
 import Button from "../ui/Button.jsx";
-import Modal from "../Modal.jsx";
+
 import FormAddressBook from "./FormAddressBook.jsx";
+import Drawer from "../Drawer.jsx";
+import { useDispatch } from "react-redux";
+import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 
 function AddAddressBook() {
   const dispatch = useDispatch();
   return (
     <>
-      <Button onClick={() => dispatch(openModalByName("address-book"))}>Add contact</Button>
-      <Modal name='address-book' onClose={() => dispatch(closeModalByName("address-book"))}>
+      <Button onClick={() => dispatch(openModalByName("create"))}>Add contact</Button>
+      <Drawer name='create' title='Create contact' onClose={() => dispatch(closeModalByName("create"))}>
         <FormAddressBook />
-      </Modal>
+      </Drawer>
     </>
   );
 }

@@ -20,6 +20,7 @@ import Modal from "../Modal.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
 import CreateCategoryForm from "./CreateCategoryForm.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
+import Drawer from "../Drawer.jsx";
 
 const P = styled.div`
   text-align: start;
@@ -51,9 +52,9 @@ function CategoryColumn({ category, selectedCat, onCheckboxChange }) {
         </Dropdown>
       </td>
 
-      <Modal name={`edit-${categoryId}`} onClose={() => dispatch(closeModalByName())}>
+      <Drawer name={`edit-${categoryId}`} title={`Edit ${name}`} onClose={() => dispatch(closeModalByName(`edit-${categoryId}`))}>
         <CreateCategoryForm categoryToEdit={category} />
-      </Modal>
+      </Drawer>
 
       <Modal name={categoryId} onClose={() => dispatch(closeModalByName())}>
         <ConfirmDialog itemName={name} onConfirm={() => mutate(categoryId)} onCloseModal={() => dispatch(closeModalByName())} />

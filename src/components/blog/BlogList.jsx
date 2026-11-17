@@ -228,8 +228,9 @@ const BlogList = () => {
           </div>
           <Pagination
             count={data?.meta?.total}
-            page={filterState.page}
-            limit={filterState.limit}
+            page={data?.meta?.page}
+            limit={data?.meta?.limit}
+            totalPages={data?.meta?.totalPages}
             onPageChange={(page) =>
               setFilterState((prev) => ({
                 ...prev,

@@ -1,3 +1,4 @@
+import { useState } from "react";
 /**
  * Third-party libraries
  */
@@ -24,7 +25,6 @@ import CategoryColumn from "./CategoryColumn.jsx";
 import Button from "../ui/Button.jsx";
 import EmptyState from "../EmptyState.jsx";
 import Checkbox from "../ui/Checkbox.jsx";
-import { useState } from "react";
 
 function CategoryTable() {
   const DEFAULT_FILTERS = {
@@ -39,7 +39,10 @@ function CategoryTable() {
   const [filterState, setFilterState] = useState(DEFAULT_FILTERS);
 
   // Fetch  data using custom hook
-  const { categories, count, isLoading, error, isFetching } = useCategories(filterState);
+  const { data, isLoading, isError, isFetching } = useCategories(filterState);
+  console.log(data);
+
+  const categories = data?.data;
 
   // Custom hook for selection and deletion
   const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(
@@ -73,8 +76,8 @@ function CategoryTable() {
   ];
 
   if (isLoading) return <Spinner />;
-  if (error) return <div>Error something went wrong</div>;
-  if (categories.length < 1) return <EmptyState message='No categories for now. Please create category' />;
+  if (isError) return <div>Error something went wrong</div>;
+  if (categories?.length < 1) return <EmptyState message='No categories for now. Please create category' />;
 
   const renderRow = (item) => <CategoryColumn category={item} selectedCat={selected} onCheckboxChange={handleCheckboxChange} />;
 
@@ -138,16 +141,17 @@ function CategoryTable() {
         )}
       </Header>
       {isFetching ? (
-        <TablePlaceholder count={categories.length} />
+        <TablePlaceholder count={6} />
       ) : (
         <Container>
           <CustomTable columns={tableColumns} renderRow={renderRow} data={categories} />
         </Container>
       )}
       <Pagination
-        count={count}
-        page={filterState.page}
-        limit={filterState.limit}
+        count={data?.meta?.total}
+        page={data?.meta?.page}
+        limit={data?.meta?.limit}
+        totalPages={data?.meta?.totalPages}
         onPageChange={(page) =>
           setFilterState((prev) => ({
             ...prev,

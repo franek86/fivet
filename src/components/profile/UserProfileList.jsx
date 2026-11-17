@@ -17,15 +17,12 @@ import { customFormatDate } from "../../utils/formatDate.js";
 import { useDeleteUserProfile, useGetUserProfile, useUpdateUserProfileVerification } from "../../hooks/useProfile.js";
 import { closeModalByName, openModalByName } from "../../slices/modalSlice.js";
 import { useAdminSocket } from "../../hooks/useAdminSocket.js";
-import { DEFAULT_PAGINATION_FILTER, PAGE_SIZE } from "../../constants/index.js";
 
 function UserProfileList() {
   const searchUsers = useSelector((state) => state.search.users);
+  const [page, setPage] = useState(1);
 
-  /* local pagination */
-  const [pagination, setPagination] = useState(DEFAULT_PAGINATION_FILTER);
-
-  const { data, isLoading } = useGetUserProfile({ search: searchUsers, page: 1, limit: PAGE_SIZE });
+  const { data, isLoading } = useGetUserProfile({ search: searchUsers, page });
 
   const { mutate: updateVerification } = useUpdateUserProfileVerification();
   const { mutate } = useDeleteUserProfile();
@@ -157,14 +154,10 @@ function UserProfileList() {
 
       <Pagination
         count={data.meta?.total}
-        page={pagination.page}
-        limit={pagination.limit}
-        onPageChange={(page) =>
-          setPagination((prev) => ({
-            ...prev,
-            page,
-          }))
-        }
+        page={data?.meta?.page}
+        totalPages={data?.meta?.totalPages}
+        limit={data?.meta?.limit}
+        onPageChange={setPage}
       />
     </Page>
   );

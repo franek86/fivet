@@ -8,6 +8,7 @@ import { useGetMyInqueries, useUpdateStatusInquery } from "../../hooks/useInquer
 import {
   ActiveBar,
   Avatar,
+  Column,
   DetailPanel,
   ItemBadge,
   ItemBody,
@@ -32,10 +33,13 @@ import {
   Toolbar,
   UnreadDot,
 } from "./Inquery.styles.js";
-import { customFormatDate, formatDateTime } from "../../utils/formatDate.js";
+import { formatDateTime } from "../../utils/formatDate.js";
 
 import InqueryDetails from "./InqueryDetails.jsx";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
+import Sort from "../ui/Sort.jsx";
+import SearchBar from "../SearchBar.jsx";
+import Pagination from "../Pagination.jsx";
 
 const TABS = [
   { value: "ALL", label: "All" },
@@ -44,15 +48,28 @@ const TABS = [
   { value: "CLOSED", label: "Closed" },
 ];
 
+const SORT_OPTIONS = [
+  { value: "createdAt:desc", label: "Newest first" },
+  { value: "createdAt:asc", label: "Oldest first" },
+  { value: "senderName:asc", label: "Sender A-Z" },
+  { value: "shipName:asc", label: "Vessel A-Z" },
+];
+
 function InqueryList() {
   const [status, setStatus] = useState("ALL");
   const [selected, setSelected] = useState(null);
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState("createdAt:desc");
   const [page, setPage] = useState(1);
 
+  const [sortBy, order] = sort.split(":");
+
   const { data, isLoading, isError } = useGetMyInqueries({
-    search: search,
+    search,
     status: status === "ALL" ? undefined : status,
+    sortBy,
+    order,
+    page,
   });
 
   const { mutate } = useUpdateStatusInquery();
@@ -62,10 +79,14 @@ function InqueryList() {
 
   const current = items.find((i) => i.id === selected?.id) ?? selected;
   const hasFilters = Boolean(search) || status !== "ALL";
+  const mapSort = SORT_OPTIONS.map((s) => ({
+    value: s.value,
+    name: s.label,
+  }));
 
   useEffect(() => {
     setPage(1);
-  }, [status]);
+  }, [status, sort, search]);
 
   const countFor = (tab) => {
     if (!counts) return undefined;
@@ -77,6 +98,10 @@ function InqueryList() {
 
     mutate({ status: next, id: current.id });
     setSelected((prev) => (prev ? { ...prev, status: next } : prev));
+  };
+
+  const handleSort = (value) => {
+    setSort(value);
   };
 
   return (
@@ -94,6 +119,11 @@ function InqueryList() {
             );
           })}
         </Tabs>
+
+        <Column>
+          <SearchBar value={search} onChange={setSearch} />
+          <Sort items={mapSort} value={sort} onChange={handleSort} />
+        </Column>
       </Toolbar>
 
       <Layout>
@@ -167,6 +197,7 @@ function InqueryList() {
               </List>
             )}
           </ListScroll>
+          <Pagination count={data?.total} totalPages={data?.totalPages} page={data?.page} limit={data?.limit} onPageChange={setPage} />
         </ListPanel>
 
         <DetailPanel $visibleOnMobile={current}>

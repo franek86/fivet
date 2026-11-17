@@ -259,6 +259,7 @@ const CreateBlog = () => {
                 control={control}
                 render={({ field }) => <TextEditor content={field.value ?? ""} onChange={field.onChange} />}
               />
+              <InputErrorMessage message={errors.content?.message} />
             </Field>
           </Section>
 
@@ -331,6 +332,7 @@ const CreateBlog = () => {
                   );
                 }}
               />
+              <InputErrorMessage message={errors.categoryId?.message} />
             </Field>
 
             <Field>

@@ -9,7 +9,7 @@ export const useShips = (filters) => {
     search: debouncedSearch,
   };
 
-  const { data, isLoading, error, isFetching } = useQuery({
+  const { data, isLoading, isError, isFetching } = useQuery({
     queryKey: ["ships", params],
     queryFn: () => getShips(params),
     placeholderData: (previousData) => previousData,
@@ -17,5 +17,5 @@ export const useShips = (filters) => {
     gcTime: 5 * 60 * 1000,
   });
 
-  return { ships: data?.data, count: data?.meta?.total, isLoading, isFetching, error };
+  return { data, isLoading, isFetching, isError };
 };

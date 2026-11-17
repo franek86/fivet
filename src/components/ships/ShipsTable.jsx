@@ -39,7 +39,8 @@ function ShipsTable() {
   const { allShipType: shipTypes } = useAllShipType();
 
   //Fetch ships data using custom hook
-  const { ships = [], count = 0, isLoading } = useShips({ ...filterState, search: searchVessels });
+  const { data, isLoading } = useShips({ ...filterState, search: searchVessels });
+  const ships = data?.ships;
 
   // Custom hook for selection and deletion
   const { mutate: deleteShip } = useDeleteShip();
@@ -65,7 +66,7 @@ function ShipsTable() {
 
   // Loading, error, and empty states
   if (isLoading) {
-    return <TablePlaceholder count={filterState.limit} />;
+    return <TablePlaceholder count={6} />;
   }
 
   if (!isLoading && ships?.length === 0) {
@@ -94,9 +95,10 @@ function ShipsTable() {
         onDeleteSelected={handleDeleteSelected}
       />
       <Pagination
-        count={count}
-        page={filterState.page}
-        limit={filterState.limit}
+        count={data?.meta?.total}
+        page={data?.meta?.page}
+        totalPages={data?.meta?.totalPages}
+        limit={data?.meta?.limit}
         onPageChange={(page) =>
           setFilterState((prev) => ({
             ...prev,

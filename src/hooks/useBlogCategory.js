@@ -19,11 +19,11 @@ export const useCreateBlogCategory = () => {
 };
 
 export const useGetBlogCategories = () => {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, isFetching } = useQuery({
     queryKey: ["blog-categories"],
     queryFn: getBlogCategoriesApi,
     staleTime: 30 * 60 * 1000,
     gcTime: 5 * 60 * 1000,
   });
-  return { data, isLoading };
+  return { data, isLoading, isError, isFetching };
 };

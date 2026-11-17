@@ -190,7 +190,7 @@ export const blogSchema = z.object({
 
   status: blogStatusEnum.nullable().optional(),
 
-  categoryId: z.string().min(1),
+  categoryId: z.string().min(1, "Please,select blog category"),
   tags: z.array(z.string()).default([]),
 
   bannerImage: z

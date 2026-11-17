@@ -10,15 +10,15 @@ export const getShips = async (filters) => {
     minPrice: filters.minPrice,
     maxPrice: filters.maxPrice,
     isPublished: filters.isPublished,
-    page: filters.page,
-    limit: filters.limit,
     sortBy: filters.sortBy,
     order: filters.order,
+    page: filters.page,
+    limit: filters.limit,
   };
 
   try {
     const res = await apiClient.get("/ships", { params });
-
+    console.log(res.data);
     return res.data;
   } catch (error) {
     const message = error.response?.data?.message || error.message || "Something went wrong";

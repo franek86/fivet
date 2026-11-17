@@ -10,6 +10,9 @@ export const useGetMyInqueries = (params) => {
     ...params,
     search: debouncedSearch,
     status: params.status,
+    sortBy: params.sortBy,
+    order: params.order,
+    page: params.page,
   };
 
   const { data, isLoading, isError } = useQuery({

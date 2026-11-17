@@ -214,9 +214,10 @@ const VerifiedBrokers = () => {
         })}
       </BrokerGrid>
       <Pagination
-        count={data.meta?.total}
-        page={filters.page}
-        limit={filters.limit}
+        count={data?.meta?.total}
+        page={data?.meta?.page}
+        limit={data?.meta?.limit}
+        totalPages={data?.meta?.totalPages}
         onPageChange={(page) =>
           setFilters((prev) => ({
             ...prev,

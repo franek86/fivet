@@ -35,7 +35,9 @@ const Header = styled.div`
 
 function CategoryTable() {
   // Fetch  data using custom hook
-  const { data, isLoading, error, isFetching } = useGetBlogCategories();
+  const { data, isLoading, isError, isFetching } = useGetBlogCategories();
+
+  console.log(data);
 
   // Custom hook for selection and deletion
   const { selected, handleSelectAll, handleCheckboxChange, handleDeleteSelected } = useSelectDeleteItem(data, useDeleteCategory().mutate);
@@ -62,7 +64,7 @@ function CategoryTable() {
   ];
 
   if (isLoading) return <Spinner />;
-  if (error) return <div>Error something went wrong</div>;
+  if (isError) return <div>Error something went wrong</div>;
   if (data.length < 1)
     return (
       <EmptyState message='No blog categories' icon={<LucideSortAsc />}>

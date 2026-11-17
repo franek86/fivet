@@ -5,6 +5,9 @@ export const fetchMyInquery = async (filter) => {
   const params = {
     search: filter.search || undefined,
     status: filter.status,
+    sortBy: filter.sortBy,
+    order: filter.order,
+    page: filter.page,
   };
 
   try {

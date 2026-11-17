@@ -62,6 +62,16 @@ export const ListScroll = styled.div`
   overflow-y: auto;
 `;
 
+export const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+  }
+`;
+
 /* -------------------------------------------------------------------------- */
 /* Empty / error states                                                       */
 /* -------------------------------------------------------------------------- */
@@ -143,11 +153,13 @@ export const ItemButton = styled.button`
   color: inherit;
   cursor: pointer;
   transition: background 0.15s;
+  &:focus {
+    outline: none;
+  }
 
   &:hover {
     background: ${({ $active }) => ($active ? "var(--color-border)" : "var(--color-bg)")};
   }
-  ${focusRingInset}
 `;
 
 export const ActiveBar = styled.span`

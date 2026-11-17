@@ -10,6 +10,55 @@ import { useDeleteNotification, useNotificationList, useUpdateReadNotification }
 
 import { BellPlus } from "lucide-react";
 
+function NotificationLists() {
+  const { data: notifications, isLoading, isError } = useNotificationList();
+  const { mutate: updateRead } = useUpdateReadNotification();
+  const { mutate: deleteNotification } = useDeleteNotification();
+
+  if (isLoading) return <Spinner />;
+  if (notifications?.length < 1)
+    return (
+      <EmptyState message='You are all caught up! 🎉' icon={<BellPlus />}>
+        <p>There are no new notifications right now.</p>
+      </EmptyState>
+    );
+  if (isError) return <div>Error</div>;
+
+  const handleToggleRead = (id, checked) => {
+    if (notifications.find((n) => n.id === id)) {
+      updateRead({ id, data: checked });
+    }
+  };
+
+  return (
+    <Wrapper>
+      {notifications.length === 0 && <p>We&lsquo;ll you keep updated on any feature notifications</p>}
+
+      {notifications.map((item) => (
+        <div key={item.id}>
+          <Card $props={item.isRead || item.read}>
+            <div>
+              <h4>{item.message}</h4>
+              <p>Created at {customFormatDate(item.createdAt)}</p>
+            </div>
+            <Buttons>
+              <SwitchWrapper>
+                <p>Mark as read</p>
+                <ToggleSwitch checked={item.isRead} onChange={(e) => handleToggleRead(item.id, e.target.checked)} />
+              </SwitchWrapper>
+              <Button $size='small' $variation='danger' onClick={() => deleteNotification(item.id)}>
+                Delete
+              </Button>
+            </Buttons>
+          </Card>
+        </div>
+      ))}
+    </Wrapper>
+  );
+}
+
+export default NotificationLists;
+
 const Wrapper = styled.section`
   display: flex;
   flex-direction: column;
@@ -56,52 +105,3 @@ const SwitchWrapper = styled.div`
     font-size: 1.35rem;
   }
 `;
-
-function NotificationLists() {
-  const { data: notifications, isLoading, isError } = useNotificationList();
-  const { mutate: updateRead } = useUpdateReadNotification();
-  const { mutate: deleteNotification } = useDeleteNotification();
-
-  if (isLoading) return <Spinner />;
-  if (notifications.length < 1)
-    return (
-      <EmptyState message='You are all caught up! 🎉' icon={<BellPlus />}>
-        <p>There are no new notifications right now.</p>
-      </EmptyState>
-    );
-  if (isError) return <div>Error</div>;
-
-  const handleToggleRead = (id, checked) => {
-    if (notifications.find((n) => n.id === id)) {
-      updateRead({ id, data: checked });
-    }
-  };
-
-  return (
-    <Wrapper>
-      {notifications.length === 0 && <p>We&lsquo;ll you keep updated on any feature notifications</p>}
-
-      {notifications.map((item) => (
-        <div key={item.id}>
-          <Card $props={item.isRead || item.read}>
-            <div>
-              <h4>{item.message}</h4>
-              <p>Created at {customFormatDate(item.createdAt)}</p>
-            </div>
-            <Buttons>
-              <SwitchWrapper>
-                <p>Mark as read</p>
-                <ToggleSwitch checked={item.isRead} onChange={(e) => handleToggleRead(item.id, e.target.checked)} />
-              </SwitchWrapper>
-              <Button $size='small' $variation='danger' onClick={() => deleteNotification(item.id)}>
-                Delete
-              </Button>
-            </Buttons>
-          </Card>
-        </div>
-      ))}
-    </Wrapper>
-  );
-}
-
-export default NotificationLists;

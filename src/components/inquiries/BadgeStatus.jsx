@@ -7,6 +7,7 @@ export const STATUS_LABELS = {
 };
 
 function BadgeStatus({ status }) {
+  if (!status || !(status in STATUS_LABELS)) return null;
   return <Badge $status={status}>{STATUS_LABELS[status]}</Badge>;
 }
 

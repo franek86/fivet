@@ -154,8 +154,13 @@ function SingleAddressBook({ id }) {
                 {priority}
               </PriorityBadge>
             </Tags>
-            {note && <StyledBox>{note}</StyledBox>}
           </Section>
+          {note && (
+            <Section>
+              <SectionTitle>Note</SectionTitle>
+              <StyledBox>{note}</StyledBox>
+            </Section>
+          )}
         </DrawerBody>
       </Drawer>
     </>
@@ -165,12 +170,12 @@ function SingleAddressBook({ id }) {
 export default SingleAddressBook;
 
 const StyledBox = styled.div`
-  margin-top: 20px;
-  padding: 16px 18px;
-  background: var(--color-background-muted);
+  background: var(--color-border);
+  padding: 1rem;
   color: var(--color-text);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
+  border-radius: var(--border-radius-lg);
 `;
 
 const Drawer = styled.aside`

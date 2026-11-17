@@ -217,7 +217,7 @@ export const UnreadDot = styled.span`
   height: 8px;
   margin-top: 6px;
   border-radius: 50%;
-  background: var(--color-accent);
+  background: var(--color-danger-600);
 `;
 
 export const Avatar = styled.span`
@@ -469,6 +469,14 @@ export const Message = styled.div`
   overflow-wrap: break-word;
 `;
 
+export const Subject = styled.h3`
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+`;
+
 export const Footer = styled.footer`
   display: flex;
   flex-direction: column;
@@ -540,4 +548,60 @@ export const ReplyLink = styled.a`
   &:hover {
     background: var(--color-accent-600);
   }
+`;
+
+export const DangerButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: var(--border-radius-md);
+  background: transparent;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-danger-600);
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--color-danger);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  ${focusRing}
+`;
+
+export const SaveContactBtn = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px dashed var(--color-border);
+  border-radius: 999px;
+  background: transparent;
+  padding: 6px 14px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-accent);
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: var(--color-white);
+  }
+
+  &:disabled {
+    cursor: default;
+    border-style: solid;
+    border-color: var(--color-success-600);
+    color: var(--color-success-600);
+  }
+
+  ${focusRing}
 `;

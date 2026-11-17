@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { AlertCircle, Inbox } from "lucide-react";
 import BadgeStatus from "./BadgeStatus.jsx";
 
-import { useGetMyInqueries } from "../../hooks/useInquery.js";
+import { useGetMyInqueries, useUpdateStatusInquery } from "../../hooks/useInquery.js";
 
 import {
   ActiveBar,
@@ -32,8 +32,9 @@ import {
   Toolbar,
   UnreadDot,
 } from "./Inquery.styles.js";
+import { customFormatDate, formatDateTime } from "../../utils/formatDate.js";
+
 import InqueryDetails from "./InqueryDetails.jsx";
-import { customFormatDate } from "../../utils/formatDate.js";
 import TablePlaceholder from "../ui/TablePlaceholder.jsx";
 
 const TABS = [
@@ -47,17 +48,24 @@ function InqueryList() {
   const [status, setStatus] = useState("ALL");
   const [selected, setSelected] = useState(null);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
 
   const { data, isLoading, isError } = useGetMyInqueries({
     search: search,
     status: status === "ALL" ? undefined : status,
   });
 
+  const { mutate } = useUpdateStatusInquery();
+
   const items = data?.items ?? [];
   const counts = data?.counts;
 
   const current = items.find((i) => i.id === selected?.id) ?? selected;
   const hasFilters = Boolean(search) || status !== "ALL";
+
+  useEffect(() => {
+    setPage(1);
+  }, [status]);
 
   const countFor = (tab) => {
     if (!counts) return undefined;
@@ -66,7 +74,8 @@ function InqueryList() {
 
   const handleStatusChange = (next) => {
     if (!current) return;
-    updateStatus(current.id, next);
+
+    mutate({ status: next, id: current.id });
     setSelected((prev) => (prev ? { ...prev, status: next } : prev));
   };
 
@@ -136,17 +145,18 @@ function InqueryList() {
                         <ItemBody>
                           <ItemTop>
                             <ItemName $unread={isOpen}>{inquiry.senderName}</ItemName>
-                            <ItemTime dateTime={customFormatDate(inquiry.createdAt)}>{customFormatDate(inquiry.createdAt)}</ItemTime>
+                            <ItemTime dateTime={formatDateTime(inquiry.createdAt)}>{formatDateTime(inquiry.createdAt)}</ItemTime>
                           </ItemTop>
 
                           <ItemShip>{inquiry.ship.shipName}</ItemShip>
+                          <ItemPreview>
+                            Subject:<strong> {inquiry.subject}</strong>
+                          </ItemPreview>
                           <ItemPreview>{inquiry.message}</ItemPreview>
 
-                          {!isOpen && (
-                            <ItemBadge>
-                              <BadgeStatus $status={inquiry.status} />
-                            </ItemBadge>
-                          )}
+                          <ItemBadge>
+                            <BadgeStatus $status={inquiry.status} />
+                          </ItemBadge>
                         </ItemBody>
 
                         {isOpen && <UnreadDot role='img' aria-label='Open' />}

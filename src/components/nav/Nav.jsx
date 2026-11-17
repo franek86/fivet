@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { useUser } from "../../hooks/useAuth.js";
 
 import NavItem from "./NavItem.jsx";
-import { useAdminSocket } from "../../hooks/useAdminSocket.js";
 import { useGetUserProfile } from "../../hooks/useProfile.js";
 import { getNavigationForRole } from "../../config/nav/index.js";
 import { DEFAULT_PAGINATION_FILTER } from "../../constants/index.js";
@@ -19,9 +18,6 @@ function Nav() {
   const { data: usersData } = useGetUserProfile(DEFAULT_PAGINATION_FILTER);
   const navLinks = getNavigationForRole(user.role);
 
-  if (user.role === "ADMIN") {
-    useAdminSocket();
-  }
   const onlineCount = usersData?.users?.filter((u) => u.online).length;
 
   const badgeValues = {

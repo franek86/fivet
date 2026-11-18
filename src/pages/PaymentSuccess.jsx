@@ -1,9 +1,53 @@
-import { useQuery } from "@tanstack/react-query";
 import { Link, useSearchParams } from "react-router";
 import styled, { keyframes } from "styled-components";
 
 import Button from "../components/ui/Button.jsx";
-import { getPaymentSession } from "../services/apiPayments.js";
+
+const PaymentSuccess = () => {
+  const [searchParams] = useSearchParams();
+
+  return (
+    <Container>
+      <BackgroundGlow />
+
+      <Card>
+        <SuccessBadge>
+          <Checkmark>✓</Checkmark>
+        </SuccessBadge>
+
+        <Title>Payment Successful</Title>
+
+        <Description>Your payment has been processed successfully. A confirmation email has been sent to your inbox.</Description>
+
+        <OrderInfo>
+          <InfoRow>
+            <Label>Invoice ID</Label>
+            <Value></Value>
+          </InfoRow>
+
+          <InfoRow>
+            <Label>Amount Paid</Label>
+            <Value></Value>
+          </InfoRow>
+
+          <InfoRow>
+            <Label>Status</Label>
+            <Status></Status>
+          </InfoRow>
+        </OrderInfo>
+
+        <ButtonGroup>
+          <Link to='/dashboard'>
+            <Button>Go to Dashboard</Button>
+          </Link>
+          <Button>Download Receipt</Button>
+        </ButtonGroup>
+      </Card>
+    </Container>
+  );
+};
+
+export default PaymentSuccess;
 
 /* Animations */
 
@@ -127,59 +171,3 @@ const ButtonGroup = styled.div`
     flex-direction: column;
   }
 `;
-
-const PaymentSuccess = () => {
-  const [searchParams] = useSearchParams();
-  const sessionId = searchParams.get("session_id");
-  /*  const { data, isLoading } = useGetPaymentSession(sessionId); */
-  const { data } = useQuery({
-    queryKey: ["payment-session", sessionId],
-    queryFn: () => getPaymentSession(sessionId),
-    enabled: !!sessionId,
-  });
-
-  const { amount_total, currency, invoice, status } = data;
-  return (
-    <Container>
-      <BackgroundGlow />
-
-      <Card>
-        <SuccessBadge>
-          <Checkmark>✓</Checkmark>
-        </SuccessBadge>
-
-        <Title>Payment Successful</Title>
-
-        <Description>Your payment has been processed successfully. A confirmation email has been sent to your inbox.</Description>
-
-        <OrderInfo>
-          <InfoRow>
-            <Label>Invoice ID</Label>
-            <Value>{invoice}</Value>
-          </InfoRow>
-
-          <InfoRow>
-            <Label>Amount Paid</Label>
-            <Value>
-              {amount_total} {currency}
-            </Value>
-          </InfoRow>
-
-          <InfoRow>
-            <Label>Status</Label>
-            <Status>{status}</Status>
-          </InfoRow>
-        </OrderInfo>
-
-        <ButtonGroup>
-          <Link to='/dashboard'>
-            <Button>Go to Dashboard</Button>
-          </Link>
-          <Button>Download Receipt</Button>
-        </ButtonGroup>
-      </Card>
-    </Container>
-  );
-};
-
-export default PaymentSuccess;

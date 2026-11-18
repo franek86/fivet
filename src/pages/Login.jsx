@@ -28,12 +28,6 @@ const LinkText = styled(Link)`
 function Login() {
   return (
     <FormWrap>
-      {/*  <ButtonTest className='btn bg-gradient' onClick={() => navigate("/sign-up?plan=STANDARD")}>
-        Standard test
-      </ButtonTest>
-      <ButtonTest className='btn bg-gradient' onClick={() => navigate("/sign-up?plan=PREMIUM")}>
-        Premium test
-      </ButtonTest> */}
       <Title>Login</Title>
       <p>Please sign in to continue</p>
       <LoginForm />

@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const plans = ["STANDARD", "PREMIUM"];
 
-function StripeTest() {
+function TestStripe() {
   return (
     <Wrapper>
       {plans.map((plan) => (
@@ -15,7 +15,7 @@ function StripeTest() {
   );
 }
 
-export default StripeTest;
+export default TestStripe;
 
 const Wrapper = styled.main`
   display: flex;

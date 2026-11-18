@@ -22,7 +22,7 @@ import { BuyerRoutes } from "./routes/buyerRoutes.jsx";
 import { SharedRoutes } from "./routes/sharedRoutes.jsx";
 
 import { useRestoreSession } from "./hooks/useRestoreSession.js";
-import StripeTest from "./pages/stripeTest.jsx";
+import TestStripe from "./pages/TestStripe.jsx";
 
 const ALL_ROLES = ["ADMIN", "BROKER", "OWNER", "BUYER"];
 
@@ -36,7 +36,7 @@ function App() {
 
       <Routes>
         {AuthRoutes}
-        <Route path='/stripe' element={<StripeTest />} />
+        <Route path='stripe-text' element={<TestStripe />} />
 
         <Route element={<ProtectedRoute allowedRoles={ALL_ROLES} />}>
           <Route element={<MainLayout />}>

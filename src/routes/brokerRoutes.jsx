@@ -11,12 +11,12 @@ import CompanyProfile from "../pages/broker/CompanyProfile.jsx";
 import BrokerChat from "../pages/broker/BrokerChat.jsx";
 import BrokerEditShip from "../pages/broker/BrokerEditShip.jsx";
 import BrokerSingleShip from "../pages/broker/BrokerSingleShip.jsx";
-import Inquiries from "../pages/broker/Inquiries.jsx";
+import Inqueries from "../pages/broker/Inqueries.jsx";
 
 export const BrokerRoutes = (
   <Route element={<ProtectedRoute allowedRoles={["BROKER"]} />}>
     <Route path='/broker/dashboard' element={<BrokerDashboard />} />
-    <Route path='/broker/inquiries' element={<Inquiries />} />
+    <Route path='/broker/inqueries' element={<Inqueries />} />
     <Route path='/broker/vessels' element={<Vessels />} />
     <Route path='/broker/vessels/:id' element={<BrokerSingleShip />} />
     <Route path='/broker/vessels/edit/:id' element={<BrokerEditShip />} />
